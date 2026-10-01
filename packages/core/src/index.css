@@ -1,0 +1,9 @@
+/* @fewlines/css — entrypoint.
+ *
+ * Cascade layers order is the architectural contract:
+ * tokens -> base -> components -> utilities.
+ * Components must never escape their layer.
+ */
+@import './tokens/index.css' layer(tokens);
+@import './base/index.css' layer(base);
+@import './components/index.css' layer(components);

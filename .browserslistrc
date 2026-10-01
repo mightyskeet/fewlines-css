@@ -1,0 +1,18 @@
+# Browserslist contract — fewLinesCSS
+#
+# Политика (PROJECT_SPEC.md, раздел 10):
+# - Floor не снижается ради удобства реализации отдельной фичи.
+# - Каждая существенная platform feature проверяется через Can I Use MCP
+#   (caniuse_feature + browserslist_compatibility_check) до использования.
+# - Решения фиксируются в compatibility notes.
+#
+# Основная матрица: последние 2 версии всех evergreen-браузеров + Safari/iOS,
+# актуальные на момент релиза. Dead-браузеры исключены.
+#
+# NOTE: floor будет уточнён после compatibility-аудита фич из раздела 6 спеки
+# (@layer, :has(), light-dark(), popover, dialog, anchor positioning).
+# Если какая-то фича не проходит матрицу — используется @supports fallback
+# внутри единственной канонической реализации (controlled regression).
+
+last 2 versions
+not dead

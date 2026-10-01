@@ -1,0 +1,17 @@
+/* Semantic color tokens.
+ *
+ * Placeholder values for Phase 1 bootstrap; replaced by the APCA-validated
+ * token matrix in Phase 3. Components must consume only semantic tokens.
+ */
+:root {
+  --ui-color-surface: white;
+  --ui-color-surface-raised: white;
+  --ui-color-text: black;
+  --ui-color-text-muted: gray;
+  --ui-color-border: gray;
+  --ui-color-accent: blue;
+  --ui-color-danger: red;
+  --ui-focus-ring: blue;
+
+  color-scheme: light dark;
+}

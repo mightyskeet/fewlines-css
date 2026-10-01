@@ -1,0 +1,10 @@
+{
+  "name": "@fewlines/docs",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Static HTML documentation site for @fewlines/css.",
+  "scripts": {
+    "dev": "npx serve .",
+    "lint": "echo 'no lint for static html yet'"
+  }
+}

@@ -1,0 +1,6 @@
+/* Motion tokens (PROJECT_SPEC.md, раздел 12). */
+:root {
+  --ui-duration-fast: 120ms;
+  --ui-duration-normal: 180ms;
+  --ui-duration-slow: 260ms;
+}

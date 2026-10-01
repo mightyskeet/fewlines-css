@@ -1,0 +1,27 @@
+/* Button component.
+ *
+ * Native basis: <button>, <a>, native states (:hover, :focus-visible, :active, :disabled).
+ * Full implementation in Phase 5 (step 16); this is the canonical skeleton.
+ */
+.ui-button {
+  font: inherit;
+  color: var(--ui-color-text);
+  background: var(--ui-color-surface-raised);
+  border: 1px solid var(--ui-color-border);
+  border-radius: 0.25rem;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
+
+.ui-button:hover {
+  border-color: var(--ui-color-accent);
+}
+
+.ui-button:active {
+  transform: translateY(1px);
+}
+
+.ui-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

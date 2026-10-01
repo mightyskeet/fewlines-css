@@ -1,0 +1,34 @@
+{
+  "name": "@fewlines/css",
+  "version": "0.1.0",
+  "description": "Platform-native CSS UI system. Zero runtime JavaScript.",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "exports": {
+    ".": {
+      "default": "./dist/index.css"
+    },
+    "./tokens": {
+      "default": "./dist/tokens/index.css"
+    },
+    "./components/*": {
+      "default": "./dist/components/*"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "node build.mjs",
+    "lint": "stylelint \"src/**/*.css\""
+  },
+  "devDependencies": {
+    "lightningcss-cli": "^1.33.0",
+    "stylelint": "^16.25.0",
+    "stylelint-config-standard": "^40.0.0"
+  }
+}
