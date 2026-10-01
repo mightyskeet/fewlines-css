@@ -13,9 +13,9 @@
  *
  * States come from the platform:
  *   details[open] — native attribute;
- *   ::details-content — styles the content box (Chrome 131+, Safari 18.2+);
- *     used only for the entry animation inside @supports, the component is
- *     fully functional without it (content simply appears).
+ *   ::details-content — styles the content box (Chrome 131+, FF 143+,
+ *     Safari 18.4+); used only for the entry animation inside @supports,
+ *     the component is fully functional without it (content simply appears).
  *   summary::-webkit-details-marker — legacy Safari marker, hidden for the
  *     custom chevron; modern engines use ::marker.
  */
@@ -85,9 +85,18 @@
 }
 
 /* Entry animation: ::details-content is progressive enhancement
- * (Chrome 131+, Safari 18.2+; Firefox does not support it yet). Without
- * support the content appears instantly — the component stays usable. */
-@supports selector(::details-content) {
+ * (Chrome 131+, FF 143+, Safari 18.4+). Animating block-size between 0 and
+ * auto requires interpolate-size: allow-keywords (Chrome 129+ only) —
+ * without it the transition snaps discretely at 50% duration, which reads
+ * as a flicker. interpolate-size is inherited, so it is declared on :root
+ * inside the same @supports gate: engines without it keep the instant
+ * (fully usable) behavior. @starting-style provides the from-state for the
+ * opening transition. */
+@supports selector(::details-content) and (interpolate-size: allow-keywords) {
+  :root {
+    interpolate-size: allow-keywords;
+  }
+
   .ui-accordion::details-content {
     block-size: 0;
     overflow: hidden;
@@ -99,6 +108,14 @@
   .ui-accordion[open]::details-content {
     block-size: auto;
   }
+
+  /* From-state for the opening transition (native discrete switch of
+   * content-visibility is smoothed by allow-discrete above). */
+  @starting-style {
+    .ui-accordion[open]::details-content {
+      block-size: 0;
+    }
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -107,8 +124,9 @@
     transition: none;
   }
 
-  @supports selector(::details-content) {
-    .ui-accordion::details-content {
+  @supports selector(::details-content) and (interpolate-size: allow-keywords) {
+    .ui-accordion::details-content,
+    .ui-accordion[open]::details-content {
       transition: none;
     }
   }

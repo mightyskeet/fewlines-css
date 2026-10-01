@@ -61,9 +61,10 @@
         <h2>Native basis</h2>
         <p>
           <code>&lt;details&gt;</code>/<code>&lt;summary&gt;</code> — native disclosure widget;
-          <code>details[open]</code> is the native state attribute; Enter/Space toggles natively;
-          <code>::details-content</code> (Chrome 131+, Safari 18.2+) is used only for the entry
-          animation inside <code>@supports</code>.
+          <code>details[open]</code> is the native state attribute; Enter/Space toggles natively.
+          Expand/collapse animation is on by default via <code>::details-content</code> +
+          <code>interpolate-size: allow-keywords</code> (Chrome/Edge 129+); without support the
+          content appears instantly.
         </p>
       </section>
 
@@ -117,7 +118,8 @@
         </div>
         <p>
           The native <code>name</code> attribute on <code>&lt;details&gt;</code> makes the group
-          exclusive — core adds nothing.
+          exclusive — core adds nothing. When switching, one block closes while the other opens:
+          both animate simultaneously, so the content below does not flicker.
         </p>
       </section>
 

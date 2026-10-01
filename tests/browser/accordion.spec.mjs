@@ -64,3 +64,64 @@ test('summary is reachable via Tab and exposes disclosure semantics', async ({ p
   const open = await page.locator('#accordion-first').evaluate((el) => el.open);
   expect(open).toBe(true);
 });
+
+test('expand animation is on by default when the engine supports it', async ({ page }) => {
+  const details = page.locator('#accordion-first');
+
+  const supported = await details.evaluate(
+    (el) =>
+      CSS.supports('selector(::details-content)') &&
+      CSS.supports('interpolate-size', 'allow-keywords'),
+  );
+
+  await page.click('#accordion-summary-first');
+  await expect(details).toHaveAttribute('open');
+
+  if (supported) {
+    // Behavioral check: block-size must interpolate over frames, not snap.
+    // Without interpolate-size the height jumps 0 -> full in one frame.
+    const frames = await details.evaluate((el) => {
+      el.open = false;
+      return new Promise((resolve) => {
+        requestAnimationFrame(() => {
+          el.open = true;
+          const samples = [];
+          const t0 = performance.now();
+          const tick = () => {
+            const t = performance.now() - t0;
+            samples.push(getComputedStyle(el, '::details-content').blockSize);
+            if (t < 120) requestAnimationFrame(tick);
+            else resolve(samples);
+          };
+          requestAnimationFrame(tick);
+        });
+      });
+    });
+
+    const unique = new Set(frames);
+    // Interpolation produces several distinct intermediate heights; the
+    // first sampled frame may already be past 0 (rAF timing), so we assert
+    // the animation is progressive rather than a single-frame snap.
+    expect(unique.size).toBeGreaterThan(2);
+    expect(Number.parseFloat(frames.at(-1))).toBeGreaterThan(Number.parseFloat(frames[0]));
+  } else {
+    // Graceful degradation: no animation, content appears instantly.
+    const visible = await details.locator('.ui-accordion-content').isVisible();
+    expect(visible).toBe(true);
+  }
+});
+
+test('exclusive group: opening one closes the other', async ({ page }) => {
+  await page.goto('/accordion.html');
+
+  const a = page.locator('.example details[name="faq"]').first();
+  const b = page.locator('.example details[name="faq"]').nth(1);
+
+  await a.locator('summary').click();
+  await expect(a).toHaveAttribute('open');
+  await expect(b).not.toHaveAttribute('open');
+
+  await b.locator('summary').click();
+  await expect(b).toHaveAttribute('open');
+  await expect(a).not.toHaveAttribute('open');
+});
