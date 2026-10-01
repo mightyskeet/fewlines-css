@@ -68,18 +68,17 @@ test('summary is reachable via Tab and exposes disclosure semantics', async ({ p
 test('expand animation is on by default when the engine supports it', async ({ page }) => {
   const details = page.locator('#accordion-first');
 
-  const supported = await details.evaluate(
-    (el) =>
-      CSS.supports('selector(::details-content)') &&
-      CSS.supports('interpolate-size', 'allow-keywords'),
-  );
+  const supported = await details.evaluate((el) => CSS.supports('selector(::details-content)'));
 
   await page.click('#accordion-summary-first');
   await expect(details).toHaveAttribute('open');
 
   if (supported) {
-    // Behavioral check: block-size must interpolate over frames, not snap.
-    // Without interpolate-size the height jumps 0 -> full in one frame.
+    // Behavioral check: the content box must grow over frames, not snap.
+    // The grid track interpolates between minmax(0, 0fr) and minmax(0, 1fr);
+    // a single-frame jump would mean the track is not animating. Layout
+    // height is sampled — computed style serialization differs per engine
+    // (e.g. Firefox reports "auto" for the pseudo's block-size).
     const frames = await details.evaluate((el) => {
       el.open = false;
       return new Promise((resolve) => {
@@ -89,7 +88,7 @@ test('expand animation is on by default when the engine supports it', async ({ p
           const t0 = performance.now();
           const tick = () => {
             const t = performance.now() - t0;
-            samples.push(getComputedStyle(el, '::details-content').blockSize);
+            samples.push(el.getBoundingClientRect().height);
             if (t < 120) requestAnimationFrame(tick);
             else resolve(samples);
           };
@@ -109,6 +108,23 @@ test('expand animation is on by default when the engine supports it', async ({ p
     const visible = await details.locator('.ui-accordion-content').isVisible();
     expect(visible).toBe(true);
   }
+});
+
+test('closed accordion has no phantom height (minmax(0, 0fr) floor)', async ({ page }) => {
+  const details = page.locator('#accordion-first');
+
+  const supported = await details.evaluate((el) => CSS.supports('selector(::details-content)'));
+  if (!supported) return;
+
+  // Closed resting state: the summary + border only. The content padding
+  // must not hold the grid track open (a plain 0fr track would).
+  const closedHeight = await details.evaluate(
+    (el) => el.getBoundingClientRect().height
+  );
+  const summaryHeight = await details.locator('summary').evaluate(
+    (el) => el.getBoundingClientRect().height
+  );
+  expect(closedHeight).toBeLessThanOrEqual(summaryHeight + 2);
 });
 
 test('exclusive group: opening one closes the other', async ({ page }) => {

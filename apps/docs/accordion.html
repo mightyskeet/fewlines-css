@@ -63,8 +63,9 @@
           <code>&lt;details&gt;</code>/<code>&lt;summary&gt;</code> — native disclosure widget;
           <code>details[open]</code> is the native state attribute; Enter/Space toggles natively.
           Expand/collapse animation is on by default via <code>::details-content</code> +
-          <code>interpolate-size: allow-keywords</code> (Chrome/Edge 129+); without support the
-          content appears instantly.
+          animated grid tracks (<code>minmax(0, 0fr) → minmax(0, 1fr)</code>) — it works in all
+          engines that support <code>::details-content</code> (Chrome 131+, Firefox 143+,
+          Safari 18.4+); without it the content appears instantly.
         </p>
       </section>
 
