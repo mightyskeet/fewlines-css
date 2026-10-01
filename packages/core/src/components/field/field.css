@@ -54,6 +54,20 @@
   resize: block;
 }
 
+/* Textarea autosize: field-sizing: content is a progressive enhancement
+ * (compatibility notes: Chrome 123+, FF 152+, Safari 26.2+). Applied by
+ * default inside @supports; the component is fully usable without it
+ * (fixed size from rows attribute). Opt-out: data-field-sizing='fixed'.
+ * Bounds: min 3lh (readable empty state), max 50vh (page stays scrollable). */
+@supports (field-sizing: content) {
+  .ui-textarea:not([data-field-sizing='fixed']) {
+    field-sizing: content;
+    min-block-size: 3lh;
+    max-block-size: 50vh;
+    overflow: auto;
+  }
+}
+
 .ui-input:disabled,
 .ui-textarea:disabled,
 .ui-select:disabled {

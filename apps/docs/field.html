@@ -102,6 +102,34 @@
       </section>
 
       <section>
+        <h2>Textarea autosize</h2>
+        <div class="example">
+          <label class="ui-field">
+            <span class="ui-field-label">Message (autosize)</span>
+            <textarea
+              class="ui-textarea"
+              placeholder="Type — the field grows with content"
+            ></textarea>
+          </label>
+          <label class="ui-field">
+            <span class="ui-field-label">Message (fixed, opt-out)</span>
+            <textarea
+              class="ui-textarea"
+              rows="3"
+              data-field-sizing="fixed"
+              placeholder="Fixed size"
+            ></textarea>
+          </label>
+        </div>
+        <p>
+          Progressive enhancement (<code>field-sizing: content</code>): the textarea grows with
+          content, bounded by <code>min-block-size: 3lh</code> and
+          <code>max-block-size: 50vh</code>. Without <code>field-sizing</code> support the size
+          comes from <code>rows</code>. Opt-out: <code>data-field-sizing="fixed"</code>.
+        </p>
+      </section>
+
+      <section>
         <h2>Validation states</h2>
         <div class="example">
           <form>

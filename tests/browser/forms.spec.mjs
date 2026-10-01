@@ -77,6 +77,30 @@ test('hint is linked via aria-describedby', async ({ page }) => {
   }
 });
 
+test('textarea autosize grows with content (field-sizing enhancement)', async ({ page }) => {
+  const textarea = page.locator('#input-textarea');
+
+  const before = await textarea.evaluate((el) => el.getBoundingClientRect().height);
+
+  // Fill with many lines: with field-sizing: content the height grows.
+  await textarea.fill(Array.from({ length: 12 }, (_, i) => `line ${i + 1}`).join('\n'));
+  const after = await textarea.evaluate((el) => el.getBoundingClientRect().height);
+
+  // field-sizing is a progressive enhancement: growth is asserted only when
+  // the engine supports it (compatibility notes).
+  const supported = await textarea.evaluate(
+    (el) => CSS.supports('field-sizing', 'content') && getComputedStyle(el).fieldSize !== 'fixed',
+  );
+  if (supported) {
+    expect(after).toBeGreaterThan(before);
+    // Bounded: never exceeds 50vh.
+    const max = await textarea.evaluate((el) => window.innerHeight * 0.5);
+    expect(after).toBeLessThanOrEqual(max + 1);
+  } else {
+    expect(after).toBeGreaterThanOrEqual(before);
+  }
+});
+
 test('focus-visible ring appears on keyboard focus', async ({ page }) => {
   await page.keyboard.press('Tab');
   const first = page.locator('#btn-secondary');

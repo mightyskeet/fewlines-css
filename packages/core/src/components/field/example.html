@@ -37,8 +37,12 @@
 
     <h2>Textarea and select</h2>
     <label class="ui-field">
-      <span class="ui-field-label">Message</span>
-      <textarea class="ui-textarea" rows="3"></textarea>
+      <span class="ui-field-label">Message (autosize default)</span>
+      <textarea class="ui-textarea" placeholder="Grows with content"></textarea>
+    </label>
+    <label class="ui-field">
+      <span class="ui-field-label">Message (fixed opt-out)</span>
+      <textarea class="ui-textarea" rows="3" data-field-sizing="fixed"></textarea>
     </label>
     <label class="ui-field">
       <span class="ui-field-label">Option</span>
