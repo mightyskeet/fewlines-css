@@ -26,6 +26,9 @@
         margin-block: var(--ui-space-md);
         background: var(--ui-color-surface-raised);
       }
+      .theme-toggle {
+        float: inline-end;
+      }
       pre {
         overflow-x: auto;
         background: var(--ui-color-surface-sunken);
@@ -39,6 +42,7 @@
     <header>
       <h1>Popover</h1>
       <p>Non-modal overlay: menus, tooltips, small panels. Light dismiss and Escape are native.</p>
+      <button class="ui-button theme-toggle" type="button" id="theme-toggle">Toggle theme</button>
     </header>
 
     <nav class="site-nav" aria-label="Documentation">
@@ -133,5 +137,17 @@
     <footer>
       <p>Full contract: <code>packages/core/src/components/popover/popover.md</code></p>
     </footer>
+    <script>
+      // Host concern (theme notes 7.2): persistence and override are the
+      // host application's job; core ships no runtime JS.
+      const root = document.documentElement;
+      const btn = document.getElementById('theme-toggle');
+      btn.addEventListener('click', () => {
+        const current =
+          root.getAttribute('data-theme') ??
+          (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        root.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
+      });
+    </script>
   </body>
 </html>
