@@ -96,6 +96,45 @@ try {
   /* dist missing already reported */
 }
 
+// 6. Build artifact sanity: the theme system must survive bundling.
+// If Lightning CSS downlevels light-dark() (its browser data can lag the
+// matrix), it emits @media (prefers-color-scheme: ...) fallback blocks and
+// drops the function — which breaks the data-theme override contract
+// (theme notes). Both signals are checked.
+try {
+  const indexCss = readFileSync(join(distRoot, 'index.css'), 'utf8');
+  if (indexCss.includes('light-dark(')) {
+    pass('light-dark() survives bundling');
+  } else {
+    fail('light-dark() missing from dist — theme tokens were downleveled');
+  }
+  if (indexCss.includes('@media (prefers-color-scheme')) {
+    fail('prefers-color-scheme media fallback found in dist — light-dark() was downleveled');
+  } else {
+    pass('no prefers-color-scheme media fallback in dist');
+  }
+} catch {
+  /* dist missing already reported */
+}
+
+// 7. Palette encapsulation: only src/tokens may define or reference
+// --ui-palette-*; components and base consume semantic --ui-* tokens only
+// (PROJECT_SPEC.md 7.1, theme notes).
+try {
+  let paletteRefs = 0;
+  for (const layerDir of ['base', 'components']) {
+    walk(join(coreRoot, 'src', layerDir), (file) => {
+      if (file.endsWith('.css') && readFileSync(file, 'utf8').includes('--ui-palette-')) {
+        paletteRefs += 1;
+        fail(`raw palette token reference: ${file}`);
+      }
+    });
+  }
+  if (paletteRefs === 0) pass('components/base consume only semantic tokens');
+} catch {
+  /* core src missing — reported by other checks */
+}
+
 console.log('');
 if (violations > 0) {
   console.error(`${violations} violation(s)`);

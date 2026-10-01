@@ -16,10 +16,5 @@
   "devDependencies": {
     "apca-w3": "^0.1.9",
     "prettier": "^3.6.2"
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "lightningcss-cli"
-    ]
   }
 }
