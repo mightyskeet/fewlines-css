@@ -32,21 +32,21 @@
 
   /* Accent */
   --ui-color-accent: light-dark(var(--ui-palette-accent-600), var(--ui-palette-accent-300));
-  --ui-color-accent-strong: light-dark(var(--ui-palette-accent-700), var(--ui-palette-accent-500));
-  --ui-color-accent-surface: light-dark(var(--ui-palette-accent-500), var(--ui-palette-accent-700));
+  --ui-color-accent-strong: light-dark(var(--ui-palette-accent-700), var(--ui-palette-accent-200));
+  --ui-color-accent-surface: light-dark(var(--ui-palette-accent-500), var(--ui-palette-accent-300));
   --ui-color-on-accent: light-dark(var(--ui-palette-neutral-0), var(--ui-palette-neutral-950));
 
   /* Danger */
   --ui-color-danger: light-dark(var(--ui-palette-danger-600), var(--ui-palette-danger-300));
-  --ui-color-danger-strong: light-dark(var(--ui-palette-danger-700), var(--ui-palette-danger-500));
-  --ui-color-danger-surface: light-dark(var(--ui-palette-danger-500), var(--ui-palette-danger-700));
+  --ui-color-danger-strong: light-dark(var(--ui-palette-danger-700), var(--ui-palette-danger-200));
+  --ui-color-danger-surface: light-dark(var(--ui-palette-danger-500), var(--ui-palette-danger-300));
   --ui-color-on-danger: light-dark(var(--ui-palette-neutral-0), var(--ui-palette-neutral-950));
 
   /* Success */
   --ui-color-success: light-dark(var(--ui-palette-success-600), var(--ui-palette-success-300));
   --ui-color-success-surface: light-dark(
     var(--ui-palette-success-500),
-    var(--ui-palette-success-700)
+    var(--ui-palette-success-300)
   );
   --ui-color-on-success: light-dark(var(--ui-palette-neutral-0), var(--ui-palette-neutral-950));
 

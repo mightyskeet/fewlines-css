@@ -4,6 +4,7 @@
   "private": true,
   "description": "Browser, visual, accessibility and APCA test harness for @fewlines/css.",
   "scripts": {
-    "lint": "echo 'tests lint configured in Phase 6'"
+    "lint": "echo 'tests lint configured in Phase 6'",
+    "test:apca": "node apca/check.mjs"
   }
 }

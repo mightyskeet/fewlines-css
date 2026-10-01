@@ -10,7 +10,7 @@
   --ui-palette-neutral-50: oklch(97% 0.003 260deg);
   --ui-palette-neutral-100: oklch(94% 0.005 260deg);
   --ui-palette-neutral-200: oklch(87% 0.008 260deg);
-  --ui-palette-neutral-300: oklch(76% 0.01 260deg);
+  --ui-palette-neutral-300: oklch(78% 0.01 260deg);
   --ui-palette-neutral-400: oklch(60% 0.012 260deg);
   --ui-palette-neutral-500: oklch(48% 0.012 260deg);
   --ui-palette-neutral-600: oklch(38% 0.012 260deg);
@@ -20,20 +20,23 @@
   --ui-palette-neutral-950: oklch(9% 0.005 260deg);
 
   /* Accent — blue */
-  --ui-palette-accent-300: oklch(75% 0.11 250deg);
-  --ui-palette-accent-500: oklch(58% 0.17 255deg);
-  --ui-palette-accent-600: oklch(50% 0.18 258deg);
-  --ui-palette-accent-700: oklch(42% 0.16 260deg);
+  --ui-palette-accent-200: oklch(92% 0.11 250deg);
+  --ui-palette-accent-300: oklch(86% 0.11 250deg);
+  --ui-palette-accent-500: oklch(56% 0.17 255deg);
+  --ui-palette-accent-600: oklch(48% 0.18 258deg);
+  --ui-palette-accent-700: oklch(38% 0.16 260deg);
 
   /* Danger — red */
-  --ui-palette-danger-300: oklch(72% 0.14 25deg);
+  --ui-palette-danger-200: oklch(94% 0.08 25deg);
+  --ui-palette-danger-300: oklch(90% 0.1 25deg);
   --ui-palette-danger-500: oklch(55% 0.19 27deg);
   --ui-palette-danger-600: oklch(48% 0.19 28deg);
-  --ui-palette-danger-700: oklch(40% 0.16 29deg);
+  --ui-palette-danger-700: oklch(36% 0.16 29deg);
 
   /* Success — green */
-  --ui-palette-success-300: oklch(75% 0.13 150deg);
+  --ui-palette-success-200: oklch(90% 0.1 150deg);
+  --ui-palette-success-300: oklch(84% 0.13 150deg);
   --ui-palette-success-500: oklch(55% 0.16 150deg);
   --ui-palette-success-600: oklch(47% 0.15 151deg);
-  --ui-palette-success-700: oklch(39% 0.13 152deg);
+  --ui-palette-success-700: oklch(35% 0.13 152deg);
 }
