@@ -1,0 +1,24 @@
+<!doctype html>
+<!-- Dialog examples. Inline onclick is example-only; core has no runtime JS. -->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Dialog examples</title>
+    <link rel="stylesheet" href="../../../../dist/index.css" />
+  </head>
+  <body>
+    <h1>Dialog</h1>
+
+    <button class="ui-button" type="button" data-variant="primary" onclick="dlg.showModal()">
+      Open modal dialog
+    </button>
+
+    <dialog class="ui-dialog" id="dlg">
+      <h2>Confirm action</h2>
+      <p>This is a native modal dialog. Press Escape or the button to close.</p>
+      <form method="dialog">
+        <button class="ui-button" type="submit">Close</button>
+      </form>
+    </dialog>
+  </body>
+</html>

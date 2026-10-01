@@ -1,0 +1,51 @@
+<!doctype html>
+<!-- Field/Input examples. -->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Field examples</title>
+    <link rel="stylesheet" href="../../../../dist/index.css" />
+  </head>
+  <body>
+    <h1>Field / Input</h1>
+
+    <h2>Basic field</h2>
+    <label class="ui-field">
+      <span class="ui-field-label">Email</span>
+      <input class="ui-input" type="email" placeholder="you@example.com" />
+      <span class="ui-field-description">We never share your email.</span>
+    </label>
+
+    <h2>Required with native validation</h2>
+    <form>
+      <label class="ui-field">
+        <span class="ui-field-label">Name (required)</span>
+        <input class="ui-input" type="text" required />
+      </label>
+      <button class="ui-button" type="submit" data-variant="primary">Submit</button>
+    </form>
+
+    <h2>States</h2>
+    <label class="ui-field">
+      <span class="ui-field-label">Disabled</span>
+      <input class="ui-input" type="text" disabled value="Disabled value" />
+    </label>
+    <label class="ui-field">
+      <span class="ui-field-label">Read-only</span>
+      <input class="ui-input" type="text" readonly value="Read-only value" />
+    </label>
+
+    <h2>Textarea and select</h2>
+    <label class="ui-field">
+      <span class="ui-field-label">Message</span>
+      <textarea class="ui-textarea" rows="3"></textarea>
+    </label>
+    <label class="ui-field">
+      <span class="ui-field-label">Option</span>
+      <select class="ui-select">
+        <option>One</option>
+        <option>Two</option>
+      </select>
+    </label>
+  </body>
+</html>

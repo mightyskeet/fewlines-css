@@ -1,0 +1,97 @@
+/* Popover component.
+ *
+ * Native basis: Popover API — declarative triggers (popovertarget),
+ * light dismiss, Escape, top-layer, :popover-open. Zero JS (PROJECT_SPEC.md, 4.1).
+ *
+ * Canonical structure:
+ *   <button class="ui-button" popovertarget="p1">Trigger</button>
+ *   <div class="ui-popover" id="p1" popover>…</div>
+ *
+ * Positioning priority (PROJECT_SPEC.md, раздел 11):
+ *   1. CSS Anchor Positioning when supported (@supports gate);
+ *   2. plain CSS positioning fallback (works everywhere in the matrix).
+ * No positioning runtime in core.
+ *
+ * Anchor contract:
+ *   - implicit anchor: popovertarget button is the anchor (native, Chrome 133+,
+ *     FF 147+, Safari 26+); explicit: anchor-name on trigger + position-anchor
+ *     on popover;
+ *   - fallback positions: block-end then block-start (flip), inline centered;
+ *   - collision handling: NOT provided — position-visibility: anchor-valid is
+ *     out of matrix (compatibility notes); host picks placement explicitly.
+ */
+
+.ui-popover {
+  color: var(--ui-color-text);
+  background: var(--ui-color-surface-raised);
+  border: 1px solid var(--ui-color-border);
+  border-radius: var(--ui-radius-md);
+  padding: var(--ui-space-md);
+  box-shadow: 0 0.25rem 1rem color-mix(in oklab, black 15%, transparent);
+  margin: auto;
+  inset: unset;
+
+  /* Fallback positioning: centered in viewport (no anchor support). */
+  position: fixed;
+  inset-block-start: 50%;
+  inset-inline-start: 50%;
+  translate: -50% -50%;
+}
+
+/* Entry animation via @starting-style + allow-discrete (same as dialog). */
+.ui-popover:popover-open {
+  transition:
+    opacity var(--ui-duration-fast) ease,
+    translate var(--ui-duration-fast) ease,
+    overlay var(--ui-duration-fast) ease allow-discrete,
+    display var(--ui-duration-fast) ease allow-discrete;
+}
+
+@starting-style {
+  .ui-popover:popover-open {
+    opacity: 0;
+    translate: -50% calc(-50% + 0.25rem);
+  }
+}
+
+/* Anchor positioning enhancement — single canonical implementation,
+ * gated by @supports (compatibility notes: partial support).
+ * stylelint-disable-next-line declaration-property-value-no-unknown --
+ * position-area/position-try-fallbacks values are valid CSS Anchor
+ * Positioning syntax; stylelint's property database does not know them yet. */
+@supports (anchor-name: --ui-anchor) {
+  .ui-popover {
+    /* stylelint-disable declaration-property-value-no-unknown */
+    position: fixed;
+    inset: unset;
+    translate: none;
+    position-anchor: --ui-popover-anchor;
+    position-area: block-end span-inline;
+    position-try-fallbacks: block-start span-inline;
+    /* stylelint-enable declaration-property-value-no-unknown */
+    margin-block-start: var(--ui-space-2xs);
+  }
+
+  /* Trigger opts in by declaring the anchor name. */
+  .ui-popover-trigger {
+    anchor-name: --ui-popover-anchor;
+  }
+
+  @starting-style {
+    .ui-popover:popover-open {
+      translate: 0 0.25rem;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-popover:popover-open {
+    transition: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .ui-popover {
+    forced-color-adjust: auto;
+  }
+}

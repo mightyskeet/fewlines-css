@@ -15,8 +15,41 @@
     <main>
       <section>
         <h2>Button</h2>
-        <button class="ui-button" type="button">Default</button>
+        <button class="ui-button" type="button">Secondary</button>
+        <button class="ui-button" type="button" data-variant="primary">Primary</button>
+        <button class="ui-button" type="button" data-variant="destructive">Delete</button>
         <button class="ui-button" type="button" disabled>Disabled</button>
+      </section>
+
+      <section>
+        <h2>Field</h2>
+        <label class="ui-field">
+          <span class="ui-field-label">Email</span>
+          <input class="ui-input" type="email" placeholder="you@example.com" />
+          <span class="ui-field-description">We never share your email.</span>
+        </label>
+      </section>
+
+      <section>
+        <h2>Dialog</h2>
+        <button class="ui-button" type="button" onclick="dlg.showModal()">Open dialog</button>
+        <dialog class="ui-dialog" id="dlg">
+          <h3>Confirm</h3>
+          <p>Native modal dialog. Escape or the button closes it.</p>
+          <form method="dialog">
+            <button class="ui-button" type="submit">Close</button>
+          </form>
+        </dialog>
+      </section>
+
+      <section>
+        <h2>Popover</h2>
+        <button class="ui-button ui-popover-trigger" type="button" popovertarget="pop">
+          Options
+        </button>
+        <div class="ui-popover" id="pop" popover>
+          <p>Anchor-positioned popover (fallback: centered).</p>
+        </div>
       </section>
     </main>
 

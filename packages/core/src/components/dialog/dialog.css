@@ -1,0 +1,71 @@
+/* Dialog component.
+ *
+ * Native basis: <dialog> element — modal/non-modal, top-layer, ::backdrop,
+ * native Escape handling, native focus trapping, form method="dialog".
+ * Zero JS required (PROJECT_SPEC.md, 4.1).
+ *
+ * Canonical structure:
+ *   <dialog class="ui-dialog">
+ *     …content…
+ *     <form method="dialog"><button class="ui-button">Close</button></form>
+ *   </dialog>
+ *
+ * Open state: dialog[open] — native attribute, no classes.
+ * Modal state: dialog:modal — native pseudo-class.
+ */
+
+.ui-dialog {
+  color: var(--ui-color-text);
+  background: var(--ui-color-surface-raised);
+  border: 1px solid var(--ui-color-border);
+  border-radius: var(--ui-radius-lg);
+  padding: var(--ui-space-lg);
+  max-block-size: min(80vh, 100%);
+  max-inline-size: min(90vw, 32rem);
+  margin: auto;
+}
+
+/* Entry animation: @starting-style + transition-behavior (compatibility notes).
+ * display transition lets the dialog animate on open/close without JS. */
+.ui-dialog[open] {
+  transition:
+    opacity var(--ui-duration-normal) ease,
+    transform var(--ui-duration-normal) ease,
+    overlay var(--ui-duration-normal) ease allow-discrete,
+    display var(--ui-duration-normal) ease allow-discrete;
+}
+
+@starting-style {
+  .ui-dialog[open] {
+    opacity: 0;
+    transform: translateY(0.5rem);
+  }
+}
+
+/* Backdrop — native pseudo-element, top-layer. */
+.ui-dialog::backdrop {
+  background: color-mix(in oklab, black 50%, transparent);
+  transition:
+    opacity var(--ui-duration-normal) ease,
+    overlay var(--ui-duration-normal) ease allow-discrete,
+    display var(--ui-duration-normal) ease allow-discrete;
+}
+
+@starting-style {
+  .ui-dialog[open]::backdrop {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-dialog[open],
+  .ui-dialog::backdrop {
+    transition: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .ui-dialog {
+    forced-color-adjust: auto;
+  }
+}

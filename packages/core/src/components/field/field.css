@@ -1,0 +1,108 @@
+/* Field / Input component.
+ *
+ * Native basis: <input>, <label>, <fieldset>/<legend>, native form validation
+ * states. No JS (PROJECT_SPEC.md, 4.1, 4.2).
+ *
+ * Canonical structure:
+ *   <label class="ui-field">
+ *     <span class="ui-field-label">…</span>
+ *     <input class="ui-input" …>
+ *   </label>
+ *
+ * States come from the platform:
+ *   :hover, :focus-visible (base layer), :disabled, :read-only,
+ *   :required, :valid, :invalid, :placeholder-shown.
+ *
+ * :invalid is gated behind :user-invalid-style intent: styling applies via
+ * :user-invalid where supported so fields are not flagged red before the user
+ * interacts. Lightning CSS downlevels :user-invalid to :invalid where needed.
+ */
+
+.ui-field {
+  display: grid;
+  gap: var(--ui-space-3xs);
+}
+
+.ui-field-label {
+  font-size: var(--ui-font-size-sm);
+  font-weight: var(--ui-font-weight-medium);
+  color: var(--ui-color-text);
+}
+
+/* Hint / error text bound via aria-describedby */
+.ui-field-description {
+  font-size: var(--ui-font-size-sm);
+  color: var(--ui-color-text-muted);
+}
+
+.ui-input,
+.ui-textarea,
+.ui-select {
+  font: inherit;
+  color: var(--ui-color-text);
+  background: var(--ui-color-surface-raised);
+  border: 1px solid var(--ui-color-border);
+  border-radius: var(--ui-radius-sm);
+  padding-block: var(--ui-space-2xs);
+  padding-inline: var(--ui-space-sm);
+  min-block-size: 2.25rem;
+  accent-color: var(--ui-color-accent);
+}
+
+.ui-textarea {
+  min-block-size: auto;
+  resize: block;
+}
+
+.ui-input:disabled,
+.ui-textarea:disabled,
+.ui-select:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Validation states — user-invalid avoids premature red before interaction. */
+.ui-input:user-invalid,
+.ui-textarea:user-invalid {
+  border-color: var(--ui-color-danger);
+}
+
+.ui-input:user-valid,
+.ui-textarea:user-valid {
+  border-color: var(--ui-color-success);
+}
+
+.ui-input:hover:not(:disabled, :read-only),
+.ui-textarea:hover:not(:disabled, :read-only),
+.ui-select:hover:not(:disabled) {
+  border-color: var(--ui-color-border-strong);
+}
+
+/* Fallback for engines without :user-invalid/:user-valid: style :invalid only
+ * when the user has interacted is not expressible; keep the neutral border
+ * and rely on native validation bubble instead. */
+@supports not selector(:user-invalid) {
+  /* Intentionally no :invalid styling — premature red is worse than none. */
+}
+
+/* Placeholder */
+.ui-input::placeholder,
+.ui-textarea::placeholder {
+  color: var(--ui-color-text-muted);
+  opacity: 1;
+}
+
+/* field-sizing: content is a progressive enhancement (compatibility notes) */
+@supports (field-sizing: content) {
+  .ui-input[data-field-sizing='content'] {
+    field-sizing: content;
+  }
+}
+
+@media (forced-colors: active) {
+  .ui-input,
+  .ui-textarea,
+  .ui-select {
+    forced-color-adjust: auto;
+  }
+}

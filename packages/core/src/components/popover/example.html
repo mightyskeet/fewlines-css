@@ -1,0 +1,24 @@
+<!doctype html>
+<!-- Popover examples. -->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Popover examples</title>
+    <link rel="stylesheet" href="../../../../dist/index.css" />
+  </head>
+  <body>
+    <h1>Popover</h1>
+
+    <h2>Anchor-positioned (when supported)</h2>
+    <button class="ui-button ui-popover-trigger" type="button" popovertarget="p1">Options</button>
+    <div class="ui-popover" id="p1" popover>
+      <p>Positioned below the trigger via CSS Anchor Positioning.</p>
+    </div>
+
+    <h2>Centered fallback</h2>
+    <button class="ui-button" type="button" popovertarget="p2">Centered</button>
+    <div class="ui-popover" id="p2" popover>
+      <p>Centered in viewport (no anchor-name on trigger).</p>
+    </div>
+  </body>
+</html>
