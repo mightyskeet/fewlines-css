@@ -66,8 +66,12 @@
     inset: unset;
     translate: none;
     position-anchor: --ui-popover-anchor;
-    position-area: block-end span-inline;
-    position-try-fallbacks: block-start span-inline;
+
+    /* 'center' = centered over the anchor in the inline axis. The 'span-inline'
+     * keyword is rejected by current Chromium (invalid value → property ignored),
+     * see compatibility notes. */
+    position-area: block-end center;
+    position-try-fallbacks: block-start center;
     /* stylelint-enable declaration-property-value-no-unknown */
     margin-block-start: var(--ui-space-2xs);
   }
