@@ -1,14 +1,22 @@
-/* Base typography: apply the system font stack to the document.
+/* Base typography and page colors: apply the system defaults to the document.
  *
- * The --ui-font-* tokens are declared in tokens/typography.css; without this
- * rule the browser renders the UA default (Times New Roman). system-ui is
- * direct use (compatibility notes: Chrome 56+, FF 92+, Safari 11+ — above
- * the matrix floor).
+ * 1. Font: --ui-font-* tokens are declared in tokens/typography.css; without
+ *    this rule the browser renders the UA default (Times New Roman). system-ui
+ *    is direct use (compatibility notes: Chrome 56+, FF 92+, Safari 11+ —
+ *    above the matrix floor).
+ * 2. Page colors: without color/background from semantic tokens the page text
+ *    and canvas come from the UA color-scheme adjustment, which switches
+ *    instantly and never participates in the theme transition. Declaring them
+ *    from tokens makes the whole document animate on data-theme switch
+ *    (tokens/theme-transition.css transitions the custom properties on :root;
+ *    descendants inherit the interpolated values frame by frame).
  *
- * Components use font: inherit, so this single rule covers the whole system.
- * Host applications can override --ui-font-sans to swap the stack.
+ * Components use font: inherit, so these rules cover the whole system.
+ * Host applications can override --ui-font-sans or the color tokens.
  */
 :root {
   font-family: var(--ui-font-sans);
   line-height: var(--ui-line-height-normal);
+  color: var(--ui-color-text);
+  background: var(--ui-color-surface);
 }
