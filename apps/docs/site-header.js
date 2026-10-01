@@ -25,6 +25,7 @@ const PAGES = [
   { href: 'popover.html', label: 'Popover' },
   { href: 'accordion.html', label: 'Accordion' },
   { href: 'alert.html', label: 'Alert' },
+  { href: 'switch.html', label: 'Switch' },
 ];
 
 class SiteHeader extends HTMLElement {

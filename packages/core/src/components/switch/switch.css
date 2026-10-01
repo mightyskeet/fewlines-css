@@ -1,0 +1,118 @@
+/* Switch component.
+ *
+ * Native basis: <input type="checkbox"> — native toggle, native keyboard
+ * (Space), native form participation, native :checked/:disabled states.
+ * The `switch` attribute upgrades the exposed role to `switch` where the
+ * engine supports it (Safari 17.4+, compatibility notes) — progressive
+ * enhancement: without it the control is a native checkbox with identical
+ * behavior and a valid on/off role. No JS, no state classes.
+ *
+ * Visual: appearance:none + custom track/thumb. The thumb is ::before on
+ * the input — not tracked by caniuse; rendering verified empirically
+ * (Chromium, Firefox, WebKit — compatibility notes, 2026-10-01).
+ *
+ * Canonical structure:
+ *   <label class="ui-switch-field">
+ *     <input class="ui-switch" type="checkbox" switch />
+ *     <span class="ui-switch-label">Label</span>
+ *   </label>
+ *
+ * Geometry (box-sizing: border-box):
+ *   track 2.25rem x 1.25rem, 1px border -> padding box 34x18px;
+ *   thumb 0.875rem (14px), inset 0.1875rem (3px) from the padding edge,
+ *   vertical centering via top: 50% + translate. Travel = 34 - 14 - 2*3
+ *   = 14px = 0.875rem, applied as translate on :checked.
+ *
+ * APCA note: thumb/track separation is non-text decoration carried by the
+ * shadow (manual audit per accessibility notes); the on/off state is
+ * carried by thumb position, not by color alone (WCAG 1.4.1).
+ */
+
+.ui-switch-field {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-sm);
+  cursor: pointer;
+}
+
+.ui-switch-field + .ui-switch-field {
+  margin-block-start: var(--ui-space-sm);
+}
+
+.ui-switch {
+  appearance: none;
+  box-sizing: border-box; /* track geometry above depends on it */
+  flex: none;
+  margin: 0;
+  inline-size: 2.25rem;
+  block-size: 1.25rem;
+  border: 1px solid var(--ui-color-border);
+  border-radius: var(--ui-radius-full);
+  background: var(--ui-color-surface-sunken);
+  position: relative;
+  transition:
+    background-color var(--ui-duration-fast) ease,
+    border-color var(--ui-duration-fast) ease;
+}
+
+.ui-switch::before {
+  content: '';
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-start: 0.1875rem;
+  inline-size: 0.875rem;
+  block-size: 0.875rem;
+  border-radius: var(--ui-radius-full);
+  background: var(--ui-color-surface);
+  box-shadow: 0 0.0625rem 0.25rem color-mix(in oklab, black 30%, transparent);
+  translate: 0 -50%;
+  transition: translate var(--ui-duration-fast) ease;
+}
+
+/* Native states */
+.ui-switch:hover {
+  border-color: var(--ui-color-border-strong);
+}
+
+.ui-switch:checked {
+  background: var(--ui-color-accent-surface);
+  border-color: transparent;
+}
+
+.ui-switch:checked::before {
+  translate: 0.875rem -50%;
+}
+
+/* Required consent switches: danger border only after user interaction,
+ * same intent gate as ui-input (Field contract). */
+.ui-switch:user-invalid {
+  border-color: var(--ui-color-danger);
+}
+
+.ui-switch:disabled,
+.ui-switch-field:has(.ui-switch:disabled) {
+  cursor: not-allowed;
+}
+
+.ui-switch:disabled {
+  opacity: 0.5;
+}
+
+/* Forced colors: system colors take over; Highlight marks the on state so
+ * it survives background stripping. */
+@media (forced-colors: active) {
+  .ui-switch {
+    forced-color-adjust: auto;
+  }
+
+  .ui-switch:checked {
+    background: Highlight;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-switch,
+  .ui-switch::before {
+    transition: none;
+  }
+}

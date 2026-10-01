@@ -56,6 +56,10 @@ for (const theme of themes) {
     test(`alerts all variants (${theme})`, async ({ page }) => {
       await expect(page.locator('#alerts')).toHaveScreenshot(`alerts-${theme}.png`);
     });
+
+    test(`switches all states (${theme})`, async ({ page }) => {
+      await expect(page.locator('#switches')).toHaveScreenshot(`switches-${theme}.png`);
+    });
   });
 }
 

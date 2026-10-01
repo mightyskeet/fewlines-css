@@ -45,6 +45,7 @@ override — `data-theme="light|dark"` на корневом элементе. �
 | Popover   | Popover API + anchor positioning | `ui-popover`, `ui-popover-trigger`                 |
 | Accordion | `<details>/<summary>`            | `ui-accordion`, `ui-accordion-summary`             |
 | Alert     | статический контейнер сообщений  | `ui-alert`, `data-variant`, `ui-alert-title/body`  |
+| Switch    | `<input type="checkbox" switch>` | `ui-switch`, `ui-switch-field`, `ui-switch-label`  |
 
 
 `packages/core/src/components/*/[name].md`. Живые примеры: `apps/docs/`.

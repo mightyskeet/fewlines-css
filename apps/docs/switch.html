@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Switch — @fewlines/css</title>
+    <link rel="stylesheet" href="/core.css" />
+    <script src="/site-header.js" defer></script>
+    <style>
+      body {
+        max-inline-size: 60rem;
+        margin-inline: auto;
+        padding-inline: var(--ui-space-xl);
+      }
+      .example {
+        border: 1px solid var(--ui-color-border);
+        border-radius: var(--ui-radius-md);
+        padding: var(--ui-space-md);
+        margin-block: var(--ui-space-md);
+        background: var(--ui-color-surface-raised);
+      }
+      .example form {
+        display: flex;
+        align-items: center;
+        gap: var(--ui-space-md);
+      }
+      pre {
+        overflow-x: auto;
+        background: var(--ui-color-surface-sunken);
+        padding: var(--ui-space-sm);
+        border-radius: var(--ui-radius-md);
+        font-size: 0.875rem;
+      }
+    </style>
+  </head>
+  <body>
+    <site-header>
+      <h1>Switch</h1>
+      <p>Binary on/off choice: settings, consents, modes. Native checkbox behavior — no JS.</p>
+    </site-header>
+
+    <main>
+      <section>
+        <h2>Native basis</h2>
+        <p>
+          <code>&lt;input type="checkbox"&gt;</code> — native toggle, keyboard (Space) and form
+          participation. The <code>switch</code> attribute upgrades the exposed role to
+          <code>switch</code> where supported (Safari 17.4+ today); in other engines the control is
+          a native checkbox with identical behavior. The track and thumb are drawn with
+          <code>appearance: none</code>.
+        </p>
+      </section>
+
+      <section>
+        <h2>Canonical markup</h2>
+        <pre><code>&lt;label class="ui-switch-field"&gt;
+  &lt;input class="ui-switch" type="checkbox" switch /&gt;
+  &lt;span class="ui-switch-label"&gt;Email notifications&lt;/span&gt;
+&lt;/label&gt;</code></pre>
+        <p>
+          The wrapper is an implicit label — clicking the text toggles the control. The label text
+          is the accessible name and must not be removed. Stacked switches get spacing
+          automatically.
+        </p>
+      </section>
+
+      <section>
+        <h2>States</h2>
+        <div class="example">
+          <label class="ui-switch-field">
+            <input class="ui-switch" type="checkbox" switch />
+            <span class="ui-switch-label">Email notifications</span>
+          </label>
+          <label class="ui-switch-field">
+            <input class="ui-switch" type="checkbox" switch checked />
+            <span class="ui-switch-label">Push notifications (on)</span>
+          </label>
+          <label class="ui-switch-field">
+            <input class="ui-switch" type="checkbox" switch disabled />
+            <span class="ui-switch-label">Disabled</span>
+          </label>
+          <label class="ui-switch-field">
+            <input class="ui-switch" type="checkbox" switch checked disabled />
+            <span class="ui-switch-label">Disabled and on</span>
+          </label>
+        </div>
+        <p>
+          States come from the platform: <code>:checked</code>, <code>:hover</code>,
+          <code>:disabled</code>. On state uses the accent surface token; the thumb position — not
+          color alone — carries the state (WCAG 1.4.1).
+        </p>
+      </section>
+
+      <section>
+        <h2>Required consent</h2>
+        <div class="example">
+          <form>
+            <label class="ui-switch-field">
+              <input class="ui-switch" type="checkbox" switch required />
+              <span class="ui-switch-label">I accept the terms</span>
+            </label>
+            <button class="ui-button" type="submit">Continue</button>
+          </form>
+        </div>
+        <p>
+          Submit the empty form: the danger border appears only after interaction
+          (<code>:user-invalid</code>, same intent gate as inputs).
+        </p>
+      </section>
+
+      <section>
+        <h2>Accessibility</h2>
+        <ul>
+          <li>
+            Role is <code>switch</code> in engines with attribute support, native
+            <code>checkbox</code> elsewhere — both are valid on/off roles. Hosts wanting a uniform
+            role today can add <code>role="switch"</code> (native ARIA, no JS).
+          </li>
+          <li>Space toggles natively; the focus ring comes from the base layer.</li>
+          <li>Hints: host adds an element and links it via <code>aria-describedby</code>.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Do not</h2>
+        <ul>
+          <li>
+            No <code>div</code>/<code>button role="switch"</code> + JS emulation — native state,
+            keyboard and forms are lost.
+          </li>
+          <li>No <code>:invalid</code> styling without <code>:user-</code> (Field rule).</li>
+          <li>No size/variant classes — the canonical view is one.</li>
+        </ul>
+      </section>
+    </main>
+
+    <footer>
+      <p>Full contract: <code>packages/core/src/components/switch/switch.md</code></p>
+    </footer>
+  </body>
+</html>
