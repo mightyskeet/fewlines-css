@@ -1,0 +1,42 @@
+<!doctype html>
+<!-- Alert examples. -->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Alert examples</title>
+    <link rel="stylesheet" href="../../../../dist/index.css" />
+  </head>
+  <body>
+    <h1>Alert</h1>
+
+    <h2>Single message (no title)</h2>
+    <div class="ui-alert">A new version of @fewlines/css is available.</div>
+
+    <h2>Variants</h2>
+    <div class="ui-alert">
+      <p class="ui-alert-title">Heads up</p>
+      <p class="ui-alert-body">A new version of @fewlines/css is available.</p>
+    </div>
+    <div class="ui-alert" data-variant="success">
+      <p class="ui-alert-title">Saved</p>
+      <p class="ui-alert-body">Your changes were stored.</p>
+    </div>
+    <div class="ui-alert" data-variant="warning" role="status">
+      <p class="ui-alert-title">Session expiring</p>
+      <p class="ui-alert-body">You will be signed out in 5 minutes.</p>
+    </div>
+    <div class="ui-alert" data-variant="danger" role="alert">
+      <p class="ui-alert-title">Payment failed</p>
+      <p class="ui-alert-body">Card was declined. Try another card.</p>
+    </div>
+
+    <h2>Host content (list inside)</h2>
+    <div class="ui-alert" data-variant="warning" role="alert">
+      <p class="ui-alert-title">Fix 2 validation errors</p>
+      <ul>
+        <li>Email is missing an @.</li>
+        <li>Phone must contain digits only.</li>
+      </ul>
+    </div>
+  </body>
+</html>

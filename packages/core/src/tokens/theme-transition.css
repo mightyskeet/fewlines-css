@@ -119,6 +119,48 @@
   initial-value: white;
 }
 
+@property --ui-color-warning {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: orange;
+}
+
+@property --ui-color-warning-strong {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: orange;
+}
+
+@property --ui-color-success-strong {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: green;
+}
+
+@property --ui-color-accent-tint {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: white;
+}
+
+@property --ui-color-success-tint {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: white;
+}
+
+@property --ui-color-warning-tint {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: white;
+}
+
+@property --ui-color-danger-tint {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: white;
+}
+
 @property --ui-focus-ring {
   syntax: '<color>';
   inherits: true;
@@ -149,6 +191,13 @@
     --ui-color-success var(--ui-duration-slow) ease,
     --ui-color-success-surface var(--ui-duration-slow) ease,
     --ui-color-on-success var(--ui-duration-slow) ease,
+    --ui-color-warning var(--ui-duration-slow) ease,
+    --ui-color-warning-strong var(--ui-duration-slow) ease,
+    --ui-color-success-strong var(--ui-duration-slow) ease,
+    --ui-color-accent-tint var(--ui-duration-slow) ease,
+    --ui-color-success-tint var(--ui-duration-slow) ease,
+    --ui-color-warning-tint var(--ui-duration-slow) ease,
+    --ui-color-danger-tint var(--ui-duration-slow) ease,
     --ui-focus-ring var(--ui-duration-slow) ease;
 }
 

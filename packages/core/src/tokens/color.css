@@ -44,11 +44,28 @@
 
   /* Success */
   --ui-color-success: light-dark(var(--ui-palette-success-600), var(--ui-palette-success-300));
+  --ui-color-success-strong: light-dark(
+    var(--ui-palette-success-700),
+    var(--ui-palette-success-200)
+  );
   --ui-color-success-surface: light-dark(
     var(--ui-palette-success-500),
     var(--ui-palette-success-300)
   );
   --ui-color-on-success: light-dark(var(--ui-palette-neutral-0), var(--ui-palette-neutral-950));
+
+  /* Warning */
+  --ui-color-warning: light-dark(var(--ui-palette-warning-600), var(--ui-palette-warning-300));
+  --ui-color-warning-strong: light-dark(
+    var(--ui-palette-warning-700),
+    var(--ui-palette-warning-200)
+  );
+
+  /* Tint surfaces — soft variant backgrounds (Alert and future feedback components) */
+  --ui-color-accent-tint: light-dark(var(--ui-palette-accent-100), var(--ui-palette-accent-800));
+  --ui-color-success-tint: light-dark(var(--ui-palette-success-100), var(--ui-palette-success-800));
+  --ui-color-warning-tint: light-dark(var(--ui-palette-warning-100), var(--ui-palette-warning-800));
+  --ui-color-danger-tint: light-dark(var(--ui-palette-danger-100), var(--ui-palette-danger-800));
 
   /* Focus */
   --ui-focus-ring: light-dark(var(--ui-palette-accent-600), var(--ui-palette-accent-300));

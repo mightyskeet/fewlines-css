@@ -52,6 +52,10 @@ for (const theme of themes) {
       await page.click('#accordion-summary-first');
       await expect(page.locator('#accordions')).toHaveScreenshot(`accordions-${theme}.png`);
     });
+
+    test(`alerts all variants (${theme})`, async ({ page }) => {
+      await expect(page.locator('#alerts')).toHaveScreenshot(`alerts-${theme}.png`);
+    });
   });
 }
 

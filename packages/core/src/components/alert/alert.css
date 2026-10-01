@@ -1,0 +1,107 @@
+/* Alert component.
+ *
+ * Native basis: static text container. The platform has no native alert
+ * element, so the semantic layer is host-owned (PROJECT_SPEC.md, 4.1):
+ *   - static callout: no role;
+ *   - dynamically inserted, urgent (errors): role="alert" (assertive);
+ *   - dynamically inserted, informational: role="status" (polite).
+ * Core adds no JS and no state machines.
+ *
+ * Canonical structure:
+ *   <div class="ui-alert" data-variant="success">
+ *     <p class="ui-alert-title">Saved</p>
+ *     <p class="ui-alert-body">Your changes were stored.</p>
+ *   </div>
+ *
+ * Variants via data-variant: success | warning | danger
+ * (default — info, attribute omitted).
+ *
+ * Variant colors are surfaced through derived local properties so each
+ * variant block only remaps two values. They consume semantic tokens only
+ * (PROJECT_SPEC.md, 7.1).
+ *
+ * APCA pairs used (validated in tests/apca):
+ *   title:  {accent,danger,success,warning}-strong on *-tint (body)
+ *   body:   text on *-tint (body)
+ *   border: {accent,danger,success,warning} on *-tint (nonText)
+ */
+
+.ui-alert {
+  --ui-alert-accent: var(--ui-color-accent);
+  --ui-alert-surface: var(--ui-color-accent-tint);
+
+  color: var(--ui-color-text);
+  background: var(--ui-alert-surface);
+  border: 1px solid var(--ui-alert-accent);
+  border-radius: var(--ui-radius-md);
+  padding: var(--ui-space-sm) var(--ui-space-md);
+}
+
+.ui-alert[data-variant='success'] {
+  --ui-alert-accent: var(--ui-color-success);
+  --ui-alert-surface: var(--ui-color-success-tint);
+}
+
+.ui-alert[data-variant='warning'] {
+  --ui-alert-accent: var(--ui-color-warning);
+  --ui-alert-surface: var(--ui-color-warning-tint);
+}
+
+.ui-alert[data-variant='danger'] {
+  --ui-alert-accent: var(--ui-color-danger);
+  --ui-alert-surface: var(--ui-color-danger-tint);
+}
+
+/* Title carries the variant color; the message text stays neutral
+ * (--ui-color-text) so long-form content keeps maximal readability.
+ * Variant title colors: -strong is the readable variant color on the tint
+ * surface (the base color sits under the body-role APCA threshold). */
+.ui-alert-title {
+  font-weight: var(--ui-font-weight-medium);
+  color: var(--ui-color-accent-strong);
+  margin-block: 0 var(--ui-space-2xs);
+}
+
+/* Variant title colors: -strong is the readable variant color on the tint
+ * surface (base color would sit under the body-role APCA threshold). */
+.ui-alert[data-variant='success'] .ui-alert-title {
+  color: var(--ui-color-success-strong);
+}
+
+.ui-alert[data-variant='warning'] .ui-alert-title {
+  color: var(--ui-color-warning-strong);
+}
+
+.ui-alert[data-variant='danger'] .ui-alert-title {
+  color: var(--ui-color-danger-strong);
+}
+
+/* Canonical spacing: paragraphs inside the alert lose their outer margins
+ * so the box hugs the content. Host content (lists, extra paragraphs) keeps
+ * its natural inner spacing; only the edges are trimmed. */
+.ui-alert-body {
+  margin-block: 0;
+}
+
+/* Host content (lists, extra paragraphs) keeps its natural inner spacing;
+ * only the edges are trimmed so the box hugs the content. */
+.ui-alert > :first-child {
+  margin-block-start: 0;
+}
+
+.ui-alert > :last-child {
+  margin-block-end: 0;
+}
+
+/* Stacked alerts (host just puts them adjacent, like accordions). */
+.ui-alert + .ui-alert {
+  margin-block-start: var(--ui-space-sm);
+}
+
+/* Forced colors: the tint background is stripped by the system; the border
+ * becomes a system color, so structure survives (like button/field). */
+@media (forced-colors: active) {
+  .ui-alert {
+    forced-color-adjust: auto;
+  }
+}

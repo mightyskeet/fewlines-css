@@ -37,21 +37,33 @@ export const paletteMap = {
   'neutral-800': 'oklch(20% 0.01 260)',
   'neutral-900': 'oklch(14% 0.008 260)',
   'neutral-950': 'oklch(9% 0.005 260)',
+  'accent-100': 'oklch(95% 0.022 255)',
   'accent-200': 'oklch(92% 0.11 250)',
   'accent-300': 'oklch(86% 0.11 250)',
   'accent-500': 'oklch(56% 0.17 255)',
   'accent-600': 'oklch(48% 0.18 258)',
   'accent-700': 'oklch(38% 0.16 260)',
+  'accent-800': 'oklch(21% 0.05 258)',
+  'danger-100': 'oklch(95% 0.02 25)',
   'danger-200': 'oklch(94% 0.08 25)',
   'danger-300': 'oklch(90% 0.1 25)',
   'danger-500': 'oklch(55% 0.19 27)',
   'danger-600': 'oklch(48% 0.19 28)',
   'danger-700': 'oklch(36% 0.16 29)',
+  'danger-800': 'oklch(21% 0.045 27)',
+  'success-100': 'oklch(95% 0.045 150)',
   'success-200': 'oklch(90% 0.1 150)',
   'success-300': 'oklch(84% 0.13 150)',
   'success-500': 'oklch(55% 0.16 150)',
   'success-600': 'oklch(47% 0.15 151)',
   'success-700': 'oklch(35% 0.13 152)',
+  'success-800': 'oklch(21% 0.05 151)',
+  'warning-100': 'oklch(95% 0.045 85)',
+  'warning-200': 'oklch(94% 0.06 85)',
+  'warning-300': 'oklch(90% 0.1 85)',
+  'warning-600': 'oklch(48% 0.1 75)',
+  'warning-700': 'oklch(36% 0.075 75)',
+  'warning-800': 'oklch(21% 0.045 80)',
 };
 
 /**
@@ -73,8 +85,15 @@ export const semanticMap = {
   'danger-surface': { light: 'danger-500', dark: 'danger-300' },
   'on-danger': { light: 'neutral-0', dark: 'neutral-950' },
   success: { light: 'success-600', dark: 'success-300' },
+  'success-strong': { light: 'success-700', dark: 'success-200' },
   'success-surface': { light: 'success-500', dark: 'success-300' },
   'on-success': { light: 'neutral-0', dark: 'neutral-950' },
+  warning: { light: 'warning-600', dark: 'warning-300' },
+  'warning-strong': { light: 'warning-700', dark: 'warning-200' },
+  'accent-tint': { light: 'accent-100', dark: 'accent-800' },
+  'success-tint': { light: 'success-100', dark: 'success-800' },
+  'warning-tint': { light: 'warning-100', dark: 'warning-800' },
+  'danger-tint': { light: 'danger-100', dark: 'danger-800' },
   'focus-ring': { light: 'accent-600', dark: 'accent-300' },
 };
 
@@ -109,6 +128,21 @@ export const tokenPairs = [
   // Success
   { fg: 'success', bg: 'surface', role: 'body' },
   { fg: 'on-success', bg: 'success-surface', role: 'body' },
+
+  // Alert tint surfaces: title uses -strong (body), body text uses text
+  // (body), 1px border uses the base variant color (nonText)
+  { fg: 'accent-strong', bg: 'accent-tint', role: 'body' },
+  { fg: 'text', bg: 'accent-tint', role: 'body' },
+  { fg: 'accent', bg: 'accent-tint', role: 'nonText' },
+  { fg: 'danger-strong', bg: 'danger-tint', role: 'body' },
+  { fg: 'text', bg: 'danger-tint', role: 'body' },
+  { fg: 'danger', bg: 'danger-tint', role: 'nonText' },
+  { fg: 'success-strong', bg: 'success-tint', role: 'body' },
+  { fg: 'text', bg: 'success-tint', role: 'body' },
+  { fg: 'success', bg: 'success-tint', role: 'nonText' },
+  { fg: 'warning-strong', bg: 'warning-tint', role: 'body' },
+  { fg: 'text', bg: 'warning-tint', role: 'body' },
+  { fg: 'warning', bg: 'warning-tint', role: 'nonText' },
 
   // Focus indicator (non-text contrast)
   { fg: 'focus-ring', bg: 'surface', role: 'nonText' },
