@@ -9,10 +9,11 @@
 # Основная матрица: последние 2 версии всех evergreen-браузеров + Safari/iOS,
 # актуальные на момент релиза. Dead-браузеры исключены.
 #
-# NOTE: floor будет уточнён после compatibility-аудита фич из раздела 6 спеки
-# (@layer, :has(), light-dark(), popover, dialog, anchor positioning).
-# Если какая-то фича не проходит матрицу — используется @supports fallback
-# внутри единственной канонической реализации (controlled regression).
+# NOTE: compatibility-аудит фич из раздела 6 спеки выполнен 2026-10-01,
+# решения зафиксированы в compatibility notes. Матрица подтверждена:
+# все core-фичи (@layer, :has(), light-dark(), popover, dialog) поддерживаются
+# полностью; anchor positioning и field-sizing — progressive enhancement
+# через @supports внутри единственной канонической реализации.
 
 last 2 versions
 not dead
