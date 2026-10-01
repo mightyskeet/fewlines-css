@@ -24,5 +24,7 @@ playwright/.cache/
 Thumbs.db
 
 # Editor
-*.logapps/docs/core.css
-test-results/
+*.log
+
+# Generated test fixture CSS (copied from packages/core/dist by tests/prepare.mjs)
+apps/docs/core.css
