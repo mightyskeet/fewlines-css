@@ -118,12 +118,10 @@ test('closed accordion has no phantom height (minmax(0, 0fr) floor)', async ({ p
 
   // Closed resting state: the summary + border only. The content padding
   // must not hold the grid track open (a plain 0fr track would).
-  const closedHeight = await details.evaluate(
-    (el) => el.getBoundingClientRect().height
-  );
-  const summaryHeight = await details.locator('summary').evaluate(
-    (el) => el.getBoundingClientRect().height
-  );
+  const closedHeight = await details.evaluate((el) => el.getBoundingClientRect().height);
+  const summaryHeight = await details
+    .locator('summary')
+    .evaluate((el) => el.getBoundingClientRect().height);
   expect(closedHeight).toBeLessThanOrEqual(summaryHeight + 2);
 });
 
