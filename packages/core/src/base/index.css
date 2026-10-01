@@ -1,5 +1,6 @@
-/* Base layer: minimal reset and focus foundations.
+/* Base layer: minimal reset, typography and focus foundations.
  *
  * Full focus contract lands in Phase 3 (step 12).
  */
+@import './typography.css';
 @import './focus.css';

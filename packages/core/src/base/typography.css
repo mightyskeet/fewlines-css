@@ -1,0 +1,14 @@
+/* Base typography: apply the system font stack to the document.
+ *
+ * The --ui-font-* tokens are declared in tokens/typography.css; without this
+ * rule the browser renders the UA default (Times New Roman). system-ui is
+ * direct use (compatibility notes: Chrome 56+, FF 92+, Safari 11+ — above
+ * the matrix floor).
+ *
+ * Components use font: inherit, so this single rule covers the whole system.
+ * Host applications can override --ui-font-sans to swap the stack.
+ */
+:root {
+  font-family: var(--ui-font-sans);
+  line-height: var(--ui-line-height-normal);
+}
