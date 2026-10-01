@@ -1,0 +1,159 @@
+/* Theme transition.
+ *
+ * Animates color custom properties on theme switch (PROJECT_SPEC.md, 7.3).
+ *
+ * Mechanism:
+ * - @property registers animatable <color> tokens so transitions interpolate
+ *   instead of snapping;
+ * - transition applies only while an explicit theme switch is happening
+ *   (html[data-theme] change), not on every repaint;
+ * - prefers-reduced-motion disables the transition entirely.
+ *
+ * color-scheme itself is NOT animated — it switches discretely by design.
+ */
+@property --ui-color-surface {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: white;
+}
+
+@property --ui-color-surface-raised {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: white;
+}
+
+@property --ui-color-surface-sunken {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: white;
+}
+
+@property --ui-color-text {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: black;
+}
+
+@property --ui-color-text-muted {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: gray;
+}
+
+@property --ui-color-border {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: gray;
+}
+
+@property --ui-color-border-strong {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: gray;
+}
+
+@property --ui-color-accent {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: blue;
+}
+
+@property --ui-color-accent-strong {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: blue;
+}
+
+@property --ui-color-accent-surface {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: blue;
+}
+
+@property --ui-color-on-accent {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: white;
+}
+
+@property --ui-color-danger {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: red;
+}
+
+@property --ui-color-danger-strong {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: red;
+}
+
+@property --ui-color-danger-surface {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: red;
+}
+
+@property --ui-color-on-danger {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: white;
+}
+
+@property --ui-color-success {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: green;
+}
+
+@property --ui-color-success-surface {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: green;
+}
+
+@property --ui-color-on-success {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: white;
+}
+
+@property --ui-focus-ring {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: blue;
+}
+
+/* Transition applies only during an explicit data-theme switch.
+ * The attribute-selector change re-evaluates these rules, so the transition
+ * runs exactly when the host application flips data-theme.
+ */
+:root[data-theme] {
+  transition:
+    --ui-color-surface var(--ui-duration-slow) ease,
+    --ui-color-surface-raised var(--ui-duration-slow) ease,
+    --ui-color-surface-sunken var(--ui-duration-slow) ease,
+    --ui-color-text var(--ui-duration-slow) ease,
+    --ui-color-text-muted var(--ui-duration-slow) ease,
+    --ui-color-border var(--ui-duration-slow) ease,
+    --ui-color-border-strong var(--ui-duration-slow) ease,
+    --ui-color-accent var(--ui-duration-slow) ease,
+    --ui-color-accent-strong var(--ui-duration-slow) ease,
+    --ui-color-accent-surface var(--ui-duration-slow) ease,
+    --ui-color-on-accent var(--ui-duration-slow) ease,
+    --ui-color-danger var(--ui-duration-slow) ease,
+    --ui-color-danger-strong var(--ui-duration-slow) ease,
+    --ui-color-danger-surface var(--ui-duration-slow) ease,
+    --ui-color-on-danger var(--ui-duration-slow) ease,
+    --ui-color-success var(--ui-duration-slow) ease,
+    --ui-color-success-surface var(--ui-duration-slow) ease,
+    --ui-color-on-success var(--ui-duration-slow) ease,
+    --ui-focus-ring var(--ui-duration-slow) ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root[data-theme] {
+    transition: none;
+  }
+}

@@ -2,8 +2,17 @@
  *
  * All interactive components use :focus-visible with the shared token.
  * Never override outline with none without providing an alternative.
+ *
+ * Forced colors mode: outline-color follows system HighlightedText rules,
+ * so the custom ring color is not forced.
  */
 :where(:focus-visible) {
   outline: 2px solid var(--ui-focus-ring);
   outline-offset: 2px;
+}
+
+@media (forced-colors: active) {
+  :where(:focus-visible) {
+    outline-color: Highlight;
+  }
 }

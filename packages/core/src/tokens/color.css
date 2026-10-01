@@ -1,17 +1,57 @@
 /* Semantic color tokens.
  *
- * Placeholder values for Phase 1 bootstrap; replaced by the APCA-validated
- * token matrix in Phase 3. Components must consume only semantic tokens.
+ * Components consume ONLY these tokens (PROJECT_SPEC.md, 7.1).
+ * Light/dark values are defined with light-dark(), which resolves against the
+ * used color scheme (color-scheme property / prefers-color-scheme).
+ * Explicit override: data-theme="light" | data-theme="dark" on :root (see theme.css).
+ *
+ * All text/surface pairs are validated by the APCA token matrix (Phase 4).
  */
 :root {
-  --ui-color-surface: white;
-  --ui-color-surface-raised: white;
-  --ui-color-text: black;
-  --ui-color-text-muted: gray;
-  --ui-color-border: gray;
-  --ui-color-accent: blue;
-  --ui-color-danger: red;
-  --ui-focus-ring: blue;
+  /* Surfaces */
+  --ui-color-surface: light-dark(var(--ui-palette-neutral-0), var(--ui-palette-neutral-900));
+  --ui-color-surface-raised: light-dark(
+    var(--ui-palette-neutral-50),
+    var(--ui-palette-neutral-800)
+  );
+  --ui-color-surface-sunken: light-dark(
+    var(--ui-palette-neutral-100),
+    var(--ui-palette-neutral-950)
+  );
+
+  /* Text */
+  --ui-color-text: light-dark(var(--ui-palette-neutral-900), var(--ui-palette-neutral-50));
+  --ui-color-text-muted: light-dark(var(--ui-palette-neutral-600), var(--ui-palette-neutral-300));
+
+  /* Border */
+  --ui-color-border: light-dark(var(--ui-palette-neutral-300), var(--ui-palette-neutral-700));
+  --ui-color-border-strong: light-dark(
+    var(--ui-palette-neutral-500),
+    var(--ui-palette-neutral-400)
+  );
+
+  /* Accent */
+  --ui-color-accent: light-dark(var(--ui-palette-accent-600), var(--ui-palette-accent-300));
+  --ui-color-accent-strong: light-dark(var(--ui-palette-accent-700), var(--ui-palette-accent-500));
+  --ui-color-accent-surface: light-dark(var(--ui-palette-accent-500), var(--ui-palette-accent-700));
+  --ui-color-on-accent: light-dark(var(--ui-palette-neutral-0), var(--ui-palette-neutral-950));
+
+  /* Danger */
+  --ui-color-danger: light-dark(var(--ui-palette-danger-600), var(--ui-palette-danger-300));
+  --ui-color-danger-strong: light-dark(var(--ui-palette-danger-700), var(--ui-palette-danger-500));
+  --ui-color-danger-surface: light-dark(var(--ui-palette-danger-500), var(--ui-palette-danger-700));
+  --ui-color-on-danger: light-dark(var(--ui-palette-neutral-0), var(--ui-palette-neutral-950));
+
+  /* Success */
+  --ui-color-success: light-dark(var(--ui-palette-success-600), var(--ui-palette-success-300));
+  --ui-color-success-surface: light-dark(
+    var(--ui-palette-success-500),
+    var(--ui-palette-success-700)
+  );
+  --ui-color-on-success: light-dark(var(--ui-palette-neutral-0), var(--ui-palette-neutral-950));
+
+  /* Focus */
+  --ui-focus-ring: light-dark(var(--ui-palette-accent-600), var(--ui-palette-accent-300));
 
   color-scheme: light dark;
 }

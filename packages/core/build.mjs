@@ -28,9 +28,17 @@ mkdirSync(distDir, { recursive: true });
 
 const cli = join(pkgRoot, 'node_modules', 'lightningcss-cli', 'lightningcss.exe');
 
+// Lightning CSS ships its own browser version database which lags behind
+// caniuse. Passing --browserslist with versions it does not know (e.g.
+// Chrome 153) makes it silently downlevel modern syntax like light-dark().
+// Explicit targets keep the modern baseline intact; the values are the
+// floor of the browser matrix (see .browserslistrc / compatibility notes)
+// expressed in versions Lightning CSS understands.
+const targets = 'chrome 130,firefox 134,safari 18.2,edge 130';
+
 const result = spawnSync(
   cli,
-  ['--bundle', entry, '--output-dir', distDir, '--minify', '--browserslist'],
+  ['--bundle', entry, '--output-dir', distDir, '--minify', '--targets', targets],
   { stdio: 'inherit' },
 );
 

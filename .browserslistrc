@@ -14,6 +14,16 @@
 # все core-фичи (@layer, :has(), light-dark(), popover, dialog) поддерживаются
 # полностью; anchor positioning и field-sizing — progressive enhancement
 # через @supports внутри единственной канонической реализации.
+#
+# op_mini и kaios исключены явно: это feature-phone браузеры, не способные
+# исполнить modern CSS baseline вообще. Их присутствие в "last 2 versions"
+# заставляло Lightning CSS даунлевелить light-dark() в media-query fallback,
+# что ломает data-theme override (спека 7.2). Это не снижение floor ради
+# одной фичи, а определение реальной целевой матрицы (спека 10.1).
 
 last 2 versions
 not dead
+not op_mini all
+not and_uc > 0
+not and_qq > 0
+not kaios > 0

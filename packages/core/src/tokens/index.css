@@ -1,7 +1,14 @@
 /* Tokens layer: semantic design tokens.
  *
- * Full implementation lands in Phase 3 (theme system, light/dark, APCA matrix).
- * This file establishes the layer structure and naming convention (--ui-*).
+ * Import order matters: palette first (raw inputs), then semantic tokens that
+ * reference it, then theme override and transition contracts.
  */
+@import './palette.css';
 @import './color.css';
+@import './theme.css';
+@import './theme-transition.css';
+@import './space.css';
+@import './radius.css';
+@import './typography.css';
 @import './motion.css';
+@import './z-index.css';

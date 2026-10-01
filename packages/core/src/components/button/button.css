@@ -8,13 +8,14 @@
   color: var(--ui-color-text);
   background: var(--ui-color-surface-raised);
   border: 1px solid var(--ui-color-border);
-  border-radius: 0.25rem;
-  padding: 0.5rem 1rem;
+  border-radius: var(--ui-radius-sm);
+  padding-block: var(--ui-space-xs);
+  padding-inline: var(--ui-space-md);
   cursor: pointer;
 }
 
 .ui-button:hover {
-  border-color: var(--ui-color-accent);
+  border-color: var(--ui-color-border-strong);
 }
 
 .ui-button:active {

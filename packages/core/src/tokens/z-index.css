@@ -1,0 +1,10 @@
+/* Z-index scale.
+ *
+ * Overlays use native top-layer (dialog/popover), which stacks above all
+ * document z-index values. This scale is for in-document stacking only.
+ */
+:root {
+  --ui-z-base: 0;
+  --ui-z-raised: 10;
+  --ui-z-sticky: 100;
+}

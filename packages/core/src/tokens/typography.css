@@ -1,0 +1,22 @@
+/* Typography tokens.
+ *
+ * Font families use system stacks — no webfont loading in core.
+ * Sizes are fluid where useful; line heights are unitless.
+ */
+:root {
+  --ui-font-sans: system-ui, -apple-system, 'Segoe UI', roboto, 'Helvetica Neue', arial, sans-serif;
+  --ui-font-mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', menlo, consolas, monospace;
+  --ui-font-size-xs: 0.75rem;
+  --ui-font-size-sm: 0.875rem;
+  --ui-font-size-md: 1rem;
+  --ui-font-size-lg: 1.125rem;
+  --ui-font-size-xl: 1.25rem;
+  --ui-font-size-2xl: 1.5rem;
+  --ui-font-size-3xl: 2rem;
+  --ui-line-height-tight: 1.2;
+  --ui-line-height-normal: 1.5;
+  --ui-font-weight-normal: 400;
+  --ui-font-weight-medium: 500;
+  --ui-font-weight-semibold: 600;
+  --ui-font-weight-bold: 700;
+}
