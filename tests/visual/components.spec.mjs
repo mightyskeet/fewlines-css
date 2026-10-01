@@ -47,6 +47,11 @@ for (const theme of themes) {
       await page.click('#form-submit');
       await expect(page.locator('#fields')).toHaveScreenshot(`fields-invalid-${theme}.png`);
     });
+
+    test(`accordions closed and open (${theme})`, async ({ page }) => {
+      await page.click('#accordion-summary-first');
+      await expect(page.locator('#accordions')).toHaveScreenshot(`accordions-${theme}.png`);
+    });
   });
 }
 

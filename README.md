@@ -43,6 +43,7 @@ override — `data-theme="light|dark"` на корневом элементе. �
 | Field     | `<input>/<textarea>/<select>`    | `ui-field`, `ui-input`, `ui-textarea`, `ui-select` |
 | Dialog    | `<dialog>` (top-layer)           | `ui-dialog`                                        |
 | Popover   | Popover API + anchor positioning | `ui-popover`, `ui-popover-trigger`                 |
+| Accordion | `<details>/<summary>`            | `ui-accordion`, `ui-accordion-summary`             |
 
 
 `packages/core/src/components/*/[name].md`. Живые примеры: `apps/docs/`.

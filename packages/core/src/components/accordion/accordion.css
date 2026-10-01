@@ -1,0 +1,121 @@
+/* Accordion component.
+ *
+ * Native basis: <details>/<summary> — disclosure widget with native
+ * open/close state, native keyboard behavior (Enter/Space on summary),
+ * no JS required (PROJECT_SPEC.md, 4.1). `details` is direct use per
+ * compatibility notes (Chrome 12+, FF 49+, Safari 12+).
+ *
+ * Canonical structure:
+ *   <details class="ui-accordion">
+ *     <summary class="ui-accordion-summary">Title</summary>
+ *     <div class="ui-accordion-content">…</div>
+ *   </details>
+ *
+ * States come from the platform:
+ *   details[open] — native attribute;
+ *   ::details-content — styles the content box (Chrome 131+, Safari 18.2+);
+ *     used only for the entry animation inside @supports, the component is
+ *     fully functional without it (content simply appears).
+ *   summary::-webkit-details-marker — legacy Safari marker, hidden for the
+ *     custom chevron; modern engines use ::marker.
+ */
+
+.ui-accordion {
+  border: 1px solid var(--ui-color-border);
+  border-radius: var(--ui-radius-md);
+  background: var(--ui-color-surface-raised);
+  color: var(--ui-color-text);
+}
+
+/* Divider between stacked accordions; the last one has no bottom border. */
+.ui-accordion + .ui-accordion {
+  border-block-start: none;
+  border-start-start-radius: 0;
+  border-start-end-radius: 0;
+  border-end-start-radius: 0;
+  border-end-end-radius: 0;
+}
+
+.ui-accordion-summary {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-sm);
+  padding: var(--ui-space-sm) var(--ui-space-md);
+  font-weight: var(--ui-font-weight-medium);
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+  transition: background-color var(--ui-duration-fast) ease;
+}
+
+/* Remove the default disclosure marker; the chevron below replaces it. */
+.ui-accordion-summary::-webkit-details-marker {
+  display: none;
+}
+
+.ui-accordion-summary::marker {
+  content: '';
+}
+
+/* Chevron rotates when the accordion is open — native [open] attribute. */
+.ui-accordion-summary::after {
+  content: '';
+  inline-size: 0.5rem;
+  block-size: 0.5rem;
+  margin-inline-start: auto;
+  border-inline-end: 2px solid var(--ui-color-text-muted);
+  border-block-end: 2px solid var(--ui-color-text-muted);
+  rotate: 45deg;
+  translate: 0 -0.125rem;
+  transition: rotate var(--ui-duration-fast) ease;
+}
+
+.ui-accordion[open] .ui-accordion-summary::after {
+  rotate: 225deg;
+  translate: 0 0.125rem;
+}
+
+.ui-accordion-summary:hover {
+  background: var(--ui-color-surface-sunken);
+}
+
+.ui-accordion-content {
+  padding: var(--ui-space-sm) var(--ui-space-md) var(--ui-space-md);
+  color: var(--ui-color-text);
+}
+
+/* Entry animation: ::details-content is progressive enhancement
+ * (Chrome 131+, Safari 18.2+; Firefox does not support it yet). Without
+ * support the content appears instantly — the component stays usable. */
+@supports selector(::details-content) {
+  .ui-accordion::details-content {
+    block-size: 0;
+    overflow: hidden;
+    transition:
+      block-size var(--ui-duration-normal) ease,
+      content-visibility var(--ui-duration-normal) ease allow-discrete;
+  }
+
+  .ui-accordion[open]::details-content {
+    block-size: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-accordion-summary,
+  .ui-accordion-summary::after {
+    transition: none;
+  }
+
+  @supports selector(::details-content) {
+    .ui-accordion::details-content {
+      transition: none;
+    }
+  }
+}
+
+@media (forced-colors: active) {
+  .ui-accordion {
+    forced-color-adjust: auto;
+  }
+}

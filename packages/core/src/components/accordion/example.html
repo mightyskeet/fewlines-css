@@ -1,0 +1,44 @@
+<!doctype html>
+<!-- Accordion examples. -->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Accordion examples</title>
+    <link rel="stylesheet" href="../../../../dist/index.css" />
+  </head>
+  <body>
+    <h1>Accordion</h1>
+
+    <h2>Single</h2>
+    <details class="ui-accordion">
+      <summary class="ui-accordion-summary">What is @fewlines/css?</summary>
+      <div class="ui-accordion-content">
+        <p>A platform-native UI system: semantic HTML, modern CSS, zero runtime JS.</p>
+      </div>
+    </details>
+
+    <h2>Stacked</h2>
+    <details class="ui-accordion">
+      <summary class="ui-accordion-summary">First question</summary>
+      <div class="ui-accordion-content"><p>Answer one.</p></div>
+    </details>
+    <details class="ui-accordion">
+      <summary class="ui-accordion-summary">Second question</summary>
+      <div class="ui-accordion-content"><p>Answer two.</p></div>
+    </details>
+    <details class="ui-accordion" open>
+      <summary class="ui-accordion-summary">Third question (open by default)</summary>
+      <div class="ui-accordion-content"><p>Answer three.</p></div>
+    </details>
+
+    <h2>Exclusive (native name attribute)</h2>
+    <details class="ui-accordion" name="faq">
+      <summary class="ui-accordion-summary">Option A</summary>
+      <div class="ui-accordion-content"><p>Only one of these can be open.</p></div>
+    </details>
+    <details class="ui-accordion" name="faq">
+      <summary class="ui-accordion-summary">Option B</summary>
+      <div class="ui-accordion-content"><p>Opening one closes the other.</p></div>
+    </details>
+  </body>
+</html>
