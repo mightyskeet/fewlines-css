@@ -5,6 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>@fewlines/css — Documentation</title>
     <link rel="stylesheet" href="../../packages/core/dist/index.css" />
+    <style>
+      body {
+        max-inline-size: 60rem;
+        margin-inline: auto;
+        padding-inline: var(--ui-space-5);
+      }
+      .site-nav ul {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--ui-space-3);
+        padding: 0;
+        margin: 0 0 var(--ui-space-5);
+        list-style: none;
+      }
+      .example {
+        border: 1px solid var(--ui-color-border);
+        border-radius: var(--ui-radius-md);
+        padding: var(--ui-space-4);
+        margin-block: var(--ui-space-4);
+        background: var(--ui-color-surface-raised);
+      }
+    </style>
   </head>
   <body>
     <header>
@@ -12,49 +34,89 @@
       <p>Platform-native UI system. Semantic HTML, modern CSS, zero runtime JavaScript.</p>
     </header>
 
+    <nav class="site-nav" aria-label="Documentation">
+      <ul>
+        <li><a href="./index.html">Overview</a></li>
+        <li><a href="./button.html">Button</a></li>
+        <li><a href="./field.html">Field</a></li>
+        <li><a href="./dialog.html">Dialog</a></li>
+        <li><a href="./popover.html">Popover</a></li>
+      </ul>
+    </nav>
+
     <main>
       <section>
+        <h2>Principles</h2>
+        <ul>
+          <li><strong>Native first</strong> — semantic HTML and native browser behavior.</li>
+          <li><strong>Zero runtime JS</strong> — the core package ships CSS only.</li>
+          <li>
+            <strong>One canonical markup</strong> — a single documented structure per component.
+          </li>
+          <li>
+            <strong>Controlled regression</strong> — one implementation, fallbacks via
+            <code>@supports</code>.
+          </li>
+        </ul>
+      </section>
+
+      <section>
         <h2>Button</h2>
-        <button class="ui-button" type="button">Secondary</button>
-        <button class="ui-button" type="button" data-variant="primary">Primary</button>
-        <button class="ui-button" type="button" data-variant="destructive">Delete</button>
-        <button class="ui-button" type="button" disabled>Disabled</button>
+        <div class="example">
+          <button class="ui-button" type="button">Secondary</button>
+          <button class="ui-button" type="button" data-variant="primary">Primary</button>
+          <button class="ui-button" type="button" data-variant="destructive">Delete</button>
+          <button class="ui-button" type="button" disabled>Disabled</button>
+        </div>
+        <p><a href="./button.html">Button documentation →</a></p>
       </section>
 
       <section>
         <h2>Field</h2>
-        <label class="ui-field">
-          <span class="ui-field-label">Email</span>
-          <input class="ui-input" type="email" placeholder="you@example.com" />
-          <span class="ui-field-description">We never share your email.</span>
-        </label>
+        <div class="example">
+          <label class="ui-field">
+            <span class="ui-field-label">Email</span>
+            <input class="ui-input" type="email" placeholder="you@example.com" />
+            <span class="ui-field-description">We never share your email.</span>
+          </label>
+        </div>
+        <p><a href="./field.html">Field documentation →</a></p>
       </section>
 
       <section>
         <h2>Dialog</h2>
-        <button class="ui-button" type="button" onclick="dlg.showModal()">Open dialog</button>
-        <dialog class="ui-dialog" id="dlg">
-          <h3>Confirm</h3>
-          <p>Native modal dialog. Escape or the button closes it.</p>
-          <form method="dialog">
-            <button class="ui-button" type="submit">Close</button>
-          </form>
-        </dialog>
+        <div class="example">
+          <button class="ui-button" type="button" onclick="dlg.showModal()">Open dialog</button>
+          <dialog class="ui-dialog" id="dlg">
+            <h3>Confirm</h3>
+            <p>Native modal dialog. Escape or the button closes it.</p>
+            <form method="dialog">
+              <button class="ui-button" type="submit">Close</button>
+            </form>
+          </dialog>
+        </div>
+        <p><a href="./dialog.html">Dialog documentation →</a></p>
       </section>
 
       <section>
         <h2>Popover</h2>
-        <button class="ui-button ui-popover-trigger" type="button" popovertarget="pop">
-          Options
-        </button>
-        <div class="ui-popover" id="pop" popover>
-          <p>Anchor-positioned popover (fallback: centered).</p>
+        <div class="example">
+          <button class="ui-button ui-popover-trigger" type="button" popovertarget="pop">
+            Options
+          </button>
+          <div class="ui-popover" id="pop" popover>
+            <p>Anchor-positioned popover (fallback: centered).</p>
+          </div>
         </div>
+        <p><a href="./popover.html">Popover documentation →</a></p>
       </section>
     </main>
 
     <footer>
-      <p>Documentation site is under construction (Phase 7).</p>
+      <p>
+        Contract docs: <code>packages/core/src/components/*/[name].md</code> · Agent index:
+
+      </p>
     </footer>
   </body>
 </html>

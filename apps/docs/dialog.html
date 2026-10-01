@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Dialog — @fewlines/css</title>
+    <link rel="stylesheet" href="../../packages/core/dist/index.css" />
+    <style>
+      body {
+        max-inline-size: 60rem;
+        margin-inline: auto;
+        padding-inline: var(--ui-space-5);
+      }
+      .site-nav ul {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--ui-space-3);
+        padding: 0;
+        margin: 0 0 var(--ui-space-5);
+        list-style: none;
+      }
+      .example {
+        border: 1px solid var(--ui-color-border);
+        border-radius: var(--ui-radius-md);
+        padding: var(--ui-space-4);
+        margin-block: var(--ui-space-4);
+        background: var(--ui-color-surface-raised);
+      }
+      pre {
+        overflow-x: auto;
+        background: var(--ui-color-surface-sunken);
+        padding: var(--ui-space-3);
+        border-radius: var(--ui-radius-md);
+        font-size: 0.875rem;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Dialog</h1>
+      <p>Modal and non-modal window on top of the page: confirmations, forms, messages.</p>
+    </header>
+
+    <nav class="site-nav" aria-label="Documentation">
+      <ul>
+        <li><a href="./index.html">Overview</a></li>
+        <li><a href="./button.html">Button</a></li>
+        <li><a href="./field.html">Field</a></li>
+        <li><a href="./dialog.html" aria-current="page">Dialog</a></li>
+        <li><a href="./popover.html">Popover</a></li>
+      </ul>
+    </nav>
+
+    <main>
+      <section>
+        <h2>Native basis</h2>
+        <p>
+          <code>&lt;dialog&gt;</code> with top-layer behavior; <code>showModal()</code> /
+          <code>show()</code> / <code>close()</code> called by the host application (core ships no
+          runtime JS); <code>::backdrop</code>; native Escape close; native focus trap;
+          <code>&lt;form method="dialog"&gt;</code> closes without JS; <code>:modal</code> and
+          <code>dialog[open]</code> for state styling.
+        </p>
+      </section>
+
+      <section>
+        <h2>Canonical markup</h2>
+        <pre><code>&lt;button class="ui-button" type="button" onclick="dlg.showModal()"&gt;Open&lt;/button&gt;
+
+&lt;dialog class="ui-dialog" id="dlg"&gt;
+  &lt;h2&gt;Confirm&lt;/h2&gt;
+  &lt;p&gt;Are you sure?&lt;/p&gt;
+  &lt;form method="dialog"&gt;
+    &lt;button class="ui-button" type="submit"&gt;Close&lt;/button&gt;
+  &lt;/form&gt;
+&lt;/dialog&gt;</code></pre>
+      </section>
+
+      <section>
+        <h2>Live example</h2>
+        <div class="example">
+          <button class="ui-button" type="button" onclick="dlg.showModal()">
+            Open modal dialog
+          </button>
+          <button class="ui-button" type="button" onclick="dlg.show()">Open non-modal</button>
+          <dialog class="ui-dialog" id="dlg">
+            <h3>Confirm</h3>
+            <p>Native dialog. Escape or the button closes it.</p>
+            <form method="dialog">
+              <button class="ui-button" type="submit">Close</button>
+            </form>
+          </dialog>
+        </div>
+        <p>One canonical variant; size via host styles (<code>max-inline-size</code>).</p>
+      </section>
+
+      <section>
+        <h2>States and animation</h2>
+        <ul>
+          <li>
+            Open — <code>dialog[open]</code>; modal — <code>:modal</code>; backdrop —
+            <code>::backdrop</code>.
+          </li>
+          <li>
+            Entry animation — <code>@starting-style</code> +
+            <code>transition-behavior: allow-discrete</code> for
+            <code>display</code>/<code>overlay</code>.
+          </li>
+          <li>Without support the dialog simply appears (graceful degradation).</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Accessibility</h2>
+        <ul>
+          <li>
+            Native <code>dialog</code> role; accessible name from the heading or
+            <code>aria-labelledby</code>.
+          </li>
+          <li>Escape closes natively; focus returns to the trigger natively.</li>
+          <li>Focus trap is native — first focusable element or <code>autofocus</code>.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Do not</h2>
+        <ul>
+          <li>
+            No <code>div</code> + <code>position: fixed</code> emulation — top-layer, focus trap and
+            Escape are lost.
+          </li>
+          <li>No JS for Escape/backdrop — native behavior.</li>
+          <li>
+            Keep <code>&lt;form method="dialog"&gt;</code> for close buttons — the JS-free path.
+          </li>
+          <li>
+            No styling of <code>dialog:not([open])</code> — natively <code>display: none</code>.
+          </li>
+        </ul>
+      </section>
+    </main>
+
+    <footer>
+      <p>Full contract: <code>packages/core/src/components/dialog/dialog.md</code></p>
+    </footer>
+  </body>
+</html>

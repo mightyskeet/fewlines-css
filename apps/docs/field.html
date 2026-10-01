@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Field — @fewlines/css</title>
+    <link rel="stylesheet" href="../../packages/core/dist/index.css" />
+    <style>
+      body {
+        max-inline-size: 60rem;
+        margin-inline: auto;
+        padding-inline: var(--ui-space-5);
+      }
+      .site-nav ul {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--ui-space-3);
+        padding: 0;
+        margin: 0 0 var(--ui-space-5);
+        list-style: none;
+      }
+      .example {
+        border: 1px solid var(--ui-color-border);
+        border-radius: var(--ui-radius-md);
+        padding: var(--ui-space-4);
+        margin-block: var(--ui-space-4);
+        background: var(--ui-color-surface-raised);
+      }
+      pre {
+        overflow-x: auto;
+        background: var(--ui-color-surface-sunken);
+        padding: var(--ui-space-3);
+        border-radius: var(--ui-radius-md);
+        font-size: 0.875rem;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Field</h1>
+      <p>Text input with label, description and native validation.</p>
+    </header>
+
+    <nav class="site-nav" aria-label="Documentation">
+      <ul>
+        <li><a href="./index.html">Overview</a></li>
+        <li><a href="./button.html">Button</a></li>
+        <li><a href="./field.html" aria-current="page">Field</a></li>
+        <li><a href="./dialog.html">Dialog</a></li>
+        <li><a href="./popover.html">Popover</a></li>
+      </ul>
+    </nav>
+
+    <main>
+      <section>
+        <h2>Native basis</h2>
+        <p>
+          <code>&lt;input&gt;</code>, <code>&lt;textarea&gt;</code>, <code>&lt;select&gt;</code>;
+          implicit <code>&lt;label&gt;</code> via nesting; native validation (<code>required</code>,
+          <code>type="email"</code>, <code>pattern</code>); native states including
+          <code>:user-invalid</code> / <code>:user-valid</code>.
+        </p>
+      </section>
+
+      <section>
+        <h2>Canonical markup</h2>
+        <pre><code>&lt;label class="ui-field"&gt;
+  &lt;span class="ui-field-label"&gt;Email&lt;/span&gt;
+  &lt;input class="ui-input" type="email" required placeholder="you@example.com" /&gt;
+  &lt;span class="ui-field-description"&gt;We never share your email.&lt;/span&gt;
+&lt;/label&gt;</code></pre>
+      </section>
+
+      <section>
+        <h2>Controls</h2>
+        <div class="example">
+          <label class="ui-field">
+            <span class="ui-field-label">Email</span>
+            <input class="ui-input" type="email" required placeholder="you@example.com" />
+            <span class="ui-field-description">We never share your email.</span>
+          </label>
+          <label class="ui-field">
+            <span class="ui-field-label">Bio</span>
+            <textarea class="ui-textarea" rows="3" placeholder="About you"></textarea>
+          </label>
+          <label class="ui-field">
+            <span class="ui-field-label">Role</span>
+            <select class="ui-select">
+              <option>Designer</option>
+              <option>Developer</option>
+            </select>
+          </label>
+        </div>
+        <p>
+          Controls: <code>ui-input</code>, <code>ui-textarea</code>, <code>ui-select</code>; the
+          <code>ui-field</code> wrapper is shared.
+        </p>
+      </section>
+
+      <section>
+        <h2>Validation states</h2>
+        <div class="example">
+          <form>
+            <label class="ui-field">
+              <span class="ui-field-label">Required email</span>
+              <input class="ui-input" type="email" required placeholder="Leave empty, then blur" />
+            </label>
+            <button class="ui-button" type="submit">Submit</button>
+          </form>
+        </div>
+        <p>
+          Red/green borders appear only after user interaction (<code>:user-invalid</code> /
+          <code>:user-valid</code>). Never style bare <code>:invalid</code>.
+        </p>
+      </section>
+
+      <section>
+        <h2>Accessibility</h2>
+        <ul>
+          <li>
+            Implicit label via nesting — accessible name without <code>for</code>/<code>id</code>.
+          </li>
+          <li><code>aria-describedby</code> for hints and errors.</li>
+          <li>Placeholder is not a label — never remove <code>&lt;label&gt;</code>.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Do not</h2>
+        <ul>
+          <li>No styling of <code>:invalid</code> without <code>:user-</code>.</li>
+          <li>No JS validation replacing native validation.</li>
+          <li>No <code>div</code> inside <code>label</code> (label is an inline container).</li>
+        </ul>
+      </section>
+    </main>
+
+    <footer>
+      <p>Full contract: <code>packages/core/src/components/field/field.md</code></p>
+    </footer>
+  </body>
+</html>

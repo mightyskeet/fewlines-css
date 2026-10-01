@@ -15,6 +15,10 @@ export default defineConfig({
   forbidOnly: !process.env.CI,
   retries: process.env.CI ? 2 : 0,
   reporter: process.env.CI ? [['github'], ['html', { open: 'never' }]] : 'list',
+  // CI: baselines were captured on win32; the first linux run generates
+  // linux baselines (PW_UPDATE_SNAPSHOTS=1 in ci.yml). Remove the env var
+  // from ci.yml once linux baselines are committed.
+  updateSnapshots: process.env.PW_UPDATE_SNAPSHOTS ? 'changed' : 'missing',
   use: {
     baseURL: 'http://localhost:4173',
     trace: 'on-first-retry',

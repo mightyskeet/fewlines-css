@@ -1,0 +1,62 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        # version comes from packageManager field in package.json
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint (stylelint)
+        run: pnpm lint
+
+      - name: Build (Lightning CSS)
+        run: pnpm build
+
+      - name: Format check (prettier)
+        run: pnpm format:check
+
+      - name: APCA token matrix
+        run: node tests/apca/check.mjs
+
+      - name: Package purity
+        run: node tests/purity/check.mjs
+
+      - name: Install Playwright browser
+        run: npx playwright install chromium --with-deps
+        working-directory: tests
+
+      # Visual regression: baselines were captured on win32. Playwright
+      # suffixes snapshot names with the platform, so the first linux run
+      # has no linux baselines and fails. Decision (TODO notes 8.3):
+      # generate linux baselines on the first CI run with
+      # `--update-snapshots=changed`, then remove the flag. The flag below
+      # must stay until linux baselines are committed.
+      - name: Browser + accessibility + visual tests
+        run: pnpm test
+        working-directory: tests
+        env:
+          PW_UPDATE_SNAPSHOTS: '1'
+
+      - name: Upload test results
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: tests/playwright-report/
+          retention-days: 7

@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Popover — @fewlines/css</title>
+    <link rel="stylesheet" href="../../packages/core/dist/index.css" />
+    <style>
+      body {
+        max-inline-size: 60rem;
+        margin-inline: auto;
+        padding-inline: var(--ui-space-5);
+      }
+      .site-nav ul {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--ui-space-3);
+        padding: 0;
+        margin: 0 0 var(--ui-space-5);
+        list-style: none;
+      }
+      .example {
+        border: 1px solid var(--ui-color-border);
+        border-radius: var(--ui-radius-md);
+        padding: var(--ui-space-4);
+        margin-block: var(--ui-space-4);
+        background: var(--ui-color-surface-raised);
+      }
+      pre {
+        overflow-x: auto;
+        background: var(--ui-color-surface-sunken);
+        padding: var(--ui-space-3);
+        border-radius: var(--ui-radius-md);
+        font-size: 0.875rem;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Popover</h1>
+      <p>Non-modal overlay: menus, tooltips, small panels. Light dismiss and Escape are native.</p>
+    </header>
+
+    <nav class="site-nav" aria-label="Documentation">
+      <ul>
+        <li><a href="./index.html">Overview</a></li>
+        <li><a href="./button.html">Button</a></li>
+        <li><a href="./field.html">Field</a></li>
+        <li><a href="./dialog.html">Dialog</a></li>
+        <li><a href="./popover.html" aria-current="page">Popover</a></li>
+      </ul>
+    </nav>
+
+    <main>
+      <section>
+        <h2>Native basis</h2>
+        <p>
+          Popover API: <code>popover</code> attribute; declarative trigger
+          <code>popovertarget</code>; <code>popovertargetaction="show|hide|toggle"</code>;
+          <code>:popover-open</code>; native light dismiss and Escape; native top-layer; implicit
+          anchor from <code>popovertarget</code> (Chrome 133+, FF 147+, Safari 26+).
+        </p>
+      </section>
+
+      <section>
+        <h2>Canonical markup</h2>
+        <pre><code>&lt;button class="ui-button ui-popover-trigger" type="button" popovertarget="p1"&gt;
+  Options
+&lt;/button&gt;
+
+&lt;div class="ui-popover" id="p1" popover&gt;
+  &lt;p&gt;Popover content&lt;/p&gt;
+&lt;/div&gt;</code></pre>
+        <p>
+          <code>ui-popover-trigger</code> on the trigger is optional — it enables anchor positioning
+          (declares <code>anchor-name</code>).
+        </p>
+      </section>
+
+      <section>
+        <h2>Live example</h2>
+        <div class="example">
+          <button class="ui-button ui-popover-trigger" type="button" popovertarget="pop">
+            Options
+          </button>
+          <div class="ui-popover" id="pop" popover>
+            <p>
+              Anchor-positioned popover (fallback: centered). Click outside or Escape closes it.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Positioning</h2>
+        <ul>
+          <li>
+            With anchor support: below the trigger (<code>position-area: block-end span-inline</code
+            >), fallback above.
+          </li>
+          <li>Without anchor support: centered in the viewport (fixed).</li>
+          <li>
+            Anchor contract: anchor name <code>--ui-popover-anchor</code>; no collision handling —
+            host sets <code>position-area</code> when needed.
+          </li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Accessibility</h2>
+        <ul>
+          <li>Role and semantics come natively from the Popover API.</li>
+          <li>Light dismiss and Escape are native — no JS.</li>
+          <li>Focus is not trapped (non-modal) — native behavior.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Do not</h2>
+        <ul>
+          <li>
+            No <code>div</code> + JS toggle emulation — light dismiss, Escape and top-layer are
+            lost.
+          </li>
+          <li>
+            No <code>position-visibility: anchor-valid/visible</code> — outside the browser matrix.
+          </li>
+          <li>No modal popover — for modality there is Dialog.</li>
+        </ul>
+      </section>
+    </main>
+
+    <footer>
+      <p>Full contract: <code>packages/core/src/components/popover/popover.md</code></p>
+    </footer>
+  </body>
+</html>
