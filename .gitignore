@@ -12,8 +12,6 @@ packages/core/dist/
 # Test artifacts
 test-results/
 playwright-report/
-blob-report/
-playwright/.cache/
 
 # Environment
 .env
