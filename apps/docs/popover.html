@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Popover — @fewlines/css</title>
     <link rel="stylesheet" href="/core.css" />
+    <script src="/site-header.js" defer></script>
     <style>
       body {
         max-inline-size: 60rem;
@@ -39,22 +40,10 @@
     </style>
   </head>
   <body>
-    <header>
+    <site-header>
       <h1>Popover</h1>
       <p>Non-modal overlay: menus, tooltips, small panels. Light dismiss and Escape are native.</p>
-      <button class="ui-button theme-toggle" type="button" id="theme-toggle">Toggle theme</button>
-    </header>
-
-    <nav class="site-nav" aria-label="Documentation">
-      <ul>
-        <li><a href="./index.html">Overview</a></li>
-        <li><a href="./button.html">Button</a></li>
-        <li><a href="./field.html">Field</a></li>
-        <li><a href="./dialog.html">Dialog</a></li>
-        <li><a href="./popover.html" aria-current="page">Popover</a></li>
-        <li><a href="./accordion.html">Accordion</a></li>
-      </ul>
-    </nav>
+    </site-header>
 
     <main>
       <section>
@@ -138,17 +127,5 @@
     <footer>
       <p>Full contract: <code>packages/core/src/components/popover/popover.md</code></p>
     </footer>
-    <script>
-      // Host concern (theme notes 7.2): persistence and override are the
-      // host application's job; core ships no runtime JS.
-      const root = document.documentElement;
-      const btn = document.getElementById('theme-toggle');
-      btn.addEventListener('click', () => {
-        const current =
-          root.getAttribute('data-theme') ??
-          (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-        root.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
-      });
-    </script>
   </body>
 </html>
