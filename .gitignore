@@ -24,4 +24,5 @@ playwright/.cache/
 Thumbs.db
 
 # Editor
-*.log
+*.logapps/docs/core.css
+test-results/

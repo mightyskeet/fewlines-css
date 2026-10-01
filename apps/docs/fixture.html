@@ -1,0 +1,76 @@
+<!doctype html>
+<!-- Test fixture: all components in one page with stable ids for tests. -->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>@fewlines/css test fixture</title>
+    <link rel="stylesheet" href="/core.css" />
+  </head>
+  <body>
+    <main>
+      <!-- Button -->
+      <section id="buttons">
+        <button class="ui-button" type="button" id="btn-secondary">Secondary</button>
+        <button class="ui-button" type="button" id="btn-primary" data-variant="primary">
+          Primary
+        </button>
+        <button class="ui-button" type="button" id="btn-destructive" data-variant="destructive">
+          Delete
+        </button>
+        <button class="ui-button" type="button" id="btn-disabled" disabled>Disabled</button>
+      </section>
+
+      <!-- Field -->
+      <section id="fields">
+        <form id="test-form">
+          <label class="ui-field">
+            <span class="ui-field-label">Email</span>
+            <input
+              class="ui-input"
+              type="email"
+              id="input-email"
+              required
+              placeholder="you@example.com"
+            />
+            <span class="ui-field-description" id="email-hint">We never share your email.</span>
+          </label>
+          <label class="ui-field">
+            <span class="ui-field-label">Disabled</span>
+            <input class="ui-input" type="text" id="input-disabled" disabled />
+          </label>
+          <button class="ui-button" type="submit" id="form-submit">Submit</button>
+        </form>
+      </section>
+
+      <!-- Dialog -->
+      <section id="dialogs">
+        <button class="ui-button" type="button" id="dialog-open" onclick="testDialog.showModal()">
+          Open dialog
+        </button>
+        <dialog class="ui-dialog" id="testDialog">
+          <h2>Confirm</h2>
+          <p>Native modal dialog.</p>
+          <form method="dialog">
+            <button class="ui-button" type="button" id="dialog-cancel">Cancel</button>
+            <button class="ui-button" type="submit" id="dialog-close">Close</button>
+          </form>
+        </dialog>
+      </section>
+
+      <!-- Popover -->
+      <section id="popovers">
+        <button
+          class="ui-button ui-popover-trigger"
+          type="button"
+          popovertarget="testPopover"
+          id="popover-trigger"
+        >
+          Options
+        </button>
+        <div class="ui-popover" id="testPopover" popover>
+          <p>Popover content</p>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
