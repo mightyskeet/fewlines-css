@@ -32,3 +32,8 @@ core CSS from `/core.css`.
 - Dialog focus trap: Chromium's Tab wrap transiently reports `body` between
   the last and first focusable element; the trap test asserts the real
   contract (outside focus attempts are refused) instead of the transient state.
+- Manual checks in the VS Code integrated browser (Electron) are not
+  representative: the shell consumes Escape, so the native `cancel` event of
+  `<dialog>` never fires and Escape-close appears broken. It works in real
+  browsers (covered by `browser/dialog.spec.mjs`). For manual verification open
+  the docs site in a standalone browser.
