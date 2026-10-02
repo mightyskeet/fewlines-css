@@ -4,7 +4,7 @@
   "private": true,
   "description": "Static HTML documentation site for @fewlines/css.",
   "scripts": {
-    "dev": "npx serve .",
+    "dev": "node ../../tests/prepare.mjs && npx serve .",
     "lint": "echo 'no lint for static html yet'"
   }
 }

@@ -30,14 +30,12 @@ function newestMtime(dir) {
   return newest;
 }
 
-if (!existsSync(distCss)) {
-  console.error('dist/index.css missing — run pnpm build first');
-  process.exit(1);
-}
-
-const stale = newestMtime(join(coreRoot, 'src')) > statSync(distCss).mtimeMs;
-if (stale) {
-  console.log('dist/index.css is stale — rebuilding @fewlines/css…');
+const distMissing = !existsSync(distCss);
+const stale = !distMissing && newestMtime(join(coreRoot, 'src')) > statSync(distCss).mtimeMs;
+if (distMissing || stale) {
+  console.log(
+    distMissing ? 'dist/index.css missing — building…' : 'dist/index.css is stale — rebuilding…',
+  );
   execSync('node build.mjs', { cwd: coreRoot, stdio: 'inherit' });
 }
 
