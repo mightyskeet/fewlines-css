@@ -1,0 +1,43 @@
+/* Shared docs-site chrome: page layout, site header/navigation and demo
+ * containers. Linked by every docs page after /core.css, before the
+ * page's own <style>, so page styles can override. Page-specific styles
+ * live in the pages; fixture pages are test-only and do not link this. */
+
+site-header {
+  display: block;
+}
+
+body {
+  max-inline-size: 60rem;
+  margin-inline: auto;
+  padding-inline: var(--ui-space-xl);
+}
+
+site-header .theme-toggle {
+  float: inline-end;
+}
+
+.site-nav ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ui-space-sm);
+  padding: 0;
+  margin: 0 0 var(--ui-space-xl);
+  list-style: none;
+}
+
+.example {
+  border: 1px solid var(--ui-color-border);
+  border-radius: var(--ui-radius-md);
+  padding: var(--ui-space-md);
+  margin-block: var(--ui-space-md);
+  background: var(--ui-color-surface-raised);
+}
+
+pre {
+  overflow-x: auto;
+  background: var(--ui-color-surface-sunken);
+  padding: var(--ui-space-sm);
+  border-radius: var(--ui-radius-md);
+  font-size: 0.875rem;
+}

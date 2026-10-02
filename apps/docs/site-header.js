@@ -13,8 +13,10 @@
 //
 // Light DOM on purpose: page styles apply to the rendered chrome, and the
 // page content stays visible even if this script never loads (no shadow
-// root, fail open). Custom elements — autonomous — are baseline high
-// (Can I Use: Chrome 54, FF 63, Safari 10.1), above the docs matrix floor.
+// root, fail open). The chrome's own styles live in /docs.css, so this
+// element is JS-structure only. Custom elements — autonomous — are
+// baseline high (Can I Use: Chrome 54, FF 63, Safari 10.1), above the
+// docs matrix floor.
 
 /** Single source of truth for docs navigation. */
 const PAGES = [
@@ -33,17 +35,6 @@ class SiteHeader extends HTMLElement {
     // Idempotent: connectedCallback re-runs whenever the element is moved.
     if (this.dataset.chrome) return;
     this.dataset.chrome = 'true';
-
-    // The element hosts block content and renders the shared chrome; the
-    // chrome's own styles are injected here once, so adding a page needs
-    // no per-page CSS (page styles can still override — they load first).
-    const style = document.createElement('style');
-    style.textContent = [
-      'site-header{display:block}',
-      'site-header .theme-toggle{float:inline-end}',
-      '.site-nav ul{display:flex;flex-wrap:wrap;gap:var(--ui-space-sm);padding:0;margin:0 0 var(--ui-space-xl);list-style:none}',
-    ].join('\n');
-    document.head.append(style);
 
     const header = document.createElement('header');
     header.append(...this.childNodes, this.#themeToggle());
