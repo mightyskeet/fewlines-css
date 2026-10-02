@@ -67,8 +67,10 @@
     translate: none;
     position-anchor: --ui-popover-anchor;
 
-    /* 'center' = centered over the anchor in the inline axis. The 'span-inline'
-     * keyword is rejected by current Chromium (invalid value → property ignored),
+    /* 'center' = centered over the anchor in the inline axis. Bare
+     * 'span-inline' does not exist in the anchor-positioning grammar
+     * (invalid value → property ignored); physical 'span-left/right' are
+     * invalid in Chromium as well — only logical keywords are used,
      * see compatibility notes. */
     position-area: block-end center;
     position-try-fallbacks: block-start center;
