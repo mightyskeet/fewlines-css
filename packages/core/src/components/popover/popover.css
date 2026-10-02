@@ -7,10 +7,12 @@
  *   <button class="ui-button ui-popover-trigger" popovertarget="p1">Trigger</button>
  *   <div class="ui-popover" id="p1" popover>…</div>
  *
- * Placement (host opt-in): data-placement on the popover mirrors the
- * position-area value 1:1 — 17 values (9 grid regions + 8 span-aligned),
- * logical keywords only. Without it: below the trigger, flipped above
- * on overflow; without anchor support: centered (fixed).
+ * Placement (host opt-in): data-block / data-inline on the popover take
+ * the position-area keywords themselves (logical only, no alias
+ * vocabulary) and compose into position-area via custom properties; an
+ * unset axis falls back to span-all (centered on the anchor). Without
+ * attributes: below the trigger, flipped above on overflow; without
+ * anchor support: centered (fixed).
  * No positioning runtime in core (PROJECT_SPEC.md, раздел 11).
  *
  * Anchor contract:
@@ -84,119 +86,73 @@
     anchor-name: --ui-popover-anchor;
   }
 
-  /* Placement variants — host opt-in via data-placement on the popover.
-   * The attribute value mirrors the position-area value 1:1 (logical
-   * keywords only; verified across the matrix, compatibility notes).
-   * The gap margin sits only on the edges facing the trigger, so
-   * span-aligned edges stay flush. Try fallbacks are the host's
-   * responsibility. Multiple trigger/popover pairs on one page must
-   * scope anchor names (anchor-scope on a common wrapper) or give each
-   * pair its own anchor name — otherwise the last trigger in DOM order
-   * anchors every popover. */
+  /* Placement — host opt-in via data-block / data-inline on the popover.
+   * Attribute values are the position-area keywords themselves (logical
+   * only, no alias vocabulary); the axes compose through custom
+   * properties and an unset axis falls back to span-all (centered on
+   * the anchor). The gap margin sits only on the axis edge facing the
+   * trigger (start/end values), so span-* edges stay flush. Try
+   * fallbacks are the host's responsibility. Multiple trigger/popover
+   * pairs on one page must scope anchor names (anchor-scope on a common
+   * wrapper) or give each pair its own anchor name — otherwise the last
+   * trigger in DOM order anchors every popover.
+   * When universal attr() ships across the matrix (missing in Safari 27,
+   * compatibility notes), the ten identity rules below collapse into
+   * attr(data-block type(<position-area>)). */
   /* stylelint-disable declaration-property-value-no-unknown */
-  .ui-popover[data-placement] {
+  .ui-popover[data-block],
+  .ui-popover[data-inline] {
+    position-area: var(--ui-popover-block, span-all) var(--ui-popover-inline, span-all);
     position-try-fallbacks: none;
-  }
-
-  .ui-popover[data-placement='block-start inline-start'] {
-    position-area: block-start inline-start;
-    margin-block: 0 var(--ui-space-2xs);
-    margin-inline: 0 var(--ui-space-2xs);
-  }
-
-  .ui-popover[data-placement='block-start center'] {
-    position-area: block-start center;
-    margin-block: 0 var(--ui-space-2xs);
-    margin-inline: 0;
-  }
-
-  .ui-popover[data-placement='block-start inline-end'] {
-    position-area: block-start inline-end;
-    margin-block: 0 var(--ui-space-2xs);
-    margin-inline: var(--ui-space-2xs) 0;
-  }
-
-  .ui-popover[data-placement='center inline-start'] {
-    position-area: center inline-start;
-    margin-block: 0;
-    margin-inline: 0 var(--ui-space-2xs);
-  }
-
-  .ui-popover[data-placement='center'] {
-    position-area: center;
     margin: 0;
   }
 
-  .ui-popover[data-placement='center inline-end'] {
-    position-area: center inline-end;
-    margin-block: 0;
-    margin-inline: var(--ui-space-2xs) 0;
-  }
+  .ui-popover[data-block='block-start'] {
+    --ui-popover-block: block-start;
 
-  .ui-popover[data-placement='block-end inline-start'] {
-    position-area: block-end inline-start;
-    margin-block: var(--ui-space-2xs) 0;
-    margin-inline: 0 var(--ui-space-2xs);
-  }
-
-  .ui-popover[data-placement='block-end center'] {
-    position-area: block-end center;
-    margin-block: var(--ui-space-2xs) 0;
-    margin-inline: 0;
-  }
-
-  .ui-popover[data-placement='block-end inline-end'] {
-    position-area: block-end inline-end;
-    margin-block: var(--ui-space-2xs) 0;
-    margin-inline: var(--ui-space-2xs) 0;
-  }
-
-  .ui-popover[data-placement='block-start span-inline-end'] {
-    position-area: block-start span-inline-end;
     margin-block: 0 var(--ui-space-2xs);
-    margin-inline: 0;
   }
 
-  .ui-popover[data-placement='block-start span-inline-start'] {
-    position-area: block-start span-inline-start;
-    margin-block: 0 var(--ui-space-2xs);
-    margin-inline: 0;
+  .ui-popover[data-block='center'] {
+    --ui-popover-block: center;
   }
 
-  .ui-popover[data-placement='inline-start span-block-end'] {
-    position-area: inline-start span-block-end;
-    margin-block: 0;
+  .ui-popover[data-block='block-end'] {
+    --ui-popover-block: block-end;
+
+    margin-block: var(--ui-space-2xs) 0;
+  }
+
+  .ui-popover[data-block='span-block-start'] {
+    --ui-popover-block: span-block-start;
+  }
+
+  .ui-popover[data-block='span-block-end'] {
+    --ui-popover-block: span-block-end;
+  }
+
+  .ui-popover[data-inline='inline-start'] {
+    --ui-popover-inline: inline-start;
+
     margin-inline: 0 var(--ui-space-2xs);
   }
 
-  .ui-popover[data-placement='inline-start span-block-start'] {
-    position-area: inline-start span-block-start;
-    margin-block: 0;
-    margin-inline: 0 var(--ui-space-2xs);
+  .ui-popover[data-inline='center'] {
+    --ui-popover-inline: center;
   }
 
-  .ui-popover[data-placement='inline-end span-block-end'] {
-    position-area: inline-end span-block-end;
-    margin-block: 0;
+  .ui-popover[data-inline='inline-end'] {
+    --ui-popover-inline: inline-end;
+
     margin-inline: var(--ui-space-2xs) 0;
   }
 
-  .ui-popover[data-placement='inline-end span-block-start'] {
-    position-area: inline-end span-block-start;
-    margin-block: 0;
-    margin-inline: var(--ui-space-2xs) 0;
+  .ui-popover[data-inline='span-inline-start'] {
+    --ui-popover-inline: span-inline-start;
   }
 
-  .ui-popover[data-placement='block-end span-inline-end'] {
-    position-area: block-end span-inline-end;
-    margin-block: var(--ui-space-2xs) 0;
-    margin-inline: 0;
-  }
-
-  .ui-popover[data-placement='block-end span-inline-start'] {
-    position-area: block-end span-inline-start;
-    margin-block: var(--ui-space-2xs) 0;
-    margin-inline: 0;
+  .ui-popover[data-inline='span-inline-end'] {
+    --ui-popover-inline: span-inline-end;
   }
   /* stylelint-enable declaration-property-value-no-unknown */
 
