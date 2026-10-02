@@ -6,7 +6,7 @@
     <title>Alert — @fewlines/css</title>
     <link rel="stylesheet" href="/core.css" />
     <link rel="stylesheet" href="/docs.css" />
-    <script src="/site-header.js" defer></script>
+    <script src="/site-sidebar.js" defer></script>
     <style>
       .example > * + * {
         margin-block-start: var(--ui-space-md);
@@ -14,15 +14,17 @@
     </style>
   </head>
   <body>
-    <site-header>
-      <h1>Alert</h1>
-      <p>
-        Feedback message: informational callout, operation result, error. Static container — the
-        semantic layer (live region role) belongs to the host application.
-      </p>
-    </site-header>
+    <site-sidebar></site-sidebar>
 
     <main>
+      <header class="page-header">
+        <h1>Alert</h1>
+        <p>
+          Feedback message: informational callout, operation result, error. Static container — the
+          semantic layer (live region role) belongs to the host application.
+        </p>
+      </header>
+
       <section>
         <h2>Semantic basis</h2>
         <p>

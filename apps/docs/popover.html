@@ -6,7 +6,7 @@
     <title>Popover — @fewlines/css</title>
     <link rel="stylesheet" href="/core.css" />
     <link rel="stylesheet" href="/docs.css" />
-    <script src="/site-header.js" defer></script>
+    <script src="/site-sidebar.js" defer></script>
     <style>
       .placement-grid {
         display: grid;
@@ -39,12 +39,16 @@
     </style>
   </head>
   <body>
-    <site-header>
-      <h1>Popover</h1>
-      <p>Non-modal overlay: menus, tooltips, small panels. Light dismiss and Escape are native.</p>
-    </site-header>
+    <site-sidebar></site-sidebar>
 
     <main>
+      <header class="page-header">
+        <h1>Popover</h1>
+        <p>
+          Non-modal overlay: menus, tooltips, small panels. Light dismiss and Escape are native.
+        </p>
+      </header>
+
       <section>
         <h2>Native basis</h2>
         <p>

@@ -1,10 +1,60 @@
-/* Shared docs-site chrome: page layout, site header/navigation and demo
- * containers. Linked by every docs page after /core.css, before the
- * page's own <style>, so page styles can override. Page-specific styles
- * live in the pages; fixture pages are test-only and do not link this. */
+/* Shared docs-site chrome: classic docs layout — sticky sidebar (brand,
+ * page navigation, theme toggle) + content column. Linked by every docs
+ * page after /core.css, before the page's own <style>, so page styles can
+ * override. Page-specific styles live in the pages; fixture pages are
+ * test-only and do not link this.
+ *
+ * Platform features (compatibility notes, 2026-10-02): CSS Grid and
+ * position:sticky — direct use, floors (Chrome 58/91, FF 54/59,
+ * Safari 10.1/13) far above the .browserslistrc matrix; narrow screens get
+ * a single-column layout from the mobile-first defaults. */
 
-site-header {
+site-sidebar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ui-space-sm) var(--ui-space-md);
+  padding-block-end: var(--ui-space-md);
+  margin-block-end: var(--ui-space-xl);
+  border-block-end: 1px solid var(--ui-color-border);
+}
+
+.site-brand {
+  margin-inline-end: auto;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--ui-color-text);
+  text-decoration: none;
+}
+
+.site-nav {
+  flex-basis: 100%;
+}
+
+.site-nav ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ui-space-2xs) var(--ui-space-sm);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.site-nav a {
   display: block;
+  padding: var(--ui-space-2xs) var(--ui-space-sm);
+  border-radius: var(--ui-radius-sm);
+  color: var(--ui-color-text);
+  text-decoration: none;
+}
+
+.site-nav a:hover,
+.site-nav a[aria-current='page'] {
+  background: var(--ui-color-surface-sunken);
+}
+
+.site-nav a[aria-current='page'] {
+  font-weight: 600;
 }
 
 body {
@@ -13,17 +63,13 @@ body {
   padding-inline: var(--ui-space-xl);
 }
 
-site-header .theme-toggle {
-  float: inline-end;
+/* Page title block, first child of <main> (static markup — renders without JS). */
+.page-header {
+  margin-block: 0 var(--ui-space-xl);
 }
 
-.site-nav ul {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--ui-space-sm);
-  padding: 0;
-  margin: 0 0 var(--ui-space-xl);
-  list-style: none;
+.page-header p {
+  color: var(--ui-color-text-muted);
 }
 
 .example {
@@ -40,4 +86,53 @@ pre {
   padding: var(--ui-space-sm);
   border-radius: var(--ui-radius-md);
   font-size: 0.875rem;
+}
+
+@media (min-width: 72rem) {
+  body {
+    display: grid;
+    grid-template-columns: 16rem minmax(0, 60rem);
+    gap: 0 var(--ui-space-2xl);
+    justify-content: center;
+    max-inline-size: none;
+    padding-inline: var(--ui-space-lg);
+  }
+
+  main,
+  footer {
+    grid-column: 2;
+  }
+
+  site-sidebar {
+    position: sticky;
+    top: 0;
+    grid-column: 1;
+    grid-row: 1 / span 2;
+    align-self: start;
+    flex-direction: column;
+    align-items: stretch;
+    flex-wrap: nowrap;
+    gap: var(--ui-space-lg);
+    max-block-size: 100vh;
+    overflow: auto;
+    margin-block-end: 0;
+    padding-block: var(--ui-space-lg);
+    border-block-end: 0;
+    border-inline-end: 1px solid var(--ui-color-border);
+  }
+
+  .site-brand {
+    margin-inline-end: 0;
+    padding-inline-start: var(--ui-space-sm);
+  }
+
+  .site-nav {
+    flex-basis: auto;
+  }
+
+  .site-nav ul {
+    flex-direction: column;
+    flex-wrap: nowrap;
+    gap: var(--ui-space-2xs);
+  }
 }

@@ -1,0 +1,88 @@
+// Docs-site chrome: shared sidebar (brand, page navigation, theme toggle).
+// This is host/tooling JS — the core package stays CSS-only
+// (PROJECT_SPEC.md, раздел 3).
+//
+// Adding a docs page = one entry in PAGES below; every sidebar picks up the
+// link automatically. The page title/description are static markup inside
+// <main> (header.page-header), so they render even if this script never
+// loads — the sidebar itself fails open (nav simply missing).
+//
+// Layout contract (docs.css): flex column on wide screens (sticky grid
+// sidebar), wrap row on narrow ones.
+//
+// Light DOM on purpose: page styles apply to the rendered chrome.
+// Custom elements — autonomous — are baseline high (Can I Use: Chrome 54,
+// FF 63, Safari 10.1), above the docs matrix floor.
+
+/** Single source of truth for docs navigation. */
+const PAGES = [
+  { href: 'index.html', label: 'Overview' },
+  { href: 'button.html', label: 'Button' },
+  { href: 'field.html', label: 'Field' },
+  { href: 'dialog.html', label: 'Dialog' },
+  { href: 'popover.html', label: 'Popover' },
+  { href: 'accordion.html', label: 'Accordion' },
+  { href: 'alert.html', label: 'Alert' },
+  { href: 'switch.html', label: 'Switch' },
+];
+
+class SiteSidebar extends HTMLElement {
+  connectedCallback() {
+    // Idempotent: connectedCallback re-runs whenever the element is moved.
+    if (this.dataset.chrome) return;
+    this.dataset.chrome = 'true';
+
+    this.append(this.#brand(), this.#nav(), this.#themeToggle());
+  }
+
+  #brand() {
+    const link = document.createElement('a');
+    link.className = 'site-brand';
+    link.href = './index.html';
+    link.textContent = '@fewlines/css';
+    return link;
+  }
+
+  #nav() {
+    // The static server serves clean URLs (/alert.html -> /alert), so both
+    // sides are normalized to the extensionless page name.
+    const current =
+      location.pathname
+        .replace(/\.html$/, '')
+        .split('/')
+        .pop() || 'index';
+    const nav = document.createElement('nav');
+    nav.className = 'site-nav';
+    nav.setAttribute('aria-label', 'Documentation');
+    const list = document.createElement('ul');
+    for (const { href, label } of PAGES) {
+      const item = document.createElement('li');
+      const link = document.createElement('a');
+      link.href = `./${href}`;
+      link.textContent = label;
+      if (href.replace(/\.html$/, '') === current) link.setAttribute('aria-current', 'page');
+      item.append(link);
+      list.append(item);
+    }
+    nav.append(list);
+    return nav;
+  }
+
+  #themeToggle() {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'ui-button theme-toggle';
+    button.textContent = 'Toggle theme';
+    button.addEventListener('click', () => {
+      // Host concern (theme notes 7.2): persistence is the host's job.
+      const root = document.documentElement;
+      const current =
+        root.getAttribute('data-theme') ??
+        (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      root.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
+    });
+    return button;
+  }
+}
+
+customElements.define('site-sidebar', SiteSidebar);
