@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Badge — @fewlines/css</title>
+    <link rel="stylesheet" href="/core.css" />
+    <link rel="stylesheet" href="/docs.css" />
+    <script src="/site-sidebar.js" defer></script>
+  </head>
+  <body>
+    <site-sidebar></site-sidebar>
+
+    <main>
+      <header class="page-header">
+        <h1>Badge</h1>
+        <p>
+          Compact status label: statuses and counters next to headings, tabs and list items. Static
+          inline element — no states, no JS.
+        </p>
+      </header>
+
+      <section>
+        <h2>Semantic basis</h2>
+        <p>
+          The platform has no native badge element, so the component is a static
+          <code>&lt;span&gt;</code> and adds no JS: no role, no focus, no hover. The label text is
+          the value itself; for ambiguous counters the host supplies an accessible name via
+          <code>aria-label</code>.
+        </p>
+      </section>
+
+      <section>
+        <h2>Canonical markup</h2>
+        <pre><code>&lt;span class="ui-badge"&gt;Beta&lt;/span&gt;</code></pre>
+        <p>
+          Adjacent badges get a gap automatically (<code>.ui-badge + .ui-badge</code>). The label
+          never wraps (<code>white-space: nowrap</code>) — badges are short labels by contract.
+        </p>
+      </section>
+
+      <section>
+        <h2>Variants</h2>
+        <div class="example">
+          <span class="ui-badge">Default</span>
+          <span class="ui-badge" data-variant="accent">New</span>
+          <span class="ui-badge" data-variant="success">Active</span>
+          <span class="ui-badge" data-variant="warning">Pending</span>
+          <span class="ui-badge" data-variant="danger">Failed</span>
+        </div>
+        <p>
+          <code>data-variant="accent|success|warning|danger"</code>; default is neutral (no
+          attribute). Variant names mirror the semantic token families they consume. Surfaces come
+          from the tint tokens (<code>--ui-color-*-tint</code>), labels from the
+          <code>-strong</code> variant colors — the same feedback model as Alert, all pairs
+          validated by the APCA matrix at the strict body threshold (Lc 75) in both themes.
+        </p>
+      </section>
+
+      <section>
+        <h2>Counters</h2>
+        <div class="example">
+          <p>
+            Inbox
+            <span class="ui-badge" data-variant="accent" aria-label="3 unread messages">3</span>
+          </p>
+        </div>
+        <p>
+          A bare number is rarely self-explanatory for assistive tech — the host adds
+          <code>aria-label</code> when the count alone is ambiguous.
+        </p>
+      </section>
+
+      <section>
+        <h2>Accessibility</h2>
+        <ul>
+          <li>Badge is a generic inline element: no interactive role, not focusable, no states.</li>
+          <li>
+            Color is never the only carrier of meaning (WCAG 1.4.1) — the label text states the
+            status; variant styling reinforces it.
+          </li>
+          <li>
+            The 0.75rem label size relies on pairs validated at the strict body-role APCA threshold,
+            not on the smaller-text allowances.
+          </li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Do not</h2>
+        <ul>
+          <li>
+            No interactive badges — a <code>&lt;button&gt;</code> or <code>&lt;a&gt;</code> styled
+            as <code>ui-badge</code> is out of contract; actions belong to Button.
+          </li>
+          <li>No variant classes — variants are expressed only via <code>data-variant</code>.</li>
+          <li>
+            No multi-line pills — <code>white-space: nowrap</code> is part of the contract;
+            multi-line labels belong in Alert or plain text.
+          </li>
+        </ul>
+      </section>
+    </main>
+
+    <footer>
+      <p>Full contract: <code>packages/core/src/components/badge/badge.md</code></p>
+    </footer>
+  </body>
+</html>

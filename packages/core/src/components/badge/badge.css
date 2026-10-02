@@ -1,0 +1,86 @@
+/* Badge component.
+ *
+ * Native basis: the platform has no native badge element. Badge is a static
+ * inline container (like Alert, PROJECT_SPEC.md, 4.1): the semantic layer is
+ * host-owned — a status word must be readable as text (WCAG 1.4.1: color is
+ * never the sole carrier of meaning), counters may need a host-supplied
+ * aria-label when the number alone is ambiguous. Core adds no JS, no states.
+ *
+ * Canonical structure:
+ *   <span class="ui-badge">Beta</span>
+ *   <span class="ui-badge" data-variant="success">Active</span>
+ *
+ * Variants via data-variant: accent | success | warning | danger
+ * (default — neutral, attribute omitted). Variant names mirror the semantic
+ * token families they consume.
+ *
+ * Feedback-family styling (same model as Alert): tint surface + -strong
+ * text. All consumed pairs are already validated by the APCA matrix at the
+ * strict body threshold, so the 0.75rem label size needs no extra registry
+ * entries (tests/apca):
+ *   default: text on surface-sunken (body)
+ *   variants: {accent,success,warning,danger}-strong on *-tint (body)
+ *
+ * APCA pairs used (validated in tests/apca):
+ *   text on surface-sunken (body)
+ *   {accent,danger,success,warning}-strong on *-tint (body)
+ */
+
+.ui-badge {
+  --ui-badge-fg: var(--ui-color-text);
+  --ui-badge-bg: var(--ui-color-surface-sunken);
+
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-space-3xs);
+  box-sizing: border-box;
+  padding-block: var(--ui-space-2xs);
+  padding-inline: var(--ui-space-2xs);
+  border-radius: var(--ui-radius-full);
+  color: var(--ui-badge-fg);
+  background: var(--ui-badge-bg);
+  font-size: var(--ui-font-size-xs);
+  font-weight: var(--ui-font-weight-medium);
+
+  /* One-line pill with an integer line box: 12px font + 2xs padding = a
+   * 20px element. A fractional height (e.g. 12px × 1.2 = 14.4px) puts every
+   * later sibling on a fractional document position, which breaks the
+   * device-pixel grid of the whole flow below the badge. */
+  line-height: 1;
+
+  /* Badge is a short label by contract; multi-line pills are host styling. */
+  white-space: nowrap;
+}
+
+.ui-badge[data-variant='accent'] {
+  --ui-badge-fg: var(--ui-color-accent-strong);
+  --ui-badge-bg: var(--ui-color-accent-tint);
+}
+
+.ui-badge[data-variant='success'] {
+  --ui-badge-fg: var(--ui-color-success-strong);
+  --ui-badge-bg: var(--ui-color-success-tint);
+}
+
+.ui-badge[data-variant='warning'] {
+  --ui-badge-fg: var(--ui-color-warning-strong);
+  --ui-badge-bg: var(--ui-color-warning-tint);
+}
+
+.ui-badge[data-variant='danger'] {
+  --ui-badge-fg: var(--ui-color-danger-strong);
+  --ui-badge-bg: var(--ui-color-danger-tint);
+}
+
+/* Adjacent badges get a gap automatically (like stacked alerts). */
+.ui-badge + .ui-badge {
+  margin-inline-start: var(--ui-space-2xs);
+}
+
+/* Forced colors: the tint background is stripped by the system; the label
+ * survives as system-colored text (like alert). */
+@media (forced-colors: active) {
+  .ui-badge {
+    forced-color-adjust: auto;
+  }
+}

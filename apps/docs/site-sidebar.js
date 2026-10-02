@@ -23,6 +23,7 @@ const PAGES = [
   { href: 'popover.html', label: 'Popover' },
   { href: 'accordion.html', label: 'Accordion' },
   { href: 'alert.html', label: 'Alert' },
+  { href: 'badge.html', label: 'Badge' },
   { href: 'switch.html', label: 'Switch' },
 ];
 

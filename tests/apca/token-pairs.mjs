@@ -129,8 +129,9 @@ export const tokenPairs = [
   { fg: 'success', bg: 'surface', role: 'body' },
   { fg: 'on-success', bg: 'success-surface', role: 'body' },
 
-  // Alert tint surfaces: title uses -strong (body), body text uses text
-  // (body), 1px border uses the base variant color (nonText)
+  // Feedback tint surfaces (Alert, Badge): title/label uses -strong (body),
+  // body text uses text (body), 1px border uses the base variant color
+  // (nonText)
   { fg: 'accent-strong', bg: 'accent-tint', role: 'body' },
   { fg: 'text', bg: 'accent-tint', role: 'body' },
   { fg: 'accent', bg: 'accent-tint', role: 'nonText' },

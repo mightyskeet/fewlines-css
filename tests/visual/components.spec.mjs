@@ -57,6 +57,10 @@ for (const theme of themes) {
       await expect(page.locator('#alerts')).toHaveScreenshot(`alerts-${theme}.png`);
     });
 
+    test(`badges all variants (${theme})`, async ({ page }) => {
+      await expect(page.locator('#badges')).toHaveScreenshot(`badges-${theme}.png`);
+    });
+
     test(`switches all states (${theme})`, async ({ page }) => {
       await expect(page.locator('#switches')).toHaveScreenshot(`switches-${theme}.png`);
     });
