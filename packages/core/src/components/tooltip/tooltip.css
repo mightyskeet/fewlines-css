@@ -1,0 +1,118 @@
+/* Tooltip component.
+ *
+ * Native basis: Popover API with `popover="hint"` (tooltip-state popover) +
+ * interest invokers (`interestfor`) — hover/focus activation is native.
+ * Both are progressive enhancements (compatibility notes, 2026-10-02):
+ *   - popover="hint": Chrome/Edge 151+, FF 153+; Safari — only preview.
+ *     In engines without the hint keyword the invalid value falls back to
+ *     the `auto` popover state (HTML invalid-value default), so the element
+ *     still behaves as a dismissible popover;
+ *   - interestfor: Chrome/Edge 142+ only; FF/Safari — not supported.
+ * The declarative zero-JS fallback is `popovertarget`
+ * (+ `popovertargetaction="show"`): the tooltip opens on click, Escape and
+ * light dismiss stay native everywhere. No runtime JS (PROJECT_SPEC.md, 4.1).
+ *
+ * Canonical structure:
+ *   <button class="ui-tooltip-trigger" popovertarget="tip-1"
+ *           popovertargetaction="show" interestfor="tip-1"
+ *           aria-describedby="tip-1">Save</button>
+ *   <span class="ui-tooltip" id="tip-1" popover="hint">Saves your changes</span>
+ *
+ * role="tooltip" is NOT set explicitly: popover="hint" carries the implicit
+ * minimum tooltip role where the keyword is supported (the host may add
+ * role="tooltip" for uniform roles while Safari lacks hint, same pattern as
+ * Switch). aria-describedby IS canonical: it is the only association in the
+ * click-fallback engines (popovertarget wires no description).
+ *
+ * Anchor contract (same model as Popover): the trigger declares
+ * --ui-tooltip-anchor, the tooltip positions with position-area and flips
+ * with position-try-fallbacks; without anchor support — centered (fixed).
+ * No positioning runtime in core (PROJECT_SPEC.md, раздел 11).
+ *
+ * APCA pair used (validated in tests/apca): text on surface-raised (body).
+ */
+
+.ui-tooltip {
+  /* Author display beats the UA [popover]:not(:popover-open) rule — keep
+   * the closed state explicitly hidden; block is applied only when open
+   * (the span would otherwise render inline in the top layer). */
+  display: none;
+  box-sizing: border-box;
+  max-inline-size: 20rem;
+  color: var(--ui-color-text);
+  background: var(--ui-color-surface-raised);
+  border: 1px solid var(--ui-color-border);
+  border-radius: var(--ui-radius-sm);
+  padding: var(--ui-space-2xs) var(--ui-space-xs);
+  box-shadow: 0 0.125rem 0.5rem color-mix(in oklab, black 15%, transparent);
+  font-size: var(--ui-font-size-xs);
+  line-height: var(--ui-line-height-normal);
+  text-wrap: pretty;
+  margin: auto;
+  inset: unset;
+
+  /* Fallback positioning: centered in viewport (no anchor support). */
+  position: fixed;
+  inset-block-start: 50%;
+  inset-inline-start: 50%;
+  translate: -50% -50%;
+}
+
+/* Entry animation via @starting-style + allow-discrete (same as popover). */
+.ui-tooltip:popover-open {
+  display: block;
+  transition:
+    opacity var(--ui-duration-fast) ease,
+    translate var(--ui-duration-fast) ease,
+    overlay var(--ui-duration-fast) ease allow-discrete,
+    display var(--ui-duration-fast) ease allow-discrete;
+}
+
+@starting-style {
+  .ui-tooltip:popover-open {
+    opacity: 0;
+    translate: -50% calc(-50% + 0.25rem);
+  }
+}
+
+/* Anchor positioning enhancement — single canonical implementation,
+ * gated by @supports (compatibility notes: partial support).
+ * stylelint-disable-next-line declaration-property-value-no-unknown --
+ * position-area/position-try-fallbacks are valid CSS Anchor Positioning
+ * syntax; stylelint's property database does not know them yet. */
+@supports (anchor-name: --ui-tooltip) {
+  .ui-tooltip {
+    /* stylelint-disable declaration-property-value-no-unknown */
+    position: fixed;
+    inset: unset;
+    translate: none;
+    position-anchor: --ui-tooltip-anchor;
+    position-area: block-end center;
+    position-try-fallbacks: block-start center;
+    /* stylelint-enable declaration-property-value-no-unknown */
+    margin-block-start: var(--ui-space-2xs);
+  }
+
+  /* Trigger opts in by declaring the anchor name. */
+  .ui-tooltip-trigger {
+    anchor-name: --ui-tooltip-anchor;
+  }
+
+  @starting-style {
+    .ui-tooltip:popover-open {
+      translate: 0 0.25rem;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-tooltip:popover-open {
+    transition: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .ui-tooltip {
+    forced-color-adjust: auto;
+  }
+}

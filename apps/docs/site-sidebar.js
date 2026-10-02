@@ -25,6 +25,7 @@ const PAGES = [
   { href: 'alert.html', label: 'Alert' },
   { href: 'badge.html', label: 'Badge' },
   { href: 'switch.html', label: 'Switch' },
+  { href: 'tooltip.html', label: 'Tooltip' },
 ];
 
 class SiteSidebar extends HTMLElement {

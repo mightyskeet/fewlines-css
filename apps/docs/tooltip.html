@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Tooltip — @fewlines/css</title>
+    <link rel="stylesheet" href="/core.css" />
+    <link rel="stylesheet" href="/docs.css" />
+    <script src="/site-sidebar.js" defer></script>
+  </head>
+  <body>
+    <site-sidebar></site-sidebar>
+
+    <main>
+      <header class="page-header">
+        <h1>Tooltip</h1>
+        <p>
+          Short hint for an interface element: shown on hover or focus, dismissed with Escape or an
+          outside click. Fully declarative — no runtime JS.
+        </p>
+      </header>
+
+      <section>
+        <h2>Semantic basis</h2>
+        <p>
+          The tooltip is a Popover API element (<code>popover="hint"</code>) plus interest invokers
+          (<code>interestfor</code>): in Chromium the browser shows it on hover/focus and hides it
+          when interest is lost. Both features are progressive enhancements — in other engines the
+          declarative <code>popovertarget</code> fallback opens the hint on click, and Escape /
+          light dismiss stay native everywhere.
+        </p>
+      </section>
+
+      <section>
+        <h2>Canonical markup</h2>
+        <pre><code>&lt;button class="ui-tooltip-trigger"
+        popovertarget="tip-save"
+        popovertargetaction="show"
+        interestfor="tip-save"
+        aria-describedby="tip-save"&gt;
+  Save
+&lt;/button&gt;
+&lt;span class="ui-tooltip" id="tip-save" popover="hint"&gt;Saves your changes&lt;/span&gt;</code></pre>
+        <p>
+          The trigger keeps its own styling (<code>ui-button</code> and friends);
+          <code>ui-tooltip-trigger</code> only declares the anchor name. The hint is a
+          <strong>sibling</strong> element, never a child of the trigger — child text would become
+          part of the trigger's accessible name.
+        </p>
+      </section>
+
+      <section>
+        <h2>Example</h2>
+        <div class="example">
+          <p>
+            Hover or focus the button:
+            <button
+              class="ui-button ui-tooltip-trigger"
+              type="button"
+              popovertarget="tip-save"
+              popovertargetaction="show"
+              interestfor="tip-save"
+              aria-describedby="tip-save"
+            >
+              Save
+            </button>
+            <span class="ui-tooltip" id="tip-save" popover="hint">Saves your changes</span>
+          </p>
+          <p>
+            Icon-only buttons are the main use case:
+            <button
+              class="ui-button ui-tooltip-trigger"
+              type="button"
+              popovertarget="tip-info"
+              popovertargetaction="show"
+              interestfor="tip-info"
+              aria-describedby="tip-info"
+              aria-label="Account details"
+            >
+              i
+            </button>
+            <span class="ui-tooltip" id="tip-info" popover="hint">
+              View billing address, plan and payment method
+            </span>
+          </p>
+        </div>
+        <p>
+          The hint renders below the trigger, centered, and flips above automatically when there is
+          no room (<code>position-area</code> + <code>position-try-fallbacks</code>, inside
+          <code>@supports</code>). Several pairs on one page need scoped anchor names — wrap a pair
+          in an element with <code>anchor-scope: all</code>.
+        </p>
+      </section>
+
+      <section>
+        <h2>Accessibility</h2>
+        <ul>
+          <li>
+            <code>aria-describedby</code> is part of the canonical markup: it is the only
+            description association in engines without interest invokers; where interest is
+            supported the browser wires it natively.
+          </li>
+          <li>
+            WCAG 1.4.13 is native: Escape dismisses, the pointer can move onto the hint text, the
+            hint stays visible until interest is lost or it is dismissed.
+          </li>
+          <li>
+            Keyboard: focus opens the hint (interest engines), Enter/Space opens it in the click
+            fallback; Escape always closes. Focus is never trapped.
+          </li>
+          <li>
+            The <code>tooltip</code> role is implicit from <code>popover="hint"</code> — do not set
+            it manually. Text uses the <code>text/surface-raised</code> pair, validated at the
+            strict body APCA threshold (Lc 75) in both themes.
+          </li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Do not</h2>
+        <ul>
+          <li>
+            No JS for open/close — <code>interestfor</code> and <code>popovertarget</code> are
+            declarative.
+          </li>
+          <li>
+            No interactive or long content inside the hint — that is a Popover; no custom placement
+            attributes — the tooltip has one canonical placement with a native flip.
+          </li>
+          <li>
+            Do not use the <code>title</code> attribute — it is unstyleable and
+            keyboard-inaccessible.
+          </li>
+        </ul>
+      </section>
+    </main>
+
+    <footer>
+      <p>Full contract: <code>packages/core/src/components/tooltip/tooltip.md</code></p>
+    </footer>
+  </body>
+</html>

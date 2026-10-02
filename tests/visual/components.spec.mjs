@@ -99,6 +99,20 @@ test.describe('overlays', () => {
     await expect(page.locator('#testPopover')).toBeVisible();
     await expect(page).toHaveScreenshot('popover-open-dark.png');
   });
+
+  test('tooltip open (light)', async ({ page }) => {
+    await page.emulateMedia({ colorScheme: 'light' });
+    await page.hover('#tooltip-trigger');
+    await expect(page.locator('#testTooltip')).toBeVisible();
+    await expect(page).toHaveScreenshot('tooltip-open-light.png');
+  });
+
+  test('tooltip open (dark)', async ({ page }) => {
+    await page.emulateMedia({ colorScheme: 'dark' });
+    await page.hover('#tooltip-trigger');
+    await expect(page.locator('#testTooltip')).toBeVisible();
+    await expect(page).toHaveScreenshot('tooltip-open-dark.png');
+  });
 });
 
 test.describe('reduced motion', () => {
