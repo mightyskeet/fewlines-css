@@ -25,17 +25,16 @@
         <p>
           The tooltip is a Popover API element (<code>popover="hint"</code>) plus interest invokers
           (<code>interestfor</code>): in Chromium the browser shows it on hover/focus and hides it
-          when interest is lost. Both features are progressive enhancements — in other engines the
-          declarative <code>popovertarget</code> fallback opens the hint on click, and Escape /
-          light dismiss stay native everywhere.
+          when interest is lost. Both features are progressive enhancements. In engines without
+          interest (Firefox, Safari) the hint has <strong>no hover activation by design</strong> —
+          the click stays the trigger's action (a "Save" button must save, not show a hint), and the
+          description stays associated via <code>aria-describedby</code> for assistive tech.
         </p>
       </section>
 
       <section>
         <h2>Canonical markup</h2>
         <pre><code>&lt;button class="ui-tooltip-trigger"
-        popovertarget="tip-save"
-        popovertargetaction="show"
         interestfor="tip-save"
         aria-describedby="tip-save"&gt;
   Save
@@ -57,8 +56,6 @@
             <button
               class="ui-button ui-tooltip-trigger"
               type="button"
-              popovertarget="tip-save"
-              popovertargetaction="show"
               interestfor="tip-save"
               aria-describedby="tip-save"
             >
@@ -76,6 +73,12 @@
           in its own element with <code>anchor-scope: all</code> (or give each pair a unique anchor
           name).
         </p>
+        <p>
+          For <strong>inert</strong> triggers (a "?" button with no action of its own) the host may
+          opt in to click activation by adding <code>popovertarget</code> +
+          <code>popovertargetaction="show"</code> — the hint then also opens on click in engines
+          without interest. Never add it to action triggers.
+        </p>
       </section>
 
       <section>
@@ -91,8 +94,9 @@
             hint stays visible until interest is lost or it is dismissed.
           </li>
           <li>
-            Keyboard: focus opens the hint (interest engines), Enter/Space opens it in the click
-            fallback; Escape always closes. Focus is never trapped.
+            Keyboard: focus opens the hint (interest engines), Escape always closes, focus is never
+            trapped. In engines without interest the hint is not shown visually; the description is
+            still announced for the focused trigger via <code>aria-describedby</code>.
           </li>
           <li>
             The <code>tooltip</code> role is implicit from <code>popover="hint"</code> — do not set
@@ -105,9 +109,10 @@
       <section>
         <h2>Do not</h2>
         <ul>
+          <li>No JS for open/close — <code>interestfor</code> is declarative.</li>
           <li>
-            No JS for open/close — <code>interestfor</code> and <code>popovertarget</code> are
-            declarative.
+            No <code>popovertarget</code> on action triggers — the click must perform the action,
+            not show the hint; click activation is an opt-in for inert triggers only.
           </li>
           <li>
             No interactive or long content inside the hint — that is a Popover; no custom placement

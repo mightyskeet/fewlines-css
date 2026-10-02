@@ -13,14 +13,28 @@
     <button
       class="ui-button ui-tooltip-trigger"
       type="button"
-      popovertarget="tip-save"
-      popovertargetaction="show"
       interestfor="tip-save"
       aria-describedby="tip-save"
     >
       Save
     </button>
     <span class="ui-tooltip" id="tip-save" popover="hint">Saves your changes</span>
+
+    <h2>Opt-in click activation for an inert trigger (host adds popovertarget)</h2>
+    <p>
+      <button
+        class="ui-button ui-tooltip-trigger"
+        type="button"
+        popovertarget="tip-help"
+        popovertargetaction="show"
+        interestfor="tip-help"
+        aria-describedby="tip-help"
+        aria-label="Help"
+      >
+        ?
+      </button>
+      <span class="ui-tooltip" id="tip-help" popover="hint">Opens the help center</span>
+    </p>
 
     <h2>Several pairs — each pair scoped with anchor-scope: all</h2>
     <p>
@@ -31,8 +45,6 @@
       <button
         class="ui-button ui-tooltip-trigger"
         type="button"
-        popovertarget="tip-a"
-        popovertargetaction="show"
         interestfor="tip-a"
         aria-describedby="tip-a"
       >
@@ -44,8 +56,6 @@
       <button
         class="ui-button ui-tooltip-trigger"
         type="button"
-        popovertarget="tip-b"
-        popovertargetaction="show"
         interestfor="tip-b"
         aria-describedby="tip-b"
       >

@@ -3,26 +3,29 @@
  * Native basis: Popover API with `popover="hint"` (tooltip-state popover) +
  * interest invokers (`interestfor`) — hover/focus activation is native.
  * Both are progressive enhancements (compatibility notes, 2026-10-02):
- *   - popover="hint": Chrome/Edge 151+, FF 153+; Safari — only preview.
- *     In engines without the hint keyword the invalid value falls back to
- *     the `auto` popover state (HTML invalid-value default), so the element
- *     still behaves as a dismissible popover;
+ *   - popover="hint": Chrome/Edge 151+, FF 153+; Safari — only preview
+ *     (WebKit 26.6 already recognizes the keyword — browser probe);
  *   - interestfor: Chrome/Edge 142+ only; FF/Safari — not supported.
- * The declarative zero-JS fallback is `popovertarget`
- * (+ `popovertargetaction="show"`): the tooltip opens on click, Escape and
- * light dismiss stay native everywhere. No runtime JS (PROJECT_SPEC.md, 4.1).
+ * In engines without interest the tooltip has no hover activation by
+ * design: `popovertarget` is NOT canonical because it couples the hint to
+ * the trigger's action (clicking "Save" would show a hint instead of /
+ * alongside saving; on submit buttons the form action wins and the
+ * popover never opens — probed 2026-10-02). The description stays
+ * programmatically associated via aria-describedby everywhere. The
+ * declarative `popovertarget` (+ `popovertargetaction="show"`) click
+ * fallback is a documented opt-in for inert triggers (e.g. "?" buttons).
+ * No runtime JS (PROJECT_SPEC.md, 4.1).
  *
  * Canonical structure:
- *   <button class="ui-tooltip-trigger" popovertarget="tip-1"
- *           popovertargetaction="show" interestfor="tip-1"
+ *   <button class="ui-tooltip-trigger" interestfor="tip-1"
  *           aria-describedby="tip-1">Save</button>
  *   <span class="ui-tooltip" id="tip-1" popover="hint">Saves your changes</span>
  *
  * role="tooltip" is NOT set explicitly: popover="hint" carries the implicit
  * minimum tooltip role where the keyword is supported (the host may add
- * role="tooltip" for uniform roles while Safari lacks hint, same pattern as
- * Switch). aria-describedby IS canonical: it is the only association in the
- * click-fallback engines (popovertarget wires no description).
+ * role="tooltip" for uniform roles in engines without hint, same pattern as
+ * Switch). aria-describedby IS canonical: it delivers the description to
+ * assistive tech in every engine.
  *
  * Anchor contract (same model as Popover): the trigger declares
  * --ui-tooltip-anchor, the tooltip positions with position-area and flips
