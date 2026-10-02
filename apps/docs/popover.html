@@ -56,131 +56,13 @@
         color: var(--ui-color-text-muted);
         font-size: 0.75rem;
       }
-      /* Host-level placement overrides: one anchor name, one position-area
-       * and no try fallbacks per pair, per the anchor contract. */
+      /* Pair scoping: with a shared anchor name every popover would anchor
+       * to the last trigger in DOM order; anchor-scope limits the lookup
+       * to the cell's own subtree (compatibility notes). Placement
+       * values and margins come from core via data-placement. */
       @supports (anchor-name: --ui-anchor) {
-        .placement-grid .ui-popover {
-          margin: var(--ui-space-2xs);
-          position-try-fallbacks: none;
-        }
-        #trigger-tl {
-          anchor-name: --demo-anchor-tl;
-        }
-        #popover-tl {
-          position-anchor: --demo-anchor-tl;
-          position-area: block-start inline-start;
-        }
-        #trigger-tc {
-          anchor-name: --demo-anchor-tc;
-        }
-        #popover-tc {
-          position-anchor: --demo-anchor-tc;
-          position-area: block-start center;
-        }
-        #trigger-tr {
-          anchor-name: --demo-anchor-tr;
-        }
-        #popover-tr {
-          position-anchor: --demo-anchor-tr;
-          position-area: block-start inline-end;
-        }
-        #trigger-ml {
-          anchor-name: --demo-anchor-ml;
-        }
-        #popover-ml {
-          position-anchor: --demo-anchor-ml;
-          position-area: center inline-start;
-        }
-        #trigger-mc {
-          anchor-name: --demo-anchor-mc;
-        }
-        #popover-mc {
-          position-anchor: --demo-anchor-mc;
-          position-area: center;
-        }
-        #trigger-mr {
-          anchor-name: --demo-anchor-mr;
-        }
-        #popover-mr {
-          position-anchor: --demo-anchor-mr;
-          position-area: center inline-end;
-        }
-        #trigger-bl {
-          anchor-name: --demo-anchor-bl;
-        }
-        #popover-bl {
-          position-anchor: --demo-anchor-bl;
-          position-area: block-end inline-start;
-        }
-        #trigger-bc {
-          anchor-name: --demo-anchor-bc;
-        }
-        #popover-bc {
-          position-anchor: --demo-anchor-bc;
-          position-area: block-end center;
-        }
-        #trigger-br {
-          anchor-name: --demo-anchor-br;
-        }
-        #popover-br {
-          position-anchor: --demo-anchor-br;
-          position-area: block-end inline-end;
-        }
-        #trigger-eal {
-          anchor-name: --demo-anchor-eal;
-        }
-        #popover-eal {
-          position-anchor: --demo-anchor-eal;
-          position-area: block-start span-inline-end;
-        }
-        #trigger-ear {
-          anchor-name: --demo-anchor-ear;
-        }
-        #popover-ear {
-          position-anchor: --demo-anchor-ear;
-          position-area: block-start span-inline-start;
-        }
-        #trigger-ert {
-          anchor-name: --demo-anchor-ert;
-        }
-        #popover-ert {
-          position-anchor: --demo-anchor-ert;
-          position-area: inline-end span-block-end;
-        }
-        #trigger-erb {
-          anchor-name: --demo-anchor-erb;
-        }
-        #popover-erb {
-          position-anchor: --demo-anchor-erb;
-          position-area: inline-end span-block-start;
-        }
-        #trigger-ebl {
-          anchor-name: --demo-anchor-ebl;
-        }
-        #popover-ebl {
-          position-anchor: --demo-anchor-ebl;
-          position-area: block-end span-inline-end;
-        }
-        #trigger-ebr {
-          anchor-name: --demo-anchor-ebr;
-        }
-        #popover-ebr {
-          position-anchor: --demo-anchor-ebr;
-          position-area: block-end span-inline-start;
-        }
-        #trigger-elt {
-          anchor-name: --demo-anchor-elt;
-        }
-        #popover-elt {
-          position-anchor: --demo-anchor-elt;
-          position-area: inline-start span-block-end;
-        }
-        #trigger-elb {
-          anchor-name: --demo-anchor-elb;
-        }
-        #popover-elb {
-          position-anchor: --demo-anchor-elb;
-          position-area: inline-start span-block-start;
+        .placement-cell {
+          anchor-scope: all;
         }
       }
     </style>
@@ -208,12 +90,13 @@
   Options
 &lt;/button&gt;
 
-&lt;div class="ui-popover" id="p1" popover&gt;
+&lt;div class="ui-popover" id="p1" popover data-placement="block-end span-inline-end"&gt;
   &lt;p&gt;Popover content&lt;/p&gt;
 &lt;/div&gt;</code></pre>
         <p>
           <code>ui-popover-trigger</code> on the trigger is optional — it enables anchor positioning
-          (declares <code>anchor-name</code>).
+          (declares <code>anchor-name</code>). <code>data-placement</code> on the popover is
+          optional — it mirrors the <code>position-area</code> value 1:1.
         </p>
       </section>
 
@@ -235,279 +118,227 @@
         <h2>Positioning</h2>
         <ul>
           <li>
-            With anchor support: below the trigger (<code>position-area: block-end center</code>),
-            fallback above.
+            Default with anchor support: below the trigger (<code>block-end center</code>), flipped
+            above on overflow; without anchor support: centered in the viewport (fixed).
           </li>
-          <li>Without anchor support: centered in the viewport (fixed).</li>
+          <li>
+            Placement variants: <code>data-placement</code> on the popover mirrors the
+            <code>position-area</code> value 1:1 — nine regions of the 3×3 grid plus eight
+            edge-aligned <code>span-*</code> placements (all shown below).
+          </li>
           <li>
             Anchor contract: anchor name <code>--ui-popover-anchor</code>; no collision handling —
-            host sets <code>position-area</code> when needed (see the placement grid below).
+            fallbacks are the host's responsibility.
           </li>
         </ul>
       </section>
 
       <section>
-        <h2>Placement grid</h2>
+        <h2>Placement</h2>
         <p>
-          <code>position-area</code> selects one of nine regions of the 3×3 grid built around the
-          trigger — logical keywords; a lone <code>center</code> means centered over the trigger in
-          both axes. The default is <code>block-end center</code>. Once <code>position-area</code>
-          applies, auto margins resolve to zero and the popover aligns toward the anchor, so the
-          demo adds a uniform margin for breathing room.
+          <code>position-area</code> places the popover in one of nine regions of the 3×3 grid built
+          around the trigger (logical keywords; a lone <code>center</code> means centered over the
+          trigger in both axes). The <code>span-*</code> keywords extend the region away from the
+          trigger while the default alignment keeps the popover hugging it — flush with one edge of
+          the trigger, the classic menu/tooltip alignment. Each cell scopes the anchor lookup with
+          <code>anchor-scope: all</code>, so the shared anchor name pairs every popover with its own
+          trigger. Verified in Chromium, Firefox and WebKit (compatibility notes).
         </p>
         <div class="placement-grid">
           <div class="placement-cell">
-            <button
-              class="ui-button ui-popover-trigger"
-              type="button"
-              id="trigger-tl"
-              popovertarget="popover-tl"
-            >
+            <button class="ui-button ui-popover-trigger" type="button" popovertarget="popover-tl">
               Top left
             </button>
-            <div class="ui-popover" id="popover-tl" popover>
+            <div
+              class="ui-popover"
+              id="popover-tl"
+              popover
+              data-placement="block-start inline-start"
+            >
               <p><code>block-start inline-start</code></p>
             </div>
             <code>block-start inline-start</code>
           </div>
           <div class="placement-cell">
-            <button
-              class="ui-button ui-popover-trigger"
-              type="button"
-              id="trigger-tc"
-              popovertarget="popover-tc"
-            >
+            <button class="ui-button ui-popover-trigger" type="button" popovertarget="popover-tc">
               Top center
             </button>
-            <div class="ui-popover" id="popover-tc" popover>
+            <div class="ui-popover" id="popover-tc" popover data-placement="block-start center">
               <p><code>block-start center</code></p>
             </div>
             <code>block-start center</code>
           </div>
           <div class="placement-cell">
-            <button
-              class="ui-button ui-popover-trigger"
-              type="button"
-              id="trigger-tr"
-              popovertarget="popover-tr"
-            >
+            <button class="ui-button ui-popover-trigger" type="button" popovertarget="popover-tr">
               Top right
             </button>
-            <div class="ui-popover" id="popover-tr" popover>
+            <div class="ui-popover" id="popover-tr" popover data-placement="block-start inline-end">
               <p><code>block-start inline-end</code></p>
             </div>
             <code>block-start inline-end</code>
           </div>
           <div class="placement-cell">
-            <button
-              class="ui-button ui-popover-trigger"
-              type="button"
-              id="trigger-ml"
-              popovertarget="popover-ml"
-            >
+            <button class="ui-button ui-popover-trigger" type="button" popovertarget="popover-ml">
               Middle left
             </button>
-            <div class="ui-popover" id="popover-ml" popover>
+            <div class="ui-popover" id="popover-ml" popover data-placement="center inline-start">
               <p><code>center inline-start</code></p>
             </div>
             <code>center inline-start</code>
           </div>
           <div class="placement-cell">
-            <button
-              class="ui-button ui-popover-trigger"
-              type="button"
-              id="trigger-mc"
-              popovertarget="popover-mc"
-            >
+            <button class="ui-button ui-popover-trigger" type="button" popovertarget="popover-mc">
               Center
             </button>
-            <div class="ui-popover" id="popover-mc" popover>
+            <div class="ui-popover" id="popover-mc" popover data-placement="center">
               <p><code>center</code> — over the trigger</p>
             </div>
             <code>center</code>
           </div>
           <div class="placement-cell">
-            <button
-              class="ui-button ui-popover-trigger"
-              type="button"
-              id="trigger-mr"
-              popovertarget="popover-mr"
-            >
+            <button class="ui-button ui-popover-trigger" type="button" popovertarget="popover-mr">
               Middle right
             </button>
-            <div class="ui-popover" id="popover-mr" popover>
+            <div class="ui-popover" id="popover-mr" popover data-placement="center inline-end">
               <p><code>center inline-end</code></p>
             </div>
             <code>center inline-end</code>
           </div>
           <div class="placement-cell">
-            <button
-              class="ui-button ui-popover-trigger"
-              type="button"
-              id="trigger-bl"
-              popovertarget="popover-bl"
-            >
+            <button class="ui-button ui-popover-trigger" type="button" popovertarget="popover-bl">
               Bottom left
             </button>
-            <div class="ui-popover" id="popover-bl" popover>
+            <div class="ui-popover" id="popover-bl" popover data-placement="block-end inline-start">
               <p><code>block-end inline-start</code></p>
             </div>
             <code>block-end inline-start</code>
           </div>
           <div class="placement-cell">
-            <button
-              class="ui-button ui-popover-trigger"
-              type="button"
-              id="trigger-bc"
-              popovertarget="popover-bc"
-            >
+            <button class="ui-button ui-popover-trigger" type="button" popovertarget="popover-bc">
               Bottom center
             </button>
-            <div class="ui-popover" id="popover-bc" popover>
+            <div class="ui-popover" id="popover-bc" popover data-placement="block-end center">
               <p><code>block-end center</code> — default</p>
             </div>
             <code>block-end center</code>
           </div>
           <div class="placement-cell">
-            <button
-              class="ui-button ui-popover-trigger"
-              type="button"
-              id="trigger-br"
-              popovertarget="popover-br"
-            >
+            <button class="ui-button ui-popover-trigger" type="button" popovertarget="popover-br">
               Bottom right
             </button>
-            <div class="ui-popover" id="popover-br" popover>
+            <div class="ui-popover" id="popover-br" popover data-placement="block-end inline-end">
               <p><code>block-end inline-end</code></p>
             </div>
             <code>block-end inline-end</code>
           </div>
-        </div>
-        <p>
-          Each pair declares its own <code>anchor-name</code> — with a shared name the last trigger
-          in DOM order would anchor every popover — plus explicit <code>position-anchor</code> and
-          <code>position-area</code>, and <code>position-try-fallbacks: none</code> to keep the
-          placement exact. Real UIs define fallbacks for edge cases instead.
-        </p>
-      </section>
-
-      <section>
-        <h2>Edge-aligned placement</h2>
-        <p>
-          The <code>span-*</code> keywords extend the region away from the trigger while the default
-          alignment keeps the popover hugging it — the result is flush with one edge of the trigger,
-          the classic menu/tooltip alignment. Verified in Chromium; other engines follow the same
-          grammar (compatibility notes).
-        </p>
-        <div class="placement-grid">
           <div class="placement-cell">
-            <button
-              class="ui-button ui-popover-trigger"
-              type="button"
-              id="trigger-eal"
-              popovertarget="popover-eal"
-            >
+            <button class="ui-button ui-popover-trigger" type="button" popovertarget="popover-eal">
               Above, left edge
             </button>
-            <div class="ui-popover" id="popover-eal" popover>
+            <div
+              class="ui-popover"
+              id="popover-eal"
+              popover
+              data-placement="block-start span-inline-end"
+            >
               <p><code>block-start span-inline-end</code></p>
             </div>
             <code>block-start span-inline-end</code>
           </div>
           <div class="placement-cell">
-            <button
-              class="ui-button ui-popover-trigger"
-              type="button"
-              id="trigger-ear"
-              popovertarget="popover-ear"
-            >
+            <button class="ui-button ui-popover-trigger" type="button" popovertarget="popover-ear">
               Above, right edge
             </button>
-            <div class="ui-popover" id="popover-ear" popover>
+            <div
+              class="ui-popover"
+              id="popover-ear"
+              popover
+              data-placement="block-start span-inline-start"
+            >
               <p><code>block-start span-inline-start</code></p>
             </div>
             <code>block-start span-inline-start</code>
           </div>
           <div class="placement-cell">
-            <button
-              class="ui-button ui-popover-trigger"
-              type="button"
-              id="trigger-ert"
-              popovertarget="popover-ert"
-            >
+            <button class="ui-button ui-popover-trigger" type="button" popovertarget="popover-ert">
               Right, top edge
             </button>
-            <div class="ui-popover" id="popover-ert" popover>
+            <div
+              class="ui-popover"
+              id="popover-ert"
+              popover
+              data-placement="inline-end span-block-end"
+            >
               <p><code>inline-end span-block-end</code></p>
             </div>
             <code>inline-end span-block-end</code>
           </div>
           <div class="placement-cell">
-            <button
-              class="ui-button ui-popover-trigger"
-              type="button"
-              id="trigger-erb"
-              popovertarget="popover-erb"
-            >
+            <button class="ui-button ui-popover-trigger" type="button" popovertarget="popover-erb">
               Right, bottom edge
             </button>
-            <div class="ui-popover" id="popover-erb" popover>
+            <div
+              class="ui-popover"
+              id="popover-erb"
+              popover
+              data-placement="inline-end span-block-start"
+            >
               <p><code>inline-end span-block-start</code></p>
             </div>
             <code>inline-end span-block-start</code>
           </div>
           <div class="placement-cell">
-            <button
-              class="ui-button ui-popover-trigger"
-              type="button"
-              id="trigger-ebl"
-              popovertarget="popover-ebl"
-            >
+            <button class="ui-button ui-popover-trigger" type="button" popovertarget="popover-ebl">
               Below, left edge
             </button>
-            <div class="ui-popover" id="popover-ebl" popover>
+            <div
+              class="ui-popover"
+              id="popover-ebl"
+              popover
+              data-placement="block-end span-inline-end"
+            >
               <p><code>block-end span-inline-end</code></p>
             </div>
             <code>block-end span-inline-end</code>
           </div>
           <div class="placement-cell">
-            <button
-              class="ui-button ui-popover-trigger"
-              type="button"
-              id="trigger-ebr"
-              popovertarget="popover-ebr"
-            >
+            <button class="ui-button ui-popover-trigger" type="button" popovertarget="popover-ebr">
               Below, right edge
             </button>
-            <div class="ui-popover" id="popover-ebr" popover>
+            <div
+              class="ui-popover"
+              id="popover-ebr"
+              popover
+              data-placement="block-end span-inline-start"
+            >
               <p><code>block-end span-inline-start</code></p>
             </div>
             <code>block-end span-inline-start</code>
           </div>
           <div class="placement-cell">
-            <button
-              class="ui-button ui-popover-trigger"
-              type="button"
-              id="trigger-elt"
-              popovertarget="popover-elt"
-            >
+            <button class="ui-button ui-popover-trigger" type="button" popovertarget="popover-elt">
               Left, top edge
             </button>
-            <div class="ui-popover" id="popover-elt" popover>
+            <div
+              class="ui-popover"
+              id="popover-elt"
+              popover
+              data-placement="inline-start span-block-end"
+            >
               <p><code>inline-start span-block-end</code></p>
             </div>
             <code>inline-start span-block-end</code>
           </div>
           <div class="placement-cell">
-            <button
-              class="ui-button ui-popover-trigger"
-              type="button"
-              id="trigger-elb"
-              popovertarget="popover-elb"
-            >
+            <button class="ui-button ui-popover-trigger" type="button" popovertarget="popover-elb">
               Left, bottom edge
             </button>
-            <div class="ui-popover" id="popover-elb" popover>
+            <div
+              class="ui-popover"
+              id="popover-elb"
+              popover
+              data-placement="inline-start span-block-start"
+            >
               <p><code>inline-start span-block-start</code></p>
             </div>
             <code>inline-start span-block-start</code>
@@ -535,6 +366,10 @@
             No <code>position-visibility: anchor-valid/visible</code> — outside the browser matrix.
           </li>
           <li>No modal popover — for modality there is Dialog.</li>
+          <li>
+            No physical <code>span-left/right</code> keywords — they are invalid; logical keywords
+            only.
+          </li>
         </ul>
       </section>
     </main>

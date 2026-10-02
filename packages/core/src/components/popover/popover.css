@@ -4,13 +4,14 @@
  * light dismiss, Escape, top-layer, :popover-open. Zero JS (PROJECT_SPEC.md, 4.1).
  *
  * Canonical structure:
- *   <button class="ui-button" popovertarget="p1">Trigger</button>
+ *   <button class="ui-button ui-popover-trigger" popovertarget="p1">Trigger</button>
  *   <div class="ui-popover" id="p1" popover>…</div>
  *
- * Positioning priority (PROJECT_SPEC.md, раздел 11):
- *   1. CSS Anchor Positioning when supported (@supports gate);
- *   2. plain CSS positioning fallback (works everywhere in the matrix).
- * No positioning runtime in core.
+ * Placement (host opt-in): data-placement on the popover mirrors the
+ * position-area value 1:1 — 17 values (9 grid regions + 8 span-aligned),
+ * logical keywords only. Without it: below the trigger, flipped above
+ * on overflow; without anchor support: centered (fixed).
+ * No positioning runtime in core (PROJECT_SPEC.md, раздел 11).
  *
  * Anchor contract:
  *   - implicit anchor: popovertarget button is the anchor (native, Chrome 133+,
@@ -82,6 +83,122 @@
   .ui-popover-trigger {
     anchor-name: --ui-popover-anchor;
   }
+
+  /* Placement variants — host opt-in via data-placement on the popover.
+   * The attribute value mirrors the position-area value 1:1 (logical
+   * keywords only; verified across the matrix, compatibility notes).
+   * The gap margin sits only on the edges facing the trigger, so
+   * span-aligned edges stay flush. Try fallbacks are the host's
+   * responsibility. Multiple trigger/popover pairs on one page must
+   * scope anchor names (anchor-scope on a common wrapper) or give each
+   * pair its own anchor name — otherwise the last trigger in DOM order
+   * anchors every popover. */
+  /* stylelint-disable declaration-property-value-no-unknown */
+  .ui-popover[data-placement] {
+    position-try-fallbacks: none;
+  }
+
+  .ui-popover[data-placement='block-start inline-start'] {
+    position-area: block-start inline-start;
+    margin-block: 0 var(--ui-space-2xs);
+    margin-inline: 0 var(--ui-space-2xs);
+  }
+
+  .ui-popover[data-placement='block-start center'] {
+    position-area: block-start center;
+    margin-block: 0 var(--ui-space-2xs);
+    margin-inline: 0;
+  }
+
+  .ui-popover[data-placement='block-start inline-end'] {
+    position-area: block-start inline-end;
+    margin-block: 0 var(--ui-space-2xs);
+    margin-inline: var(--ui-space-2xs) 0;
+  }
+
+  .ui-popover[data-placement='center inline-start'] {
+    position-area: center inline-start;
+    margin-block: 0;
+    margin-inline: 0 var(--ui-space-2xs);
+  }
+
+  .ui-popover[data-placement='center'] {
+    position-area: center;
+    margin: 0;
+  }
+
+  .ui-popover[data-placement='center inline-end'] {
+    position-area: center inline-end;
+    margin-block: 0;
+    margin-inline: var(--ui-space-2xs) 0;
+  }
+
+  .ui-popover[data-placement='block-end inline-start'] {
+    position-area: block-end inline-start;
+    margin-block: var(--ui-space-2xs) 0;
+    margin-inline: 0 var(--ui-space-2xs);
+  }
+
+  .ui-popover[data-placement='block-end center'] {
+    position-area: block-end center;
+    margin-block: var(--ui-space-2xs) 0;
+    margin-inline: 0;
+  }
+
+  .ui-popover[data-placement='block-end inline-end'] {
+    position-area: block-end inline-end;
+    margin-block: var(--ui-space-2xs) 0;
+    margin-inline: var(--ui-space-2xs) 0;
+  }
+
+  .ui-popover[data-placement='block-start span-inline-end'] {
+    position-area: block-start span-inline-end;
+    margin-block: 0 var(--ui-space-2xs);
+    margin-inline: 0;
+  }
+
+  .ui-popover[data-placement='block-start span-inline-start'] {
+    position-area: block-start span-inline-start;
+    margin-block: 0 var(--ui-space-2xs);
+    margin-inline: 0;
+  }
+
+  .ui-popover[data-placement='inline-start span-block-end'] {
+    position-area: inline-start span-block-end;
+    margin-block: 0;
+    margin-inline: 0 var(--ui-space-2xs);
+  }
+
+  .ui-popover[data-placement='inline-start span-block-start'] {
+    position-area: inline-start span-block-start;
+    margin-block: 0;
+    margin-inline: 0 var(--ui-space-2xs);
+  }
+
+  .ui-popover[data-placement='inline-end span-block-end'] {
+    position-area: inline-end span-block-end;
+    margin-block: 0;
+    margin-inline: var(--ui-space-2xs) 0;
+  }
+
+  .ui-popover[data-placement='inline-end span-block-start'] {
+    position-area: inline-end span-block-start;
+    margin-block: 0;
+    margin-inline: var(--ui-space-2xs) 0;
+  }
+
+  .ui-popover[data-placement='block-end span-inline-end'] {
+    position-area: block-end span-inline-end;
+    margin-block: var(--ui-space-2xs) 0;
+    margin-inline: 0;
+  }
+
+  .ui-popover[data-placement='block-end span-inline-start'] {
+    position-area: block-end span-inline-start;
+    margin-block: var(--ui-space-2xs) 0;
+    margin-inline: 0;
+  }
+  /* stylelint-enable declaration-property-value-no-unknown */
 
   @starting-style {
     .ui-popover:popover-open {
