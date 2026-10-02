@@ -66,29 +66,15 @@
             </button>
             <span class="ui-tooltip" id="tip-save" popover="hint">Saves your changes</span>
           </p>
-          <p>
-            Icon-only buttons are the main use case:
-            <button
-              class="ui-button ui-tooltip-trigger"
-              type="button"
-              popovertarget="tip-info"
-              popovertargetaction="show"
-              interestfor="tip-info"
-              aria-describedby="tip-info"
-              aria-label="Account details"
-            >
-              i
-            </button>
-            <span class="ui-tooltip" id="tip-info" popover="hint">
-              View billing address, plan and payment method
-            </span>
-          </p>
         </div>
         <p>
           The hint renders below the trigger, centered, and flips above automatically when there is
           no room (<code>position-area</code> + <code>position-try-fallbacks</code>, inside
-          <code>@supports</code>). Several pairs on one page need scoped anchor names — wrap a pair
-          in an element with <code>anchor-scope: all</code>.
+          <code>@supports</code>). Several pairs on one page must be scoped: triggers share the
+          <code>--ui-tooltip-anchor</code> name, and without scoping every hint anchors to the last
+          trigger in DOM order — a Save hover would show a hint under another button. Wrap each pair
+          in its own element with <code>anchor-scope: all</code> (or give each pair a unique anchor
+          name).
         </p>
       </section>
 

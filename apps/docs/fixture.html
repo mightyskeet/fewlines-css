@@ -82,35 +82,42 @@
 
       <!-- Tooltip -->
       <section id="tooltips">
+        <!-- Each pair is scoped with anchor-scope: all — triggers share the
+             --ui-tooltip-anchor name, and without scoping every hint anchors
+             to the last trigger in DOM order (compatibility notes). -->
         <!-- Canonical pair: interestfor (hover/focus, Chromium) + popovertarget
              (declarative click fallback for engines without interest). -->
-        <button
-          class="ui-button ui-tooltip-trigger"
-          type="button"
-          id="tooltip-trigger"
-          popovertarget="testTooltip"
-          popovertargetaction="show"
-          interestfor="testTooltip"
-          aria-describedby="testTooltip"
-        >
-          Save
-        </button>
-        <span class="ui-tooltip" id="testTooltip" popover="hint">Saves your changes</span>
+        <div style="anchor-scope: all">
+          <button
+            class="ui-button ui-tooltip-trigger"
+            type="button"
+            id="tooltip-trigger"
+            popovertarget="testTooltip"
+            popovertargetaction="show"
+            interestfor="testTooltip"
+            aria-describedby="testTooltip"
+          >
+            Save
+          </button>
+          <span class="ui-tooltip" id="testTooltip" popover="hint">Saves your changes</span>
+        </div>
         <!-- Fallback-only pair (simulates engines without interest support):
              opens on click, dismisses via Escape / light dismiss. -->
-        <button
-          class="ui-button ui-tooltip-trigger"
-          type="button"
-          id="tooltip-fallback-trigger"
-          popovertarget="testTooltipFallback"
-          popovertargetaction="show"
-          aria-describedby="testTooltipFallback"
-        >
-          Delete
-        </button>
-        <span class="ui-tooltip" id="testTooltipFallback" popover="hint">
-          Deletes the item permanently
-        </span>
+        <div style="anchor-scope: all">
+          <button
+            class="ui-button ui-tooltip-trigger"
+            type="button"
+            id="tooltip-fallback-trigger"
+            popovertarget="testTooltipFallback"
+            popovertargetaction="show"
+            aria-describedby="testTooltipFallback"
+          >
+            Delete
+          </button>
+          <span class="ui-tooltip" id="testTooltipFallback" popover="hint">
+            Deletes the item permanently
+          </span>
+        </div>
       </section>
 
       <!-- Alert -->

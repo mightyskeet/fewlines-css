@@ -22,23 +22,11 @@
     </button>
     <span class="ui-tooltip" id="tip-save" popover="hint">Saves your changes</span>
 
-    <h2>Icon-only trigger (describedby carries the name meaning)</h2>
-    <button
-      class="ui-button ui-tooltip-trigger"
-      type="button"
-      popovertarget="tip-info"
-      popovertargetaction="show"
-      interestfor="tip-info"
-      aria-describedby="tip-info"
-      aria-label="Account details"
-    >
-      i
-    </button>
-    <span class="ui-tooltip" id="tip-info" popover="hint">
-      View billing address, plan and payment method
-    </span>
-
-    <h2>Several pairs (anchor names scoped on the common wrapper)</h2>
+    <h2>Several pairs — each pair scoped with anchor-scope: all</h2>
+    <p>
+      Triggers share the <code>--ui-tooltip-anchor</code> name; without scoping every hint anchors
+      to the last trigger in DOM order. One scoped ancestor per pair (compatibility notes):
+    </p>
     <div style="anchor-scope: all">
       <button
         class="ui-button ui-tooltip-trigger"
@@ -51,6 +39,8 @@
         Alpha
       </button>
       <span class="ui-tooltip" id="tip-a" popover="hint">First hint</span>
+    </div>
+    <div style="anchor-scope: all">
       <button
         class="ui-button ui-tooltip-trigger"
         type="button"
@@ -63,21 +53,5 @@
       </button>
       <span class="ui-tooltip" id="tip-b" popover="hint">Second hint</span>
     </div>
-
-    <h2>Long hint (wraps at max-inline-size)</h2>
-    <button
-      class="ui-button ui-tooltip-trigger"
-      type="button"
-      popovertarget="tip-long"
-      popovertargetaction="show"
-      interestfor="tip-long"
-      aria-describedby="tip-long"
-    >
-      Terms
-    </button>
-    <span class="ui-tooltip" id="tip-long" popover="hint">
-      By continuing you accept the service terms, the privacy policy and the data processing
-      addendum that governs this workspace.
-    </span>
   </body>
 </html>
