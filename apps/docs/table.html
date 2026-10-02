@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Table — @fewlines/css</title>
+    <link rel="stylesheet" href="/core.css" />
+    <link rel="stylesheet" href="/docs.css" />
+    <script src="/site-sidebar.js" defer></script>
+  </head>
+  <body>
+    <site-sidebar></site-sidebar>
+
+    <main>
+      <header class="page-header">
+        <h1>Table</h1>
+        <p>
+          Tabular data: registries, reports, dashboards. The component styles the native
+          <code>&lt;table&gt;</code> and adds nothing to its semantics — no JS.
+        </p>
+      </header>
+
+      <section>
+        <h2>Semantic basis</h2>
+        <p>
+          Roles (<code>table</code>, <code>row</code>, <code>columnheader</code>,
+          <code>rowheader</code>, <code>cell</code>), the <code>&lt;caption&gt;</code> association
+          and <code>scope</code> links are native. The caption is required — it doubles as the
+          table's accessible name.
+        </p>
+      </section>
+
+      <section>
+        <h2>Canonical markup</h2>
+        <pre><code>&lt;table class="ui-table"&gt;
+  &lt;caption&gt;Quarterly revenue&lt;/caption&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;&lt;th scope="col"&gt;Region&lt;/th&gt;…&lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;&lt;th scope="row"&gt;EMEA&lt;/th&gt;…&lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;</code></pre>
+        <p>
+          Borders use <code>border-collapse: separate</code> with explicit cell borders: Firefox
+          does not paint borders on sticky headers under <code>collapse</code>, and Chromium has
+          never applied <code>position: sticky</code> to <code>thead</code>/<code>tr</code> — the
+          separate model with sticky on <code>th</code> is the portable form.
+        </p>
+      </section>
+
+      <section>
+        <h2>Default and zebra</h2>
+        <div class="example">
+          <table class="ui-table">
+            <caption>
+              Quarterly revenue
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col">Region</th>
+                <th scope="col">Status</th>
+                <th scope="col" data-align="end">Revenue</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">EMEA</th>
+                <td>Growing</td>
+                <td data-align="end">1 250 000</td>
+              </tr>
+              <tr>
+                <th scope="row">APAC</th>
+                <td>Steady</td>
+                <td data-align="end">980 000</td>
+              </tr>
+              <tr>
+                <th scope="row">Americas</th>
+                <td>Growing</td>
+                <td data-align="end">1 730 000</td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <th scope="row">Total</th>
+                <td></td>
+                <td data-align="end">3 960 000</td>
+              </tr>
+            </tfoot>
+          </table>
+
+          <table class="ui-table" data-zebra>
+            <caption>
+              Deployments
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col">Service</th>
+                <th scope="col">State</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>api</td>
+                <td>Healthy</td>
+              </tr>
+              <tr>
+                <td>web</td>
+                <td>Healthy</td>
+              </tr>
+              <tr>
+                <td>worker</td>
+                <td>Degraded</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p>
+          <code>data-zebra</code> stripes odd body rows with the sunken surface. Row hover flips to
+          the opposite surface, so the affordance stays visible on zebra tables. Numeric columns
+          take <code>data-align="end"</code> on every cell of the column (header included) — it
+          right-aligns and enables tabular numerals.
+        </p>
+      </section>
+
+      <section>
+        <h2>Wide tables and sticky header</h2>
+        <div class="example">
+          <div
+            class="ui-table-wrap"
+            style="max-block-size: 14rem"
+            tabindex="0"
+            role="region"
+            aria-label="Backlog, scrollable"
+          >
+            <table class="ui-table" data-sticky>
+              <caption>
+                Backlog
+              </caption>
+              <thead>
+                <tr>
+                  <th scope="col">Task</th>
+                  <th scope="col">Assignee</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Fix login redirect</td>
+                  <td>Ann</td>
+                </tr>
+                <tr>
+                  <td>Rate-limit the API</td>
+                  <td>Ben</td>
+                </tr>
+                <tr>
+                  <td>Migrate tokens</td>
+                  <td>Cara</td>
+                </tr>
+                <tr>
+                  <td>Ship dark theme</td>
+                  <td>Dan</td>
+                </tr>
+                <tr>
+                  <td>Profile queries</td>
+                  <td>Eve</td>
+                </tr>
+                <tr>
+                  <td>Cleanup alerts</td>
+                  <td>Fox</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <p>
+          <code>.ui-table-wrap</code> is the horizontal scroll container for wide tables;
+          <code>data-sticky</code> pins <code>thead th</code> to the top of the nearest scroll
+          container (the constrained wrap, or the page for unwrapped tables). A scrollable wrap must
+          be keyboard reachable and named: <code>tabindex="0"</code>, <code>role="region"</code> and
+          <code>aria-label</code>.
+        </p>
+      </section>
+
+      <section>
+        <h2>Accessibility</h2>
+        <ul>
+          <li>
+            <code>&lt;caption&gt;</code> and <code>scope</code> are required — the accessible name
+            and header associations rest on them.
+          </li>
+          <li>
+            A scrollable wrap gets <code>tabindex="0"</code>, <code>role="region"</code> and a label
+            so keyboard users can scroll and find it.
+          </li>
+          <li>
+            Hover is never the sole differentiator — rows are separated by hairlines and content.
+          </li>
+          <li>
+            All color pairs are existing APCA-registered pairs (<code>text</code>/<code
+              >text-muted</code
+            >
+            on the surface family); no new tokens.
+          </li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Do not</h2>
+        <ul>
+          <li>
+            No <code>&lt;div&gt;</code> grids instead of <code>&lt;table&gt;</code> — header
+            associations and roles are native to real tables.
+          </li>
+          <li>No sticky on <code>thead</code>/<code>tr</code> — only <code>thead th</code>.</li>
+          <li>
+            No variant classes — options are only <code>data-zebra</code>, <code>data-sticky</code>,
+            <code>data-align</code>.
+          </li>
+          <li>No sorting/selection styling in core — those are host states.</li>
+        </ul>
+      </section>
+    </main>
+
+    <footer>
+      <p>Full contract: <code>packages/core/src/components/table/table.md</code></p>
+    </footer>
+  </body>
+</html>

@@ -37,16 +37,17 @@ override — `data-theme="light|dark"` на корневом элементе. �
 
 ## Компоненты
 
-| Компонент | Basis                            | Классы                                             |
-| --------- | -------------------------------- | -------------------------------------------------- |
-| Button    | `<button>`, `<a>`                | `ui-button`, `data-variant`, `data-size`           |
-| Field     | `<input>/<textarea>/<select>`    | `ui-field`, `ui-input`, `ui-textarea`, `ui-select` |
-| Dialog    | `<dialog>` (top-layer)           | `ui-dialog`                                        |
-| Popover   | Popover API + anchor positioning | `ui-popover`, `ui-popover-trigger`                 |
-| Accordion | `<details>/<summary>`            | `ui-accordion`, `ui-accordion-summary`             |
-| Alert     | статический контейнер сообщений  | `ui-alert`, `data-variant`, `ui-alert-title/body`  |
-| Badge     | статический inline статус-лейбл  | `ui-badge`, `data-variant`                         |
-| Switch    | `<input type="checkbox" switch>` | `ui-switch`, `ui-switch-field`, `ui-switch-label`  |
+| Компонент | Basis                            | Классы                                                                 |
+| --------- | -------------------------------- | ---------------------------------------------------------------------- |
+| Button    | `<button>`, `<a>`                | `ui-button`, `data-variant`, `data-size`                               |
+| Field     | `<input>/<textarea>/<select>`    | `ui-field`, `ui-input`, `ui-textarea`, `ui-select`                     |
+| Dialog    | `<dialog>` (top-layer)           | `ui-dialog`                                                            |
+| Popover   | Popover API + anchor positioning | `ui-popover`, `ui-popover-trigger`                                     |
+| Accordion | `<details>/<summary>`            | `ui-accordion`, `ui-accordion-summary`                                 |
+| Alert     | статический контейнер сообщений  | `ui-alert`, `data-variant`, `ui-alert-title/body`                      |
+| Badge     | статический inline статус-лейбл  | `ui-badge`, `data-variant`                                             |
+| Switch    | `<input type="checkbox" switch>` | `ui-switch`, `ui-switch-field`, `ui-switch-label`                      |
+| Table     | `<table>` + `<caption>`          | `ui-table`, `ui-table-wrap`, `data-zebra`, `data-sticky`, `data-align` |
 
 
 `packages/core/src/components/*/[name].md`. Живые примеры: `apps/docs/`.

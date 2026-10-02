@@ -1,0 +1,119 @@
+/* Table component.
+ *
+ * Native basis: <table> with <caption>, <thead>, <tbody>, <tfoot>,
+ * <th scope="col|row"> and <td>. Table semantics (table/row/columnheader/
+ * rowheader/cell roles, <caption> as the accessible name) are native; core
+ * adds no JS and no states.
+ *
+ * Canonical structure:
+ *   <table class="ui-table">
+ *     <caption>Quarterly revenue</caption>
+ *     <thead>
+ *       <tr><th scope="col">Region</th><th scope="col" data-align="end">Q3</th></tr>
+ *     </thead>
+ *     <tbody>
+ *       <tr><th scope="row">EMEA</th><td data-align="end">1 250 000</td></tr>
+ *     </tbody>
+ *   </table>
+ *
+ * Vocabulary:
+ *   data-zebra on <table>     — striped odd body rows;
+ *   data-sticky on <table>    — sticky header: thead th sticks to the top of
+ *                               the nearest scroll container (a vertically
+ *                               constrained .ui-table-wrap, or the page when
+ *                               the table is not wrapped);
+ *   data-align="end" on th/td — end-aligned cell (numeric columns; pairs with
+ *                               tabular numerals);
+ *   .ui-table-wrap            — optional horizontal scroll container for wide
+ *                               tables (host adds tabindex="0", role="region"
+ *                               and an aria-label for keyboard scrolling).
+ *
+ * Border model: border-collapse: separate + explicit cell borders. Firefox
+ * does not paint borders on sticky table headers under collapse
+ * (bugzil.la/1727594), and Chromium has never applied sticky to thead/tr —
+ * applying it to th under the separate model is portable (Can I Use MCP,
+ * compatibility notes, 2026-10-02).
+ *
+ * APCA pairs used (validated in tests/apca, no new pairs):
+ *   text on surface / surface-sunken (body) — body cells, hover and zebra rows
+ *   text-muted on surface (fluent)          — caption and header cells
+ */
+
+.ui-table {
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: var(--ui-font-size-sm);
+}
+
+/* <caption> is the table's accessible name (native association). */
+.ui-table caption {
+  padding-block: var(--ui-space-xs);
+  color: var(--ui-color-text-muted);
+  text-align: start;
+}
+
+.ui-table :is(th, td) {
+  padding-block: var(--ui-space-sm);
+  padding-inline: var(--ui-space-sm);
+
+  /* UA centers th — normalize every cell to the start edge. */
+  text-align: start;
+  border-block-end: 1px solid var(--ui-color-border);
+}
+
+.ui-table thead th {
+  color: var(--ui-color-text-muted);
+  font-weight: var(--ui-font-weight-medium);
+}
+
+.ui-table tbody th {
+  font-weight: var(--ui-font-weight-medium);
+}
+
+/* Row hover: the row flips to the opposite surface (base <-> sunken), so the
+ * hover affordance stays visible on zebra tables too. */
+.ui-table tbody tr:hover {
+  background: var(--ui-color-surface-sunken);
+}
+
+/* Zebra: odd body rows on the sunken surface (text/surface-sunken — body). */
+.ui-table[data-zebra] tbody tr:nth-child(odd) {
+  background: var(--ui-color-surface-sunken);
+}
+
+.ui-table[data-zebra] tbody tr:nth-child(odd):hover {
+  background: var(--ui-color-surface);
+}
+
+/* Footer: summary band with a stronger separator above it. */
+.ui-table tfoot :is(th, td) {
+  font-weight: var(--ui-font-weight-medium);
+  border-block-start: 1px solid var(--ui-color-border-strong);
+}
+
+/* The footer separator replaces the last body row's bottom hairline;
+ * otherwise the two adjacent borders stack into a 2px line. */
+.ui-table:has(tfoot) tbody tr:last-child :is(th, td) {
+  border-block-end: none;
+}
+
+/* End-aligned (numeric) cells. */
+.ui-table :is(th, td)[data-align='end'] {
+  text-align: end;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Sticky header: opaque surface so scrolled rows do not show through.
+ * Applied on th (never thead/tr — Chromium divergence, Can I Use MCP). */
+.ui-table[data-sticky] thead th {
+  position: sticky;
+  inset-block-start: 0;
+  background: var(--ui-color-surface);
+}
+
+/* Wide tables: horizontal scroll container. Per CSS Overflow, a non-visible
+ * axis forces the other axis from visible to auto — the wrap is scrollable
+ * on both axes, so data-sticky headers bind to it when it scrolls. */
+.ui-table-wrap {
+  overflow-inline: auto;
+}

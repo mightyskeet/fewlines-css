@@ -64,6 +64,10 @@ for (const theme of themes) {
     test(`switches all states (${theme})`, async ({ page }) => {
       await expect(page.locator('#switches')).toHaveScreenshot(`switches-${theme}.png`);
     });
+
+    test(`tables default, zebra and sticky (${theme})`, async ({ page }) => {
+      await expect(page.locator('#tables')).toHaveScreenshot(`tables-${theme}.png`);
+    });
   });
 }
 

@@ -191,6 +191,119 @@
           <div class="ui-accordion-content"><p>Answer two.</p></div>
         </details>
       </section>
+
+      <!-- Table -->
+      <section id="tables">
+        <table class="ui-table" id="table-default">
+          <caption>
+            Quarterly revenue
+          </caption>
+          <thead>
+            <tr>
+              <th scope="col">Region</th>
+              <th scope="col">Status</th>
+              <th scope="col" data-align="end">Revenue</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">EMEA</th>
+              <td>Growing</td>
+              <td data-align="end">1 250 000</td>
+            </tr>
+            <tr>
+              <th scope="row">APAC</th>
+              <td>Steady</td>
+              <td data-align="end">980 000</td>
+            </tr>
+            <tr>
+              <th scope="row">Americas</th>
+              <td>Growing</td>
+              <td data-align="end">1 730 000</td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <th scope="row">Total</th>
+              <td></td>
+              <td data-align="end">3 960 000</td>
+            </tr>
+          </tfoot>
+        </table>
+
+        <table class="ui-table" data-zebra id="table-zebra">
+          <caption>
+            Deployments
+          </caption>
+          <thead>
+            <tr>
+              <th scope="col">Service</th>
+              <th scope="col">State</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>api</td>
+              <td>Healthy</td>
+            </tr>
+            <tr>
+              <td>web</td>
+              <td>Healthy</td>
+            </tr>
+            <tr>
+              <td>worker</td>
+              <td>Degraded</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div
+          class="ui-table-wrap"
+          id="table-wrap"
+          style="max-block-size: 12rem"
+          tabindex="0"
+          role="region"
+          aria-label="Backlog, scrollable"
+        >
+          <table class="ui-table" data-sticky id="table-sticky">
+            <caption>
+              Backlog
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col">Task</th>
+                <th scope="col">Assignee</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Fix login redirect</td>
+                <td>Ann</td>
+              </tr>
+              <tr>
+                <td>Rate-limit the API</td>
+                <td>Ben</td>
+              </tr>
+              <tr>
+                <td>Migrate tokens</td>
+                <td>Cara</td>
+              </tr>
+              <tr>
+                <td>Ship dark theme</td>
+                <td>Dan</td>
+              </tr>
+              <tr>
+                <td>Profile queries</td>
+                <td>Eve</td>
+              </tr>
+              <tr>
+                <td>Cleanup alerts</td>
+                <td>Fox</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
     </main>
   </body>
 </html>
