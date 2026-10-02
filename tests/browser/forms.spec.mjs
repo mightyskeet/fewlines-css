@@ -112,3 +112,73 @@ test('focus-visible ring appears on keyboard focus', async ({ page }) => {
   const outline = await first.evaluate((el) => getComputedStyle(el).outlineStyle);
   expect(outline).not.toBe('none');
 });
+
+test('single-line controls share the standardized height scale', async ({ page }) => {
+  // Height scale (matches Button): sm 1.75rem / md 2.25rem / lg 2.75rem.
+  // block-size is explicit: WebKit renders select taller when only
+  // min-block-size is set (compatibility notes, 2026-10-02).
+  const height = (id) => page.locator(`#${id}`).evaluate((el) => el.getBoundingClientRect().height);
+
+  const inputMd = await height('input-md');
+  expect(await height('select-md')).toBe(inputMd);
+  expect(inputMd).toBe(36);
+  expect(await height('input-sm')).toBe(28);
+  expect(await height('select-sm')).toBe(28);
+  expect(await height('input-lg')).toBe(44);
+  expect(await height('select-lg')).toBe(44);
+
+  // Inputs and buttons align in one row (md = 2.25rem).
+  expect(await height('form-submit')).toBe(36);
+
+  const font = (id) => page.locator(`#${id}`).evaluate((el) => getComputedStyle(el).fontSize);
+  expect(await font('input-sm')).toBe('14px');
+  expect(await font('input-lg')).toBe('18px');
+});
+
+test('read-only field uses the sunken surface', async ({ page }) => {
+  const background = await page
+    .locator('#input-readonly')
+    .evaluate((el) => getComputedStyle(el).backgroundColor);
+  const sunken = await page
+    .evaluate(() =>
+      getComputedStyle(document.documentElement).getPropertyValue('--ui-color-surface-sunken'),
+    )
+    .then((v) => v.trim());
+  expect(background).toBe(sunken);
+});
+
+test('file input button is styled by the component', async ({ page }) => {
+  const button = await page.locator('#input-file').evaluate((el) => {
+    const s = getComputedStyle(el, '::file-selector-button');
+    return {
+      background: s.backgroundColor,
+      divider: s.borderInlineEndWidth,
+      cursor: s.cursor,
+      paddingInlineStart: s.paddingInlineStart,
+    };
+  });
+  const sunken = await page
+    .evaluate(() =>
+      getComputedStyle(document.documentElement).getPropertyValue('--ui-color-surface-sunken'),
+    )
+    .then((v) => v.trim());
+  expect(button.background).toBe(sunken);
+  expect(button.divider).toBe('1px');
+  expect(button.cursor).toBe('pointer');
+  expect(button.paddingInlineStart).not.toBe('0px');
+});
+
+test('field error text uses the danger token and is linked via aria-describedby', async ({
+  page,
+}) => {
+  const describedBy = await page.locator('#input-invalid-demo').getAttribute('aria-describedby');
+  expect(describedBy).toBe('email-error');
+
+  const color = await page.locator('#email-error').evaluate((el) => getComputedStyle(el).color);
+  const danger = await page
+    .evaluate(() =>
+      getComputedStyle(document.documentElement).getPropertyValue('--ui-color-danger'),
+    )
+    .then((v) => v.trim());
+  expect(color).toBe(danger);
+});

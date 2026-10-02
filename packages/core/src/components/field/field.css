@@ -7,15 +7,26 @@
  *   <label class="ui-field">
  *     <span class="ui-field-label">…</span>
  *     <input class="ui-input" …>
+ *     <span class="ui-field-description">…</span>
  *   </label>
+ *
+ * Controls: ui-input, ui-textarea, ui-select — one shared wrapper (ui-field).
+ * Sizes via data-size: sm | lg (default — md, attribute omitted). The height
+ * scale matches Button (sm 1.75rem / md 2.25rem / lg 2.75rem) so inputs,
+ * selects and buttons align when composed in one row.
  *
  * States come from the platform:
  *   :hover, :focus-visible (base layer), :disabled, :read-only,
- *   :required, :valid, :invalid, :placeholder-shown.
+ *   :user-invalid / :user-valid.
  *
  * :invalid is gated behind :user-invalid-style intent: styling applies via
- * :user-invalid where supported so fields are not flagged red before the user
- * interacts. Lightning CSS downlevels :user-invalid to :invalid where needed.
+ * :user-invalid so fields are not flagged red before the user interacts.
+ *
+ * Box model: UA box-sizing diverges across controls (input/textarea are
+ * content-box, select is border-box in Chromium), which makes the same
+ * min-block-size render at different total heights. Single-line controls
+ * pin border-box so md/sm/lg heights are exact and identical; textarea
+ * stays content-box because its sizing is line-based (rows, 3lh floor).
  */
 
 .ui-field {
@@ -29,10 +40,17 @@
   color: var(--ui-color-text);
 }
 
-/* Hint / error text bound via aria-describedby */
+/* Hint text bound via aria-describedby */
 .ui-field-description {
   font-size: var(--ui-font-size-sm);
   color: var(--ui-color-text-muted);
+}
+
+/* Error text bound via aria-describedby (danger/surface, danger/surface-raised
+ * — registered APCA pairs, tests/apca). */
+.ui-field-error {
+  font-size: var(--ui-font-size-sm);
+  color: var(--ui-color-danger);
 }
 
 .ui-input,
@@ -45,13 +63,47 @@
   border-radius: var(--ui-radius-sm);
   padding-block: var(--ui-space-2xs);
   padding-inline: var(--ui-space-sm);
-  min-block-size: 2.25rem;
   accent-color: var(--ui-color-accent);
 }
 
+/* Single-line controls: fixed height scale, identical across engines.
+ * WebKit renders select taller than the same min-block-size (its UA metrics
+ * win over min-height) — an explicit block-size is the only portable exact
+ * height (field-sizing: content opt-in still grows the inline axis). */
+.ui-input,
+.ui-select {
+  box-sizing: border-box;
+  block-size: 2.25rem;
+}
+
 .ui-textarea {
-  min-block-size: auto;
   resize: block;
+}
+
+/* Sizes — font applies to every control; the height scale applies to
+ * single-line controls (textarea sizing is line-based). */
+.ui-input[data-size='sm'],
+.ui-textarea[data-size='sm'],
+.ui-select[data-size='sm'] {
+  font-size: var(--ui-font-size-sm);
+}
+
+.ui-input[data-size='lg'],
+.ui-textarea[data-size='lg'],
+.ui-select[data-size='lg'] {
+  font-size: var(--ui-font-size-lg);
+}
+
+.ui-input[data-size='sm'],
+.ui-select[data-size='sm'] {
+  block-size: 1.75rem;
+  padding-block: var(--ui-space-3xs);
+}
+
+.ui-input[data-size='lg'],
+.ui-select[data-size='lg'] {
+  block-size: 2.75rem;
+  padding-inline: var(--ui-space-md);
 }
 
 /* Textarea autosize: field-sizing: content is a progressive enhancement
@@ -84,6 +136,42 @@
 .ui-input:user-valid,
 .ui-textarea:user-valid {
   border-color: var(--ui-color-success);
+}
+
+/* Read-only (not disabled): selectable and copyable, not editable — the
+ * sunken surface signals "fixed value" (text/surface-sunken — registered). */
+.ui-input:read-only:not(:disabled),
+.ui-textarea:read-only:not(:disabled) {
+  background: var(--ui-color-surface-sunken);
+  cursor: default;
+}
+
+/* File input: the native button is styled with tokens; the field provides the
+ * frame, the button carries the interactive surface. block-size: 100% makes
+ * the button fill the field (engines without it render the natural height —
+ * graceful, compatibility notes). */
+.ui-input[type='file'] {
+  padding: 0;
+}
+
+.ui-input[type='file']::file-selector-button {
+  block-size: 100%;
+  margin-inline-end: var(--ui-space-sm);
+  border: none;
+  border-inline-end: 1px solid var(--ui-color-border);
+  background: var(--ui-color-surface-sunken);
+  color: var(--ui-color-text);
+  font: inherit;
+  font-weight: var(--ui-font-weight-medium);
+  padding-block: var(--ui-space-2xs);
+  padding-inline: var(--ui-space-sm);
+  cursor: pointer;
+}
+
+/* Hover flips the button to the base surface — the same opposite-surface
+ * model as the Table row hover. */
+.ui-input[type='file']::file-selector-button:hover {
+  background: var(--ui-color-surface);
 }
 
 .ui-input:hover:not(:disabled, :read-only),

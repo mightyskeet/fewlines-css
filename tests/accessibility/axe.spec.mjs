@@ -48,7 +48,7 @@ test('axe scan: dialog page state has no violations', async ({ page }) => {
 
 test('keyboard: all interactive elements reachable via Tab', async ({ page }) => {
   const reachable = [];
-  for (let i = 0; i < 12; i++) {
+  for (let i = 0; i < 20; i++) {
     await page.keyboard.press('Tab');
     const id = await page.evaluate(
       () => document.activeElement?.id || document.activeElement?.tagName,

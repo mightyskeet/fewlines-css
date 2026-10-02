@@ -63,6 +63,30 @@
       </section>
 
       <section>
+        <h2>Sizes</h2>
+        <div class="example">
+          <label class="ui-field">
+            <span class="ui-field-label">Small</span>
+            <input class="ui-input" type="text" data-size="sm" placeholder="Small" />
+          </label>
+          <label class="ui-field">
+            <span class="ui-field-label">Default</span>
+            <input class="ui-input" type="text" placeholder="Default" />
+          </label>
+          <label class="ui-field">
+            <span class="ui-field-label">Large</span>
+            <input class="ui-input" type="text" data-size="lg" placeholder="Large" />
+          </label>
+        </div>
+        <p>
+          <code>data-size="sm|lg"</code> (default — md) on the control. The height scale matches
+          Button (1.75 / 2.25 / 2.75rem), so inputs, selects and buttons align in one row.
+          Single-line controls pin <code>block-size</code> — WebKit renders select taller when only
+          <code>min-block-size</code> is set.
+        </p>
+      </section>
+
+      <section>
         <h2>Textarea autosize</h2>
         <div class="example">
           <label class="ui-field">
@@ -98,12 +122,45 @@
               <span class="ui-field-label">Required email</span>
               <input class="ui-input" type="email" required placeholder="Leave empty, then blur" />
             </label>
+            <label class="ui-field">
+              <span class="ui-field-label">Email with error text</span>
+              <input
+                class="ui-input"
+                type="email"
+                value="not-an-email"
+                aria-describedby="demo-email-error"
+              />
+              <span class="ui-field-error" id="demo-email-error">Please enter a valid email.</span>
+            </label>
             <button class="ui-button" type="submit">Submit</button>
           </form>
         </div>
         <p>
           Red/green borders appear only after user interaction (<code>:user-invalid</code> /
-          <code>:user-valid</code>). Never style bare <code>:invalid</code>.
+          <code>:user-valid</code>). Never style bare <code>:invalid</code>. Host-rendered error
+          text uses <code>ui-field-error</code> bound via <code>aria-describedby</code>.
+        </p>
+      </section>
+
+      <section>
+        <h2>Read-only and file</h2>
+        <div class="example">
+          <label class="ui-field">
+            <span class="ui-field-label">API key</span>
+            <input class="ui-input" type="text" readonly value="sk-1234567890abcdef" />
+            <span class="ui-field-description">Your API key is read-only.</span>
+          </label>
+          <label class="ui-field">
+            <span class="ui-field-label">Attachment</span>
+            <input class="ui-input" type="file" />
+            <span class="ui-field-description">Select a file to upload.</span>
+          </label>
+        </div>
+        <p>
+          Read-only fields keep the value selectable and copyable — the sunken surface signals the
+          fixed value (distinct from <code>:disabled</code>). The file button
+          (<code>::file-selector-button</code>) is styled with tokens: sunken surface, hairline
+          divider, full field height.
         </p>
       </section>
 
@@ -124,6 +181,11 @@
           <li>No styling of <code>:invalid</code> without <code>:user-</code>.</li>
           <li>No JS validation replacing native validation.</li>
           <li>No <code>div</code> inside <code>label</code> (label is an inline container).</li>
+          <li>No size classes — sizes are only <code>data-size</code> on the control.</li>
+          <li>
+            No host fonts larger than the size scale on single-line controls — use
+            <code>data-size="lg"</code>.
+          </li>
         </ul>
       </section>
     </main>
