@@ -34,10 +34,15 @@ class SiteHeader extends HTMLElement {
     if (this.dataset.chrome) return;
     this.dataset.chrome = 'true';
 
-    // The element hosts block content; its own display is the component's
-    // concern, so pages carry no chrome styling.
+    // The element hosts block content and renders the shared chrome; the
+    // chrome's own styles are injected here once, so adding a page needs
+    // no per-page CSS (page styles can still override — they load first).
     const style = document.createElement('style');
-    style.textContent = 'site-header{display:block}';
+    style.textContent = [
+      'site-header{display:block}',
+      'site-header .theme-toggle{float:inline-end}',
+      '.site-nav ul{display:flex;flex-wrap:wrap;gap:var(--ui-space-sm);padding:0;margin:0 0 var(--ui-space-xl);list-style:none}',
+    ].join('\n');
     document.head.append(style);
 
     const header = document.createElement('header');
