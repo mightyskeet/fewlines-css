@@ -26,3 +26,6 @@ Thumbs.db
 
 # Generated test fixture CSS (copied from packages/core/dist by tests/prepare.mjs)
 apps/docs/core.css
+
+# Local experiments
+.experiments/
