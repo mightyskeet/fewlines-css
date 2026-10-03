@@ -32,12 +32,15 @@
  *
  * Monospaced via --ui-font-mono, slightly smaller than the surrounding text
  * (0.875em — scales with the host context). Surface is sunken (the validated
- * pair is text/surface-sunken at the fluent role — 0.875em of 16px body).
+ * pair is text/surface-sunken at the fluent role — 0.875em of 16px body);
+ * the border delineates the well in both themes — near-black steps compress
+ * perceptually in the dark theme, so background lightness alone is too
+ * subtle for small fragments (same model as <pre>: sunken + border).
  *
- * box-decoration-break: clone repeats the padding and radius on every line
- * fragment when inline code wraps. Decorative enhancement — without support
- * the code is fully readable; the matrix floor Safari supports only the
- * -webkit- prefixed form, Chromium/FF the unprefixed one
+ * box-decoration-break: clone repeats the padding, border and radius on
+ * every line fragment when inline code wraps. Decorative enhancement —
+ * without support the code is fully readable; the matrix floor Safari
+ * supports only the -webkit- prefixed form, Chromium/FF the unprefixed one
  * (compatibility notes, 2026-10-03). */
 code,
 kbd,
@@ -46,6 +49,7 @@ samp {
   font-size: 0.875em;
   color: var(--ui-color-text);
   background: var(--ui-color-surface-sunken);
+  border: 1px solid var(--ui-color-border);
   padding-block: var(--ui-space-3xs);
   padding-inline: var(--ui-space-2xs);
   border-radius: var(--ui-radius-xs);
@@ -57,11 +61,10 @@ samp {
   box-decoration-break: clone;
 }
 
-/* <kbd> reads as a key cap: raised surface with a border (the raised variant
- * of the same validated text pair). */
+/* <kbd> reads as a key cap: raised surface (the raised variant of the same
+ * validated text pair) and a slightly larger radius. */
 kbd {
   background: var(--ui-color-surface-raised);
-  border: 1px solid var(--ui-color-border);
   border-radius: var(--ui-radius-sm);
 }
 
