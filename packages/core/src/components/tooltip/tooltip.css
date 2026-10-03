@@ -32,6 +32,15 @@
  * with position-try-fallbacks; without anchor support — centered (fixed).
  * No positioning runtime in core (PROJECT_SPEC.md, раздел 11).
  *
+ * Motion: the transition is declared on the element (not scoped to the open
+ * state) and the hidden state lives in the base styles, so closing animates
+ * back (opacity to 0, translate to the entry offset). `allow-discrete`
+ * keeps the tooltip rendered until the exit transition ends; entry is
+ * anchored by @starting-style. The exit runs in Chromium only (overlay
+ * property is Chromium/Edge-only; Firefox/WebKit hide instantly) —
+ * graceful degradation inside the single canonical implementation
+ * (compatibility notes).
+ *
  * APCA pair used (validated in tests/apca): text on surface-raised (body).
  */
 
@@ -58,12 +67,11 @@
   position: fixed;
   inset-block-start: 50%;
   inset-inline-start: 50%;
-  translate: -50% -50%;
-}
 
-/* Entry animation via @starting-style + allow-discrete (same as popover). */
-.ui-tooltip:popover-open {
-  display: block;
+  /* Hidden state (fallback mode): centered with the entry offset — also
+   * the target of the close transition. */
+  opacity: 0;
+  translate: -50% calc(-50% + 0.25rem);
   transition:
     opacity var(--ui-duration-fast) ease,
     translate var(--ui-duration-fast) ease,
@@ -71,6 +79,15 @@
     display var(--ui-duration-fast) ease allow-discrete;
 }
 
+/* Open state: block beats the span default; follows the base rule. */
+.ui-tooltip:popover-open {
+  display: block;
+  opacity: 1;
+  translate: -50% -50%;
+}
+
+/* Entry anchor: transitions do not start from display:none, so the
+ * from-state is declared explicitly for the opening frame. */
 @starting-style {
   .ui-tooltip:popover-open {
     opacity: 0;
@@ -88,7 +105,11 @@
     /* stylelint-disable declaration-property-value-no-unknown */
     position: fixed;
     inset: unset;
-    translate: none;
+
+    /* Hidden state (anchor mode): the entry offset — also the close
+     * transition target. */
+    opacity: 0;
+    translate: 0 0.25rem;
     position-anchor: --ui-tooltip-anchor;
     position-area: block-end center;
     position-try-fallbacks: block-start center;
@@ -96,20 +117,26 @@
     margin-block-start: var(--ui-space-2xs);
   }
 
-  /* Trigger opts in by declaring the anchor name. */
-  .ui-tooltip-trigger {
-    anchor-name: --ui-tooltip-anchor;
+  .ui-tooltip:popover-open {
+    opacity: 1;
+    translate: none;
   }
 
   @starting-style {
     .ui-tooltip:popover-open {
+      opacity: 0;
       translate: 0 0.25rem;
     }
+  }
+
+  /* Trigger opts in by declaring the anchor name. */
+  .ui-tooltip-trigger {
+    anchor-name: --ui-tooltip-anchor;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .ui-tooltip:popover-open {
+  .ui-tooltip {
     transition: none;
   }
 }

@@ -58,3 +58,57 @@ test('popover is in top layer when open', async ({ page }) => {
   });
   expect(inTopLayer).toBe(true);
 });
+
+const hasOverlaySupport = (page) => page.evaluate(() => CSS.supports('overlay', 'auto'));
+
+test('popover animates in on open (entry transition)', async ({ page }) => {
+  // Arm before opening: transitionrun proves the entry is a real transition
+  // from the @starting-style state, not an instant display flip.
+  await page.evaluate(() => {
+    window.__popEntry = [];
+    document
+      .querySelector('#testPopover')
+      .addEventListener('transitionrun', (e) => window.__popEntry.push(e.propertyName));
+  });
+
+  await page.click('#popover-trigger');
+  await expect(page.locator('#testPopover')).toBeVisible();
+
+  await expect
+    .poll(() => page.evaluate(() => window.__popEntry))
+    .toEqual(expect.arrayContaining(['translate', 'opacity']));
+});
+
+test('popover animates out on close (reverse transition)', async ({ page }) => {
+  // Exit retention requires the overlay property: engines without it
+  // (Firefox/WebKit) drop the popover from the top layer immediately and
+  // create no exit transitions (probed 2026-10-03, compatibility notes).
+  test.skip(!(await hasOverlaySupport(page)), 'overlay not supported: exit hides instantly');
+
+  await page.click('#popover-trigger');
+  await expect(page.locator('#testPopover')).toBeVisible();
+
+  // Close only after the entry settles: closing within the first frames
+  // leaves opacity/translate at their hidden values, so no reverse
+  // transition runs for them (display/overlay still flip).
+  await expect
+    .poll(() =>
+      page.evaluate(() => getComputedStyle(document.querySelector('#testPopover')).translate),
+    )
+    .toBe('none');
+
+  await page.evaluate(() => {
+    window.__popExit = [];
+    document
+      .querySelector('#testPopover')
+      .addEventListener('transitionrun', (e) => window.__popExit.push(e.propertyName));
+  });
+
+  await page.keyboard.press('Escape');
+
+  await expect
+    .poll(() => page.evaluate(() => window.__popExit))
+    .toEqual(expect.arrayContaining(['translate', 'opacity']));
+
+  await expect(page.locator('#testPopover')).not.toBeVisible();
+});

@@ -102,3 +102,56 @@ test('dialog focus is trapped while modal', async ({ page }) => {
     expect(inside, `focused element ${id} escaped the dialog`).toBe(true);
   }
 });
+
+const hasOverlaySupport = (page) => page.evaluate(() => CSS.supports('overlay', 'auto'));
+
+test('dialog animates in on open (entry transition)', async ({ page }) => {
+  // Arm before opening: transitionrun proves the entry is a real transition
+  // from the @starting-style state, not an instant display flip.
+  await page.evaluate(() => {
+    window.__dlgEntry = [];
+    document
+      .querySelector('#testDialog')
+      .addEventListener('transitionrun', (e) => window.__dlgEntry.push(e.propertyName));
+  });
+
+  await page.click('#dialog-open');
+  await expect(page.locator('#testDialog')).toBeVisible();
+
+  await expect
+    .poll(() => page.evaluate(() => window.__dlgEntry))
+    .toEqual(expect.arrayContaining(['transform', 'opacity']));
+});
+
+test('dialog animates out on close (reverse transition)', async ({ page }) => {
+  // Exit retention requires the overlay property: engines without it
+  // (Firefox/WebKit) drop the dialog from the top layer immediately and
+  // create no exit transitions (probed 2026-10-03, compatibility notes).
+  test.skip(!(await hasOverlaySupport(page)), 'overlay not supported: exit hides instantly');
+
+  await page.click('#dialog-open');
+  await expect(page.locator('#testDialog')).toBeVisible();
+
+  // Close only after the entry settles (same reasoning as popover: closing
+  // within the first frames leaves opacity/transform at hidden values).
+  await expect
+    .poll(() =>
+      page.evaluate(() => getComputedStyle(document.querySelector('#testDialog')).transform),
+    )
+    .toBe('none');
+
+  await page.evaluate(() => {
+    window.__dlgExit = [];
+    document
+      .querySelector('#testDialog')
+      .addEventListener('transitionrun', (e) => window.__dlgExit.push(e.propertyName));
+  });
+
+  await page.keyboard.press('Escape');
+
+  await expect
+    .poll(() => page.evaluate(() => window.__dlgExit))
+    .toEqual(expect.arrayContaining(['transform', 'opacity']));
+
+  await expect(page.locator('#testDialog')).not.toBeVisible();
+});

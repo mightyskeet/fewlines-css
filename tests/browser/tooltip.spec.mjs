@@ -180,3 +180,60 @@ test('tooltip follows the theme switch (light-dark tokens)', async ({ page }) =>
 
   expect(light).not.toBe(dark);
 });
+
+const hasOverlaySupport = (page) => page.evaluate(() => CSS.supports('overlay', 'auto'));
+
+test('tooltip animates in on open (entry transition)', async ({ page }) => {
+  // The opt-in pair (declarative click) exercises the engine-independent
+  // path. Arm before opening: transitionrun proves the entry is a real
+  // transition from the @starting-style state.
+  await page.evaluate(() => {
+    window.__tipEntry = [];
+    document
+      .querySelector('#testTooltipFallback')
+      .addEventListener('transitionrun', (e) => window.__tipEntry.push(e.propertyName));
+  });
+
+  await page.click('#tooltip-fallback-trigger');
+  await expect(page.locator('#testTooltipFallback')).toBeVisible();
+
+  await expect
+    .poll(() => page.evaluate(() => window.__tipEntry))
+    .toEqual(expect.arrayContaining(['translate', 'opacity']));
+});
+
+test('tooltip animates out on close (reverse transition)', async ({ page }) => {
+  // Exit retention requires the overlay property: engines without it
+  // (Firefox/WebKit) drop the tooltip from the top layer immediately and
+  // create no exit transitions (probed 2026-10-03, compatibility notes).
+  test.skip(!(await hasOverlaySupport(page)), 'overlay not supported: exit hides instantly');
+
+  await page.click('#tooltip-fallback-trigger');
+  await expect(page.locator('#testTooltipFallback')).toBeVisible();
+
+  // Close only after the entry settles: closing within the first frames
+  // leaves opacity/translate at their hidden values, so no reverse
+  // transition runs for them (display/overlay still flip).
+  await expect
+    .poll(() =>
+      page.evaluate(
+        () => getComputedStyle(document.querySelector('#testTooltipFallback')).translate,
+      ),
+    )
+    .toBe('none');
+
+  await page.evaluate(() => {
+    window.__tipExit = [];
+    document
+      .querySelector('#testTooltipFallback')
+      .addEventListener('transitionrun', (e) => window.__tipExit.push(e.propertyName));
+  });
+
+  await page.keyboard.press('Escape');
+
+  await expect
+    .poll(() => page.evaluate(() => window.__tipExit))
+    .toEqual(expect.arrayContaining(['translate', 'opacity']));
+
+  await expect(page.locator('#testTooltipFallback')).not.toBeVisible();
+});

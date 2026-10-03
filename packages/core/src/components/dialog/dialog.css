@@ -12,6 +12,14 @@
  *
  * Open state: dialog[open] — native attribute, no classes.
  * Modal state: dialog:modal — native pseudo-class.
+ *
+ * Motion: the transition is declared on the element (not scoped to the open
+ * state) and the hidden state lives in the base styles, so closing animates
+ * back (opacity to 0, translateY to +0.5rem). `allow-discrete` keeps the
+ * dialog rendered until the exit transition ends; entry is anchored by
+ * @starting-style. The exit runs in Chromium only (overlay property is
+ * Chromium/Edge-only; Firefox/WebKit hide instantly) — graceful degradation
+ * inside the single canonical implementation (compatibility notes).
  */
 
 .ui-dialog {
@@ -23,11 +31,10 @@
   max-block-size: min(80vh, 100%);
   max-inline-size: min(90vw, 32rem);
   margin: auto;
-}
 
-/* Entry animation: @starting-style + transition-behavior (compatibility notes).
- * display transition lets the dialog animate on open/close without JS. */
-.ui-dialog[open] {
+  /* Hidden state: also the target of the close transition. */
+  opacity: 0;
+  transform: translateY(0.5rem);
   transition:
     opacity var(--ui-duration-normal) ease,
     transform var(--ui-duration-normal) ease,
@@ -35,6 +42,13 @@
     display var(--ui-duration-normal) ease allow-discrete;
 }
 
+.ui-dialog[open] {
+  opacity: 1;
+  transform: none;
+}
+
+/* Entry anchor: transitions do not start from display:none, so the
+ * from-state is declared explicitly for the opening frame. */
 @starting-style {
   .ui-dialog[open] {
     opacity: 0;
@@ -42,13 +56,19 @@
   }
 }
 
-/* Backdrop — native pseudo-element, top-layer. */
+/* Backdrop — native pseudo-element, top-layer. Hidden-state opacity in the
+ * base rule makes the scrim fade out on close. */
 .ui-dialog::backdrop {
   background: color-mix(in oklab, black 50%, transparent);
+  opacity: 0;
   transition:
     opacity var(--ui-duration-normal) ease,
     overlay var(--ui-duration-normal) ease allow-discrete,
     display var(--ui-duration-normal) ease allow-discrete;
+}
+
+.ui-dialog[open]::backdrop {
+  opacity: 1;
 }
 
 @starting-style {
@@ -58,7 +78,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .ui-dialog[open],
+  .ui-dialog,
   .ui-dialog::backdrop {
     transition: none;
   }

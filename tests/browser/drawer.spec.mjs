@@ -157,6 +157,15 @@ test('drawer animates out on close (reverse transition)', async ({ page }) => {
   await page.click('#drawer-trigger');
   await expect(page.locator('#testDrawer')).toBeVisible();
 
+  // Close only after the entry settles: closing within the first frames
+  // leaves opacity/translate at their hidden values, so no reverse
+  // transition runs for them (display/overlay still flip).
+  await expect
+    .poll(() =>
+      page.evaluate(() => getComputedStyle(document.querySelector('#testDrawer')).translate),
+    )
+    .toBe('none');
+
   // Arm before closing: transitionrun proves the exit is a real transition
   // toward the hidden state (translate/opacity), not an instant display flip.
   // The events fire at the next rendering frame after hidePopover, so poll
