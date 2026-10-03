@@ -22,10 +22,11 @@
         <p>
           Popover API — <code>popover</code> on the panel gives top-layer, light dismiss and native
           Escape; <code>popovertarget</code> / <code>popovertargetaction="hide"</code> open and
-          close it declaratively (core ships no runtime JS); <code>::backdrop</code> is the native
-          pseudo-element (host may style it as a scrim); <code>autofocus</code> inside the popover
-          moves focus in natively; <code>@starting-style</code> +
-          <code>transition-behavior: allow-discrete</code> animate the slide-in.
+          close it declaratively (core ships no runtime JS); <code>::backdrop</code>
+          is styled as a scrim by default (same as Dialog) and fades both ways;
+          <code>autofocus</code> inside the popover moves focus in natively;
+          <code>@starting-style</code> + <code>transition-behavior: allow-discrete</code>
+          animate the slide-in and the reverse slide-out.
         </p>
       </section>
 
@@ -98,9 +99,10 @@
         <ul>
           <li>Open — <code>:popover-open</code>; closed — native <code>display: none</code>.</li>
           <li>
-            Slide-in — <code>@starting-style</code> +
+            Slide-in and reverse slide-out — <code>@starting-style</code> +
             <code>transition-behavior: allow-discrete</code> for
-            <code>translate</code>/<code>opacity</code>/<code>display</code>/<code>overlay</code>.
+            <code>translate</code>/<code>opacity</code>/<code>display</code>/<code>overlay</code>;
+            the scrim fades both ways.
           </li>
           <li>Reduced motion disables the animation; without support the panel appears as is.</li>
         </ul>
@@ -119,8 +121,9 @@
             underneath.
           </li>
           <li>
-            A scrim look is a host decision: style <code>::backdrop</code> and lock scroll via
-            <code>body:has(#id:popover-open)</code> — semantics stay non-modal; a blocking panel is
+            The scrim is default (as in Dialog): an outside click closes the drawer and still
+            reaches the page underneath. Restyle <code>::backdrop</code> to opt out; scroll lock
+            stays a host decision (<code>body:has(#id:popover-open)</code>). A blocking panel is
             Dialog.
           </li>
         </ul>

@@ -2,10 +2,9 @@
  *
  * Native basis: Popover API — `popover` (auto) on the drawer container,
  * declarative triggers (popovertarget), light dismiss, Escape, top-layer,
- * :popover-open, native ::backdrop (host may style it as a scrim).
- * Zero JS required (PROJECT_SPEC.md, 4.1). Non-modal by design: the page
- * stays interactive and focus is not trapped — a blocking panel is Dialog
- * (modal-only, see dialog.md).
+ * :popover-open. Zero JS required (PROJECT_SPEC.md, 4.1). Non-modal by
+ * design: the page stays interactive and focus is not trapped — a blocking
+ * panel is Dialog (modal-only, see dialog.md).
  *
  * Canonical structure:
  *   <button class="ui-button" popovertarget="cart">Cart</button>
@@ -25,6 +24,19 @@
  * inline edges, correct under RTL. Full block size: inset-block stretch
  * against the fixed-positioned initial containing block; inline-size caps
  * at 24rem and fills the viewport width on narrow screens.
+ *
+ * Backdrop: styled like Dialog by default (color-mix scrim, fades in and
+ * out); the popover ::backdrop is the native light-dismiss surface — a click
+ * on the scrim closes the drawer and still reaches the page underneath. The
+ * host may restyle or remove the scrim via ::backdrop; scroll lock remains a
+ * host decision (body:has(#id:popover-open)).
+ *
+ * Motion: the transition is declared on the element (not scoped to the open
+ * state) and the hidden state lives in the base styles, so closing animates
+ * back (translate to the off-screen edge, opacity to 0). `allow-discrete`
+ * keeps the panel in the top layer until the exit transition ends. Entry is
+ * anchored by @starting-style. Both directions use the same logged features
+ * (@starting-style + allow-discrete, compatibility notes).
  *
  * APCA pair used (validated in tests/apca): text on surface-raised (body).
  */
@@ -49,27 +61,15 @@
    * scrollbar — unlike viewport units. */
   inline-size: min(24rem, 100%);
   max-inline-size: none;
-}
 
-/* Edge variants — logical inline edges (RTL-correct). The rounded corners
- * sit on the content-facing edge only. Default (no attribute) = start. */
-.ui-drawer,
-.ui-drawer[data-variant='drawer-start'] {
+  /* Default edge (drawer-start): pinned to the logical inline-start edge,
+   * rounded on the content-facing edge only. These hidden-state styles are
+   * also the target of the close transition. */
   inset-inline: 0 auto;
   border-start-end-radius: var(--ui-radius-lg);
   border-end-end-radius: var(--ui-radius-lg);
-}
-
-.ui-drawer[data-variant='drawer-end'] {
-  inset-inline: auto 0;
-  border-start-start-radius: var(--ui-radius-lg);
-  border-end-start-radius: var(--ui-radius-lg);
-}
-
-/* Slide-in from the pinned edge: @starting-style + allow-discrete (same
- * mechanism as dialog/popover; compatibility notes). The exit is instant —
- * the codebase convention (transition is state-scoped to the open state). */
-.ui-drawer:popover-open {
+  opacity: 0;
+  translate: -100% 0;
   transition:
     translate var(--ui-duration-normal) ease,
     opacity var(--ui-duration-normal) ease,
@@ -77,6 +77,22 @@
     display var(--ui-duration-normal) ease allow-discrete;
 }
 
+.ui-drawer[data-variant='drawer-end'] {
+  inset-inline: auto 0;
+  border-start-start-radius: var(--ui-radius-lg);
+  border-end-start-radius: var(--ui-radius-lg);
+  translate: 100% 0;
+}
+
+/* Open state: must come after the variant blocks (equal specificity —
+ * source order wins) so translate: none beats the hidden-state value. */
+.ui-drawer:popover-open {
+  opacity: 1;
+  translate: none;
+}
+
+/* Entry anchor: transitions do not start from display:none, so the from-state
+ * is declared explicitly for the opening frame. */
 @starting-style {
   .ui-drawer:popover-open {
     opacity: 0;
@@ -89,8 +105,30 @@
   }
 }
 
+/* Backdrop — native popover pseudo-element, styled like Dialog (dialog.css).
+ * Hidden-state opacity in the base rule makes the scrim fade out on close. */
+.ui-drawer::backdrop {
+  background: color-mix(in oklab, black 50%, transparent);
+  opacity: 0;
+  transition:
+    opacity var(--ui-duration-normal) ease,
+    overlay var(--ui-duration-normal) ease allow-discrete,
+    display var(--ui-duration-normal) ease allow-discrete;
+}
+
+.ui-drawer:popover-open::backdrop {
+  opacity: 1;
+}
+
+@starting-style {
+  .ui-drawer:popover-open::backdrop {
+    opacity: 0;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .ui-drawer:popover-open {
+  .ui-drawer,
+  .ui-drawer::backdrop {
     transition: none;
   }
 }

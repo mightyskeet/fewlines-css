@@ -100,6 +100,52 @@ test('drawer is pinned to the inline-end edge at full height', async ({ page }) 
   expect(geometry.inlineSize).toBe(24 * 16);
 });
 
+test('drawer has a dialog-like scrim backdrop by default', async ({ page }) => {
+  await page.click('#drawer-trigger');
+  await expect(page.locator('#testDrawer')).toBeVisible();
+
+  // Read after the entry transition settles so the scrim opacity is final.
+  await expect
+    .poll(() =>
+      page.evaluate(() => getComputedStyle(document.querySelector('#testDrawer')).translate),
+    )
+    .toBe('none');
+
+  const backdrop = await page
+    .locator('#testDrawer')
+    .evaluate((el) => getComputedStyle(el, '::backdrop'));
+
+  // Scrim like dialog.css: color-mix over black — never transparent/absent,
+  // fully opaque while open. Chromium serializes as oklch/rgba, WebKit as rgba.
+  expect(backdrop.backgroundColor).not.toBe('rgba(0, 0, 0, 0)');
+  expect(backdrop.backgroundColor).not.toBe('transparent');
+  expect(Number(backdrop.opacity)).toBe(1);
+});
+
+test('drawer animates out on close (reverse transition)', async ({ page }) => {
+  await page.click('#drawer-trigger');
+  await expect(page.locator('#testDrawer')).toBeVisible();
+
+  // Arm before closing: transitionrun proves the exit is a real transition
+  // toward the hidden state (translate/opacity), not an instant display flip.
+  // The events fire at the next rendering frame after hidePopover, so poll
+  // for them instead of reading immediately after the click.
+  await page.evaluate(() => {
+    window.__drawerExit = [];
+    document
+      .querySelector('#testDrawer')
+      .addEventListener('transitionrun', (e) => window.__drawerExit.push(e.propertyName));
+  });
+
+  await page.click('#drawer-close');
+
+  await expect
+    .poll(() => page.evaluate(() => window.__drawerExit))
+    .toEqual(expect.arrayContaining(['translate', 'opacity']));
+
+  await expect(page.locator('#testDrawer')).not.toBeVisible();
+});
+
 test('drawer-start variant (default) is pinned to the inline-start edge', async ({ page }) => {
   await page.click('#drawer-start-trigger');
   await expect(page.locator('#testDrawerStart')).toBeVisible();
