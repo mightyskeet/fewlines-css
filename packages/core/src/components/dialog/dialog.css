@@ -1,6 +1,6 @@
 /* Dialog component.
  *
- * Native basis: <dialog> element — modal/non-modal, top-layer, ::backdrop,
+ * Native basis: <dialog> element — modal-only, top-layer, ::backdrop,
  * native Escape handling, native focus trapping, form method="dialog".
  * Zero JS required (PROJECT_SPEC.md, 4.1).
  *

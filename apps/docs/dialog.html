@@ -14,15 +14,15 @@
     <main>
       <header class="page-header">
         <h1>Dialog</h1>
-        <p>Modal and non-modal window on top of the page: confirmations, forms, messages.</p>
+        <p>Modal window on top of the page: confirmations, forms, messages.</p>
       </header>
 
       <section>
         <h2>Native basis</h2>
         <p>
           <code>&lt;dialog&gt;</code> with top-layer behavior; <code>showModal()</code> /
-          <code>show()</code> / <code>close()</code> called by the host application (core ships no
-          runtime JS); <code>::backdrop</code>; native Escape close; native focus trap;
+          <code>close()</code> called by the host application (core ships no runtime JS);
+          <code>::backdrop</code>; native Escape close; native focus trap;
           <code>&lt;form method="dialog"&gt;</code> closes without JS; <code>:modal</code> and
           <code>dialog[open]</code> for state styling.
         </p>
@@ -47,7 +47,6 @@
           <button class="ui-button" type="button" onclick="dlg.showModal()">
             Open modal dialog
           </button>
-          <button class="ui-button" type="button" onclick="dlg.show()">Open non-modal</button>
           <dialog class="ui-dialog" id="dlg">
             <h3>Confirm</h3>
             <p>Native dialog. Escape or the button closes it.</p>
@@ -100,6 +99,10 @@
           </li>
           <li>
             No styling of <code>dialog:not([open])</code> — natively <code>display: none</code>.
+          </li>
+          <li>
+            No non-modal <code>show()</code> — it loses top-layer, <code>::backdrop</code> and
+            Escape; non-modal overlays are popover (<code>popover.html</code>).
           </li>
         </ul>
       </section>
