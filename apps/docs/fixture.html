@@ -143,6 +143,57 @@
         </div>
       </section>
 
+      <!-- Drawer -->
+      <section id="drawers">
+        <button class="ui-button" type="button" popovertarget="testDrawer" id="drawer-trigger">
+          Open drawer
+        </button>
+        <button
+          class="ui-button"
+          type="button"
+          id="drawer-behind"
+          onclick="this.dataset.clicked = 'true'"
+        >
+          Behind the drawer
+        </button>
+        <aside class="ui-drawer" id="testDrawer" popover data-variant="drawer-end">
+          <h2>Filters</h2>
+          <p>Drawer content. Escape or an outside click closes it.</p>
+          <button
+            class="ui-button"
+            type="button"
+            id="drawer-close"
+            popovertarget="testDrawer"
+            popovertargetaction="hide"
+            autofocus
+          >
+            Close
+          </button>
+        </aside>
+        <button
+          class="ui-button"
+          type="button"
+          popovertarget="testDrawerStart"
+          id="drawer-start-trigger"
+        >
+          Open start drawer
+        </button>
+        <nav class="ui-drawer" id="testDrawerStart" popover aria-label="Mobile menu">
+          <h2>Menu</h2>
+          <p>Start-edge drawer (default variant).</p>
+          <button
+            class="ui-button"
+            type="button"
+            id="drawer-start-close"
+            popovertarget="testDrawerStart"
+            popovertargetaction="hide"
+            autofocus
+          >
+            Close
+          </button>
+        </nav>
+      </section>
+
       <!-- Tooltip -->
       <section id="tooltips">
         <!-- Each pair is scoped with anchor-scope: all — triggers share the

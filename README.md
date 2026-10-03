@@ -43,6 +43,7 @@ override — `data-theme="light|dark"` на корневом элементе. �
 | Field     | `<input>/<textarea>/<select>`    | `ui-field`, `ui-input`, `ui-textarea`, `ui-select`, `ui-field-error`, `data-size` |
 | Dialog    | `<dialog>` (top-layer)           | `ui-dialog`                                                                       |
 | Popover   | Popover API + anchor positioning | `ui-popover`, `ui-popover-trigger`                                                |
+| Drawer    | Popover API (панель от края)     | `ui-drawer`, `popover`, `data-variant`                                            |
 | Accordion | `<details>/<summary>`            | `ui-accordion`, `ui-accordion-summary`                                            |
 | Alert     | статический контейнер сообщений  | `ui-alert`, `data-variant`, `ui-alert-title/body`                                 |
 | Badge     | статический inline статус-лейбл  | `ui-badge`, `data-variant`                                                        |

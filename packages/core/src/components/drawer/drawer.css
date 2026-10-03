@@ -1,0 +1,102 @@
+/* Drawer component.
+ *
+ * Native basis: Popover API — `popover` (auto) on the drawer container,
+ * declarative triggers (popovertarget), light dismiss, Escape, top-layer,
+ * :popover-open, native ::backdrop (host may style it as a scrim).
+ * Zero JS required (PROJECT_SPEC.md, 4.1). Non-modal by design: the page
+ * stays interactive and focus is not trapped — a blocking panel is Dialog
+ * (modal-only, see dialog.md).
+ *
+ * Canonical structure:
+ *   <button class="ui-button" popovertarget="cart">Cart</button>
+ *   <aside class="ui-drawer" id="cart" popover data-variant="drawer-end">
+ *     <h2>Cart</h2>
+ *     …content…
+ *     <button class="ui-button" popovertarget="cart"
+ *             popovertargetaction="hide" autofocus>Close</button>
+ *   </aside>
+ *
+ * The semantic element is the host's choice (aside/nav/form/section); the
+ * class + popover attribute are the contract. `autofocus` on the first
+ * interactive element moves focus into the drawer natively (popover show
+ * steps run the focusing steps) — no JS focus management.
+ *
+ * Edge: data-variant="drawer-start" (default) | "drawer-end" — logical
+ * inline edges, correct under RTL. Full block size: inset-block stretch
+ * against the fixed-positioned initial containing block; inline-size caps
+ * at 24rem and fills the viewport width on narrow screens.
+ *
+ * APCA pair used (validated in tests/apca): text on surface-raised (body).
+ */
+
+.ui-drawer {
+  box-sizing: border-box;
+  color: var(--ui-color-text);
+  background: var(--ui-color-surface-raised);
+  border: 1px solid var(--ui-color-border);
+  padding: var(--ui-space-lg);
+
+  /* Full-height edge panel: override the UA fit-content sizing and centering
+   * so the inset-block stretch fills the viewport height. */
+  margin: 0;
+  inset-block: 0;
+  block-size: auto;
+  max-block-size: none;
+  overflow: auto;
+
+  /* Wide screens: capped column; narrow screens: full width. Percentage
+   * resolves against the initial containing block, which excludes the classic
+   * scrollbar — unlike viewport units. */
+  inline-size: min(24rem, 100%);
+  max-inline-size: none;
+}
+
+/* Edge variants — logical inline edges (RTL-correct). The rounded corners
+ * sit on the content-facing edge only. Default (no attribute) = start. */
+.ui-drawer,
+.ui-drawer[data-variant='drawer-start'] {
+  inset-inline: 0 auto;
+  border-start-end-radius: var(--ui-radius-lg);
+  border-end-end-radius: var(--ui-radius-lg);
+}
+
+.ui-drawer[data-variant='drawer-end'] {
+  inset-inline: auto 0;
+  border-start-start-radius: var(--ui-radius-lg);
+  border-end-start-radius: var(--ui-radius-lg);
+}
+
+/* Slide-in from the pinned edge: @starting-style + allow-discrete (same
+ * mechanism as dialog/popover; compatibility notes). The exit is instant —
+ * the codebase convention (transition is state-scoped to the open state). */
+.ui-drawer:popover-open {
+  transition:
+    translate var(--ui-duration-normal) ease,
+    opacity var(--ui-duration-normal) ease,
+    overlay var(--ui-duration-normal) ease allow-discrete,
+    display var(--ui-duration-normal) ease allow-discrete;
+}
+
+@starting-style {
+  .ui-drawer:popover-open {
+    opacity: 0;
+    translate: -100% 0;
+  }
+
+  .ui-drawer[data-variant='drawer-end']:popover-open {
+    opacity: 0;
+    translate: 100% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-drawer:popover-open {
+    transition: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .ui-drawer {
+    forced-color-adjust: auto;
+  }
+}

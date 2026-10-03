@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Drawer — @fewlines/css</title>
+    <link rel="stylesheet" href="/core.css" />
+    <link rel="stylesheet" href="/docs.css" />
+    <script src="/site-sidebar.js" defer></script>
+  </head>
+  <body>
+    <site-sidebar></site-sidebar>
+
+    <main>
+      <header class="page-header">
+        <h1>Drawer</h1>
+        <p>Non-modal panel sliding in from the viewport edge: filters, mobile menus, carts.</p>
+      </header>
+
+      <section>
+        <h2>Native basis</h2>
+        <p>
+          Popover API — <code>popover</code> on the panel gives top-layer, light dismiss and native
+          Escape; <code>popovertarget</code> / <code>popovertargetaction="hide"</code> open and
+          close it declaratively (core ships no runtime JS); <code>::backdrop</code> is the native
+          pseudo-element (host may style it as a scrim); <code>autofocus</code> inside the popover
+          moves focus in natively; <code>@starting-style</code> +
+          <code>transition-behavior: allow-discrete</code> animate the slide-in.
+        </p>
+      </section>
+
+      <section>
+        <h2>Canonical markup</h2>
+        <pre><code>&lt;button class="ui-button" popovertarget="cart"&gt;Cart&lt;/button&gt;
+
+&lt;aside class="ui-drawer" id="cart" popover data-variant="drawer-end"&gt;
+  &lt;h2&gt;Cart&lt;/h2&gt;
+  &lt;p&gt;…content…&lt;/p&gt;
+  &lt;button class="ui-button" popovertarget="cart"
+          popovertargetaction="hide" autofocus&gt;Close&lt;/button&gt;
+&lt;/aside&gt;</code></pre>
+        <p>
+          The panel element is the host's semantic choice (<code>aside</code>,
+          <code>nav</code>, <code>form</code>, <code>section</code>); the heading or
+          <code>aria-label</code> provides the accessible name.
+        </p>
+      </section>
+
+      <section>
+        <h2>Live example</h2>
+        <div class="example">
+          <button class="ui-button" type="button" popovertarget="demo-cart">Open end drawer</button>
+          <button class="ui-button" type="button" popovertarget="demo-menu">
+            Open start drawer
+          </button>
+          <aside class="ui-drawer" id="demo-cart" popover data-variant="drawer-end">
+            <h3>Cart</h3>
+            <p>
+              Non-modal edge panel. The page stays interactive; Escape or an outside click closes
+              it. Focus moved here natively via <code>autofocus</code>.
+            </p>
+            <button
+              class="ui-button"
+              type="button"
+              popovertarget="demo-cart"
+              popovertargetaction="hide"
+              autofocus
+            >
+              Close
+            </button>
+          </aside>
+          <nav class="ui-drawer" id="demo-menu" popover aria-label="Mobile menu">
+            <h3>Menu</h3>
+            <p>
+              Default variant (<code>drawer-start</code>): pinned to the logical inline-start edge,
+              correct under RTL.
+            </p>
+            <button
+              class="ui-button"
+              type="button"
+              popovertarget="demo-menu"
+              popovertargetaction="hide"
+              autofocus
+            >
+              Close
+            </button>
+          </nav>
+        </div>
+        <p>
+          Variants: <code>data-variant="drawer-start"</code> (default) | <code>"drawer-end"</code> —
+          logical inline edges. Geometry: full viewport height, width <code>min(24rem, 100%)</code>,
+          radius on the inner edge only.
+        </p>
+      </section>
+
+      <section>
+        <h2>States and animation</h2>
+        <ul>
+          <li>Open — <code>:popover-open</code>; closed — native <code>display: none</code>.</li>
+          <li>
+            Slide-in — <code>@starting-style</code> +
+            <code>transition-behavior: allow-discrete</code> for
+            <code>translate</code>/<code>opacity</code>/<code>display</code>/<code>overlay</code>.
+          </li>
+          <li>Reduced motion disables the animation; without support the panel appears as is.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Accessibility</h2>
+        <ul>
+          <li>Semantics and role come from the host element; the popover API adds none.</li>
+          <li>
+            Focus moves into the panel natively (<code>autofocus</code>) and is not trapped — the
+            drawer is non-modal by design; focus return to the trigger is the host's job.
+          </li>
+          <li>
+            Escape and outside click close natively; the outside click also reaches the page
+            underneath.
+          </li>
+          <li>
+            A scrim look is a host decision: style <code>::backdrop</code> and lock scroll via
+            <code>body:has(#id:popover-open)</code> — semantics stay non-modal; a blocking panel is
+            Dialog.
+          </li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Do not</h2>
+        <ul>
+          <li>
+            No <code>div</code> + <code>position: fixed</code> + JS toggle emulation — top-layer,
+            light dismiss and Escape are lost.
+          </li>
+          <li>No JS for open/close — <code>popovertarget</code> is declarative.</li>
+          <li>No modal drawer, no focus trap — blocking panels are Dialog.</li>
+          <li>
+            No <code>data-block</code>/<code>data-inline</code>/anchor positioning — that is
+            Popover; Drawer pins to the viewport edge.
+          </li>
+        </ul>
+      </section>
+    </main>
+
+    <footer>
+      <p>Full contract: <code>packages/core/src/components/drawer/drawer.md</code></p>
+    </footer>
+  </body>
+</html>

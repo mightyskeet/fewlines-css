@@ -22,6 +22,7 @@ const PAGES = [
   { href: 'field.html', label: 'Field' },
   { href: 'dialog.html', label: 'Dialog' },
   { href: 'popover.html', label: 'Popover' },
+  { href: 'drawer.html', label: 'Drawer' },
   { href: 'accordion.html', label: 'Accordion' },
   { href: 'alert.html', label: 'Alert' },
   { href: 'badge.html', label: 'Badge' },

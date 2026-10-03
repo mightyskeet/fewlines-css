@@ -121,6 +121,30 @@ test.describe('overlays', () => {
     await expect(page.locator('#testTooltip')).toBeVisible();
     await expect(page).toHaveScreenshot('tooltip-open-dark.png');
   });
+
+  test('drawer open (light)', async ({ page }) => {
+    await page.emulateMedia({ colorScheme: 'light' });
+    await page.click('#drawer-trigger');
+    await expect(page.locator('#testDrawer')).toBeVisible();
+    await expect
+      .poll(() =>
+        page.evaluate(() => getComputedStyle(document.querySelector('#testDrawer')).translate),
+      )
+      .toBe('none');
+    await expect(page).toHaveScreenshot('drawer-open-light.png');
+  });
+
+  test('drawer open (dark)', async ({ page }) => {
+    await page.emulateMedia({ colorScheme: 'dark' });
+    await page.click('#drawer-trigger');
+    await expect(page.locator('#testDrawer')).toBeVisible();
+    await expect
+      .poll(() =>
+        page.evaluate(() => getComputedStyle(document.querySelector('#testDrawer')).translate),
+      )
+      .toBe('none');
+    await expect(page).toHaveScreenshot('drawer-open-dark.png');
+  });
 });
 
 test.describe('reduced motion', () => {
@@ -133,6 +157,17 @@ test.describe('reduced motion', () => {
 
     const transition = await page.evaluate(
       () => getComputedStyle(document.querySelector('#testDialog')).transitionProperty,
+    );
+    expect(transition).toBe('none');
+  });
+
+  test('drawer opens without transition artifacts', async ({ page }) => {
+    await page.goto('/fixture.html');
+    await page.click('#drawer-trigger');
+    await expect(page.locator('#testDrawer')).toBeVisible();
+
+    const transition = await page.evaluate(
+      () => getComputedStyle(document.querySelector('#testDrawer')).transitionProperty,
     );
     expect(transition).toBe('none');
   });

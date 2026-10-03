@@ -46,6 +46,21 @@ test('axe scan: dialog page state has no violations', async ({ page }) => {
   expect(serious, `axe violations: ${JSON.stringify(results)}`).toEqual([]);
 });
 
+test('axe scan: drawer open state has no violations', async ({ page }) => {
+  await page.click('#drawer-trigger');
+  await expect(page.locator('#testDrawer')).toBeVisible();
+
+  const results = await page.evaluate(async () => {
+    const res = await window.axe.run(document.querySelector('#testDrawer'), {
+      rules: { 'color-contrast': { enabled: false } },
+    });
+    return res.violations.map((v) => ({ id: v.id, impact: v.impact }));
+  });
+
+  const serious = results.filter((v) => v.impact === 'critical' || v.impact === 'serious');
+  expect(serious, `axe violations: ${JSON.stringify(results)}`).toEqual([]);
+});
+
 test('keyboard: all interactive elements reachable via Tab', async ({ page }) => {
   const reachable = [];
   for (let i = 0; i < 20; i++) {
