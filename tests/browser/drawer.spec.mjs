@@ -12,6 +12,27 @@ test.beforeEach(async ({ page }) => {
   await page.goto('/fixture.html');
 });
 
+const hasOverlaySupport = (page) => page.evaluate(() => CSS.supports('overlay', 'auto'));
+
+test('drawer animates in on open (entry transition)', async ({ page }) => {
+  // Arm before opening: transitionrun proves the entry is a real transition
+  // from the @starting-style state, not an instant display flip. Entry works
+  // in every engine of the matrix (probed 2026-10-03, compatibility notes).
+  await page.evaluate(() => {
+    window.__drawerEntry = [];
+    document
+      .querySelector('#testDrawer')
+      .addEventListener('transitionrun', (e) => window.__drawerEntry.push(e.propertyName));
+  });
+
+  await page.click('#drawer-trigger');
+  await expect(page.locator('#testDrawer')).toBeVisible();
+
+  await expect
+    .poll(() => page.evaluate(() => window.__drawerEntry))
+    .toEqual(expect.arrayContaining(['translate', 'opacity']));
+});
+
 test('drawer opens via declarative popovertarget click', async ({ page }) => {
   const drawer = page.locator('#testDrawer');
   await expect(drawer).not.toBeVisible();
@@ -93,7 +114,9 @@ test('drawer is pinned to the inline-end edge at full height', async ({ page }) 
   });
 
   // Pinned to the inline-end edge, spanning the full viewport height.
-  expect(geometry.right).toBe(geometry.clientWidth);
+  // toBeCloseTo: Firefox lays out the fixed edge fractionally (1279.95
+  // against clientWidth 1280).
+  expect(geometry.right).toBeCloseTo(geometry.clientWidth, 0);
   expect(geometry.top).toBe(0);
   expect(geometry.height).toBeCloseTo(geometry.clientHeight, 0);
   // min(24rem, 100%): capped column on the wide test viewport.
@@ -111,9 +134,13 @@ test('drawer has a dialog-like scrim backdrop by default', async ({ page }) => {
     )
     .toBe('none');
 
-  const backdrop = await page
-    .locator('#testDrawer')
-    .evaluate((el) => getComputedStyle(el, '::backdrop'));
+  // Construct a plain object in the page: a live CSSStyleDeclaration does
+  // not survive evaluate serialization in every engine (Firefox returns an
+  // empty map), which would make the assertions vacuous.
+  const backdrop = await page.locator('#testDrawer').evaluate((el) => {
+    const s = getComputedStyle(el, '::backdrop');
+    return { backgroundColor: s.backgroundColor, opacity: s.opacity };
+  });
 
   // Scrim like dialog.css: color-mix over black — never transparent/absent,
   // fully opaque while open. Chromium serializes as oklch/rgba, WebKit as rgba.
@@ -123,6 +150,10 @@ test('drawer has a dialog-like scrim backdrop by default', async ({ page }) => {
 });
 
 test('drawer animates out on close (reverse transition)', async ({ page }) => {
+  // Exit retention requires the overlay property: engines without it
+  // (Firefox/WebKit) drop the popover from the top layer immediately and
+  // create no exit transitions (probed 2026-10-03, compatibility notes).
+  test.skip(!(await hasOverlaySupport(page)), 'overlay not supported: exit hides instantly');
   await page.click('#drawer-trigger');
   await expect(page.locator('#testDrawer')).toBeVisible();
 
