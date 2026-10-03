@@ -68,6 +68,10 @@ for (const theme of themes) {
     test(`tables default, zebra and sticky (${theme})`, async ({ page }) => {
       await expect(page.locator('#tables')).toHaveScreenshot(`tables-${theme}.png`);
     });
+
+    test(`base typography elements (${theme})`, async ({ page }) => {
+      await expect(page.locator('#typography')).toHaveScreenshot(`typography-${theme}.png`);
+    });
   });
 }
 

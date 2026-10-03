@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Base typography — @fewlines/css</title>
+    <link rel="stylesheet" href="/core.css" />
+    <link rel="stylesheet" href="/docs.css" />
+    <script src="/site-sidebar.js" defer></script>
+  </head>
+  <body>
+    <site-sidebar></site-sidebar>
+
+    <main>
+      <header class="page-header">
+        <h1>Base typography</h1>
+        <p>
+          The platform's text content elements get one canonical presentation from the base layer:
+          semantic HTML carries the meaning, CSS carries the look. No classes, no states of our own.
+        </p>
+      </header>
+
+      <section>
+        <h2>Semantic basis</h2>
+        <p>
+          These are native elements (<code>code</code>, <kbd>kbd</kbd>, <samp>samp</samp>,
+          <code>pre</code>, <code>mark</code>, <code>abbr</code>, <code>a</code>,
+          <code>blockquote</code>, <code>hr</code>, <code>sub</code>/<code>sup</code>) styled by
+          bare element selectors in the <code>base</code> cascade layer — below
+          <code>components</code>, so component classes always win. Host applications style nothing
+          for plain text content.
+        </p>
+      </section>
+
+      <section>
+        <h2>Inline code</h2>
+        <div class="example">
+          <p>
+            Run <code>pnpm build</code>, then press <kbd>Ctrl</kbd>+<kbd>C</kbd>. The console prints
+            <samp>Done in 1.2s</samp>.
+          </p>
+        </div>
+        <p>
+          The family uses <code>--ui-font-mono</code> at <code>0.875em</code> (scales with the
+          context) on the sunken surface; <code>kbd</code> reads as a key cap on the raised surface
+          with a border. Wrapped inline code repeats its padding per line via
+          <code>box-decoration-break: clone</code> — decorative enhancement, the matrix floor Safari
+          needs the <code>-webkit-</code> prefixed form (compatibility notes).
+        </p>
+      </section>
+
+      <section>
+        <h2>Code block</h2>
+        <pre><code>&lt;pre&gt;&lt;code&gt;carries the surface itself;
+	a tab renders 4 columns wide.
+&lt;/code&gt;&lt;/pre&gt;</code></pre>
+        <p>
+          The <code>pre</code> element owns the sunken surface, border and scroll; nested
+          <code>code</code>/<code>samp</code> reset automatically, so the canonical
+          <code>&lt;pre&gt;&lt;code&gt;</code> pair is not double-padded.
+        </p>
+      </section>
+
+      <section>
+        <h2>Highlight and abbreviation</h2>
+        <div class="example">
+          <p>
+            The release is <mark>relevance-highlighted</mark>, built in
+            <abbr title="HyperText Markup Language">HTML</abbr> only.
+          </p>
+        </div>
+        <p>
+          <code>mark</code> uses the warning tint — the same soft-surface model as Alert/Badge.
+          <code>abbr[title]</code> gets a normalized dotted underline (Safari renders none by
+          default); the <code>title</code> attribute is the expansion for assistive tech.
+        </p>
+      </section>
+
+      <section>
+        <h2>Links</h2>
+        <div class="example">
+          <p>Read the <a href="./index.html">overview page</a> next.</p>
+        </div>
+        <p>
+          Accent color with an underline and a small optical offset; hover deepens to
+          <code>-strong</code>. The visited state is intentionally not restyled. The focus ring
+          comes from the base focus contract.
+        </p>
+      </section>
+
+      <section>
+        <h2>Quotation and thematic break</h2>
+        <div class="example">
+          <blockquote>
+            <p>A hanging border carries the quotation affordance; text keeps full body contrast.</p>
+          </blockquote>
+          <hr />
+          <p>Content after a thematic break.</p>
+        </div>
+        <p>
+          <code>blockquote</code> deliberately avoids <code>text-muted</code>: that token pair is
+          calibrated for the fluent role and fails the strict body APCA threshold in the dark theme
+          (tests/apca). <code>hr</code> is a single border-token line.
+        </p>
+      </section>
+
+      <section>
+        <h2>Subscript and superscript</h2>
+        <div class="example">
+          <p>H<sub>2</sub>O and x<sup>2</sup> never disrupt the surrounding line box.</p>
+        </div>
+        <p>
+          Baseline-relative positioning (<code>75%</code>, <code>line-height: 0</code>,
+          <code>position: relative</code>) instead of the UA <code>vertical-align</code>, which
+          grows the line height.
+        </p>
+      </section>
+
+      <section>
+        <h2>Selection</h2>
+        <div class="example">
+          <p>Select any text on this page to see the accent-tint highlight.</p>
+        </div>
+        <p>
+          <code>::selection</code> paints the accent tint under the author text color — a validated
+          pair; forced-colors modes repaint the selection natively.
+        </p>
+      </section>
+
+      <section>
+        <h2>Accessibility</h2>
+        <ul>
+          <li>
+            All color pairs are registered in the APCA matrix: inline code at
+            <code>0.875em</code> on the fluent role, body text at the body role, both themes.
+          </li>
+          <li>
+            <code>abbr</code> expansion lives in the <code>title</code> attribute — the native
+            contract; color and decoration are not carriers of meaning.
+          </li>
+          <li>Link affordance is not color-only: the underline is always present.</li>
+          <li>Forced colors: links, code surfaces and selection are repainted by the system.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Do not</h2>
+        <ul>
+          <li>
+            No classes for text content — do not wrap <code>code</code>/<code>mark</code> etc. in
+            <code>ui-*</code> components.
+          </li>
+          <li>
+            No direct <code>--ui-palette-*</code> references when restyling these elements in the
+            host.
+          </li>
+          <li>
+            Do not restyle <code>:visited</code> or remove the link underline — the affordance is
+            part of the contract.
+          </li>
+          <li>
+            Do not put interactive content (<code>&lt;button&gt;</code>, <code>&lt;a&gt;</code>)
+            inside <code>&lt;pre&gt;</code> demos — code blocks are content, not controls.
+          </li>
+        </ul>
+      </section>
+    </main>
+
+    <footer>
+      <p>Implementation: <code>packages/core/src/base/typography.css</code></p>
+    </footer>
+  </body>
+</html>

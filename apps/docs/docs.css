@@ -80,14 +80,6 @@ body {
   background: var(--ui-color-surface-raised);
 }
 
-pre {
-  overflow-x: auto;
-  background: var(--ui-color-surface-sunken);
-  padding: var(--ui-space-sm);
-  border-radius: var(--ui-radius-md);
-  font-size: 0.875rem;
-}
-
 @media (min-width: 72rem) {
   body {
     display: grid;

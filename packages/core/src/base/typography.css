@@ -1,4 +1,4 @@
-/* Base typography and page colors: apply the system defaults to the document.
+/* Base typography: page defaults and the semantic text content elements.
  *
  * 1. Font: --ui-font-* tokens are declared in tokens/typography.css; without
  *    this rule the browser renders the UA default (Times New Roman). system-ui
@@ -10,8 +10,15 @@
  *    from tokens makes the whole document animate on data-theme switch
  *    (tokens/theme-transition.css transitions the custom properties on :root;
  *    descendants inherit the interpolated values frame by frame).
+ * 3. Text content elements (<code>, <pre>, <mark>, <a>, <blockquote>, ...):
+ *    the platform already provides the semantics, the base layer provides one
+ *    canonical presentation — hosts style nothing for plain text content.
+ *    Native first (PROJECT_SPEC.md, 4.1): no classes, no states of our own.
+ *    Every color pair consumed here is registered in tests/apca.
  *
- * Components use font: inherit, so these rules cover the whole system.
+ * Element selectors sit in the base layer below components, so component
+ * classes always win over these rules.
+ * Components use font: inherit, so the :root rules cover the whole system.
  * Host applications can override --ui-font-sans or the color tokens.
  */
 :root {
@@ -19,4 +26,142 @@
   line-height: var(--ui-line-height-normal);
   color: var(--ui-color-text);
   background: var(--ui-color-surface);
+}
+
+/* Inline code family: <code>, <kbd>, <samp>.
+ *
+ * Monospaced via --ui-font-mono, slightly smaller than the surrounding text
+ * (0.875em — scales with the host context). Surface is sunken (the validated
+ * pair is text/surface-sunken at the fluent role — 0.875em of 16px body).
+ *
+ * box-decoration-break: clone repeats the padding and radius on every line
+ * fragment when inline code wraps. Decorative enhancement — without support
+ * the code is fully readable; the matrix floor Safari supports only the
+ * -webkit- prefixed form, Chromium/FF the unprefixed one
+ * (compatibility notes, 2026-10-03). */
+code,
+kbd,
+samp {
+  font-family: var(--ui-font-mono);
+  font-size: 0.875em;
+  color: var(--ui-color-text);
+  background: var(--ui-color-surface-sunken);
+  padding-block: var(--ui-space-3xs);
+  padding-inline: var(--ui-space-2xs);
+  border-radius: var(--ui-radius-xs);
+  /* stylelint-disable-next-line property-no-vendor-prefix --
+   * the matrix floor Safari (26.6) supports clone only in the -webkit-
+   * prefixed form; Chromium/FF take the unprefixed one
+   * (compatibility notes, 2026-10-03). */
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+/* <kbd> reads as a key cap: raised surface with a border (the raised variant
+ * of the same validated text pair). */
+kbd {
+  background: var(--ui-color-surface-raised);
+  border: 1px solid var(--ui-color-border);
+  border-radius: var(--ui-radius-sm);
+}
+
+/* Code block: <pre> carries the surface; nested inline code elements reset so
+ * a canonical <pre><code> pair is not double-padded and does not shrink the
+ * font twice. tab-size is an <integer> — direct use, floor is far above
+ * (compatibility notes, 2026-10-03). */
+pre {
+  font-family: var(--ui-font-mono);
+  font-size: 0.875em;
+  color: var(--ui-color-text);
+  background: var(--ui-color-surface-sunken);
+  border: 1px solid var(--ui-color-border);
+  border-radius: var(--ui-radius-md);
+  padding-block: var(--ui-space-sm);
+  padding-inline: var(--ui-space-md);
+  overflow: auto;
+  tab-size: 4;
+}
+
+pre :is(code, kbd, samp) {
+  font-size: inherit;
+  background: none;
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+}
+
+/* <mark>: highlighted text on the warning tint — the same soft-surface model
+ * as Alert/Badge; the text color pair is validated at the body threshold. */
+mark {
+  color: var(--ui-color-text);
+  background: var(--ui-color-warning-tint);
+}
+
+/* Abbreviation with an expansion: normalize the dotted underline (UA styles
+ * diverge — Safari renders none by default); the title attribute supplies the
+ * expansion to assistive tech and the tooltip. skip-ink: none keeps the dotted
+ * line unbroken across descenders (direct use: Chrome 64+, FF 70+,
+ * Safari 15.4+). */
+abbr[title] {
+  text-decoration: underline dotted;
+  text-decoration-skip-ink: none;
+  cursor: help;
+}
+
+/* Links: accent color, underlined with a small optical offset. Hover deepens
+ * to -strong. The visited state is intentionally not restyled — it stays
+ * identical to unvisited. The focus ring comes from the base focus contract;
+ * in forced-colors mode the system repaints links natively. */
+a {
+  color: var(--ui-color-accent);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+a:hover {
+  color: var(--ui-color-accent-strong);
+}
+
+/* Block quotation: hanging border on the inline-start edge carries the
+ * quotation affordance; the text keeps the full body-contrast color —
+ * text-muted is calibrated for the fluent role only and fails the body APCA
+ * threshold in the dark theme (tests/apca). Inline margins are zeroed — the
+ * UA 40px side margins are replaced by the border + padding. */
+blockquote {
+  margin-block: var(--ui-space-md);
+  margin-inline: 0;
+  padding-inline-start: var(--ui-space-md);
+  border-inline-start: 2px solid var(--ui-color-border-strong);
+}
+
+/* Thematic break: a single border-token line; the UA side margins stay. */
+hr {
+  margin-block: var(--ui-space-md);
+  border: 0;
+  border-block-start: 1px solid var(--ui-color-border);
+}
+
+/* Subscript/superscript: baseline-relative positioning so the shifted text
+ * never disrupts the surrounding line box (the UA vertical-align sub/super
+ * forces the line height to grow). */
+sub,
+sup {
+  font-size: 75%;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+
+sup {
+  top: -0.5em;
+}
+
+sub {
+  bottom: -0.25em;
+}
+
+/* Text selection: accent tint under the author text color (validated pair).
+ * Forced colors mode repaints the selection natively. */
+::selection {
+  background: var(--ui-color-accent-tint);
 }

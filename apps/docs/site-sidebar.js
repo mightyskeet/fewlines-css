@@ -17,6 +17,7 @@
 /** Single source of truth for docs navigation. */
 const PAGES = [
   { href: 'index.html', label: 'Overview' },
+  { href: 'typography.html', label: 'Typography' },
   { href: 'button.html', label: 'Button' },
   { href: 'field.html', label: 'Field' },
   { href: 'dialog.html', label: 'Dialog' },

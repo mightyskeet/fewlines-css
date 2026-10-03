@@ -49,6 +49,11 @@ override — `data-theme="light|dark"` на корневом элементе. �
 | Switch    | `<input type="checkbox" switch>` | `ui-switch`, `ui-switch-field`, `ui-switch-label`                                 |
 | Table     | `<table>` + `<caption>`          | `ui-table`, `ui-table-wrap`, `data-zebra`, `data-sticky`, `data-align`            |
 
+Помимо компонентов base layer оформляет семантические текстовые элементы без
+классов: `code`/`kbd`/`samp`, `pre`, `mark`, `abbr`, ссылки, `blockquote`,
+
+typography»).
+
 
 `packages/core/src/components/*/[name].md`. Живые примеры: `apps/docs/`.
 

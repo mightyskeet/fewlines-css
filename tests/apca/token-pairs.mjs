@@ -112,6 +112,12 @@ export const tokenPairs = [
   { fg: 'text-muted', bg: 'surface-raised', role: 'fluent' },
   { fg: 'text-muted', bg: 'surface-sunken', role: 'fluent' },
 
+  // Base typography (base/typography.css): the inline code family renders at
+  // 0.875em (fluent role at 16px body). Blockquote deliberately keeps the
+  // text/surface body pair — text-muted fails the body threshold in dark
+  { fg: 'text', bg: 'surface-sunken', role: 'fluent', note: 'inline code, samp; pre' },
+  { fg: 'text', bg: 'surface-raised', role: 'fluent', note: 'kbd' },
+
   // Accent text and controls
   { fg: 'accent', bg: 'surface', role: 'body' },
   { fg: 'accent', bg: 'surface-raised', role: 'body' },
