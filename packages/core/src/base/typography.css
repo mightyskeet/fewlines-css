@@ -98,12 +98,16 @@ mark {
 }
 
 /* Abbreviation with an expansion: normalize the dotted underline (UA styles
- * diverge — Safari renders none by default); the title attribute supplies the
- * expansion to assistive tech and the tooltip. skip-ink: none keeps the dotted
- * line unbroken across descenders (direct use: Chrome 64+, FF 70+,
- * Safari 15.4+). */
+ * diverge — Safari renders none by default; Chromium's hairline dotting is
+ * barely visible at body sizes, so the line gets an explicit 0.125rem
+ * thickness and offset); the title attribute supplies the expansion to
+ * assistive tech and the tooltip. skip-ink: none keeps the dotted line
+ * unbroken across descenders (direct use: compatibility notes,
+ * 2026-10-03). */
 abbr[title] {
   text-decoration: underline dotted;
+  text-decoration-thickness: 0.125rem;
+  text-underline-offset: 0.15em;
   text-decoration-skip-ink: none;
   cursor: help;
 }
