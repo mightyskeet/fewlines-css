@@ -55,10 +55,18 @@
  */
 
 .ui-tooltip {
-  /* Author display beats the UA [popover]:not(:popover-open) rule — keep
-   * the closed state explicitly hidden; block is applied only when open
-   * (the span would otherwise render inline in the top layer). */
+  /* Author display beats the UA [popover]:not(:popover-open) rule — the
+   * closed popover stays out of the top layer and unrendered here; the
+   * fallback gate below re-enables rendering (display: block) with
+   * visibility doing the hiding, because a transition delay is ignored
+   * on the first render out of display:none (probed 2026-10-04). */
   display: none;
+
+  /* visibility rides the transitions: a hidden hint is non-intercepting
+   * and non-painting (the delayed fallback reveal holds this state for
+   * --ui-delay-hint), and the sticky-visible rule keeps the fade-out
+   * painted until it ends. */
+  visibility: hidden;
   box-sizing: border-box;
   max-inline-size: 20rem;
   color: var(--ui-color-text);
@@ -86,7 +94,8 @@
     opacity var(--ui-duration-fast) ease,
     translate var(--ui-duration-fast) ease,
     overlay var(--ui-duration-fast) ease allow-discrete,
-    display var(--ui-duration-fast) ease allow-discrete;
+    display var(--ui-duration-fast) ease allow-discrete,
+    visibility var(--ui-duration-fast) linear;
 }
 
 /* Open state: block beats the span default; follows the base rule. */
@@ -94,6 +103,7 @@
   display: block;
   opacity: 1;
   translate: -50% -50%;
+  visibility: visible;
 }
 
 /* Entry anchor: transitions do not start from display:none, so the
@@ -105,6 +115,19 @@
   }
 }
 
+/* Hint show delay — one token drives both activation paths: the native
+ * interest delay (Chromium; the UA default `normal` measured ≈ 500ms for
+ * hover and focus alike — probed 2026-10-04) and the CSS fallback reveal
+ * (transition-delay on the shown state). In engines without interest
+ * invokers the property is unknown and ignored. Hosts override through
+ * their own CSS (host layer beats components). */
+.ui-tooltip-trigger {
+  /* stylelint-disable-next-line property-no-unknown --
+   * interest-delay-start is valid Interest Invokers CSS; stylelint's
+   * property database does not know it yet. */
+  interest-delay-start: var(--ui-delay-hint);
+}
+
 /* CSS-only activation fallback — engines without interest invokers
  * (Firefox, Safari). Hover (pointer-capable devices only: sticky :hover
  * on touch would latch the hint open) and keyboard focus open the hint
@@ -112,17 +135,25 @@
  * (hoverable), the transparent top border carries the placement gap as
  * part of the hint's own hit box, and the ::after bridge extends the
  * trigger's hover area so the pointer can travel onto the hint without
- * it closing (also while the hint is entering/exiting). Entry animates
- * via @starting-style, exit transitions back to the hidden state
- * (allow-discrete defers the display flip — animates in every engine
- * here, no top layer involved). */
+ * it closing (also while the hint is entering/exiting). The reveal is
+ * held back for --ui-delay-hint by delaying only the visibility flip:
+ * a transition-delay does not defer the first render out of
+ * display:none (probed — values apply instantly), so the closed hint
+ * stays rendered but visibility:hidden — invisible and
+ * non-intercepting during the wait, no flash on a sweeping pointer.
+ * The reveal itself is therefore instant (the fade stays a popover-path
+ * feature); recovery and exit keep their transitions. */
 @supports not selector(:interest-source) {
-  /* The CSS-shown hint is not in the top layer: raise it above
-   * neighbouring z:auto content. The pair wrapper is raised too while a
-   * hint is shown — anchor-scope wrappers (the documented multi-pair
-   * pattern) are stacking contexts, so the hint's own z-index cannot
-   * escape them and later pairs would otherwise win the hit test. */
+  /* The closed hint stays rendered but visibility:hidden (see above):
+   * a later reveal is a plain value change on a rendered element, which
+   * is what makes the delayed visibility flip work at all. The
+   * CSS-shown hint is not in the top layer: raise it above neighbouring
+   * z:auto content. The pair wrapper is raised too while a hint is
+   * shown — anchor-scope wrappers (the documented multi-pair pattern)
+   * are stacking contexts, so the hint's own z-index cannot escape them
+   * and later pairs would otherwise win the hit test. */
   .ui-tooltip {
+    display: block;
     z-index: 1;
     border-block-start: var(--ui-space-2xs) solid transparent;
   }
@@ -134,27 +165,57 @@
     z-index: 2;
   }
 
-  .ui-tooltip:hover,
-  .ui-tooltip-trigger:focus-visible ~ .ui-tooltip {
+  /* Recovery path (pointer back on the hint itself): no delay — once the
+   * hint is up, returning to it must not re-arm the wait. */
+  .ui-tooltip:hover {
     display: block;
     opacity: 1;
     translate: -50% -50%;
+    visibility: visible;
+  }
+
+  /* Activation paths carry the show delay on the visibility flip only;
+   * :not(:popover-open) keeps the delay off the popover API path (a
+   * click-opened hint must appear instantly). Opacity/translate stay
+   * undelayed on purpose: their fade would run invisibly during the
+   * wait, and delaying them would freeze a half-faded hint for the full
+   * delay when the pointer returns mid-close. */
+  .ui-tooltip-trigger:focus-visible ~ .ui-tooltip:not(:popover-open) {
+    display: block;
+    opacity: 1;
+    translate: -50% -50%;
+    visibility: visible;
+    transition:
+      opacity var(--ui-duration-fast) ease,
+      translate var(--ui-duration-fast) ease,
+      overlay var(--ui-duration-fast) ease allow-discrete,
+      display var(--ui-duration-fast) ease allow-discrete,
+      visibility 0s linear var(--ui-delay-hint);
   }
 
   @media (hover: hover) and (pointer: fine) {
-    .ui-tooltip-trigger:hover ~ .ui-tooltip {
+    .ui-tooltip-trigger:hover ~ .ui-tooltip:not(:popover-open) {
       display: block;
       opacity: 1;
       translate: -50% -50%;
+      visibility: visible;
+      transition:
+        opacity var(--ui-duration-fast) ease,
+        translate var(--ui-duration-fast) ease,
+        overlay var(--ui-duration-fast) ease allow-discrete,
+        display var(--ui-duration-fast) ease allow-discrete,
+        visibility 0s linear var(--ui-delay-hint);
     }
   }
 
-  @starting-style {
-    .ui-tooltip:hover,
-    .ui-tooltip-trigger:focus-visible ~ .ui-tooltip,
-    .ui-tooltip-trigger:hover ~ .ui-tooltip {
-      opacity: 0;
-      translate: -50% calc(-50% + 0.25rem);
+  /* Reduced motion: the global override kills every transition, which
+   * would also drop the visibility hold-back and let a sweeping pointer
+   * flash the hint — restore just the delayed visibility flip (no
+   * fades). */
+  @media (prefers-reduced-motion: reduce) {
+    .ui-tooltip-trigger:hover ~ .ui-tooltip:not(:popover-open),
+    .ui-tooltip-trigger:focus-visible ~ .ui-tooltip:not(:popover-open) {
+      transition: visibility 0s linear var(--ui-delay-hint);
     }
   }
 
@@ -190,21 +251,29 @@
     /* stylelint-disable declaration-property-value-no-unknown */
     position: fixed;
     inset: unset;
+    /* stylelint-enable declaration-property-value-no-unknown */
 
     /* Hidden state (anchor mode): the entry offset — also the close
-     * transition target. */
+     * transition target. The anchor placement lives on the shown states
+     * only: the closed hint is always rendered in the fallback engines,
+     * and a placement evaluated while the trigger is off-viewport (page
+     * load) sticks to the flipped block-start fallback after scrolling
+     * (probed 2026-10-04). Evaluating at show time uses the real
+     * viewport. */
     opacity: 0;
     translate: 0 0.25rem;
+  }
+
+  .ui-tooltip:popover-open {
+    /* stylelint-disable declaration-property-value-no-unknown */
     position-anchor: --ui-tooltip-anchor;
     position-area: block-end center;
     position-try-fallbacks: block-start center;
     /* stylelint-enable declaration-property-value-no-unknown */
     margin-block-start: var(--ui-space-2xs);
-  }
-
-  .ui-tooltip:popover-open {
     opacity: 1;
     translate: none;
+    visibility: visible;
   }
 
   @starting-style {
@@ -219,31 +288,48 @@
    * the hidden state differs. Source order after the base fallback
    * block wins the cascade for the equal-specificity selectors. */
   @supports not selector(:interest-source) {
-    /* The placement gap is carried by the transparent top border
-     * (part of the hint's own hit box), not by the margin. */
-    .ui-tooltip {
+    .ui-tooltip:hover {
+      /* stylelint-disable declaration-property-value-no-unknown */
+      position-anchor: --ui-tooltip-anchor;
+      position-area: block-end center;
+      position-try-fallbacks: block-start center;
+      /* stylelint-enable declaration-property-value-no-unknown */
       margin-block-start: 0;
-    }
-
-    .ui-tooltip:hover,
-    .ui-tooltip-trigger:focus-visible ~ .ui-tooltip {
       opacity: 1;
       translate: none;
+      visibility: visible;
+    }
+
+    /* Same :not(:popover-open) form as the base fallback block: equal
+     * specificity, so source order (this block, later) wins and the
+     * anchor translate stays none — the centered -50% translate of the
+     * base rules must not leak into anchor mode. The anchor placement
+     * rides the shown state (see the hidden-state note above); the
+     * placement gap is carried by the transparent top border (part of
+     * the hint's own hit box), not by the margin. */
+    .ui-tooltip-trigger:focus-visible ~ .ui-tooltip:not(:popover-open) {
+      /* stylelint-disable declaration-property-value-no-unknown */
+      position-anchor: --ui-tooltip-anchor;
+      position-area: block-end center;
+      position-try-fallbacks: block-start center;
+      /* stylelint-enable declaration-property-value-no-unknown */
+      margin-block-start: 0;
+      opacity: 1;
+      translate: none;
+      visibility: visible;
     }
 
     @media (hover: hover) and (pointer: fine) {
-      .ui-tooltip-trigger:hover ~ .ui-tooltip {
+      .ui-tooltip-trigger:hover ~ .ui-tooltip:not(:popover-open) {
+        /* stylelint-disable declaration-property-value-no-unknown */
+        position-anchor: --ui-tooltip-anchor;
+        position-area: block-end center;
+        position-try-fallbacks: block-start center;
+        /* stylelint-enable declaration-property-value-no-unknown */
+        margin-block-start: 0;
         opacity: 1;
         translate: none;
-      }
-    }
-
-    @starting-style {
-      .ui-tooltip:hover,
-      .ui-tooltip-trigger:focus-visible ~ .ui-tooltip,
-      .ui-tooltip-trigger:hover ~ .ui-tooltip {
-        opacity: 0;
-        translate: 0 0.25rem;
+        visibility: visible;
       }
     }
   }

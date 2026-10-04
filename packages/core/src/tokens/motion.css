@@ -3,4 +3,11 @@
   --ui-duration-fast: 120ms;
   --ui-duration-normal: 180ms;
   --ui-duration-slow: 260ms;
+
+  /* Hint show delay: held-back reveal of hover/focus hints (Tooltip).
+   * Drives both activation paths — the native interest delay
+   * (interest-delay-start) and the CSS fallback reveal — so they stay in
+   * sync. 500ms mirrors the UA default (`interest-delay-start: normal`,
+   * measured in Chromium 153). */
+  --ui-delay-hint: 500ms;
 }

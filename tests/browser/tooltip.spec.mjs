@@ -143,7 +143,7 @@ test('opt-in pattern pair closes on Escape natively', async ({ page }) => {
   // ...in engines without interest the CSS fallback keeps the hint shown
   // while the pointer still rests on the trigger; moving the pointer away
   // dismisses it (compatibility notes, 2026-10-04).
-  await page.mouse.move(10, 300);
+  await page.mouse.move(2, 2);
   await expect(page.locator('#testTooltipFallback')).not.toBeVisible();
 });
 
@@ -151,7 +151,7 @@ test('opt-in pattern pair closes on outside click (light dismiss)', async ({ pag
   await page.click('#tooltip-fallback-trigger');
   await expect(page.locator('#testTooltipFallback')).toBeVisible();
 
-  await page.mouse.click(10, 300);
+  await page.mouse.click(2, 2);
   await expect(page.locator('#testTooltipFallback')).not.toBeVisible();
 });
 
@@ -259,11 +259,59 @@ test('tooltip animates out on close (reverse transition)', async ({ page }) => {
 const gateActive = (page) => page.evaluate(() => !CSS.supports('selector(:interest-source)'));
 
 test('css fallback gate mirrors interest invoker support', async ({ page }) => {
-  const [interest, gateOn] = await page.evaluate(() => [
+  const [interest, gateOn, delayStart] = await page.evaluate(() => [
     'interestForElement' in HTMLButtonElement.prototype,
     !CSS.supports('selector(:interest-source)'),
+    getComputedStyle(document.querySelector('#tooltip-trigger')).interestDelayStart,
   ]);
   expect(gateOn).toBe(!interest);
+  // One token drives both paths: the native interest delay and the CSS
+  // fallback reveal (compatibility notes, 2026-10-04).
+  if (interest) expect(delayStart).toBe('0.5s');
+});
+
+test('fallback: a brief hover does not flash the hint (show delay)', async ({ page }) => {
+  test.skip(!(await gateActive(page)), 'interest supported: the native delay covers this');
+
+  await page.hover('#tooltip-trigger');
+  await page.waitForTimeout(200);
+  await expect(page.locator('#testTooltip')).not.toBeVisible();
+
+  await page.mouse.move(2, 2);
+  await page.waitForTimeout(600);
+  await expect(page.locator('#testTooltip')).not.toBeVisible();
+});
+
+test('fallback: the hint appears after the hint delay', async ({ page }) => {
+  test.skip(!(await gateActive(page)), 'interest supported: the native delay covers this');
+
+  await page.hover('#tooltip-trigger');
+  await page.waitForTimeout(250);
+  // Still held back mid-delay...
+  await expect(page.locator('#testTooltip')).not.toBeVisible();
+  // ...revealed once the delay elapses (hint appears fully opaque: the
+  // fade ran invisibly under visibility:hidden).
+  await expect(page.locator('#testTooltip')).toBeVisible({ timeout: 1500 });
+});
+
+test('fallback: exit animates and closes after the pointer leaves', async ({ page }) => {
+  test.skip(!(await gateActive(page)), 'interest supported: the native path covers the exit');
+
+  await page.hover('#tooltip-trigger');
+  await expect(page.locator('#testTooltip')).toBeVisible({ timeout: 2000 });
+
+  await page.evaluate(() => {
+    window.__tipExit = [];
+    document
+      .querySelector('#testTooltip')
+      .addEventListener('transitionrun', (e) => window.__tipExit.push(e.propertyName));
+  });
+
+  await page.mouse.move(2, 2);
+  await expect
+    .poll(() => page.evaluate(() => window.__tipExit))
+    .toEqual(expect.arrayContaining(['opacity', 'translate']));
+  await expect(page.locator('#testTooltip')).not.toBeVisible();
 });
 
 test('fallback: hover opens the hint as a CSS-shown element', async ({ page }) => {
@@ -278,7 +326,7 @@ test('fallback: hover opens the hint as a CSS-shown element', async ({ page }) =
   const isOpenViaApi = await tooltip.evaluate((el) => el.matches(':popover-open'));
   expect(isOpenViaApi).toBe(false);
 
-  await page.mouse.move(10, 300);
+  await page.mouse.move(2, 2);
   await expect(tooltip).not.toBeVisible();
 });
 
@@ -304,7 +352,7 @@ test('fallback: the pointer can travel onto the hint (gap and body hold)', async
   await page.waitForTimeout(300);
   await expect(page.locator('#testTooltip')).toBeVisible();
 
-  await page.mouse.move(10, 300);
+  await page.mouse.move(2, 2);
   await expect(page.locator('#testTooltip')).not.toBeVisible();
 });
 
@@ -312,6 +360,9 @@ test('fallback: keyboard focus opens the hint, blur closes it', async ({ page })
   test.skip(!(await gateActive(page)), 'interest supported: the native path covers focus');
 
   const tooltip = page.locator('#testTooltip');
+  // A Tab first: it sets the keyboard input modality, so the scripted
+  // focus below matches :focus-visible even right after pointer tests.
+  await page.keyboard.press('Tab');
   await page.locator('#tooltip-trigger').focus();
   await expect(tooltip).toBeVisible();
 
@@ -331,7 +382,7 @@ test('fallback: Escape does not close the CSS-shown hint, pointer leave does', a
   // no effect; the pointer leave below is the dismissal path.
   await expect(page.locator('#testTooltip')).toBeVisible();
 
-  await page.mouse.move(10, 300);
+  await page.mouse.move(2, 2);
   await expect(page.locator('#testTooltip')).not.toBeVisible();
 });
 

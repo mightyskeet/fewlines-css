@@ -29,9 +29,11 @@
           interest (Firefox, Safari) a CSS-only fallback shows the same element on hover (pointer
           devices only) and keyboard focus — the click still stays the trigger's action (a "Save"
           button must save, not show a hint), and the description stays associated via
-          <code>aria-describedby</code> for assistive tech. The fallback hint is shown by CSS, not
-          through the popover API: Escape does not close it (it dismisses on pointer leave or blur),
-          and it is not in the top layer.
+          <code>aria-describedby</code> for assistive tech. The show delay
+          (<code>--ui-delay-hint</code>, 500ms) drives both paths, so a sweeping pointer never
+          flashes the hint in any engine. The fallback hint is shown by CSS, not through the popover
+          API: Escape does not close it (it dismisses on pointer leave or blur), and it is not in
+          the top layer.
         </p>
       </section>
 
