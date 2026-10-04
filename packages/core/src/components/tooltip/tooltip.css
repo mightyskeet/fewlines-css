@@ -6,15 +6,25 @@
  *   - popover="hint": Chrome/Edge 151+, FF 153+; Safari — only preview
  *     (WebKit 26.6 already recognizes the keyword — browser probe);
  *   - interestfor: Chrome/Edge 142+ only; FF/Safari — not supported.
- * In engines without interest the tooltip has no hover activation by
- * design: `popovertarget` is NOT canonical because it couples the hint to
- * the trigger's action (clicking "Save" would show a hint instead of /
- * alongside saving; on submit buttons the form action wins and the
- * popover never opens — probed 2026-10-02). The description stays
- * programmatically associated via aria-describedby everywhere. The
- * declarative `popovertarget` (+ `popovertargetaction="show"`) click
- * fallback is a documented opt-in for inert triggers (e.g. "?" buttons).
- * No runtime JS (PROJECT_SPEC.md, 4.1).
+ * In engines without interest the tooltip still opens on hover/focus via
+ * a CSS-only fallback (compatibility notes, 2026-10-04), gated by
+ * `@supports not selector(:interest-source)` (:interest-source exists only
+ * where interest invokers exist — probed: Chromium true, FF/WebKit false).
+ * The hint is then shown as a plain CSS element (display: block), not via
+ * the popover API: it is not :popover-open, so Escape does not close it
+ * (it dismisses on pointer leave / blur — accepted trade-off), and it is
+ * not in the top layer (an ancestor with transform/filter can clip it;
+ * z-index raises + a :has() raise of the pair wrapper keep it hittable
+ * above neighbouring content). Touch is excluded via @media (hover: hover)
+ * (sticky :hover). Hoverable transit (WCAG 1.4.13): a ::after bridge
+ * extends the trigger's hover area across the placement gap, and the gap
+ * itself is carried by a transparent top border of the hint (pseudo-
+ * elements of the anchor-positioned hint are not hit-testable in
+ * Firefox/WebKit — probed). In the CSS-shown path the exit transition
+ * animates in every engine (no top layer involved); the popover-path exit
+ * stays Chromium-only (overlay). `popovertarget` remains a documented
+ * opt-in for inert triggers (e.g. "?" buttons). No runtime JS
+ * (PROJECT_SPEC.md, 4.1).
  *
  * Canonical structure:
  *   <button class="ui-tooltip-trigger" interestfor="tip-1"
@@ -95,6 +105,81 @@
   }
 }
 
+/* CSS-only activation fallback — engines without interest invokers
+ * (Firefox, Safari). Hover (pointer-capable devices only: sticky :hover
+ * on touch would latch the hint open) and keyboard focus open the hint
+ * as a plain CSS-shown element; :hover on the hint itself keeps it open
+ * (hoverable), the transparent top border carries the placement gap as
+ * part of the hint's own hit box, and the ::after bridge extends the
+ * trigger's hover area so the pointer can travel onto the hint without
+ * it closing (also while the hint is entering/exiting). Entry animates
+ * via @starting-style, exit transitions back to the hidden state
+ * (allow-discrete defers the display flip — animates in every engine
+ * here, no top layer involved). */
+@supports not selector(:interest-source) {
+  /* The CSS-shown hint is not in the top layer: raise it above
+   * neighbouring z:auto content. The pair wrapper is raised too while a
+   * hint is shown — anchor-scope wrappers (the documented multi-pair
+   * pattern) are stacking contexts, so the hint's own z-index cannot
+   * escape them and later pairs would otherwise win the hit test. */
+  .ui-tooltip {
+    z-index: 1;
+    border-block-start: var(--ui-space-2xs) solid transparent;
+  }
+
+  :has(> .ui-tooltip-trigger:hover ~ .ui-tooltip),
+  :has(> .ui-tooltip-trigger:focus-visible ~ .ui-tooltip),
+  :has(> .ui-tooltip:hover) {
+    position: relative;
+    z-index: 2;
+  }
+
+  .ui-tooltip:hover,
+  .ui-tooltip-trigger:focus-visible ~ .ui-tooltip {
+    display: block;
+    opacity: 1;
+    translate: -50% -50%;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .ui-tooltip-trigger:hover ~ .ui-tooltip {
+      display: block;
+      opacity: 1;
+      translate: -50% -50%;
+    }
+  }
+
+  @starting-style {
+    .ui-tooltip:hover,
+    .ui-tooltip-trigger:focus-visible ~ .ui-tooltip,
+    .ui-tooltip-trigger:hover ~ .ui-tooltip {
+      opacity: 0;
+      translate: -50% calc(-50% + 0.25rem);
+    }
+  }
+
+  /* Invisible bridge: extends the trigger's hover area across the
+   * placement gap, keeping the trigger :hovered while the pointer
+   * crosses it — including while the hint is entering or exiting (the
+   * moving border box would otherwise evade the pointer mid-animation).
+   * Pseudo-elements of the anchor-positioned hint itself are not
+   * hit-testable in Firefox/WebKit (probed 2026-10-04), so the bridge
+   * lives on the plain positioned trigger; z-index keeps it above later
+   * positioned content, same as the hint. */
+  .ui-tooltip-trigger {
+    position: relative;
+  }
+
+  .ui-tooltip-trigger::after {
+    content: '';
+    position: absolute;
+    inset-block-start: 100%;
+    inset-inline: 0;
+    block-size: var(--ui-space-2xs);
+    z-index: 1;
+  }
+}
+
 /* Anchor positioning enhancement — single canonical implementation,
  * gated by @supports (compatibility notes: partial support).
  * stylelint-disable-next-line declaration-property-value-no-unknown --
@@ -126,6 +211,40 @@
     .ui-tooltip:popover-open {
       opacity: 0;
       translate: 0 0.25rem;
+    }
+  }
+
+  /* Same activation fallback in anchor mode: position-area owns the
+   * placement, so the shown translate is none (no -50% centering) and
+   * the hidden state differs. Source order after the base fallback
+   * block wins the cascade for the equal-specificity selectors. */
+  @supports not selector(:interest-source) {
+    /* The placement gap is carried by the transparent top border
+     * (part of the hint's own hit box), not by the margin. */
+    .ui-tooltip {
+      margin-block-start: 0;
+    }
+
+    .ui-tooltip:hover,
+    .ui-tooltip-trigger:focus-visible ~ .ui-tooltip {
+      opacity: 1;
+      translate: none;
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      .ui-tooltip-trigger:hover ~ .ui-tooltip {
+        opacity: 1;
+        translate: none;
+      }
+    }
+
+    @starting-style {
+      .ui-tooltip:hover,
+      .ui-tooltip-trigger:focus-visible ~ .ui-tooltip,
+      .ui-tooltip-trigger:hover ~ .ui-tooltip {
+        opacity: 0;
+        translate: 0 0.25rem;
+      }
     }
   }
 

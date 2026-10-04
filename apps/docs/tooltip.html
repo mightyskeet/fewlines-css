@@ -26,9 +26,12 @@
           The tooltip is a Popover API element (<code>popover="hint"</code>) plus interest invokers
           (<code>interestfor</code>): in Chromium the browser shows it on hover/focus and hides it
           when interest is lost. Both features are progressive enhancements. In engines without
-          interest (Firefox, Safari) the hint has <strong>no hover activation by design</strong> —
-          the click stays the trigger's action (a "Save" button must save, not show a hint), and the
-          description stays associated via <code>aria-describedby</code> for assistive tech.
+          interest (Firefox, Safari) a CSS-only fallback shows the same element on hover (pointer
+          devices only) and keyboard focus — the click still stays the trigger's action (a "Save"
+          button must save, not show a hint), and the description stays associated via
+          <code>aria-describedby</code> for assistive tech. The fallback hint is shown by CSS, not
+          through the popover API: Escape does not close it (it dismisses on pointer leave or blur),
+          and it is not in the top layer.
         </p>
       </section>
 
@@ -90,13 +93,15 @@
             supported the browser wires it natively.
           </li>
           <li>
-            WCAG 1.4.13 is native: Escape dismisses, the pointer can move onto the hint text, the
-            hint stays visible until interest is lost or it is dismissed.
+            WCAG 1.4.13 is native in the popover path: Escape dismisses, the pointer can move onto
+            the hint text, the hint stays visible until interest is lost or it is dismissed. The CSS
+            fallback keeps the hint hoverable and persistent, but Escape does not dismiss it
+            (pointer leave/blur does) — a documented trade-off.
           </li>
           <li>
-            Keyboard: focus opens the hint (interest engines), Escape always closes, focus is never
-            trapped. In engines without interest the hint is not shown visually; the description is
-            still announced for the focused trigger via <code>aria-describedby</code>.
+            Keyboard: focus opens the hint in every engine (native interest, or the
+            <code>:focus-visible</code> fallback), focus is never trapped. Escape closes the popover
+            path; the CSS fallback hint dismisses on pointer leave or blur.
           </li>
           <li>
             The <code>tooltip</code> role is implicit from <code>popover="hint"</code> — do not set

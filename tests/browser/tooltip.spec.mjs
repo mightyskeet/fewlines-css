@@ -135,6 +135,15 @@ test('opt-in pattern pair closes on Escape natively', async ({ page }) => {
   await expect(page.locator('#testTooltipFallback')).toBeVisible();
 
   await page.keyboard.press('Escape');
+  // The popover API state is closed in every engine...
+  const open = await page
+    .locator('#testTooltipFallback')
+    .evaluate((el) => el.matches(':popover-open'));
+  expect(open).toBe(false);
+  // ...in engines without interest the CSS fallback keeps the hint shown
+  // while the pointer still rests on the trigger; moving the pointer away
+  // dismisses it (compatibility notes, 2026-10-04).
+  await page.mouse.move(10, 300);
   await expect(page.locator('#testTooltipFallback')).not.toBeVisible();
 });
 
@@ -236,4 +245,128 @@ test('tooltip animates out on close (reverse transition)', async ({ page }) => {
     .toEqual(expect.arrayContaining(['translate', 'opacity']));
 
   await expect(page.locator('#testTooltipFallback')).not.toBeVisible();
+});
+
+/*
+ * CSS-only activation fallback (compatibility notes, 2026-10-04): in
+ * engines without interest invokers the hint opens on hover/focus as a
+ * plain CSS-shown element (not :popover-open — Escape cannot close it;
+ * the pointer leave/blur dismissal is the accepted trade-off). The gate
+ * `@supports not selector(:interest-source)` mirrors interest invoker
+ * support (probed: Chromium true, Firefox/WebKit false).
+ */
+
+const gateActive = (page) => page.evaluate(() => !CSS.supports('selector(:interest-source)'));
+
+test('css fallback gate mirrors interest invoker support', async ({ page }) => {
+  const [interest, gateOn] = await page.evaluate(() => [
+    'interestForElement' in HTMLButtonElement.prototype,
+    !CSS.supports('selector(:interest-source)'),
+  ]);
+  expect(gateOn).toBe(!interest);
+});
+
+test('fallback: hover opens the hint as a CSS-shown element', async ({ page }) => {
+  test.skip(!(await gateActive(page)), 'interest supported: the native path covers hover');
+
+  const tooltip = page.locator('#testTooltip');
+  await page.hover('#tooltip-trigger');
+  await expect(tooltip).toBeVisible();
+
+  // Shown by CSS, not through the popover API: no :popover-open state,
+  // therefore no Escape dismissal (accepted trade-off).
+  const isOpenViaApi = await tooltip.evaluate((el) => el.matches(':popover-open'));
+  expect(isOpenViaApi).toBe(false);
+
+  await page.mouse.move(10, 300);
+  await expect(tooltip).not.toBeVisible();
+});
+
+test('fallback: the pointer can travel onto the hint (gap and body hold)', async ({ page }) => {
+  test.skip(!(await gateActive(page)), 'interest supported: the native path covers hover');
+
+  await page.hover('#tooltip-trigger');
+  await expect(page.locator('#testTooltip')).toBeVisible();
+
+  // Cross the placement gap onto the hint text: the bridge extends the
+  // trigger's hover area and the transparent top border makes the gap
+  // part of the hint's own hit box, so the hint must not close.
+  const pts = await page.evaluate(() => {
+    const t = document.querySelector('#tooltip-trigger').getBoundingClientRect();
+    const h = document.querySelector('#testTooltip').getBoundingClientRect();
+    return { x: t.left + t.width / 2, gapY: t.bottom + 2, hintY: h.top + h.height / 2 };
+  });
+  await page.mouse.move(pts.x, pts.gapY);
+  await page.waitForTimeout(300);
+  await expect(page.locator('#testTooltip')).toBeVisible();
+
+  await page.mouse.move(pts.x, pts.hintY);
+  await page.waitForTimeout(300);
+  await expect(page.locator('#testTooltip')).toBeVisible();
+
+  await page.mouse.move(10, 300);
+  await expect(page.locator('#testTooltip')).not.toBeVisible();
+});
+
+test('fallback: keyboard focus opens the hint, blur closes it', async ({ page }) => {
+  test.skip(!(await gateActive(page)), 'interest supported: the native path covers focus');
+
+  const tooltip = page.locator('#testTooltip');
+  await page.locator('#tooltip-trigger').focus();
+  await expect(tooltip).toBeVisible();
+
+  await page.evaluate(() => document.querySelector('#tooltip-trigger').blur());
+  await expect(tooltip).not.toBeVisible();
+});
+
+test('fallback: Escape does not close the CSS-shown hint, pointer leave does', async ({ page }) => {
+  test.skip(!(await gateActive(page)), 'interest supported: Escape closes the native popover');
+
+  await page.hover('#tooltip-trigger');
+  await expect(page.locator('#testTooltip')).toBeVisible();
+
+  await page.keyboard.press('Escape');
+  await page.waitForTimeout(200);
+  // Accepted trade-off: a CSS-shown hint is not :popover-open, Escape has
+  // no effect; the pointer leave below is the dismissal path.
+  await expect(page.locator('#testTooltip')).toBeVisible();
+
+  await page.mouse.move(10, 300);
+  await expect(page.locator('#testTooltip')).not.toBeVisible();
+});
+
+test('fallback: the shown hint is placed below the trigger (anchor works without top layer)', async ({
+  page,
+}) => {
+  test.skip(!(await gateActive(page)), 'interest supported: the native path covers placement');
+
+  await page.hover('#tooltip-trigger');
+  await expect(page.locator('#testTooltip')).toBeVisible();
+
+  // The entry transition starts from the hidden offset — measure the
+  // settled geometry only.
+  await expect
+    .poll(() =>
+      page.evaluate(() => getComputedStyle(document.querySelector('#testTooltip')).opacity),
+    )
+    .toBe('1');
+
+  const geometry = await page.evaluate(() => {
+    const trigger = document.querySelector('#tooltip-trigger').getBoundingClientRect();
+    const tooltip = document.querySelector('#testTooltip').getBoundingClientRect();
+    return {
+      tooltipTop: tooltip.top,
+      triggerBottom: trigger.bottom,
+      overlap: Math.min(trigger.right, tooltip.right) - Math.max(trigger.left, tooltip.left),
+      inViewport: tooltip.left >= 0 && tooltip.right <= window.innerWidth,
+    };
+  });
+
+  // The fallback carries the gap as a transparent top border: the border
+  // box touches the trigger, the visible background starts one --ui-space-2xs
+  // lower — same geometry as the margin-based popover path.
+  expect(geometry.tooltipTop).toBeGreaterThanOrEqual(geometry.triggerBottom - 1);
+  expect(geometry.tooltipTop - geometry.triggerBottom).toBeLessThan(8);
+  expect(geometry.overlap).toBeGreaterThan(0);
+  expect(geometry.inViewport).toBe(true);
 });
