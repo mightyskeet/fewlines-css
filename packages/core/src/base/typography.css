@@ -28,6 +28,31 @@
   background: var(--ui-color-surface);
 }
 
+/* Canonical heading typography: h1–h6 consume the type roles
+ * (tokens/typography.css). h1 -> display, h2 -> headline, h3–h6 -> title —
+ * the role vocabulary is intentionally minimal, sub-sub-headings are not a
+ * separate scale step. Margins stay UA: headings participate in host layout
+ * systems; roles own the font only.
+ *
+ * The `font` shorthand resets the font-variant-* longhands on the styled
+ * element — a host setting e.g. font-variant-numeric on a heading declares
+ * it in a later layer (cascade: base < components < host) and wins.
+ */
+h1 {
+  font: var(--ui-type-display);
+}
+
+h2 {
+  font: var(--ui-type-headline);
+}
+
+h3,
+h4,
+h5,
+h6 {
+  font: var(--ui-type-title);
+}
+
 /* Inline code family: <code>, <kbd>, <samp>.
  *
  * Monospaced via --ui-font-mono, slightly smaller than the surrounding text

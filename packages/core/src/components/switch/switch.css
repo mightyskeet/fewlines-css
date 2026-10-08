@@ -64,7 +64,7 @@
   block-size: 0.875rem;
   border-radius: var(--ui-radius-full);
   background: var(--ui-color-surface);
-  box-shadow: 0 0.0625rem 0.25rem color-mix(in oklab, black 30%, transparent);
+  box-shadow: var(--ui-elevation-1);
   translate: 0 -50%;
   transition: translate var(--ui-duration-fast) ease;
 }

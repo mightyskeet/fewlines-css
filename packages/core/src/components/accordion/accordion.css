@@ -41,7 +41,10 @@
   align-items: center;
   gap: var(--ui-space-sm);
   padding: var(--ui-space-sm) var(--ui-space-md);
-  font-weight: var(--ui-font-weight-medium);
+
+  /* The summary is the item title: the `title` type role (same as h3–h6
+   * and the alert title). */
+  font: var(--ui-type-title);
   cursor: pointer;
   list-style: none;
   user-select: none;

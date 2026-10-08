@@ -39,6 +39,10 @@
   border-radius: var(--ui-radius-full);
   color: var(--ui-badge-fg);
   background: var(--ui-badge-bg);
+
+  /* Intentionally the raw scale token, not a type role: the badge is the
+   * smallest pill in the system (0.75rem + integer line box below); the
+   * `label`/`support` roles (0.875rem) would inflate it. */
   font-size: var(--ui-font-size-xs);
   font-weight: var(--ui-font-weight-medium);
 

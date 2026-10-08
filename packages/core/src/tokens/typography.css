@@ -2,6 +2,18 @@
  *
  * Font families use system stacks — no webfont loading in core.
  * Sizes are fluid where useful; line heights are unitless.
+ *
+ * Two-tier model (mirrors the palette -> semantic color split):
+ *   --ui-font-* / --ui-font-size-* / --ui-font-weight-* / --ui-line-height-*
+ *     — infrastructure scale, host-overridable inputs;
+ *   --ui-type-* — semantic roles (display/headline/title/body/support/label),
+ *     the only typography API for base headings and components.
+ *
+ * Roles are composite `font` shorthand values so size, weight and line
+ * height always travel together. Caveat: the shorthand resets the
+ * font-variant-* longhands on the element where it is declared — declare
+ * font-variant-numeric etc. in a later layer (cascade: tokens < base <
+ * components < host) and it wins.
  */
 :root {
   --ui-font-sans: system-ui, -apple-system, 'Segoe UI', roboto, 'Helvetica Neue', arial, sans-serif;
@@ -19,4 +31,14 @@
   --ui-font-weight-medium: 500;
   --ui-font-weight-semibold: 600;
   --ui-font-weight-bold: 700;
+
+  /* Semantic type roles. `body` mirrors the :root defaults (base/typography.css)
+   * and is the reference definition of document text. `display`/`headline`
+   * render at large sizes (>= 24px / 18px bold — APCA `large` role, Lc 45). */
+  --ui-type-display: 700 2rem/1.2 var(--ui-font-sans);
+  --ui-type-headline: 600 1.5rem/1.25 var(--ui-font-sans);
+  --ui-type-title: 600 1.125rem/1.3 var(--ui-font-sans);
+  --ui-type-body: 400 1rem/1.5 var(--ui-font-sans);
+  --ui-type-support: 400 0.875rem/1.45 var(--ui-font-sans);
+  --ui-type-label: 500 0.875rem/1.45 var(--ui-font-sans);
 }

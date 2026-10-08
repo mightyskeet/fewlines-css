@@ -66,9 +66,8 @@
   border: 1px solid var(--ui-color-border);
   border-radius: var(--ui-radius-sm);
   padding: var(--ui-space-2xs) var(--ui-space-xs);
-  box-shadow: 0 0.125rem 0.5rem color-mix(in oklab, black 15%, transparent);
-  font-size: var(--ui-font-size-xs);
-  line-height: var(--ui-line-height-normal);
+  box-shadow: var(--ui-elevation-2);
+  font: var(--ui-type-support);
   text-wrap: pretty;
   margin: auto;
   inset: unset;
@@ -199,6 +198,15 @@
     position-area: block-end center;
     position-try-fallbacks: block-start center;
     /* stylelint-enable declaration-property-value-no-unknown */
+
+    /* position-area resolves auto sizes against the position-area region —
+     * a narrow anchor clamps the hint to the anchor's inline extent and the
+     * text wraps into a column (measured: 69px-wide, 71px-tall hint on a
+     * 68px trigger). max-content escapes the region clamp; the existing
+     * max-inline-size cap keeps it in bounds. margin-inline: 0 —
+     * position-area owns the inline placement. */
+    inline-size: max-content;
+    margin-inline: 0;
     margin-block-start: var(--ui-space-2xs);
   }
 

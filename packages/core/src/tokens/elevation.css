@@ -1,0 +1,41 @@
+/* Elevation tokens — box-shadow depth levels.
+ *
+ * Components consume these tokens; hardcoded shadows are forbidden
+ * (PROJECT_SPEC.md, 7.1 — one semantic layer for all visual values).
+ *
+ * The alpha is calibrated per geometry, not a single "strength" number:
+ * a small tight shadow needs a higher alpha to read than a large soft one.
+ * Dark theme strengthens the alpha (light-dark()): on dark surfaces
+ * (neutral-900/800) a light-theme alpha is barely perceptible, and the
+ * system carries no surface-tint overlay to compensate — geometry stays
+ * identical across themes.
+ *
+ * Levels (M3-style scale):
+ *   1 — control relief (switch thumb): element visually above its track;
+ *   2 — attached hint (tooltip): small floating affordance;
+ *   3 — floating surface (popover): detached overlay.
+ *
+ * Dialog and Drawer carry no elevation: the backdrop scrim is their depth
+ * metaphor (full-screen overlay, not a floating card).
+ *
+ * Color values inside the shadow resolve through light-dark(), an already
+ * audited feature (compatibility notes — direct use). Shadows are stripped
+ * by forced-colors mode natively; no extra adaptation needed.
+ */
+:root {
+  --ui-elevation-1: 0 0.0625rem 0.25rem
+    light-dark(
+      color-mix(in oklab, black 30%, transparent),
+      color-mix(in oklab, black 45%, transparent)
+    );
+  --ui-elevation-2: 0 0.125rem 0.5rem
+    light-dark(
+      color-mix(in oklab, black 15%, transparent),
+      color-mix(in oklab, black 30%, transparent)
+    );
+  --ui-elevation-3: 0 0.25rem 1rem
+    light-dark(
+      color-mix(in oklab, black 15%, transparent),
+      color-mix(in oklab, black 25%, transparent)
+    );
+}

@@ -42,7 +42,12 @@
 .ui-table {
   border-collapse: separate;
   border-spacing: 0;
-  font-size: var(--ui-font-size-sm);
+
+  /* The `support` type role: the table is typographically more compact than
+   * the document (0.875rem, 400). Header cells add the medium weight on top
+   * (below). The `font` shorthand resets font-variant-* on .ui-table only —
+   * tabular numerals are declared per cell (data-align) and win. */
+  font: var(--ui-type-support);
 }
 
 /* <caption> is the table's accessible name (native association). */

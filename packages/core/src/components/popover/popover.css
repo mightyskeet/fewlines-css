@@ -39,7 +39,7 @@
   border: 1px solid var(--ui-color-border);
   border-radius: var(--ui-radius-md);
   padding: var(--ui-space-md);
-  box-shadow: 0 0.25rem 1rem color-mix(in oklab, black 15%, transparent);
+  box-shadow: var(--ui-elevation-3);
   margin: auto;
   inset: unset;
 
@@ -99,6 +99,17 @@
     position-area: block-end center;
     position-try-fallbacks: block-start center;
     /* stylelint-enable declaration-property-value-no-unknown */
+
+    /* position-area resolves auto sizes against the position-area region —
+     * a narrow anchor clamps the panel to the anchor's inline extent
+     * (measured: 92px popover on a 91px trigger, text wraps into a column).
+     * max-content escapes the region clamp; the cap keeps long content
+     * inside the viewport (default 20rem like the tooltip; the host layer
+     * overrides for wider panels). margin-inline: 0 — position-area owns
+     * the inline placement (auto margins are a fallback-mode concern). */
+    inline-size: max-content;
+    max-inline-size: min(20rem, calc(100vw - 2 * var(--ui-space-2xl)));
+    margin-inline: 0;
     margin-block-start: var(--ui-space-2xs);
   }
 

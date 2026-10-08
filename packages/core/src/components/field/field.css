@@ -35,21 +35,22 @@
 }
 
 .ui-field-label {
-  font-size: var(--ui-font-size-sm);
-  font-weight: var(--ui-font-weight-medium);
+  /* The label consumes the `label` type role (500, 0.875rem) — the same
+   * role vocabulary as the rest of the chrome text. */
+  font: var(--ui-type-label);
   color: var(--ui-color-text);
 }
 
 /* Hint text bound via aria-describedby */
 .ui-field-description {
-  font-size: var(--ui-font-size-sm);
+  font: var(--ui-type-support);
   color: var(--ui-color-text-muted);
 }
 
 /* Error text bound via aria-describedby (danger/surface, danger/surface-raised
  * — registered APCA pairs, tests/apca). */
 .ui-field-error {
-  font-size: var(--ui-font-size-sm);
+  font: var(--ui-type-support);
   color: var(--ui-color-danger);
 }
 

@@ -214,8 +214,10 @@
           <span class="ui-tooltip" id="testTooltip" popover="hint">Saves your changes</span>
         </div>
         <!-- Opt-in click pattern for an inert trigger: popovertarget opens the
-             hint on click in engines without interest (compatibility notes). -->
-        <div style="anchor-scope: all">
+             hint on click in engines without interest (compatibility notes).
+             The margin keeps the second pair clear of the first hint's hit
+             area while the first hint is open (hint exclusivity test). -->
+        <div style="anchor-scope: all; margin-block-start: 3rem">
           <button
             class="ui-button ui-tooltip-trigger"
             type="button"

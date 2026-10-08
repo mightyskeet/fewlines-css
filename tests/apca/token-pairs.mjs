@@ -155,15 +155,21 @@ export const tokenPairs = [
   { fg: 'focus-ring', bg: 'surface', role: 'nonText' },
   { fg: 'focus-ring', bg: 'surface-raised', role: 'nonText' },
 
-  // Disabled state (tracked, exempt from conformance)
+  // Headings: display (h1) and headline (h2, dialog/drawer titles) render at
+  // large sizes — the `large` role threshold (Lc 45) is the applicable gate.
+  // Same pairs as the body entries; the role records the rendered usage.
+  { fg: 'text', bg: 'surface', role: 'large', note: 'h1 display headings' },
+  { fg: 'text', bg: 'surface-raised', role: 'large', note: 'h2 headline (dialog, drawer)' },
+
+  // Disabled state (tracked, exempt from conformance, spot readable)
   { fg: 'text-muted', bg: 'surface', role: 'disabled', note: 'disabled controls' },
 ];
 
-/** Minimum APCA Lc per role. */
+/** Minimum APCA Lc per role (accessibility notes). */
 export const roleThresholds = {
   body: 75,
   fluent: 60,
   large: 45,
   nonText: 15,
-  disabled: 15,
+  disabled: 30,
 };

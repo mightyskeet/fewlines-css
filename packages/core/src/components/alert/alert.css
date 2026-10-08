@@ -54,10 +54,12 @@
 
 /* Title carries the variant color; the message text stays neutral
  * (--ui-color-text) so long-form content keeps maximal readability.
- * Variant title colors: -strong is the readable variant color on the tint
- * surface (the base color sits under the body-role APCA threshold). */
+ * The title consumes the `title` type role (600, 1.125rem — the same role
+ * as h3–h6 and the accordion summary). Variant title colors: -strong is the
+ * readable variant color on the tint surface (the base color sits under the
+ * body-role APCA threshold). */
 .ui-alert-title {
-  font-weight: var(--ui-font-weight-medium);
+  font: var(--ui-type-title);
   color: var(--ui-color-accent-strong);
   margin-block: 0 var(--ui-space-2xs);
 }
