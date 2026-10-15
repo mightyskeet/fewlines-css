@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 
 /**
- * Native form behavior tests (PROJECT_SPEC.md, 15.2).
+ * Native form behavior tests (tests/README.md).
  * Covers: labels, validation, disabled/required/invalid/focus states.
  */
 

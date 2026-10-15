@@ -2,7 +2,7 @@
  *
  * Native basis: <details>/<summary> — disclosure widget with native
  * open/close state, native keyboard behavior (Enter/Space on summary),
- * no JS required (PROJECT_SPEC.md, 4.1). `details` is direct use per
+ * no JS required (architecture notes, Native first). `details` is direct use per
  * compatibility notes (Chrome 12+, FF 49+, Safari 12+).
  *
  * Canonical structure:

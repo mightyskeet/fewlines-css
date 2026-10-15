@@ -1,6 +1,6 @@
 /**
  * APCA token matrix — machine-readable registry of allowed
- * semantic foreground/background pairs (PROJECT_SPEC.md, 8.1).
+ * semantic foreground/background pairs (accessibility notes).
  *
  * Each pair declares the text role it is used for. APCA thresholds depend on
  * role (size/weight), not a single universal number:

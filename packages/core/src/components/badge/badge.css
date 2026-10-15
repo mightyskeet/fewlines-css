@@ -1,7 +1,7 @@
 /* Badge component.
  *
  * Native basis: the platform has no native badge element. Badge is a static
- * inline container (like Alert, PROJECT_SPEC.md, 4.1): the semantic layer is
+ * inline container (like Alert, architecture notes Native first): the semantic layer is
  * host-owned — a status word must be readable as text (WCAG 1.4.1: color is
  * never the sole carrier of meaning), counters may need a host-supplied
  * aria-label when the number alone is ambiguous. Core adds no JS, no states.

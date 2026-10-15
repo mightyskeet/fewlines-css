@@ -1,7 +1,7 @@
 /* Popover component.
  *
  * Native basis: Popover API — declarative triggers (popovertarget),
- * light dismiss, Escape, top-layer, :popover-open. Zero JS (PROJECT_SPEC.md, 4.1).
+ * light dismiss, Escape, top-layer, :popover-open. Zero JS (architecture notes, Native first).
  *
  * Canonical structure:
  *   <button class="ui-button ui-popover-trigger" popovertarget="p1">Trigger</button>
@@ -13,7 +13,7 @@
  * unset axis falls back to span-all (centered on the anchor). Without
  * attributes: below the trigger, flipped above on overflow; without
  * anchor support: centered (fixed).
- * No positioning runtime in core (PROJECT_SPEC.md, раздел 11).
+ * No positioning runtime in core (architecture notes, «Positioning и overlays»).
  *
  * Anchor contract:
  *   - implicit anchor: popovertarget button is the anchor (native, Chrome 133+,

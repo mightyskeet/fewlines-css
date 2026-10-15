@@ -1,7 +1,7 @@
 /* Field / Input component.
  *
  * Native basis: <input>, <label>, <fieldset>/<legend>, native form validation
- * states. No JS (PROJECT_SPEC.md, 4.1, 4.2).
+ * states. No JS (architecture notes, Native first).
  *
  * Canonical structure:
  *   <label class="ui-field">

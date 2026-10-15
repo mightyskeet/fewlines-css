@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 
 /**
- * Drawer component tests (PROJECT_SPEC.md, 15.2).
+ * Drawer component tests (tests/README.md).
  * Native basis: popover="auto" + popovertarget — declarative open/close,
  * native Escape, light dismiss, top-layer, native autofocus. Non-modal by
  * contract: the page stays interactive while the drawer is open; the light

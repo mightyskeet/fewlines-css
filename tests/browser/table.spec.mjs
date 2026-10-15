@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 
 /**
- * Table component tests (PROJECT_SPEC.md, 15.2).
+ * Table component tests (tests/README.md).
  * Table is a native table: semantics (roles, caption association, scope)
  * are native. Tests cover token theming, zebra/hover surfaces, the sticky
  * header contract in a scroll container and the wrap model.

@@ -1,7 +1,7 @@
 /* Alert component.
  *
  * Native basis: static text container. The platform has no native alert
- * element, so the semantic layer is host-owned (PROJECT_SPEC.md, 4.1):
+ * element, so the semantic layer is host-owned (architecture notes, Native first):
  *   - static callout: no role;
  *   - dynamically inserted, urgent (errors): role="alert" (assertive);
  *   - dynamically inserted, informational: role="status" (polite).
@@ -18,7 +18,7 @@
  *
  * Variant colors are surfaced through derived local properties so each
  * variant block only remaps two values. They consume semantic tokens only
- * (PROJECT_SPEC.md, 7.1).
+ * (theme notes).
  *
  * APCA pairs used (validated in tests/apca):
  *   title:  {accent,danger,success,warning}-strong on *-tint (body)

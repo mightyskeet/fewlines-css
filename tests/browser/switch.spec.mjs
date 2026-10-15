@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 
 /**
- * Switch component tests (PROJECT_SPEC.md, 15.2).
+ * Switch component tests (tests/README.md).
  * Covers: native toggle behavior, keyboard, implicit label, disabled state,
  * checked-state tokens. The switch attribute is a progressive enhancement
  * (Safari-only per compatibility notes), so the exposed role is asserted

@@ -1,7 +1,7 @@
 /* Elevation tokens — box-shadow depth levels.
  *
  * Components consume these tokens; hardcoded shadows are forbidden
- * (PROJECT_SPEC.md, 7.1 — one semantic layer for all visual values).
+ * (theme notes — one semantic layer for all visual values).
  *
  * The alpha is calibrated per geometry, not a single "strength" number:
  * a small tight shadow needs a higher alpha to read than a large soft one.

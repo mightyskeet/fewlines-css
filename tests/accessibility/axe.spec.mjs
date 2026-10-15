@@ -5,7 +5,7 @@ const require = createRequire(import.meta.url);
 
 /**
  * Accessibility tests: axe-core scan + explicit keyboard/focus checks
- * (PROJECT_SPEC.md, раздел 9). Axe is an extra layer, not a replacement
+ * (accessibility notes). Axe is an extra layer, not a replacement
  * for the explicit keyboard tests in browser/.
  */
 

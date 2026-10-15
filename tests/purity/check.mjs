@@ -1,5 +1,5 @@
 /**
- * Package purity check (PROJECT_SPEC.md, 15.4).
+ * Package purity check (tests/README.md).
  *
  * Verifies the published core package contains no runtime JS and no
  * unexpected runtime dependencies.
@@ -119,7 +119,7 @@ try {
 
 // 7. Palette encapsulation: only src/tokens may define or reference
 // --ui-palette-*; components and base consume semantic --ui-* tokens only
-// (PROJECT_SPEC.md 7.1, theme notes).
+// (theme notes).
 try {
   let paletteRefs = 0;
   for (const layerDir of ['base', 'components']) {

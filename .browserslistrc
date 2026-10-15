@@ -1,6 +1,6 @@
 # Browserslist contract — fewLinesCSS
 #
-# Политика (PROJECT_SPEC.md, раздел 10):
+# Политика (compatibility notes, architecture notes):
 # - Floor не снижается ради удобства реализации отдельной фичи.
 # - Каждая существенная platform feature проверяется через Can I Use MCP
 #   (caniuse_feature + browserslist_compatibility_check) до использования.
@@ -9,7 +9,7 @@
 # Основная матрица: последние 2 версии всех evergreen-браузеров + Safari/iOS,
 # актуальные на момент релиза. Dead-браузеры исключены.
 #
-# NOTE: compatibility-аудит фич из раздела 6 спеки выполнен 2026-10-01,
+# NOTE: compatibility-аудит platform features выполнен 2026-10-01,
 # решения зафиксированы в compatibility notes. Матрица подтверждена:
 # все core-фичи (@layer, :has(), light-dark(), popover, dialog) поддерживаются
 # полностью; anchor positioning и field-sizing — progressive enhancement
@@ -18,8 +18,8 @@
 # op_mini и kaios исключены явно: это feature-phone браузеры, не способные
 # исполнить modern CSS baseline вообще. Их присутствие в "last 2 versions"
 # заставляло Lightning CSS даунлевелить light-dark() в media-query fallback,
-# что ломает data-theme override (спека 7.2). Это не снижение floor ради
-# одной фичи, а определение реальной целевой матрицы (спека 10.1).
+# что ломает data-theme override (theme notes). Это не снижение floor ради
+# одной фичи, а определение реальной целевой матрицы.
 
 last 2 versions
 not dead

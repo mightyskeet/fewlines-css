@@ -13,7 +13,7 @@
  * 3. Text content elements (<code>, <pre>, <mark>, <a>, <blockquote>, ...):
  *    the platform already provides the semantics, the base layer provides one
  *    canonical presentation — hosts style nothing for plain text content.
- *    Native first (PROJECT_SPEC.md, 4.1): no classes, no states of our own.
+ *    Native first (architecture notes, Native first): no classes, no states of our own.
  *    Every color pair consumed here is registered in tests/apca.
  *
  * Element selectors sit in the base layer below components, so component

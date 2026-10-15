@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 
 /**
- * Native dialog behavior tests (PROJECT_SPEC.md, 15.2).
+ * Native dialog behavior tests (tests/README.md).
  * Covers: open/close, modal state, Escape, backdrop, form semantics, focus.
  */
 

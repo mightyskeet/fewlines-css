@@ -1,6 +1,6 @@
 /* Theme transition.
  *
- * Animates color custom properties on theme switch (PROJECT_SPEC.md, 7.3).
+ * Animates color custom properties on theme switch (theme notes).
  *
  * Mechanism:
  * - @property registers animatable <color> tokens so transitions interpolate

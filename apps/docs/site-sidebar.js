@@ -1,6 +1,6 @@
 // Docs-site chrome: shared sidebar (brand, page navigation, theme toggle).
 // This is host/tooling JS — the core package stays CSS-only
-// (PROJECT_SPEC.md, раздел 3).
+// (overview notes, «Не является целью»).
 //
 // Adding a docs page = one entry in PAGES below; every sidebar picks up the
 // link automatically. The page title/description are static markup inside

@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 
 /**
- * Native popover behavior tests (PROJECT_SPEC.md, 15.2).
+ * Native popover behavior tests (tests/README.md).
  * Covers: declarative trigger, open state, light dismiss, Escape.
  */
 

@@ -4,7 +4,7 @@ import { expect, test } from '@playwright/test';
  * Badge component tests.
  * Badge is a static inline label: there is no native behavior to exercise,
  * so the contract under test is theming (variant tokens), theme switching,
- * inline flow and the absence of interactive semantics (PROJECT_SPEC.md, 15.2).
+ * inline flow and the absence of interactive semantics (tests/README.md).
  */
 
 test.beforeEach(async ({ page }) => {

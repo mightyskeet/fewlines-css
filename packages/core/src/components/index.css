@@ -2,7 +2,7 @@
  *
  * Each component lives in its own directory with:
  *   component.css, example.html, component.md, component.spec.ts
- * (PROJECT_SPEC.md, раздел 14).
+ * (architecture notes, «Качество как контракт»).
  */
 @import './button/button.css';
 @import './field/field.css';

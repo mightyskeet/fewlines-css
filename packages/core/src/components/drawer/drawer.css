@@ -2,7 +2,7 @@
  *
  * Native basis: Popover API — `popover` (auto) on the drawer container,
  * declarative triggers (popovertarget), light dismiss, Escape, top-layer,
- * :popover-open. Zero JS required (PROJECT_SPEC.md, 4.1). Non-modal by
+ * :popover-open. Zero JS required (architecture notes, Native first). Non-modal by
  * design: the page stays interactive and focus is not trapped — a blocking
  * panel is Dialog (modal-only, see dialog.md).
  *

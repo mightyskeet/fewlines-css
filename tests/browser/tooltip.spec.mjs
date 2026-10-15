@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 
 /**
- * Tooltip component tests (PROJECT_SPEC.md, 15.2).
+ * Tooltip component tests (tests/README.md).
  * Canonical pair = interestfor only (native hover/focus activation); the click
  * stays the trigger's own action. The opt-in pair = popovertarget on an inert
  * trigger (documented host pattern, compatibility notes). Interest invokers

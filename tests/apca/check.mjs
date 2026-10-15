@@ -1,5 +1,5 @@
 /**
- * APCA token matrix check (PROJECT_SPEC.md, 8.1).
+ * APCA token matrix check (accessibility notes).
  *
  * Validates every declared fg/bg pair in token-pairs.mjs against role-based
  * APCA thresholds, separately for light and dark themes.

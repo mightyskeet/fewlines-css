@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 
 /**
- * Native accordion behavior tests (PROJECT_SPEC.md, 15.2).
+ * Native accordion behavior tests (tests/README.md).
  * Covers: open/close via <details>, keyboard toggle, native state attribute.
  */
 

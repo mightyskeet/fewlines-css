@@ -2,7 +2,7 @@
  *
  * Native basis: <button>, <a> with button semantics, native states.
  * States come from the platform: :hover, :focus-visible (base layer),
- * :active, :disabled — no JS state classes (PROJECT_SPEC.md, 4.2).
+ * :active, :disabled — no JS state classes (architecture notes, CSS как слой presentation и state).
  *
  * Variants via data-variant: primary | secondary | destructive.
  * Sizes via data-size: sm | md | lg.

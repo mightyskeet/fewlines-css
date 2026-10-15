@@ -4,7 +4,7 @@ import { expect, test } from '@playwright/test';
  * Alert component tests.
  * Alert is a static container: there is no native behavior to exercise,
  * so the contract under test is theming (variant tokens), theme switching
- * and the host-owned live-region roles (PROJECT_SPEC.md, 15.2).
+ * and the host-owned live-region roles (tests/README.md).
  */
 
 test.beforeEach(async ({ page }) => {

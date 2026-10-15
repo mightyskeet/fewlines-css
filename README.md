@@ -72,7 +72,7 @@ pnpm format:check   # prettier
 
 ## Документация
 
-- `PROJECT_SPEC.md` — спецификация (source of truth);
+- `overview notes` — идея и позиционирование;
 - `architecture notes` — принципы и структура;
 - `workflow notes` — порядок работы агента;
 

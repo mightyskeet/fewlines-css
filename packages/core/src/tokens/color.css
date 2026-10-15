@@ -1,6 +1,6 @@
 /* Semantic color tokens.
  *
- * Components consume ONLY these tokens (PROJECT_SPEC.md, 7.1).
+ * Components consume ONLY these tokens (theme notes).
  * Light/dark values are defined with light-dark(), which resolves against the
  * used color scheme (color-scheme property / prefers-color-scheme).
  * Explicit override: data-theme="light" | data-theme="dark" on :root (see theme.css).

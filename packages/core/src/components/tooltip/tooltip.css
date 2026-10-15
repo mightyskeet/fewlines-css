@@ -24,7 +24,7 @@
  * animates in every engine (no top layer involved); the popover-path exit
  * stays Chromium-only (overlay). `popovertarget` remains a documented
  * opt-in for inert triggers (e.g. "?" buttons). No runtime JS
- * (PROJECT_SPEC.md, 4.1).
+ * (architecture notes, Native first).
  *
  * Canonical structure:
  *   <button class="ui-tooltip-trigger" interestfor="tip-1"
@@ -40,7 +40,7 @@
  * Anchor contract (same model as Popover): the trigger declares
  * --ui-tooltip-anchor, the tooltip positions with position-area and flips
  * with position-try-fallbacks; without anchor support — centered (fixed).
- * No positioning runtime in core (PROJECT_SPEC.md, раздел 11).
+ * No positioning runtime in core (architecture notes, «Positioning и overlays»).
  *
  * Motion: the transition is declared on the element (not scoped to the open
  * state) and the hidden state lives in the base styles, so closing animates

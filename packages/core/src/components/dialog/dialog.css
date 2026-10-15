@@ -2,7 +2,7 @@
  *
  * Native basis: <dialog> element — modal-only, top-layer, ::backdrop,
  * native Escape handling, native focus trapping, form method="dialog".
- * Zero JS required (PROJECT_SPEC.md, 4.1).
+ * Zero JS required (architecture notes, Native first).
  *
  * Canonical structure:
  *   <dialog class="ui-dialog">

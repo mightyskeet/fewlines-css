@@ -1,7 +1,7 @@
 /* Raw palette tokens.
  *
  * Primitive color values in OKLCH. Components must NOT consume these directly
- * (PROJECT_SPEC.md, 7.1) — they exist only as inputs for semantic tokens.
+ * (theme notes) — they exist only as inputs for semantic tokens.
  * Values are APCA-validated through the semantic token matrix (Phase 4).
  */
 :root {

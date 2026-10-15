@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 
 /**
- * Button state tests (PROJECT_SPEC.md, 15.2).
+ * Button state tests (tests/README.md).
  * Computed-style checks: hover must not restyle disabled controls.
  */
 
