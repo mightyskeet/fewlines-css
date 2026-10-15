@@ -9,7 +9,7 @@
  * Zero runtime JS policy: this script is tooling only; dist/ contains CSS only.
  */
 import { spawnSync } from 'node:child_process';
-import { existsSync, mkdirSync, rmSync } from 'node:fs';
+import { cpSync, existsSync, mkdirSync, rmSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -49,6 +49,15 @@ if (!existsSync(cli)) {
 // Chrome behavior, while Lightning CSS's own Edge data is stale (≤130)
 // and would silently drag down features added after Chrome 130.
 const targets = 'chrome 141,firefox 143,safari 26';
+
+// package.json exports ./tokens and ./components/*, which map to plain files
+// (dist/tokens/index.css, dist/components/<name>/*.css) rather than bundles.
+// Emitting a separate bundle per entry would be tooling for nothing: instead
+// the src tree is copied 1:1 into dist BEFORE the bundle runs (the bundle
+// then overwrites dist/index.css). The copied files keep their relative
+// @import because the whole tree is copied together; they ship as plain CSS
+// and are compiled by the consumer's own pipeline. dist/ stays CSS-only.
+cpSync(srcDir, distDir, { recursive: true });
 
 const result = spawnSync(
   cli,

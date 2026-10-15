@@ -136,6 +136,33 @@ try {
 }
 
 console.log('');
+
+// 8. Exported entry points must actually exist in dist. The "./components/*"
+// wildcard in package.json is otherwise skipped by the export check above
+// without ever being resolved (audit 2026-10-15).
+try {
+  readFileSync(join(distRoot, 'tokens', 'index.css'));
+  pass('dist/tokens/index.css exists ("./tokens" entry)');
+} catch {
+  fail('dist/tokens/index.css missing — "./tokens" export is broken');
+}
+
+try {
+  const componentDirs = readdirSync(join(distRoot, 'components'), {
+    withFileTypes: true,
+  }).filter((e) => e.isDirectory());
+  const withCss = componentDirs.filter((dir) =>
+    readdirSync(join(distRoot, 'components', dir.name)).some((f) => f.endsWith('.css')),
+  );
+  if (withCss.length === 0) {
+    fail('dist/components/* has no component CSS — "./components/*" export is broken');
+  } else {
+    pass(`dist/components/* resolves ${withCss.length} component CSS module(s)`);
+  }
+} catch {
+  fail('dist/components missing — "./components/*" export is broken');
+}
+
 if (violations > 0) {
   console.error(`${violations} violation(s)`);
   process.exit(1);
