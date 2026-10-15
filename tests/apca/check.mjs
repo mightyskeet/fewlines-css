@@ -10,8 +10,25 @@
  * Note: apca-w3 expects sRGB hex/rgb colors. OKLCH values are converted to
  * sRGB via CSS Color 4 conversion implemented locally (no extra dependency).
  */
+import { readFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { APCAcontrast, sRGBtoY } from 'apca-w3';
-import { paletteMap, semanticMap, tokenPairs, roleThresholds } from './token-pairs.mjs';
+import { semanticMap, tokenPairs, roleThresholds } from './token-pairs.mjs';
+
+const repoRoot = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
+
+// Palette parsed from the source of truth; "deg" is stripped so the values
+// match the oklch(L% C H) format the local converter expects.
+const paletteMap = Object.fromEntries(
+  [
+    ...readFileSync(join(repoRoot, 'packages', 'core', 'src', 'tokens', 'palette.css'), 'utf8')
+      .matchAll(/--ui-palette-([\w-]+):\s*([^;]+);/g),
+  ].map(([, name, value]) => [name, value.trim().replace(/(\d)deg\b/g, '$1')]),
+);
+if (Object.keys(paletteMap).length === 0) {
+  throw new Error('No palette tokens parsed from palette.css — parser broken');
+}
 
 /**
  * Convert OKLCH string to sRGB {r,g,b} in 0..1 using CSS Color 4 math.

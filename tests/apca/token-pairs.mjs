@@ -12,59 +12,15 @@
  *  disabled    — disabled controls (exempt from conformance, still tracked)
  *
  * Values are resolved per theme: light and dark variants are checked
- * separately. Colors are raw OKLCH strings mirroring packages/core palette
- * tokens; the check script resolves var() references via paletteMap.
+ * separately. Palette colors are parsed from packages/core/src/tokens/palette.css
+ * by the check script; semanticMap below mirrors packages/core/src/tokens/color.css
+ * light-dark() arguments (kept as a reviewed registry — it is a decision
+ * document, not a duplicate of parsed values).
  */
 
 /**
  * @typedef {'body'|'fluent'|'large'|'nonText'|'disabled'} TextRole
  */
-
-/**
- * Raw palette values mirrored from packages/core/src/tokens/palette.css.
- * Keep in sync — a CI grep gate verifies both files agree (Phase 6).
- */
-export const paletteMap = {
-  'neutral-0': 'oklch(100% 0 0)',
-  'neutral-50': 'oklch(97% 0.003 260)',
-  'neutral-100': 'oklch(94% 0.005 260)',
-  'neutral-200': 'oklch(87% 0.008 260)',
-  'neutral-300': 'oklch(78% 0.01 260)',
-  'neutral-400': 'oklch(60% 0.012 260)',
-  'neutral-500': 'oklch(48% 0.012 260)',
-  'neutral-600': 'oklch(38% 0.012 260)',
-  'neutral-700': 'oklch(28% 0.012 260)',
-  'neutral-800': 'oklch(20% 0.01 260)',
-  'neutral-900': 'oklch(14% 0.008 260)',
-  'neutral-950': 'oklch(9% 0.005 260)',
-  'accent-100': 'oklch(95% 0.022 255)',
-  'accent-200': 'oklch(92% 0.11 250)',
-  'accent-300': 'oklch(86% 0.11 250)',
-  'accent-500': 'oklch(56% 0.17 255)',
-  'accent-600': 'oklch(48% 0.18 258)',
-  'accent-700': 'oklch(38% 0.16 260)',
-  'accent-800': 'oklch(21% 0.05 258)',
-  'danger-100': 'oklch(95% 0.02 25)',
-  'danger-200': 'oklch(94% 0.08 25)',
-  'danger-300': 'oklch(90% 0.1 25)',
-  'danger-500': 'oklch(55% 0.19 27)',
-  'danger-600': 'oklch(48% 0.19 28)',
-  'danger-700': 'oklch(36% 0.16 29)',
-  'danger-800': 'oklch(21% 0.045 27)',
-  'success-100': 'oklch(95% 0.045 150)',
-  'success-200': 'oklch(90% 0.1 150)',
-  'success-300': 'oklch(84% 0.13 150)',
-  'success-500': 'oklch(55% 0.16 150)',
-  'success-600': 'oklch(47% 0.15 151)',
-  'success-700': 'oklch(35% 0.13 152)',
-  'success-800': 'oklch(21% 0.05 151)',
-  'warning-100': 'oklch(95% 0.045 85)',
-  'warning-200': 'oklch(94% 0.06 85)',
-  'warning-300': 'oklch(90% 0.1 85)',
-  'warning-600': 'oklch(48% 0.1 75)',
-  'warning-700': 'oklch(36% 0.075 75)',
-  'warning-800': 'oklch(21% 0.045 80)',
-};
 
 /**
  * Semantic token -> palette reference, per theme.
