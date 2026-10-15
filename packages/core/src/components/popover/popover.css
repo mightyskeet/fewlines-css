@@ -108,7 +108,7 @@
      * overrides for wider panels). margin-inline: 0 — position-area owns
      * the inline placement (auto margins are a fallback-mode concern). */
     inline-size: max-content;
-    max-inline-size: min(20rem, calc(100vw - 2 * var(--ui-space-2xl)));
+    max-inline-size: min(20rem, calc(100dvw - 2 * var(--ui-space-2xl)));
     margin-inline: 0;
     margin-block-start: var(--ui-space-2xs);
   }

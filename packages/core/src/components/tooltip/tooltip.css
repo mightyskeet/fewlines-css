@@ -281,6 +281,20 @@
     block-size: var(--ui-space-2xs);
     z-index: 1;
   }
+
+  /* Mirror bridge above the trigger: position-try-fallbacks flips the hint
+   * to block-start near the top edge, and the below-bridge would not cover
+   * that gap (audit 2026-10-15, finding 6). Both bridges exist only while
+   * the hint is open. */
+  .ui-tooltip-trigger:hover::before,
+  .ui-tooltip-trigger:focus-visible::before {
+    content: '';
+    position: absolute;
+    inset-block-end: 100%;
+    inset-inline: 0;
+    block-size: var(--ui-space-2xs);
+    z-index: 1;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
