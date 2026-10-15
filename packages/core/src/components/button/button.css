@@ -49,15 +49,24 @@
   font-size: var(--ui-font-size-lg);
 }
 
-/* States (secondary) */
-.ui-button:hover {
-  background: var(--ui-color-surface-sunken);
-  border-color: var(--ui-color-border-strong);
-}
-
 .ui-button:active {
   background: var(--ui-color-surface-sunken);
   transform: translateY(1px);
+}
+
+/* Disabled — native :disabled covers <button>; aria-disabled covers links.
+ * Before the hover rules (no-descending-specificity: hover excludes it). */
+.ui-button:disabled,
+.ui-button[aria-disabled='true'] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* States (secondary) — hover never restyles a disabled control. */
+.ui-button:hover:not(:disabled, [aria-disabled='true']) {
+  background: var(--ui-color-surface-sunken);
+  border-color: var(--ui-color-border-strong);
 }
 
 /* Primary */
@@ -66,7 +75,7 @@
   background: var(--ui-color-accent-surface);
 }
 
-.ui-button[data-variant='primary']:hover {
+.ui-button[data-variant='primary']:hover:not(:disabled, [aria-disabled='true']) {
   background: var(--ui-color-accent-strong);
 }
 
@@ -76,16 +85,8 @@
   background: var(--ui-color-danger-surface);
 }
 
-.ui-button[data-variant='destructive']:hover {
+.ui-button[data-variant='destructive']:hover:not(:disabled, [aria-disabled='true']) {
   background: var(--ui-color-danger-strong);
-}
-
-/* Disabled — native :disabled covers <button>; aria-disabled covers links */
-.ui-button:disabled,
-.ui-button[aria-disabled='true'] {
-  opacity: 0.5;
-  cursor: not-allowed;
-  transform: none;
 }
 
 /* Forced colors: let the system paint button colors. */

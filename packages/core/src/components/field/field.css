@@ -130,12 +130,14 @@
 
 /* Validation states — user-invalid avoids premature red before interaction. */
 .ui-input:user-invalid,
-.ui-textarea:user-invalid {
+.ui-textarea:user-invalid,
+.ui-select:user-invalid {
   border-color: var(--ui-color-danger);
 }
 
 .ui-input:user-valid,
-.ui-textarea:user-valid {
+.ui-textarea:user-valid,
+.ui-select:user-valid {
   border-color: var(--ui-color-success);
 }
 

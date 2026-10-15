@@ -58,6 +58,24 @@ test('user-valid applies after valid input', async ({ page }) => {
   expect(userValid).toBe(true);
 });
 
+test('required select paints the danger border after user-invalid', async ({ page }) => {
+  const select = page.locator('#select-required');
+  const border = () => select.evaluate((el) => getComputedStyle(el).borderColor);
+
+  // Before interaction: :invalid matches, but no danger border yet
+  expect(await select.evaluate((el) => el.matches(':user-invalid'))).toBe(false);
+  const idle = await border();
+
+  await page.click('#form-submit');
+  expect(await select.evaluate((el) => el.matches(':user-invalid'))).toBe(true);
+  expect(await border()).not.toBe(idle);
+
+  // Choosing a valid option flips to :user-valid
+  await select.selectOption({ index: 1 });
+  await select.blur();
+  expect(await select.evaluate((el) => el.matches(':user-valid'))).toBe(true);
+});
+
 test('disabled input is not focusable and not editable', async ({ page }) => {
   const input = page.locator('#input-disabled');
   const disabled = await input.evaluate((el) => el.matches(':disabled'));

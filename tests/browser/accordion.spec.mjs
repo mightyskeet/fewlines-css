@@ -9,6 +9,31 @@ test.beforeEach(async ({ page }) => {
   await page.goto('/fixture.html');
 });
 
+test('stacked accordion corners: seam is straight, container edges keep radius', async ({
+  page,
+}) => {
+  const radii = (id) =>
+    page.locator(id).evaluate((el) => {
+      const s = getComputedStyle(el);
+      return {
+        start: [s.borderStartStartRadius, s.borderStartEndRadius],
+        end: [s.borderEndStartRadius, s.borderEndEndRadius],
+      };
+    });
+
+  const first = await radii('#accordion-first');
+  const second = await radii('#accordion-second');
+
+  // The shared edge is straight: end corners of the preceding item and
+  // start corners of the following item are squared.
+  expect(first.end).toEqual(['0px', '0px']);
+  expect(second.start).toEqual(['0px', '0px']);
+
+  // The container edges keep the same (non-zero) radius on both ends.
+  expect(second.end).toEqual(first.start);
+  expect(first.start[0]).not.toBe('0px');
+});
+
 test('accordion opens and closes via summary click', async ({ page }) => {
   const details = page.locator('#accordion-first');
   await expect(details).not.toHaveAttribute('open');

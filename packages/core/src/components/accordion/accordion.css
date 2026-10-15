@@ -27,11 +27,17 @@
   color: var(--ui-color-text);
 }
 
-/* Divider between stacked accordions; the last one has no bottom border. */
+/* Divider between stacked accordions: the following item drops its top
+ * border and start corners; the preceding item drops its end corners —
+ * the shared edge is straight while the container edges keep their
+ * radius (:has — both items are surface-raised, probed in fixture). */
 .ui-accordion + .ui-accordion {
   border-block-start: none;
   border-start-start-radius: 0;
   border-start-end-radius: 0;
+}
+
+.ui-accordion:has(+ .ui-accordion) {
   border-end-start-radius: 0;
   border-end-end-radius: 0;
 }

@@ -70,10 +70,6 @@
 }
 
 /* Native states */
-.ui-switch:hover {
-  border-color: var(--ui-color-border-strong);
-}
-
 .ui-switch:checked {
   background: var(--ui-color-accent-surface);
   border-color: transparent;
@@ -96,6 +92,12 @@
 
 .ui-switch:disabled {
   opacity: 0.5;
+}
+
+/* Hover never overrides the checked or invalid border, and never restyles
+ * a disabled switch (after the state rules — no-descending-specificity). */
+.ui-switch:hover:not(:disabled, :checked, :user-invalid) {
+  border-color: var(--ui-color-border-strong);
 }
 
 /* Forced colors: system colors take over; Highlight marks the on state so

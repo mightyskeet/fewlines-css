@@ -282,6 +282,28 @@ test('fallback: hover opens the hint as a CSS-shown element', async ({ page }) =
   await expect(tooltip).not.toBeVisible();
 });
 
+test('fallback: the bridge does not intercept clicks while the hint is closed', async ({
+  page,
+}) => {
+  test.skip(!(await gateActive(page)), 'interest supported: the native path has no CSS bridge');
+
+  // Bridge emitted only while a hint of the pair is open (audit 2026-10-15):
+  // with the hint closed, the point below the trigger must not hit the
+  // trigger; with the hint open (trigger hovered), the bridge holds it.
+  const underTrigger = () =>
+    page.evaluate(() => {
+      const t = document.querySelector('#tooltip-trigger').getBoundingClientRect();
+      const el = document.elementFromPoint(t.left + t.width / 2, t.bottom + 2);
+      return el?.id ?? el?.tagName;
+    });
+
+  expect(await underTrigger()).not.toBe('tooltip-trigger');
+
+  await page.hover('#tooltip-trigger');
+  await expect(page.locator('#testTooltip')).toBeVisible();
+  expect(await underTrigger()).toBe('tooltip-trigger');
+});
+
 test('fallback: the pointer can travel onto the hint (gap and body hold)', async ({ page }) => {
   test.skip(!(await gateActive(page)), 'interest supported: the native path covers hover');
 
