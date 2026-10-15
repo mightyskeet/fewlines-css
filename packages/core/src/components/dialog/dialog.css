@@ -34,17 +34,17 @@
 
   /* Hidden state: also the target of the close transition. */
   opacity: 0;
-  transform: translateY(0.5rem);
+  translate: 0 0.5rem;
   transition:
     opacity var(--ui-duration-normal) ease,
-    transform var(--ui-duration-normal) ease,
+    translate var(--ui-duration-normal) ease,
     overlay var(--ui-duration-normal) ease allow-discrete,
     display var(--ui-duration-normal) ease allow-discrete;
 }
 
 .ui-dialog[open] {
   opacity: 1;
-  transform: none;
+  translate: none;
 }
 
 /* Entry anchor: transitions do not start from display:none, so the
@@ -52,14 +52,14 @@
 @starting-style {
   .ui-dialog[open] {
     opacity: 0;
-    transform: translateY(0.5rem);
+    translate: 0 0.5rem;
   }
 }
 
 /* Backdrop — native pseudo-element, top-layer. Hidden-state opacity in the
  * base rule makes the scrim fade out on close. */
 .ui-dialog::backdrop {
-  background: color-mix(in oklab, black 50%, transparent);
+  background: var(--ui-color-scrim);
   opacity: 0;
   transition:
     opacity var(--ui-duration-normal) ease,

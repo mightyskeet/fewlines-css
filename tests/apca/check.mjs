@@ -22,8 +22,10 @@ const repoRoot = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 // match the oklch(L% C H) format the local converter expects.
 const paletteMap = Object.fromEntries(
   [
-    ...readFileSync(join(repoRoot, 'packages', 'core', 'src', 'tokens', 'palette.css'), 'utf8')
-      .matchAll(/--ui-palette-([\w-]+):\s*([^;]+);/g),
+    ...readFileSync(
+      join(repoRoot, 'packages', 'core', 'src', 'tokens', 'palette.css'),
+      'utf8',
+    ).matchAll(/--ui-palette-([\w-]+):\s*([^;]+);/g),
   ].map(([, name, value]) => [name, value.trim().replace(/(\d)deg\b/g, '$1')]),
 );
 if (Object.keys(paletteMap).length === 0) {

@@ -1,9 +1,8 @@
 /* Components layer.
  *
  * Each component lives in its own directory with:
- *   component.css, example.html, component.md, component.spec.ts, component.visual.spec.ts
- * (PROJECT_SPEC.md, раздел 14). Catalog expansion starts only after
- * the first milestone foundation is stable.
+ *   component.css, example.html, component.md, component.spec.ts
+ * (PROJECT_SPEC.md, раздел 14).
  */
 @import './button/button.css';
 @import './field/field.css';

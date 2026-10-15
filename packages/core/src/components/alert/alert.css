@@ -30,6 +30,10 @@
   --ui-alert-accent: var(--ui-color-accent);
   --ui-alert-surface: var(--ui-color-accent-tint);
 
+  /* Variant title colors: -strong is the readable variant color on the tint
+   * surface (the base color sits under the body-role APCA threshold). */
+  --ui-alert-title: var(--ui-color-accent-strong);
+
   color: var(--ui-color-text);
   background: var(--ui-alert-surface);
   border: 1px solid var(--ui-alert-accent);
@@ -40,42 +44,29 @@
 .ui-alert[data-variant='success'] {
   --ui-alert-accent: var(--ui-color-success);
   --ui-alert-surface: var(--ui-color-success-tint);
+  --ui-alert-title: var(--ui-color-success-strong);
 }
 
 .ui-alert[data-variant='warning'] {
   --ui-alert-accent: var(--ui-color-warning);
   --ui-alert-surface: var(--ui-color-warning-tint);
+  --ui-alert-title: var(--ui-color-warning-strong);
 }
 
 .ui-alert[data-variant='danger'] {
   --ui-alert-accent: var(--ui-color-danger);
   --ui-alert-surface: var(--ui-color-danger-tint);
+  --ui-alert-title: var(--ui-color-danger-strong);
 }
 
-/* Title carries the variant color; the message text stays neutral
- * (--ui-color-text) so long-form content keeps maximal readability.
+/* Title carries the variant color (--ui-alert-title); the message text stays
+ * neutral (--ui-color-text) so long-form content keeps maximal readability.
  * The title consumes the `title` type role (600, 1.125rem — the same role
- * as h3–h6 and the accordion summary). Variant title colors: -strong is the
- * readable variant color on the tint surface (the base color sits under the
- * body-role APCA threshold). */
+ * as h3–h6 and the accordion summary). */
 .ui-alert-title {
   font: var(--ui-type-title);
-  color: var(--ui-color-accent-strong);
+  color: var(--ui-alert-title);
   margin-block: 0 var(--ui-space-2xs);
-}
-
-/* Variant title colors: -strong is the readable variant color on the tint
- * surface (base color would sit under the body-role APCA threshold). */
-.ui-alert[data-variant='success'] .ui-alert-title {
-  color: var(--ui-color-success-strong);
-}
-
-.ui-alert[data-variant='warning'] .ui-alert-title {
-  color: var(--ui-color-warning-strong);
-}
-
-.ui-alert[data-variant='danger'] .ui-alert-title {
-  color: var(--ui-color-danger-strong);
 }
 
 /* Canonical spacing: paragraphs inside the alert lose their outer margins

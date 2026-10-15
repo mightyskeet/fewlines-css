@@ -76,18 +76,21 @@
 }
 
 /* Row hover: the row flips to the opposite surface (base <-> sunken), so the
- * hover affordance stays visible on zebra tables too. */
-.ui-table tbody tr:hover {
-  background: var(--ui-color-surface-sunken);
+ * hover affordance stays visible on zebra tables too. Pointer-gated like
+ * Button/Switch (sticky :hover on touch would latch the highlight). */
+@media (hover: hover) and (pointer: fine) {
+  .ui-table tbody tr:hover {
+    background: var(--ui-color-surface-sunken);
+  }
+
+  .ui-table[data-zebra] tbody tr:nth-child(odd):hover {
+    background: var(--ui-color-surface);
+  }
 }
 
 /* Zebra: odd body rows on the sunken surface (text/surface-sunken — body). */
 .ui-table[data-zebra] tbody tr:nth-child(odd) {
   background: var(--ui-color-surface-sunken);
-}
-
-.ui-table[data-zebra] tbody tr:nth-child(odd):hover {
-  background: var(--ui-color-surface);
 }
 
 /* Footer: summary band with a stronger separator above it. */

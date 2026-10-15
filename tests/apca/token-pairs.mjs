@@ -111,6 +111,11 @@ export const tokenPairs = [
   { fg: 'focus-ring', bg: 'surface', role: 'nonText' },
   { fg: 'focus-ring', bg: 'surface-raised', role: 'nonText' },
 
+  // Scrim (--ui-color-scrim, Dialog/Drawer ::backdrop) is a non-text layer:
+  // semi-transparent, so it has no direct fg/bg pair here; the readability
+  // contract is carried by the content's own pairs against the scrimmed
+  // surface (text/surface, body) — spot-checked in browser tests.
+
   // Headings: display (h1) and headline (h2, dialog/drawer titles) render at
   // large sizes — the `large` role threshold (Lc 45) is the applicable gate.
   // Same pairs as the body entries; the role records the rendered usage.

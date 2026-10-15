@@ -108,7 +108,7 @@
 /* Backdrop — native popover pseudo-element, styled like Dialog (dialog.css).
  * Hidden-state opacity in the base rule makes the scrim fade out on close. */
 .ui-drawer::backdrop {
-  background: color-mix(in oklab, black 50%, transparent);
+  background: var(--ui-color-scrim);
   opacity: 0;
   transition:
     opacity var(--ui-duration-normal) ease,

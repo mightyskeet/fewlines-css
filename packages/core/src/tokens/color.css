@@ -69,5 +69,10 @@
   /* Focus */
   --ui-focus-ring: light-dark(var(--ui-palette-accent-600), var(--ui-palette-accent-300));
 
+  /* Scrim — shared overlay backdrop (Dialog, Drawer). Constant black in
+   * both themes (non-text layer, exempt from the APCA text matrix —
+   * tests/apca registry note). */
+  --ui-color-scrim: color-mix(in oklab, black 50%, transparent);
+
   color-scheme: light dark;
 }

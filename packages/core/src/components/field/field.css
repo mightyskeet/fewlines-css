@@ -65,6 +65,9 @@
   padding-block: var(--ui-space-2xs);
   padding-inline: var(--ui-space-sm);
   accent-color: var(--ui-color-accent);
+
+  /* The border carries state changes (hover, :user-invalid/:user-valid). */
+  transition: border-color var(--ui-duration-fast) ease;
 }
 
 /* Single-line controls: fixed height scale, identical across engines.
@@ -128,7 +131,10 @@
   cursor: not-allowed;
 }
 
-/* Validation states — user-invalid avoids premature red before interaction. */
+/* Validation states — user-invalid avoids premature red before interaction.
+ * Engines without :user-invalid/:user-valid get intentionally no :invalid
+ * styling (premature red is worse than none) — the native validation bubble
+ * carries the signal. */
 .ui-input:user-invalid,
 .ui-textarea:user-invalid,
 .ui-select:user-invalid {
@@ -181,13 +187,6 @@
 .ui-textarea:hover:not(:disabled, :read-only),
 .ui-select:hover:not(:disabled) {
   border-color: var(--ui-color-border-strong);
-}
-
-/* Fallback for engines without :user-invalid/:user-valid: style :invalid only
- * when the user has interacted is not expressible; keep the neutral border
- * and rely on native validation bubble instead. */
-@supports not selector(:user-invalid) {
-  /* Intentionally no :invalid styling — premature red is worse than none. */
 }
 
 /* Placeholder */

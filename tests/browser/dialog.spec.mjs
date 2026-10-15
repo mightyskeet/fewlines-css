@@ -120,7 +120,7 @@ test('dialog animates in on open (entry transition)', async ({ page }) => {
 
   await expect
     .poll(() => page.evaluate(() => window.__dlgEntry))
-    .toEqual(expect.arrayContaining(['transform', 'opacity']));
+    .toEqual(expect.arrayContaining(['translate', 'opacity']));
 });
 
 test('dialog animates out on close (reverse transition)', async ({ page }) => {
@@ -133,10 +133,10 @@ test('dialog animates out on close (reverse transition)', async ({ page }) => {
   await expect(page.locator('#testDialog')).toBeVisible();
 
   // Close only after the entry settles (same reasoning as popover: closing
-  // within the first frames leaves opacity/transform at hidden values).
+  // within the first frames leaves opacity/translate at hidden values).
   await expect
     .poll(() =>
-      page.evaluate(() => getComputedStyle(document.querySelector('#testDialog')).transform),
+      page.evaluate(() => getComputedStyle(document.querySelector('#testDialog')).translate),
     )
     .toBe('none');
 
@@ -151,7 +151,7 @@ test('dialog animates out on close (reverse transition)', async ({ page }) => {
 
   await expect
     .poll(() => page.evaluate(() => window.__dlgExit))
-    .toEqual(expect.arrayContaining(['transform', 'opacity']));
+    .toEqual(expect.arrayContaining(['translate', 'opacity']));
 
   await expect(page.locator('#testDialog')).not.toBeVisible();
 });

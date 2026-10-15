@@ -37,19 +37,19 @@ override — `data-theme="light|dark"` на корневом элементе. �
 
 ## Компоненты
 
-| Компонент | Basis                            | Классы                                                                            |
-| --------- | -------------------------------- | --------------------------------------------------------------------------------- |
-| Button    | `<button>`, `<a>`                | `ui-button`, `data-variant`, `data-size`                                          |
-| Field     | `<input>/<textarea>/<select>`    | `ui-field`, `ui-input`, `ui-textarea`, `ui-select`, `ui-field-error`, `data-size` |
-| Dialog    | `<dialog>` (top-layer)           | `ui-dialog`                                                                       |
-| Popover   | Popover API + anchor positioning | `ui-popover`, `ui-popover-trigger`                                                |
-| Drawer    | `<div popover>` (панель от края) | `ui-drawer`, `data-variant` (атрибут `popover` задаёт host)                       |
-| Accordion | `<details>/<summary>`            | `ui-accordion`, `ui-accordion-summary`                                            |
-| Alert     | статический контейнер сообщений  | `ui-alert`, `data-variant`, `ui-alert-title/body`                                 |
-| Badge     | статический inline статус-лейбл  | `ui-badge`, `data-variant`                                                        |
-| Switch    | `<input type="checkbox" switch>` | `ui-switch`, `ui-switch-field`, `ui-switch-label`                                 |
-| Table     | `<table>` + `<caption>`          | `ui-table`, `ui-table-wrap`, `data-zebra`, `data-sticky`, `data-align`            |
-| Tooltip   | `popover="hint"` / interest invoker | `ui-tooltip`, `ui-tooltip-trigger`                                             |
+| Компонент | Basis                               | Классы                                                                            |
+| --------- | ----------------------------------- | --------------------------------------------------------------------------------- |
+| Button    | `<button>`, `<a>`                   | `ui-button`, `data-variant`, `data-size`                                          |
+| Field     | `<input>/<textarea>/<select>`       | `ui-field`, `ui-input`, `ui-textarea`, `ui-select`, `ui-field-error`, `data-size` |
+| Dialog    | `<dialog>` (top-layer)              | `ui-dialog`                                                                       |
+| Popover   | Popover API + anchor positioning    | `ui-popover`, `ui-popover-trigger`                                                |
+| Drawer    | `<div popover>` (панель от края)    | `ui-drawer`, `data-variant` (атрибут `popover` задаёт host)                       |
+| Accordion | `<details>/<summary>`               | `ui-accordion`, `ui-accordion-summary`                                            |
+| Alert     | статический контейнер сообщений     | `ui-alert`, `data-variant`, `ui-alert-title/body`                                 |
+| Badge     | статический inline статус-лейбл     | `ui-badge`, `data-variant`                                                        |
+| Switch    | `<input type="checkbox" switch>`    | `ui-switch`, `ui-switch-field`, `ui-switch-label`                                 |
+| Table     | `<table>` + `<caption>`             | `ui-table`, `ui-table-wrap`, `data-zebra`, `data-sticky`, `data-align`            |
+| Tooltip   | `popover="hint"` / interest invoker | `ui-tooltip`, `ui-tooltip-trigger`                                                |
 
 Помимо компонентов base layer оформляет семантические текстовые элементы без
 классов: `code`/`kbd`/`samp`, `pre`, `mark`, `abbr`, ссылки, `blockquote`,

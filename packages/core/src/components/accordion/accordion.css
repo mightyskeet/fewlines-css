@@ -84,8 +84,12 @@
   translate: 0 0.125rem;
 }
 
-.ui-accordion-summary:hover {
-  background: var(--ui-color-surface-sunken);
+/* Hover is pointer-gated: on touch (sticky :hover) the summary would latch
+ * the highlight — same policy as Button/Table/Switch. */
+@media (hover: hover) and (pointer: fine) {
+  .ui-accordion-summary:hover {
+    background: var(--ui-color-surface-sunken);
+  }
 }
 
 .ui-accordion-content {
