@@ -2,7 +2,7 @@
   "name": "@fewlines/tests",
   "version": "0.1.0",
   "private": true,
-  "description": "Browser, visual, accessibility and APCA test harness for @fewlines/css.",
+  "description": "Browser, accessibility and APCA test harness for @fewlines/css.",
   "scripts": {
     "lint": "echo 'tests lint configured in Phase 6'",
     "test:prepare": "node prepare.mjs",
@@ -10,8 +10,6 @@
     "test:purity": "node purity/check.mjs",
     "pretest:browser": "node prepare.mjs",
     "test:browser": "playwright test browser accessibility",
-    "pretest:visual": "node prepare.mjs",
-    "test:visual": "playwright test visual",
     "test": "node prepare.mjs && playwright test"
   },
   "devDependencies": {

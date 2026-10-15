@@ -14,7 +14,7 @@ accessibility-контракт и предсказуемый API. Предназ
 - **Zero runtime JS** — core содержит только CSS (проверяется автоматически).
 - **One canonical markup** — одна каноническая структура на компонент.
 - **Controlled regression** — одна реализация, fallback через `@supports`.
-- **Проверяемое качество** — browser, accessibility, APCA и visual regression
+- **Проверяемое качество** — browser, accessibility, APCA тесты
   тесты как часть контракта компонента.
 
 ## Установка и подключение

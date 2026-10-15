@@ -18,7 +18,7 @@
 - единая светлая/тёмная theme system как часть foundation;
 - APCA/readability gates на уровне токенов и компонентов;
 - controlled regression вместо параллельных legacy/modern/experimental сборок;
-- browser, keyboard, accessibility и visual regression как часть контракта компонента;
+- browser, keyboard, accessibility и computed-style regression как часть контракта компонента;
 - документация, специально пригодная для coding agents;
 - небольшой и предсказуемый vocabulary вместо огромного количества комбинаций.
 
@@ -71,7 +71,7 @@ Framework integration, включая React, может существовать
 
 Core package не должен содержать runtime JavaScript и не должен требовать JS для использования CSS/HTML компонентов.
 
-JavaScript разрешён только для tooling: build, docs, tests, Playwright, visual regression, CI и вспомогательных development scripts.
+JavaScript разрешён только для tooling: build, docs, tests, Playwright, CI и вспомогательных development scripts.
 
 Если конкретное взаимодействие невозможно реализовать без JS с приемлемой семантикой, keyboard behavior и accessibility, компонент не следует искусственно делать CSS-only. Его нужно либо сузить до native части, либо исключить из core.
 
@@ -333,7 +333,6 @@ semantic design
 → browser tests
 → accessibility checks
 → APCA checks
-→ visual regression
 → package purity check
 ```
 
@@ -344,8 +343,7 @@ component/
 ├── component.css
 ├── example.html
 ├── component.md
-├── component.spec.ts
-└── component.visual.spec.ts
+└── component.spec.ts
 ```
 
 Названия могут измениться вместе с выбранной toolchain, но разделение contract/implementation/tests должно сохраняться.
@@ -375,22 +373,9 @@ component/
 
 **Forms** — labels, validation, disabled/required/invalid/focus states.
 
-### 15.3. Visual regression
+### 15.3. Геометрические регрессии
 
-Для representative компонентов и состояний иметь screenshot fixtures:
-
-- default;
-- hover;
-- focus-visible;
-- active;
-- disabled;
-- invalid;
-- open/closed overlays;
-- light/dark;
-- reduced motion, где визуальный результат отличается;
-- узкий/широкий container, где используется container query.
-
-Не считать изменение браузера автоматически regression или автоматически приемлемым изменением: определить причину.
+Screenshot-based visual regression удалён (решение 2026-10-15): бейзлайны зависят от платформы и шрифтов, гейт в CI фактически не работал, поддержка перевешивала пользу. Геометрию и отступы покрывают code review, демо-страницы и computed-style проверки в browser tests. Изменение визуального результата не считать автоматически regression или автоматически приемлемым: определить причину.
 
 ### 15.4. Package purity
 
@@ -412,7 +397,6 @@ apps/
   docs/
 tests/
   browser/
-  visual/
   accessibility/
 
 
@@ -432,7 +416,7 @@ tests/
 6. Проверить их через Can I Use MCP.
 7. Реализовать минимальное связное изменение.
 8. Обновить component contract и документацию.
-9. Добавить/обновить browser, accessibility, APCA и visual regression.
+9. Добавить/обновить browser, accessibility и APCA-тесты.
 10. Проверить package purity.
 11. Запустить focused checks и затем полный относящийся к задаче suite.
 12. Проверить diff на случайный JS, рост specificity, duplicate tokens и unrelated cleanup.
@@ -450,7 +434,6 @@ tests/
 - keyboard/focus/reduced-motion покрыты;
 - APCA-проверки для релевантных token pairs проходят;
 - browser tests проходят;
-- visual regression representative states проходят;
 - документация для человека и agent contract обновлены;
 - package purity check проходит.
 
@@ -490,7 +473,7 @@ tests/
 12. Dialog;
 13. Popover;
 14. Anchor-positioned popover enhancement;
-15. browser + visual + accessibility regression harness;
+15. browser + accessibility regression harness;
 16. human docs + agent-facing component contracts;
 17. package purity check.
 

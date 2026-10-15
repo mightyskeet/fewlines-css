@@ -41,17 +41,9 @@ jobs:
         run: npx playwright install chromium --with-deps
         working-directory: tests
 
-      # Visual regression: baselines were captured on win32. Playwright
-      # suffixes snapshot names with the platform, so the first linux run
-      # has no linux baselines and fails. Decision (TODO notes, хвосты):
-      # generate linux baselines on the first CI run with
-      # `--update-snapshots=changed`, then remove the flag. The flag below
-      # must stay until linux baselines are committed.
-      - name: Browser + accessibility + visual tests
+      - name: Browser + accessibility tests
         run: pnpm test
         working-directory: tests
-        env:
-          PW_UPDATE_SNAPSHOTS: '1'
 
       - name: Upload test results
         if: failure()
