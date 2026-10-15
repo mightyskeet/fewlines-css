@@ -22,15 +22,9 @@
   --ui-font-size-sm: 0.875rem;
   --ui-font-size-md: 1rem;
   --ui-font-size-lg: 1.125rem;
-  --ui-font-size-xl: 1.25rem;
-  --ui-font-size-2xl: 1.5rem;
-  --ui-font-size-3xl: 2rem;
   --ui-line-height-tight: 1.2;
   --ui-line-height-normal: 1.5;
-  --ui-font-weight-normal: 400;
   --ui-font-weight-medium: 500;
-  --ui-font-weight-semibold: 600;
-  --ui-font-weight-bold: 700;
 
   /* Semantic type roles. `body` mirrors the :root defaults (base/typography.css)
    * and is the reference definition of document text. `display`/`headline`
