@@ -43,7 +43,7 @@ jobs:
 
       # Visual regression: baselines were captured on win32. Playwright
       # suffixes snapshot names with the platform, so the first linux run
-      # has no linux baselines and fails. Decision (TODO notes 8.3):
+      # has no linux baselines and fails. Decision (TODO notes, хвосты):
       # generate linux baselines on the first CI run with
       # `--update-snapshots=changed`, then remove the flag. The flag below
       # must stay until linux baselines are committed.
