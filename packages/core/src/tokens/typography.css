@@ -3,28 +3,27 @@
  * Font families use system stacks — no webfont loading in core.
  * Line heights are unitless.
  *
- * Two-tier model (mirrors the palette -> semantic color split):
- *   --ui-font-* / --ui-font-size-* / --ui-font-weight-* / --ui-line-height-*
- *     — infrastructure scale, host-overridable inputs;
- *   --ui-type-* — semantic roles (display/headline/title/lead/body/support/
- *     label/caption), the only typography API for base headings, text-style
- *     classes and components.
+ * Single-tier fluid scale: the raw step tokens --ui-font-size-* are the
+ * only typography API. Consumers (base headings, text-style classes,
+ * components) pair a step with an explicit weight and line height — the
+ * canonical mapping is documented in theme notes; there is no separate
+ * role-token layer.
  *
- * Fluid scale: four host-overridable knobs (--ui-fluid-vmin/vmax set the
- * interpolation window, --ui-type-scale-small/large the per-step ratio on
- * narrow/wide viewports) generate every step from one formula:
- *   step(n) = base * ratio^n,  base = 1rem + fluid * 0.125rem,
- *   ratio = scale-small + fluid * (scale-large - scale-small).
- * The fluid factor itself is a plain 0..1 progress() of the viewport width
- * (100dvw — scrollbar-free, compatibility notes). Hosts opt out by pinning
- * vmin = vmax (or overriding the step tokens directly); overrides beyond the
- * calibrated defaults carry the host's own APCA responsibility.
+ * Four host-overridable knobs generate the scale:
+ *   --ui-fluid-vmin/vmax — the interpolation window over the viewport
+ *     width (100dvw — scrollbar-free, compatibility notes);
+ *   --ui-type-scale-small/large — the per-step ratio on narrow/wide
+ *     viewports: step(n) = base * ratio^n, base = 1rem + fluid * 0.125rem.
  *
- * Roles are composite `font` shorthand values so size, weight and line
- * height always travel together. Caveat: the shorthand resets the
- * font-variant-* longhands on the element where it is declared — declare
- * font-variant-numeric etc. in a later layer (cascade: tokens < base <
- * components < host) and it wins.
+ * Above the base the scale is geometric — the ratio drives the hierarchy.
+ * Below it, division by a growing ratio would dive below readable sizes
+ * (at ratio 1.333: 18 / 1.333^2 ≈ 10px), so xs/sm/md are anchored: explicit
+ * min->max pairs interpolated linearly through the same --ui-fluid factor.
+ * The anchors keep the APCA size ranges intact (small >= 11px full-contrast,
+ * fluent >= 14px — accessibility notes) whatever ratio the host sets.
+ * Hosts opt out of fluid entirely by pinning vmin = vmax (or overriding
+ * individual step tokens); overrides beyond the calibrated defaults carry
+ * the host's own APCA responsibility.
  */
 :root {
   --ui-font-sans: system-ui, -apple-system, 'Segoe UI', roboto, 'Helvetica Neue', arial, sans-serif;
@@ -34,45 +33,32 @@
    * below vmin / above vmax pin to the boundary anchors (direct use:
    * compatibility notes — Chrome 138, FF 155, Safari 26, at or below the
    * matrix floor). */
-  --ui-fluid-vmin: 500px;
-  --ui-fluid-vmax: 1000px;
+  --ui-fluid-vmin: 400px;
+  --ui-fluid-vmax: 1200px;
   --ui-fluid: progress(100dvw, var(--ui-fluid-vmin), var(--ui-fluid-vmax));
   --ui-type-scale-small: 1.2;
-  --ui-type-scale-large: 1.25;
+  --ui-type-scale-large: 1.333;
   --ui-type-scale: calc(
     var(--ui-type-scale-small) + var(--ui-fluid) *
       (var(--ui-type-scale-large) - var(--ui-type-scale-small))
   );
   --ui-type-base: calc(1rem + var(--ui-fluid) * 0.125rem);
 
-  /* Raw scale steps, geometric: step(n) = base * ratio^n (negative n divide).
-   * Anchor values (fluid = 0 -> 1): xs 11.1 -> 11.5, sm 13.3 -> 14.4,
-   * md 16 -> 18, lg 19.2 -> 22.5, xl 23 -> 28.1, 2xl 27.6 -> 35.2.
-   * The default ratio pair (1.2 -> 1.25) is deliberately calm — a 1.414 max
-   * would put display at ~51px; editorial hosts raise the knobs instead. */
-  --ui-font-size-xs: calc(var(--ui-type-base) / pow(var(--ui-type-scale), 2));
-  --ui-font-size-sm: calc(var(--ui-type-base) / var(--ui-type-scale));
-  --ui-font-size-md: var(--ui-type-base);
+  /* Anchored steps (around and below the base), 0 -> 1 in px:
+   * xs 11 -> 12, sm 14 -> 14.5, md 18 -> 20. */
+  --ui-font-size-xs: calc(0.6875rem + var(--ui-fluid) * 0.0625rem);
+  --ui-font-size-sm: calc(0.875rem + var(--ui-fluid) * 0.0313rem);
+  --ui-font-size-default: var(--ui-type-base);
+  --ui-font-size-md: calc(1.125rem + var(--ui-fluid) * 0.125rem);
+
+  /* Geometric steps above the base, lg = base * ratio^1 ... 3xl = ratio^4.
+   * Anchors 0 -> 1: lg 19.2 -> 24, xl 23 -> 32, 2xl 27.7 -> 42.7,
+   * 3xl 33.2 -> 56.9. */
   --ui-font-size-lg: calc(var(--ui-type-base) * var(--ui-type-scale));
   --ui-font-size-xl: calc(var(--ui-type-base) * pow(var(--ui-type-scale), 2));
   --ui-font-size-2xl: calc(var(--ui-type-base) * pow(var(--ui-type-scale), 3));
+  --ui-font-size-3xl: calc(var(--ui-type-base) * pow(var(--ui-type-scale), 4));
   --ui-line-height-tight: 1.2;
   --ui-line-height-normal: 1.5;
   --ui-font-weight-medium: 500;
-
-  /* Semantic type roles. `body` mirrors the body element defaults
-   * (base/typography.css) and is the reference definition of document text.
-   * `display`/`headline` render at large sizes (>= 24px / 18.66px bold —
-   * APCA `large` role, Lc 45) across the whole fluid window; `caption` is
-   * the smallest step and only ships full-contrast `text` pairs (APCA
-   * `small` role, Lc 90 — text-muted fails it in the dark theme,
-   * tests/apca). */
-  --ui-type-display: 700 var(--ui-font-size-2xl) / 1.2 var(--ui-font-sans);
-  --ui-type-headline: 600 var(--ui-font-size-xl) / 1.25 var(--ui-font-sans);
-  --ui-type-title: 600 var(--ui-font-size-lg) / 1.3 var(--ui-font-sans);
-  --ui-type-lead: 400 var(--ui-font-size-lg) / 1.5 var(--ui-font-sans);
-  --ui-type-body: 400 var(--ui-font-size-md) / 1.5 var(--ui-font-sans);
-  --ui-type-support: 400 var(--ui-font-size-sm) / 1.45 var(--ui-font-sans);
-  --ui-type-label: 500 var(--ui-font-size-sm) / 1.45 var(--ui-font-sans);
-  --ui-type-caption: 500 var(--ui-font-size-xs) / 1.45 var(--ui-font-sans);
 }

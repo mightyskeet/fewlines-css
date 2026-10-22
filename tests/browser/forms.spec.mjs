@@ -149,19 +149,11 @@ test('single-line controls share the standardized height scale', async ({ page }
   expect(await height('form-submit')).toBe(36);
 
   const font = (id) => page.locator(`#${id}`).evaluate((el) => getComputedStyle(el).fontSize);
-  // Sizes map to the raw scale tokens; the scale is fluid, so the expected
-  // values are read from the tokens themselves, not hardcoded pixels.
-  const tokenFont = (token) =>
-    page.evaluate((name) => {
-      const probe = document.createElement('span');
-      probe.style.fontSize = `var(${name})`;
-      document.body.append(probe);
-      const size = getComputedStyle(probe).fontSize;
-      probe.remove();
-      return size;
-    }, token);
-  expect(await font('input-sm')).toBe(await tokenFont('--ui-font-size-sm'));
-  expect(await font('input-lg')).toBe(await tokenFont('--ui-font-size-lg'));
+  // Sizes are density only: every variant keeps the default font step
+  // (controls do not ride the display scale, theme notes).
+  const md = await font('input-md');
+  expect(await font('input-sm')).toBe(md);
+  expect(await font('input-lg')).toBe(md);
 });
 
 test('read-only field uses the sunken surface', async ({ page }) => {

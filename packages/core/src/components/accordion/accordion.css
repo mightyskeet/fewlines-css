@@ -48,9 +48,10 @@
   gap: var(--ui-space-sm);
   padding: var(--ui-space-sm) var(--ui-space-md);
 
-  /* The summary is the item title: the `title` type role (same as h3–h6
-   * and the alert title). */
-  font: var(--ui-type-title);
+  /* The summary is the item title: the md step, 600 — the widget level of
+   * the canonical heading mapping (theme notes); a <summary> cannot
+   * contain a heading element. */
+  font: 600 var(--ui-font-size-md) / 1.3 var(--ui-font-sans);
   cursor: pointer;
   list-style: none;
   user-select: none;

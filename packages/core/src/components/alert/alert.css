@@ -61,10 +61,11 @@
 
 /* Title carries the variant color (--ui-alert-title); the message text stays
  * neutral (--ui-color-text) so long-form content keeps maximal readability.
- * The title consumes the `title` type role (600, 1.125rem — the same role
- * as h3–h6 and the accordion summary). */
+ * The title sits on the md step (600, 18->20px) — the widget level of the
+ * canonical heading mapping (theme notes); the element is a <p>: an alert
+ * is not a document section, a heading element would pollute the outline. */
 .ui-alert-title {
-  font: var(--ui-type-title);
+  font: 600 var(--ui-font-size-md) / 1.3 var(--ui-font-sans);
   color: var(--ui-alert-title);
   margin-block: 0 var(--ui-space-2xs);
 }

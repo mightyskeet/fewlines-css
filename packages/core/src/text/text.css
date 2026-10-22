@@ -1,45 +1,34 @@
-/* Text styles: the semantic type roles as classes (tokens/typography.css).
+/* Text styles: the canonical scale positions as classes (theme notes).
  *
  * Roles are normally consumed through semantic elements — h1–h6 are styled
- * by the base layer, components use font: var(--ui-type-*). These classes
- * cover the remaining case: an element whose role has no matching HTML
- * element (a <p> acting as a lead, a <span> acting as a caption) or whose
- * canonical tag is already taken. One class per role, one declaration
- * each — the vocabulary changes only together with the roles, never apart.
+ * by the base layer, components pair steps with weights inline. These
+ * classes cover the remaining case: an element whose typographic position
+ * has no matching HTML element (a <p> acting as a lead, a <span> acting as
+ * a caption, a hero line that must not be an <h1>). One class per position,
+ * one declaration each — the vocabulary changes only together with the
+ * canonical mapping, never apart.
  *
  * Font only: color is a separate axis (semantic color tokens + the APCA
  * registry). Rule of thumb: start from the element; use a class only when
  * the element would lie about the meaning.
  */
 
-.ui-display {
-  font: var(--ui-type-display);
-}
-
-.ui-headline {
-  font: var(--ui-type-headline);
-}
-
-.ui-title {
-  font: var(--ui-type-title);
-}
-
-.ui-lead {
-  font: var(--ui-type-lead);
-}
-
-.ui-body {
-  font: var(--ui-type-body);
-}
-
-.ui-support {
-  font: var(--ui-type-support);
-}
-
-.ui-label {
-  font: var(--ui-type-label);
+.ui-overline {
+  font: 500 var(--ui-font-size-xs) / 1.45 var(--ui-font-sans);
 }
 
 .ui-caption {
-  font: var(--ui-type-caption);
+  font: 400 var(--ui-font-size-xs) / 1.45 var(--ui-font-sans);
+}
+
+.ui-body {
+  font: 400 var(--ui-font-size-default) / 1.5 var(--ui-font-sans);
+}
+
+.ui-lead {
+  font: 400 var(--ui-font-size-md) / 1.5 var(--ui-font-sans);
+}
+
+.ui-display {
+  font: 700 var(--ui-font-size-3xl) / 1.1 var(--ui-font-sans);
 }

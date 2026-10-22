@@ -35,22 +35,22 @@
 }
 
 .ui-field-label {
-  /* The label consumes the `label` type role (500, 0.875rem) — the same
-   * role vocabulary as the rest of the chrome text. */
-  font: var(--ui-type-label);
+  /* The label is chrome text: the sm step, 500 — the same level as the rest
+   * of the chrome (canonical mapping, theme notes). */
+  font: 500 var(--ui-font-size-sm) / 1.45 var(--ui-font-sans);
   color: var(--ui-color-text);
 }
 
 /* Hint text bound via aria-describedby */
 .ui-field-description {
-  font: var(--ui-type-support);
+  font: 400 var(--ui-font-size-sm) / 1.45 var(--ui-font-sans);
   color: var(--ui-color-text-muted);
 }
 
 /* Error text bound via aria-describedby (danger/surface, danger/surface-raised
  * — registered APCA pairs, tests/apca). */
 .ui-field-error {
-  font: var(--ui-type-support);
+  font: 400 var(--ui-font-size-sm) / 1.45 var(--ui-font-sans);
   color: var(--ui-color-danger);
 }
 
@@ -84,20 +84,10 @@
   resize: block;
 }
 
-/* Sizes — font applies to every control; the height scale applies to
- * single-line controls (textarea sizing is line-based). */
-.ui-input[data-size='sm'],
-.ui-textarea[data-size='sm'],
-.ui-select[data-size='sm'] {
-  font-size: var(--ui-font-size-sm);
-}
-
-.ui-input[data-size='lg'],
-.ui-textarea[data-size='lg'],
-.ui-select[data-size='lg'] {
-  font-size: var(--ui-font-size-lg);
-}
-
+/* Sizes — density only: the font stays at the default step on every
+ * variant (controls are chrome, they do not ride the display scale);
+ * the height scale applies to single-line controls (textarea sizing is
+ * line-based). */
 .ui-input[data-size='sm'],
 .ui-select[data-size='sm'] {
   block-size: 1.75rem;

@@ -67,7 +67,7 @@
   border-radius: var(--ui-radius-sm);
   padding: var(--ui-space-2xs) var(--ui-space-xs);
   box-shadow: var(--ui-elevation-2);
-  font: var(--ui-type-support);
+  font: 400 var(--ui-font-size-sm) / 1.45 var(--ui-font-sans);
   text-wrap: pretty;
   margin: auto;
   inset: unset;
