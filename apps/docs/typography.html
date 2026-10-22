@@ -130,6 +130,32 @@
       </section>
 
       <section>
+        <h2>Text styles</h2>
+        <div class="example">
+          <p class="ui-display">ui-display — hero heading</p>
+          <p class="ui-headline">ui-headline — section heading</p>
+          <p class="ui-title">ui-title — card heading</p>
+          <p class="ui-lead">
+            ui-lead — an intro paragraph set larger than body text; the role for a paragraph that
+            must not pretend to be a heading.
+          </p>
+          <p class="ui-body">ui-body — explicit return to document text.</p>
+          <p class="ui-support">ui-support — secondary text, captions under figures.</p>
+          <p class="ui-label">ui-label — a control label outside a Field.</p>
+          <p class="ui-caption">ui-caption — fine print, ~11&ndash;12px.</p>
+        </div>
+        <p>
+          Each class applies one semantic type role (<code>--ui-type-*</code>) — use them when the
+          role has no matching HTML element or the canonical tag is taken. Start from the element:
+          <code>h1</code>&ndash;<code>h6</code> are styled by the base layer without classes. Font
+          only — color is a separate axis of semantic tokens. The scale is fluid: sizes interpolate
+          with the viewport width (<code>progress()</code> + <code>pow()</code>,
+          compatibility notes); hosts pin <code>--ui-fluid-vmin</code> to
+          <code>--ui-fluid-vmax</code> to opt out.
+        </p>
+      </section>
+
+      <section>
         <h2>Accessibility</h2>
         <ul>
           <li>
@@ -149,8 +175,14 @@
         <h2>Do not</h2>
         <ul>
           <li>
-            No classes for text content — do not wrap <code>code</code>/<code>mark</code> etc. in
-            <code>ui-*</code> components.
+            No component classes for text content — do not wrap
+            <code>code</code>/<code>mark</code> etc. in <code>ui-*</code> components; role classes
+            (<code>ui-lead</code>, <code>ui-caption</code>, &hellip;) exist for roles without a
+            matching element.
+          </li>
+          <li>
+            Do not set <code>ui-caption</code> in <code>--ui-color-text-muted</code> — the muted
+            pair fails the <code>small</code> APCA threshold (Lc 90) in the dark theme.
           </li>
           <li>
             No direct <code>--ui-palette-*</code> references when restyling these elements in the
@@ -169,7 +201,10 @@
     </main>
 
     <footer>
-      <p>Implementation: <code>packages/core/src/base/typography.css</code></p>
+      <p>
+        Implementation: <code>packages/core/src/base/typography.css</code>,
+        <code>packages/core/src/text/text.css</code>
+      </p>
     </footer>
   </body>
 </html>

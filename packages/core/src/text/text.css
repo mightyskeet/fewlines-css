@@ -1,0 +1,45 @@
+/* Text styles: the semantic type roles as classes (tokens/typography.css).
+ *
+ * Roles are normally consumed through semantic elements — h1–h6 are styled
+ * by the base layer, components use font: var(--ui-type-*). These classes
+ * cover the remaining case: an element whose role has no matching HTML
+ * element (a <p> acting as a lead, a <span> acting as a caption) or whose
+ * canonical tag is already taken. One class per role, one declaration
+ * each — the vocabulary changes only together with the roles, never apart.
+ *
+ * Font only: color is a separate axis (semantic color tokens + the APCA
+ * registry). Rule of thumb: start from the element; use a class only when
+ * the element would lie about the meaning.
+ */
+
+.ui-display {
+  font: var(--ui-type-display);
+}
+
+.ui-headline {
+  font: var(--ui-type-headline);
+}
+
+.ui-title {
+  font: var(--ui-type-title);
+}
+
+.ui-lead {
+  font: var(--ui-type-lead);
+}
+
+.ui-body {
+  font: var(--ui-type-body);
+}
+
+.ui-support {
+  font: var(--ui-type-support);
+}
+
+.ui-label {
+  font: var(--ui-type-label);
+}
+
+.ui-caption {
+  font: var(--ui-type-caption);
+}

@@ -28,6 +28,15 @@
   background: var(--ui-color-surface);
 }
 
+/* Document text follows the fluid scale (tokens/typography.css): on body,
+ * not :root — on :root a font-size declaration would redefine the rem
+ * anchor the whole scale is computed from (on :root rem resolves to the
+ * initial UA value, so components would disagree with the page). body
+ * inherits from :root for free; components use font: inherit. */
+body {
+  font-size: var(--ui-font-size-md);
+}
+
 /* Canonical heading typography: h1–h6 consume the type roles
  * (tokens/typography.css). h1 -> display, h2 -> headline, h3–h6 -> title —
  * the role vocabulary is intentionally minimal, sub-sub-headings are not a

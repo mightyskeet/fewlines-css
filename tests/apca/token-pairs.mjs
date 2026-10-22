@@ -7,6 +7,7 @@
  *
  *  body        — normal body text (>= 16px regular): Lc 75 preferred, 60 minimum
  *  fluent      — slightly smaller/fluent text (14-15px): Lc 60 minimum
+ *  small       — fine-print text (~11-12px, caption role): Lc 90 minimum
  *  large       — large text (>= 24px or 18.66px bold): Lc 45 minimum
  *  nonText     — UI boundaries, icons, focus indicators: Lc 15 minimum
  *  disabled    — disabled controls (exempt from conformance, still tracked)
@@ -19,7 +20,7 @@
  */
 
 /**
- * @typedef {'body'|'fluent'|'large'|'nonText'|'disabled'} TextRole
+ * @typedef {'body'|'fluent'|'small'|'large'|'nonText'|'disabled'} TextRole
  */
 
 /**
@@ -124,12 +125,21 @@ export const tokenPairs = [
 
   // Disabled state (tracked, exempt from conformance, spot readable)
   { fg: 'text-muted', bg: 'surface', role: 'disabled', note: 'disabled controls' },
+
+  // Caption role (--ui-type-caption, the xs step ~11-12px): below the fluent
+  // size range, so the strict `small` threshold applies. Only full-contrast
+  // text pairs ship — text-muted fails Lc 90 in the dark theme (Lc ~63),
+  // same policy as blockquote (theme notes).
+  { fg: 'text', bg: 'surface', role: 'small', note: 'caption' },
+  { fg: 'text', bg: 'surface-raised', role: 'small', note: 'caption' },
+  { fg: 'text', bg: 'surface-sunken', role: 'small', note: 'caption' },
 ];
 
 /** Minimum APCA Lc per role (accessibility notes). */
 export const roleThresholds = {
   body: 75,
   fluent: 60,
+  small: 90,
   large: 45,
   nonText: 15,
   disabled: 30,
