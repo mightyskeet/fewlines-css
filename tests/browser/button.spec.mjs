@@ -29,6 +29,20 @@ test('filled buttons carry no visible border', async ({ page }) => {
   expect(styles.background).toBe(await token(page, '--ui-color-surface-raised'));
 });
 
+test('filled primary keeps the solid accent fill and on-accent text', async ({ page }) => {
+  const styles = await stylesOf(page, '#btn-primary');
+  expect(styles.background).toBe(await token(page, '--ui-color-accent-surface'));
+  expect(styles.color).toBe(await token(page, '--ui-color-on-accent'));
+  expect(styles.borderColor).toBe('rgba(0, 0, 0, 0)');
+});
+
+test('filled destructive keeps the solid danger fill and on-danger text', async ({ page }) => {
+  const styles = await stylesOf(page, '#btn-destructive');
+  expect(styles.background).toBe(await token(page, '--ui-color-danger-surface'));
+  expect(styles.color).toBe(await token(page, '--ui-color-on-danger'));
+  expect(styles.borderColor).toBe('rgba(0, 0, 0, 0)');
+});
+
 test('outline secondary is a bordered transparent button', async ({ page }) => {
   const styles = await stylesOf(page, '#btn-outline');
   expect(styles.background).toBe('rgba(0, 0, 0, 0)');
