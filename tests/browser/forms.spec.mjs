@@ -156,16 +156,16 @@ test('single-line controls share the standardized height scale', async ({ page }
   expect(await font('input-lg')).toBe(md);
 });
 
-test('read-only field uses the sunken surface', async ({ page }) => {
+test('read-only field uses the subtle surface', async ({ page }) => {
   const background = await page
     .locator('#input-readonly')
     .evaluate((el) => getComputedStyle(el).backgroundColor);
-  const sunken = await page
+  const subtle = await page
     .evaluate(() =>
-      getComputedStyle(document.documentElement).getPropertyValue('--ui-color-surface-sunken'),
+      getComputedStyle(document.documentElement).getPropertyValue('--ui-color-surface-subtle'),
     )
     .then((v) => v.trim());
-  expect(background).toBe(sunken);
+  expect(background).toBe(subtle);
 });
 
 test('file input button is styled by the component', async ({ page }) => {
@@ -178,12 +178,12 @@ test('file input button is styled by the component', async ({ page }) => {
       paddingInlineStart: s.paddingInlineStart,
     };
   });
-  const sunken = await page
+  const subtle = await page
     .evaluate(() =>
-      getComputedStyle(document.documentElement).getPropertyValue('--ui-color-surface-sunken'),
+      getComputedStyle(document.documentElement).getPropertyValue('--ui-color-surface-subtle'),
     )
     .then((v) => v.trim());
-  expect(button.background).toBe(sunken);
+  expect(button.background).toBe(subtle);
   expect(button.divider).toBe('1px');
   expect(button.cursor).toBe('pointer');
   expect(button.paddingInlineStart).not.toBe('0px');

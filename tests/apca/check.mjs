@@ -33,10 +33,10 @@ if (Object.keys(paletteMap).length === 0) {
 }
 
 /**
- * Convert OKLCH string to sRGB {r,g,b} in 0..1 using CSS Color 4 math.
+ * Convert OKLCH string to OKLab {L,a,b} using CSS Color 4 math.
  * Handles the subset used by the palette: oklch(L% C H).
  */
-function oklchToSrgb(oklch) {
+function oklchToOkLab(oklch) {
   const match = oklch.match(/oklch\(([\d.]+)%\s+([\d.]+)\s+([\d.]+)\)/);
   if (!match) {
     throw new Error(`Unsupported color format: ${oklch}`);
@@ -46,10 +46,11 @@ function oklchToSrgb(oklch) {
   const C = Number(cStr);
   const H = (Number(hStr) * Math.PI) / 180;
 
-  // OKLCH -> OKLab
-  const a = C * Math.cos(H);
-  const b = C * Math.sin(H);
+  return { L, a: C * Math.cos(H), b: C * Math.sin(H) };
+}
 
+/** Convert OKLab {L,a,b} to sRGB {r,g,b} in 0..1 (CSS Color 4 math). */
+function okLabToSrgb({ L, a, b }) {
   // OKLab -> LMS (non-linear)
   const l_ = L + 0.3963377774 * a + 0.2158037573 * b;
   const m_ = L - 0.1055633454 * a - 0.0638541728 * b;
@@ -73,6 +74,14 @@ function oklchToSrgb(oklch) {
   return { r: encode(r), g: encode(g), b: encode(bl) };
 }
 
+/**
+ * Convert OKLCH string to sRGB {r,g,b} in 0..1 using CSS Color 4 math.
+ * Handles the subset used by the palette: oklch(L% C H).
+ */
+function oklchToSrgb(oklch) {
+  return okLabToSrgb(oklchToOkLab(oklch));
+}
+
 /** Convert {r,g,b} 0..1 to "rgb(r g b)" 0-255 string for apca-w3. */
 function toRgbString({ r, g, b }) {
   const to255 = (v) => Math.round(v * 255);
@@ -92,10 +101,25 @@ function resolveColor(semanticName, theme) {
   if (!paletteRef) {
     throw new Error(`Unknown semantic token: ${semanticName}`);
   }
-  const paletteKey = paletteRef[theme];
-  const oklch = paletteMap[paletteKey];
+  const spec = paletteRef[theme];
+
+  // Derived token: oklab color-mix of two semantic tokens (50/50) — mirrors
+  // the color-mix() values in tokens/color.css.
+  if (typeof spec === 'object') {
+    const [a, b] = spec.mix.map((name) => {
+      const key = semanticMap[name][theme];
+      return oklchToOkLab(paletteMap[key]);
+    });
+    return okLabToSrgb({
+      L: (a.L + b.L) / 2,
+      a: (a.a + b.a) / 2,
+      b: (a.b + b.b) / 2,
+    });
+  }
+
+  const oklch = paletteMap[spec];
   if (!oklch) {
-    throw new Error(`Unknown palette token: ${paletteKey}`);
+    throw new Error(`Unknown palette token: ${spec}`);
   }
   return oklchToSrgb(oklch);
 }

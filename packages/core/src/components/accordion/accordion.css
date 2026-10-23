@@ -89,7 +89,7 @@
  * the highlight — same policy as Button/Table/Switch. */
 @media (hover: hover) and (pointer: fine) {
   .ui-accordion-summary:hover {
-    background: var(--ui-color-surface-sunken);
+    background: var(--ui-color-hover-raised);
   }
 }
 

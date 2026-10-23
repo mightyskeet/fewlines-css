@@ -58,11 +58,11 @@ test('cells carry a hairline bottom border under the separate border model', asy
 });
 
 test('zebra stripes apply to odd body rows only', async ({ page }) => {
-  const sunken = await token(page, '--ui-color-surface-sunken');
+  const subtle = await token(page, '--ui-color-surface-subtle');
   const rows = page.locator('#table-zebra tbody tr');
   const odd = await rows.nth(0).evaluate((el) => getComputedStyle(el).backgroundColor);
   const even = await rows.nth(1).evaluate((el) => getComputedStyle(el).backgroundColor);
-  expect(odd).toBe(sunken);
+  expect(odd).toBe(subtle);
   expect(even).toBe('rgba(0, 0, 0, 0)');
 });
 
@@ -74,13 +74,13 @@ test('non-zebra rows stay unstriped', async ({ page }) => {
   expect(background).toBe('rgba(0, 0, 0, 0)');
 });
 
-test('hover flips the row to the opposite surface (zebra-safe)', async ({ page }) => {
-  const sunken = await token(page, '--ui-color-surface-sunken');
+test('hover fills the row with the hover token (zebra-safe)', async ({ page }) => {
+  const hover = await token(page, '--ui-color-hover');
   const surface = await token(page, '--ui-color-surface');
 
   const row = page.locator('#table-default tbody tr').nth(0);
   await row.locator('td').first().hover();
-  expect(await row.evaluate((el) => getComputedStyle(el).backgroundColor)).toBe(sunken);
+  expect(await row.evaluate((el) => getComputedStyle(el).backgroundColor)).toBe(hover);
 
   const zebraRow = page.locator('#table-zebra tbody tr').nth(0);
   await zebraRow.locator('td').first().hover();

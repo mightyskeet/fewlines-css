@@ -35,8 +35,8 @@
  * compatibility notes, 2026-10-02).
  *
  * APCA pairs used (validated in tests/apca, no new pairs):
- *   text on surface / surface-sunken (body) — body cells, hover and zebra rows
- *   text-muted on surface (fluent)          — caption and header cells
+ *   text on surface / surface-subtle / hover (body) — cells, zebra and hover rows
+ *   text-muted on surface (fluent)                  — caption and header cells
  */
 
 .ui-table {
@@ -76,12 +76,14 @@
   font-weight: var(--ui-font-weight-medium);
 }
 
-/* Row hover: the row flips to the opposite surface (base <-> sunken), so the
- * hover affordance stays visible on zebra tables too. Pointer-gated like
- * Button/Switch (sticky :hover on touch would latch the highlight). */
+/* Row hover: the hover fill (--ui-color-hover, state model theme notes) is
+ * visible against both the base surface and the zebra fill. A zebra row
+ * flips to the full opposite surface so the affordance never coincides with
+ * its own stripe. Pointer-gated like Button/Switch (sticky :hover on touch
+ * would latch the highlight). */
 @media (hover: hover) and (pointer: fine) {
   .ui-table tbody tr:hover {
-    background: var(--ui-color-surface-sunken);
+    background: var(--ui-color-hover);
   }
 
   .ui-table[data-zebra] tbody tr:nth-child(odd):hover {
@@ -89,9 +91,9 @@
   }
 }
 
-/* Zebra: odd body rows on the sunken surface (text/surface-sunken — body). */
+/* Zebra: odd body rows on the subtle surface (text/surface-subtle — body). */
 .ui-table[data-zebra] tbody tr:nth-child(odd) {
-  background: var(--ui-color-surface-sunken);
+  background: var(--ui-color-surface-subtle);
 }
 
 /* Footer: summary band with a stronger separator above it. */

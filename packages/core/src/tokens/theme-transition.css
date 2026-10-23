@@ -23,10 +23,38 @@
   initial-value: white;
 }
 
-@property --ui-color-surface-sunken {
+@property --ui-color-surface-subtle {
   syntax: '<color>';
   inherits: true;
   initial-value: white;
+}
+
+/* Hover tokens are derived (color-mix of animated inputs) — they recompute
+ * per frame during the theme transition and are NOT in the transition list.
+ * Registered as <color> so the computed value serializes as a color
+ * (browser tests compare it against computed backgrounds). */
+@property --ui-color-hover {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: gray;
+}
+
+@property --ui-color-hover-raised {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: gray;
+}
+
+@property --ui-color-accent-hover {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: blue;
+}
+
+@property --ui-color-danger-hover {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: red;
 }
 
 @property --ui-color-text {
@@ -169,7 +197,7 @@
   transition:
     --ui-color-surface var(--ui-duration-slow) ease,
     --ui-color-surface-raised var(--ui-duration-slow) ease,
-    --ui-color-surface-sunken var(--ui-duration-slow) ease,
+    --ui-color-surface-subtle var(--ui-duration-slow) ease,
     --ui-color-text var(--ui-duration-slow) ease,
     --ui-color-text-muted var(--ui-duration-slow) ease,
     --ui-color-border var(--ui-duration-slow) ease,

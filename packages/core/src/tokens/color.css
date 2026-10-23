@@ -14,9 +14,30 @@
     var(--ui-palette-neutral-50),
     var(--ui-palette-neutral-800)
   );
-  --ui-color-surface-sunken: light-dark(
+
+  /* Subtle fill: persistent soft surfaces (zebra rows, switch track,
+   * read-only fields, code wells, secondary chrome). Dark theme follows the
+   * elevation direction: the page surface is the darkest step, every role
+   * above it is lighter (surface 900 -> raised 800 -> subtle 700). */
+  --ui-color-surface-subtle: light-dark(
     var(--ui-palette-neutral-100),
-    var(--ui-palette-neutral-950)
+    var(--ui-palette-neutral-700)
+  );
+
+  /* Hover fills — derived state tokens, no new palette entries (theme notes,
+   * state model). In the dark theme the surface steps are wide (6-8 L units),
+   * so hover is the midpoint to the next step via color-mix; in the light
+   * theme the steps are already tight (3 units) and hover is the first step
+   * that does not collide with a neighboring surface (subtle). Inputs are
+   * light-dark() tokens, so one expression serves both themes and follows
+   * the theme transition. */
+  --ui-color-hover: light-dark(
+    var(--ui-color-surface-subtle),
+    color-mix(in oklab, var(--ui-color-surface), var(--ui-color-surface-raised))
+  );
+  --ui-color-hover-raised: light-dark(
+    var(--ui-color-surface-subtle),
+    color-mix(in oklab, var(--ui-color-surface-raised), var(--ui-color-surface-subtle))
   );
 
   /* Text */
@@ -36,11 +57,25 @@
   --ui-color-accent-surface: light-dark(var(--ui-palette-accent-500), var(--ui-palette-accent-300));
   --ui-color-on-accent: light-dark(var(--ui-palette-neutral-0), var(--ui-palette-neutral-950));
 
+  /* Hover = midpoint to the next family step: tighter than the -strong jump,
+   * and color-mix keeps the hue (a neutral black/white overlay would gray
+   * the fill). */
+  --ui-color-accent-hover: color-mix(
+    in oklab,
+    var(--ui-color-accent-surface),
+    var(--ui-color-accent-strong)
+  );
+
   /* Danger */
   --ui-color-danger: light-dark(var(--ui-palette-danger-600), var(--ui-palette-danger-300));
   --ui-color-danger-strong: light-dark(var(--ui-palette-danger-700), var(--ui-palette-danger-200));
   --ui-color-danger-surface: light-dark(var(--ui-palette-danger-500), var(--ui-palette-danger-300));
   --ui-color-on-danger: light-dark(var(--ui-palette-neutral-0), var(--ui-palette-neutral-950));
+  --ui-color-danger-hover: color-mix(
+    in oklab,
+    var(--ui-color-danger-surface),
+    var(--ui-color-danger-strong)
+  );
 
   /* Success */
   --ui-color-success: light-dark(var(--ui-palette-success-600), var(--ui-palette-success-300));

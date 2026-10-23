@@ -8,9 +8,9 @@
  * Sizes via data-size: sm | md | lg.
  *
  * APCA pairs used (validated in tests/apca):
- *   primary:     on-accent on accent-surface / accent-strong
- *   secondary:   text on surface-raised / surface-sunken
- *   destructive: on-danger on danger-surface / danger-strong
+ *   primary:     on-accent on accent-surface / accent-hover
+ *   secondary:   text on surface-raised / hover-raised
+ *   destructive: on-danger on danger-surface / danger-hover
  */
 
 .ui-button {
@@ -50,8 +50,12 @@
   padding-inline: var(--ui-space-lg);
 }
 
+/* Press = hover fill + mechanical response (state model, theme notes). The
+ * variant rules below win over this background on primary/destructive —
+ * their :hover fill stays while pressed; this rule covers the default
+ * variant and touch (no :hover media). */
 .ui-button:active {
-  background: var(--ui-color-surface-sunken);
+  background: var(--ui-color-hover-raised);
   translate: 0 1px;
 }
 
@@ -68,7 +72,7 @@
  * pointer-gated (sticky :hover on touch would latch the highlight). */
 @media (hover: hover) and (pointer: fine) {
   .ui-button:hover:not(:disabled, [aria-disabled='true']) {
-    background: var(--ui-color-surface-sunken);
+    background: var(--ui-color-hover-raised);
     border-color: var(--ui-color-border-strong);
   }
 }
@@ -81,7 +85,7 @@
 
 @media (hover: hover) and (pointer: fine) {
   .ui-button[data-variant='primary']:hover:not(:disabled, [aria-disabled='true']) {
-    background: var(--ui-color-accent-strong);
+    background: var(--ui-color-accent-hover);
   }
 }
 
@@ -93,7 +97,7 @@
 
 @media (hover: hover) and (pointer: fine) {
   .ui-button[data-variant='destructive']:hover:not(:disabled, [aria-disabled='true']) {
-    background: var(--ui-color-danger-strong);
+    background: var(--ui-color-danger-hover);
   }
 }
 

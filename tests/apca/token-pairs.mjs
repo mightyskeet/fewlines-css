@@ -26,20 +26,40 @@
 /**
  * Semantic token -> palette reference, per theme.
  * Mirrors packages/core/src/tokens/color.css light-dark() arguments.
+ *
+ * Derived tokens (hover fills) may declare a `mix`: an oklab color-mix of two
+ * semantic tokens (50/50), resolved per theme — mirrors the color-mix() in
+ * color.css.
  */
 export const semanticMap = {
   surface: { light: 'neutral-0', dark: 'neutral-900' },
   'surface-raised': { light: 'neutral-50', dark: 'neutral-800' },
-  'surface-sunken': { light: 'neutral-100', dark: 'neutral-950' },
+  'surface-subtle': { light: 'neutral-100', dark: 'neutral-700' },
+  hover: {
+    light: 'neutral-100',
+    dark: { mix: ['surface', 'surface-raised'] },
+  },
+  'hover-raised': {
+    light: 'neutral-100',
+    dark: { mix: ['surface-raised', 'surface-subtle'] },
+  },
   text: { light: 'neutral-900', dark: 'neutral-50' },
   'text-muted': { light: 'neutral-600', dark: 'neutral-300' },
   accent: { light: 'accent-600', dark: 'accent-300' },
   'accent-strong': { light: 'accent-700', dark: 'accent-200' },
   'accent-surface': { light: 'accent-500', dark: 'accent-300' },
+  'accent-hover': {
+    light: { mix: ['accent-surface', 'accent-strong'] },
+    dark: { mix: ['accent-surface', 'accent-strong'] },
+  },
   'on-accent': { light: 'neutral-0', dark: 'neutral-950' },
   danger: { light: 'danger-600', dark: 'danger-300' },
   'danger-strong': { light: 'danger-700', dark: 'danger-200' },
   'danger-surface': { light: 'danger-500', dark: 'danger-300' },
+  'danger-hover': {
+    light: { mix: ['danger-surface', 'danger-strong'] },
+    dark: { mix: ['danger-surface', 'danger-strong'] },
+  },
   'on-danger': { light: 'neutral-0', dark: 'neutral-950' },
   success: { light: 'success-600', dark: 'success-300' },
   'success-strong': { light: 'success-700', dark: 'success-200' },
@@ -64,29 +84,37 @@ export const tokenPairs = [
   // Core text on surfaces
   { fg: 'text', bg: 'surface', role: 'body' },
   { fg: 'text', bg: 'surface-raised', role: 'body' },
-  { fg: 'text', bg: 'surface-sunken', role: 'body' },
+  { fg: 'text', bg: 'surface-subtle', role: 'body' },
   { fg: 'text-muted', bg: 'surface', role: 'fluent' },
   { fg: 'text-muted', bg: 'surface-raised', role: 'fluent' },
-  { fg: 'text-muted', bg: 'surface-sunken', role: 'fluent' },
+  // text-muted on surface-subtle is intentionally NOT registered: the darker
+  // dark-theme subtle fill (700) drops the pair below the fluent threshold
+  // (Lc ~60.0), and no core component consumes it. Full-contrast text only
+  // on subtle (same policy as blockquote).
 
   // Base typography (base/typography.css): the inline code family renders at
   // 0.875em (fluent role at 16px body). Blockquote deliberately keeps the
   // text/surface body pair — text-muted fails the body threshold in dark
-  { fg: 'text', bg: 'surface-sunken', role: 'fluent', note: 'inline code, samp; pre' },
+  { fg: 'text', bg: 'surface-subtle', role: 'fluent', note: 'inline code, samp; pre' },
   { fg: 'text', bg: 'surface-raised', role: 'fluent', note: 'kbd' },
+
+  // Hover fills (state model, theme notes): secondary button, table rows
+  { fg: 'text', bg: 'hover', role: 'body' },
+  { fg: 'text', bg: 'hover-raised', role: 'body' },
 
   // Accent text and controls
   { fg: 'accent', bg: 'surface', role: 'body' },
   { fg: 'accent', bg: 'surface-raised', role: 'body' },
   { fg: 'accent-strong', bg: 'surface', role: 'body' },
   { fg: 'on-accent', bg: 'accent-surface', role: 'body' },
-  { fg: 'on-accent', bg: 'accent-strong', role: 'body' },
+  { fg: 'on-accent', bg: 'accent-hover', role: 'body', note: 'primary button hover' },
 
   // Danger text and controls
   { fg: 'danger', bg: 'surface', role: 'body' },
   { fg: 'danger', bg: 'surface-raised', role: 'body' },
   { fg: 'danger-strong', bg: 'surface', role: 'body' },
   { fg: 'on-danger', bg: 'danger-surface', role: 'body' },
+  { fg: 'on-danger', bg: 'danger-hover', role: 'body', note: 'destructive button hover' },
 
   // Success
   { fg: 'success', bg: 'surface', role: 'body' },
@@ -132,7 +160,7 @@ export const tokenPairs = [
   // same policy as blockquote (theme notes).
   { fg: 'text', bg: 'surface', role: 'small', note: 'caption' },
   { fg: 'text', bg: 'surface-raised', role: 'small', note: 'caption' },
-  { fg: 'text', bg: 'surface-sunken', role: 'small', note: 'caption' },
+  { fg: 'text', bg: 'surface-subtle', role: 'small', note: 'caption' },
 ];
 
 /** Minimum APCA Lc per role (accessibility notes). */

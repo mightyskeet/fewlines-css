@@ -138,10 +138,10 @@
 }
 
 /* Read-only (not disabled): selectable and copyable, not editable — the
- * sunken surface signals "fixed value" (text/surface-sunken — registered). */
+ * subtle surface signals "fixed value" (text/surface-subtle — registered). */
 .ui-input:read-only:not(:disabled),
 .ui-textarea:read-only:not(:disabled) {
-  background: var(--ui-color-surface-sunken);
+  background: var(--ui-color-surface-subtle);
   cursor: default;
 }
 
@@ -158,7 +158,7 @@
   margin-inline-end: var(--ui-space-sm);
   border: none;
   border-inline-end: 1px solid var(--ui-color-border);
-  background: var(--ui-color-surface-sunken);
+  background: var(--ui-color-surface-subtle);
   color: var(--ui-color-text);
   font: inherit;
   font-weight: var(--ui-font-weight-medium);
