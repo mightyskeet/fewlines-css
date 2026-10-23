@@ -121,7 +121,7 @@ test('textarea autosize grows with content (field-sizing enhancement)', async ({
 
 test('focus-visible ring appears on keyboard focus', async ({ page }) => {
   await page.keyboard.press('Tab');
-  const first = page.locator('#btn-secondary');
+  const first = page.locator('#btn-neutral');
   await expect(first).toBeFocused();
 
   const hasFocusVisible = await first.evaluate((el) => el.matches(':focus-visible'));

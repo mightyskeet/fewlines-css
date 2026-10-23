@@ -5,8 +5,9 @@
  * :active, :disabled — no JS state classes (architecture notes, CSS как слой presentation и state).
  *
  * Two orthogonal axes:
- *   color tone  — data-variant: secondary | primary | destructive
- *                 (secondary is the default, attribute omitted);
+ *   color tone  — data-variant: neutral | primary | destructive
+ *                 (neutral is the default, attribute omitted); the variant
+ *                 name is the semantic family it consumes;
  *   appearance  — data-appearance: filled (default) | outline.
  *
  * Filled buttons carry no visible border — the fill is the surface
@@ -14,10 +15,10 @@
  * buttons swap the fill for a border and a colored text identity.
  *
  * APCA pairs used (validated in tests/apca):
- *   filled secondary:   text on surface-raised / hover-raised
+ *   filled neutral:     on-neutral on neutral-surface / neutral-strong
  *   filled primary:     on-accent on accent-surface / accent-hover
  *   filled destructive: on-danger on danger-surface / danger-hover
- *   outline secondary:  text on hover (hover fill) / surface (border, nonText)
+ *   outline neutral:    text on hover (hover fill) / surface (border, nonText)
  *   outline primary:    accent-strong on surface / accent-tint (hover fill)
  *   outline destructive: danger-strong on surface / danger-tint (hover fill)
  */
@@ -41,9 +42,10 @@
     background-color var(--ui-duration-fast) ease,
     border-color var(--ui-duration-fast) ease;
 
-  /* Filled secondary is the default variant. */
-  color: var(--ui-color-text);
-  background: var(--ui-color-surface-raised);
+  /* Filled neutral is the default variant: the high-contrast inverted
+   * family (dark fill in light theme, near-white in dark). */
+  color: var(--ui-color-on-neutral);
+  background: var(--ui-color-neutral-surface);
 }
 
 /* Sizes — density only: the font stays at the default step on every
@@ -58,12 +60,13 @@
   padding-inline: var(--ui-space-lg);
 }
 
-/* Press = hover fill + mechanical response (state model, theme notes).
- * Same specificity as the variant rules below, which come later — pressed
- * filled primary/destructive keep their family fill (only translate lands
- * from this rule); outline re-states its hover fill further down. */
+/* Press = the next family step + mechanical response (state model,
+ * theme notes). Same specificity as the variant rules below, which come
+ * later — pressed filled primary/destructive keep their family fill (only
+ * translate lands from this rule); outline re-states its hover fill
+ * further down. */
 .ui-button:active {
-  background: var(--ui-color-hover-raised);
+  background: var(--ui-color-neutral-strong);
   translate: 0 1px;
 }
 
@@ -76,9 +79,24 @@
   translate: none;
 }
 
-/* Outline appearance: the border is the surface, the fill is transparent. */
+/* Filled color variants: solid family fill, on-* text. Declared after
+ * :active (same specificity, later) so a press keeps the family fill. */
+.ui-button[data-variant='primary'] {
+  color: var(--ui-color-on-accent);
+  background: var(--ui-color-accent-surface);
+}
+
+.ui-button[data-variant='destructive'] {
+  color: var(--ui-color-on-danger);
+  background: var(--ui-color-danger-surface);
+}
+
+/* Outline appearance: the border is the surface, the fill is transparent.
+ * The text returns to the plain text color (the base rule carries the
+ * on-neutral pair for the filled default). */
 .ui-button[data-appearance='outline'] {
   background: transparent;
+  color: var(--ui-color-text);
   border-color: var(--ui-color-border);
 }
 
@@ -106,24 +124,12 @@
   background: var(--ui-color-danger-tint);
 }
 
-/* Filled color variants: solid family fill, on-* text. Declared after
- * :active (same specificity, later) so a press keeps the family fill. */
-.ui-button[data-variant='primary'] {
-  color: var(--ui-color-on-accent);
-  background: var(--ui-color-accent-surface);
-}
-
-.ui-button[data-variant='destructive'] {
-  color: var(--ui-color-on-danger);
-  background: var(--ui-color-danger-surface);
-}
-
 /* States — hover never restyles a disabled control. Hover is pointer-gated
  * (sticky :hover on touch would latch the highlight). Outline selectors are
  * more specific and win over the filled hover rules for outline elements. */
 @media (hover: hover) and (pointer: fine) {
   .ui-button:hover:not(:disabled, [aria-disabled='true']) {
-    background: var(--ui-color-hover-raised);
+    background: var(--ui-color-neutral-strong);
   }
 
   .ui-button[data-variant='primary']:hover:not(:disabled, [aria-disabled='true']) {

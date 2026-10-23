@@ -81,6 +81,24 @@
   initial-value: gray;
 }
 
+@property --ui-color-neutral-surface {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: black;
+}
+
+@property --ui-color-neutral-strong {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: black;
+}
+
+@property --ui-color-on-neutral {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: white;
+}
+
 @property --ui-color-accent {
   syntax: '<color>';
   inherits: true;
@@ -202,6 +220,9 @@
     --ui-color-text-muted var(--ui-duration-slow) ease,
     --ui-color-border var(--ui-duration-slow) ease,
     --ui-color-border-strong var(--ui-duration-slow) ease,
+    --ui-color-neutral-surface var(--ui-duration-slow) ease,
+    --ui-color-neutral-strong var(--ui-duration-slow) ease,
+    --ui-color-on-neutral var(--ui-duration-slow) ease,
     --ui-color-accent var(--ui-duration-slow) ease,
     --ui-color-accent-strong var(--ui-duration-slow) ease,
     --ui-color-accent-surface var(--ui-duration-slow) ease,

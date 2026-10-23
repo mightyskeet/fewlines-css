@@ -24,9 +24,10 @@ const stylesOf = (page, id) =>
   });
 
 test('filled buttons carry no visible border', async ({ page }) => {
-  const styles = await stylesOf(page, '#btn-secondary');
+  const styles = await stylesOf(page, '#btn-neutral');
   expect(styles.borderColor).toBe('rgba(0, 0, 0, 0)');
-  expect(styles.background).toBe(await token(page, '--ui-color-surface-raised'));
+  expect(styles.background).toBe(await token(page, '--ui-color-neutral-surface'));
+  expect(styles.color).toBe(await token(page, '--ui-color-on-neutral'));
 });
 
 test('filled primary keeps the solid accent fill and on-accent text', async ({ page }) => {
@@ -68,10 +69,11 @@ test('hover does not restyle a disabled button', async ({ page }) => {
   const background = (id) =>
     page.locator(id).evaluate((el) => getComputedStyle(el).backgroundColor);
 
-  // Control: hovering the enabled secondary button changes its background
-  const idle = await background('#btn-secondary');
-  await page.hover('#btn-secondary');
-  expect(await background('#btn-secondary')).not.toBe(idle);
+  // Control: hovering the enabled neutral button lands on the next family
+  // step (poll: the fast background transition needs a frame or two)
+  const hoverFill = await token(page, '--ui-color-neutral-strong');
+  await page.hover('#btn-neutral');
+  await expect.poll(() => background('#btn-neutral'), { timeout: 500 }).toBe(hoverFill);
 
   // The disabled button keeps its base surface under the pointer
   const disabledIdle = await background('#btn-disabled');

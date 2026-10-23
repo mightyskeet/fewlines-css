@@ -43,6 +43,9 @@ export const semanticMap = {
     light: 'neutral-100',
     dark: { mix: ['surface-raised', 'surface-subtle'] },
   },
+  'neutral-surface': { light: 'neutral-900', dark: 'neutral-50' },
+  'neutral-strong': { light: 'neutral-950', dark: 'neutral-0' },
+  'on-neutral': { light: 'neutral-0', dark: 'neutral-950' },
   text: { light: 'neutral-900', dark: 'neutral-50' },
   'text-muted': { light: 'neutral-600', dark: 'neutral-300' },
   accent: { light: 'accent-600', dark: 'accent-300' },
@@ -98,9 +101,13 @@ export const tokenPairs = [
   { fg: 'text', bg: 'surface-subtle', role: 'fluent', note: 'inline code, samp; pre' },
   { fg: 'text', bg: 'surface-raised', role: 'fluent', note: 'kbd' },
 
-  // Hover fills (state model, theme notes): secondary button, table rows
+  // Hover fills (state model, theme notes): table rows, accordion
   { fg: 'text', bg: 'hover', role: 'body' },
   { fg: 'text', bg: 'hover-raised', role: 'body' },
+
+  // Neutral action family (filled default button)
+  { fg: 'on-neutral', bg: 'neutral-surface', role: 'body' },
+  { fg: 'on-neutral', bg: 'neutral-strong', role: 'body' },
 
   // Accent text and controls
   { fg: 'accent', bg: 'surface', role: 'body' },

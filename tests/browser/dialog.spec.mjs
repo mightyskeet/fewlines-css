@@ -79,9 +79,9 @@ test('dialog focus is trapped while modal', async ({ page }) => {
   });
   expect(outside).not.toBe('btn-primary');
 
-  await page.click('#btn-secondary', { force: true }).catch(() => {});
+  await page.click('#btn-neutral', { force: true }).catch(() => {});
   const afterClick = await page.evaluate(() => document.activeElement.id);
-  expect(afterClick).not.toBe('btn-secondary');
+  expect(afterClick).not.toBe('btn-neutral');
 
   // Keyboard cycling stays within the dialog (allowing the transient body
   // step at the wrap point).

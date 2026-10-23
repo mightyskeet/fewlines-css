@@ -52,6 +52,18 @@
     var(--ui-palette-neutral-400)
   );
 
+  /* Neutral action family — the high-contrast default button: dark fill in
+   * the light theme, near-white in the dark (inverted, like the text
+   * polarity). Symmetric with the accent/danger families (surface / strong /
+   * on-*). The steps are tight, so hover/press is the full next step
+   * (neutral-strong) — a half-step mix would be imperceptible. */
+  --ui-color-neutral-surface: light-dark(
+    var(--ui-palette-neutral-900),
+    var(--ui-palette-neutral-50)
+  );
+  --ui-color-neutral-strong: light-dark(var(--ui-palette-neutral-950), var(--ui-palette-neutral-0));
+  --ui-color-on-neutral: light-dark(var(--ui-palette-neutral-0), var(--ui-palette-neutral-950));
+
   /* Accent */
   --ui-color-accent: light-dark(var(--ui-palette-accent-600), var(--ui-palette-accent-300));
   --ui-color-accent-strong: light-dark(var(--ui-palette-accent-700), var(--ui-palette-accent-200));
