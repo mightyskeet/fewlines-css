@@ -64,20 +64,19 @@
   --ui-color-neutral-strong: light-dark(var(--ui-palette-neutral-950), var(--ui-palette-neutral-0));
   --ui-color-on-neutral: light-dark(var(--ui-palette-neutral-0), var(--ui-palette-neutral-950));
 
+  /* Secondary action family — the muted button: a soft panel-gray fill,
+   * quiet next to the high-contrast default. Text sits on it directly as
+   * `text` (the same value in both themes — no on-secondary token). */
+  --ui-color-secondary-surface: light-dark(
+    var(--ui-palette-neutral-50),
+    var(--ui-palette-neutral-800)
+  );
+
   /* Accent */
   --ui-color-accent: light-dark(var(--ui-palette-accent-600), var(--ui-palette-accent-300));
   --ui-color-accent-strong: light-dark(var(--ui-palette-accent-700), var(--ui-palette-accent-200));
   --ui-color-accent-surface: light-dark(var(--ui-palette-accent-500), var(--ui-palette-accent-300));
   --ui-color-on-accent: light-dark(var(--ui-palette-neutral-0), var(--ui-palette-neutral-950));
-
-  /* Hover = midpoint to the next family step: tighter than the -strong jump,
-   * and color-mix keeps the hue (a neutral black/white overlay would gray
-   * the fill). */
-  --ui-color-accent-hover: color-mix(
-    in oklab,
-    var(--ui-color-accent-surface),
-    var(--ui-color-accent-strong)
-  );
 
   /* Danger */
   --ui-color-danger: light-dark(var(--ui-palette-danger-600), var(--ui-palette-danger-300));

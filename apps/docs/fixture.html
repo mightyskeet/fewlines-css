@@ -10,34 +10,36 @@
     <main>
       <!-- Button -->
       <section id="buttons">
-        <button class="ui-button" type="button" id="btn-neutral">Neutral</button>
-        <button class="ui-button" type="button" id="btn-primary" data-variant="primary">
-          Primary
+        <button class="ui-button" type="button" id="btn-neutral">Default</button>
+        <button class="ui-button" type="button" id="btn-secondary" data-variant="secondary">
+          Secondary
         </button>
+        <button class="ui-button" type="button" id="btn-outline" data-variant="outline">
+          Outline
+        </button>
+        <button class="ui-button" type="button" id="btn-ghost" data-variant="ghost">Ghost</button>
+        <a class="ui-button" href="#" id="btn-link" data-variant="link">Link</a>
         <button class="ui-button" type="button" id="btn-destructive" data-variant="destructive">
           Delete
         </button>
         <button class="ui-button" type="button" id="btn-disabled" disabled>Disabled</button>
-        <button class="ui-button" type="button" id="btn-outline" data-appearance="outline">
-          Outline
-        </button>
         <button
           class="ui-button"
           type="button"
-          id="btn-outline-primary"
-          data-variant="primary"
-          data-appearance="outline"
+          id="btn-icon"
+          data-size="icon"
+          aria-label="Settings"
         >
-          Outline
-        </button>
-        <button
-          class="ui-button"
-          type="button"
-          id="btn-outline-destructive"
-          data-variant="destructive"
-          data-appearance="outline"
-        >
-          Outline
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true"
+          >
+            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" />
+          </svg>
         </button>
       </section>
 

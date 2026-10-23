@@ -1,9 +1,9 @@
 import { expect, test } from '@playwright/test';
 
 /**
- * Button state tests (tests/README.md).
- * Computed-style checks: the variant × appearance matrix, the borderless
- * filled model, and hover must not restyle disabled controls.
+ * Button variant tests (tests/README.md).
+ * Computed-style checks: the six-variant matrix (shadcn model), the
+ * borderless filled model, and hover must not restyle disabled controls.
  */
 
 test.beforeEach(async ({ page }) => {
@@ -23,53 +23,62 @@ const stylesOf = (page, id) =>
     };
   });
 
-test('filled buttons carry no visible border', async ({ page }) => {
+test('default is the high-contrast inverted neutral fill', async ({ page }) => {
   const styles = await stylesOf(page, '#btn-neutral');
-  expect(styles.borderColor).toBe('rgba(0, 0, 0, 0)');
   expect(styles.background).toBe(await token(page, '--ui-color-neutral-surface'));
   expect(styles.color).toBe(await token(page, '--ui-color-on-neutral'));
-});
-
-test('filled primary keeps the solid accent fill and on-accent text', async ({ page }) => {
-  const styles = await stylesOf(page, '#btn-primary');
-  expect(styles.background).toBe(await token(page, '--ui-color-accent-surface'));
-  expect(styles.color).toBe(await token(page, '--ui-color-on-accent'));
   expect(styles.borderColor).toBe('rgba(0, 0, 0, 0)');
 });
 
-test('filled destructive keeps the solid danger fill and on-danger text', async ({ page }) => {
-  const styles = await stylesOf(page, '#btn-destructive');
-  expect(styles.background).toBe(await token(page, '--ui-color-danger-surface'));
-  expect(styles.color).toBe(await token(page, '--ui-color-on-danger'));
+test('secondary is the muted soft fill with plain text', async ({ page }) => {
+  const styles = await stylesOf(page, '#btn-secondary');
+  expect(styles.background).toBe(await token(page, '--ui-color-secondary-surface'));
+  expect(styles.color).toBe(await token(page, '--ui-color-text'));
   expect(styles.borderColor).toBe('rgba(0, 0, 0, 0)');
 });
 
-test('outline secondary is a bordered transparent button', async ({ page }) => {
+test('outline is a bordered transparent button', async ({ page }) => {
   const styles = await stylesOf(page, '#btn-outline');
   expect(styles.background).toBe('rgba(0, 0, 0, 0)');
   expect(styles.borderColor).toBe(await token(page, '--ui-color-border'));
   expect(styles.color).toBe(await token(page, '--ui-color-text'));
 });
 
-test('outline primary uses the accent identity', async ({ page }) => {
-  const styles = await stylesOf(page, '#btn-outline-primary');
+test('ghost is borderless and transparent', async ({ page }) => {
+  const styles = await stylesOf(page, '#btn-ghost');
   expect(styles.background).toBe('rgba(0, 0, 0, 0)');
-  expect(styles.borderColor).toBe(await token(page, '--ui-color-accent'));
-  expect(styles.color).toBe(await token(page, '--ui-color-accent-strong'));
+  expect(styles.borderColor).toBe('rgba(0, 0, 0, 0)');
+  expect(styles.color).toBe(await token(page, '--ui-color-text'));
 });
 
-test('outline destructive uses the danger identity', async ({ page }) => {
-  const styles = await stylesOf(page, '#btn-outline-destructive');
+test('link is bare accent text', async ({ page }) => {
+  const styles = await stylesOf(page, '#btn-link');
   expect(styles.background).toBe('rgba(0, 0, 0, 0)');
-  expect(styles.borderColor).toBe(await token(page, '--ui-color-danger'));
-  expect(styles.color).toBe(await token(page, '--ui-color-danger-strong'));
+  expect(styles.color).toBe(await token(page, '--ui-color-accent'));
+  expect(
+    await page.locator('#btn-link').evaluate((el) => getComputedStyle(el).textDecorationLine),
+  ).not.toBe('underline');
+});
+
+test('destructive is the solid danger fill', async ({ page }) => {
+  const styles = await stylesOf(page, '#btn-destructive');
+  expect(styles.background).toBe(await token(page, '--ui-color-danger-surface'));
+  expect(styles.color).toBe(await token(page, '--ui-color-on-danger'));
+  expect(styles.borderColor).toBe('rgba(0, 0, 0, 0)');
+});
+
+test('icon size renders a square button', async ({ page }) => {
+  const box = await page
+    .locator('#btn-icon')
+    .evaluate((el) => ({ w: getComputedStyle(el).inlineSize, h: getComputedStyle(el).blockSize }));
+  expect(box.w).toBe(box.h);
 });
 
 test('hover does not restyle a disabled button', async ({ page }) => {
   const background = (id) =>
     page.locator(id).evaluate((el) => getComputedStyle(el).backgroundColor);
 
-  // Control: hovering the enabled neutral button lands on the next family
+  // Control: hovering the enabled default button lands on the next family
   // step (poll: the fast background transition needs a frame or two)
   const hoverFill = await token(page, '--ui-color-neutral-strong');
   await page.hover('#btn-neutral');

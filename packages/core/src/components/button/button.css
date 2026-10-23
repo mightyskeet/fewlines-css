@@ -4,23 +4,25 @@
  * States come from the platform: :hover, :focus-visible (base layer),
  * :active, :disabled — no JS state classes (architecture notes, CSS как слой presentation и state).
  *
- * Two orthogonal axes:
- *   color tone  — data-variant: neutral | primary | destructive
- *                 (neutral is the default, attribute omitted); the variant
- *                 name is the semantic family it consumes;
- *   appearance  — data-appearance: filled (default) | outline.
+ * Six variants via data-variant (shadcn model):
+ *   default (attribute omitted) — high-contrast inverted neutral family;
+ *   secondary                   — muted soft fill;
+ *   outline                     — border, transparent fill;
+ *   ghost                       — borderless transparent;
+ *   link                        — plain text link styled as a button;
+ *   destructive                 — solid danger family fill.
  *
- * Filled buttons carry no visible border — the fill is the surface
- * (border stays transparent, geometry is shared with outline). Outline
- * buttons swap the fill for a border and a colored text identity.
+ * Filled variants (default/secondary/destructive) carry no visible border —
+ * the fill is the surface; the 1px transparent border keeps geometry shared
+ * with outline.
  *
  * APCA pairs used (validated in tests/apca):
- *   filled neutral:     on-neutral on neutral-surface / neutral-strong
- *   filled primary:     on-accent on accent-surface / accent-hover
- *   filled destructive: on-danger on danger-surface / danger-hover
- *   outline neutral:    text on hover (hover fill) / surface (border, nonText)
- *   outline primary:    accent-strong on surface / accent-tint (hover fill)
- *   outline destructive: danger-strong on surface / danger-tint (hover fill)
+ *   default:     on-neutral on neutral-surface / neutral-strong
+ *   secondary:   text on secondary-surface / hover-raised
+ *   outline:     text on hover (hover fill) / surface (border, nonText)
+ *   ghost:       text on hover (hover fill)
+ *   link:        accent on surface (body)
+ *   destructive: on-danger on danger-surface / danger-hover
  */
 
 .ui-button {
@@ -42,14 +44,25 @@
     background-color var(--ui-duration-fast) ease,
     border-color var(--ui-duration-fast) ease;
 
-  /* Filled neutral is the default variant: the high-contrast inverted
-   * family (dark fill in light theme, near-white in dark). */
+  /* Default variant: the high-contrast inverted neutral family (dark fill in
+   * light theme, near-white in dark). */
   color: var(--ui-color-on-neutral);
   background: var(--ui-color-neutral-surface);
 }
 
+/* Icons auto-size to 1rem and never intercept the pointer. */
+.ui-button svg {
+  inline-size: 1rem;
+  block-size: 1rem;
+  flex: none;
+  pointer-events: none;
+}
+
 /* Sizes — density only: the font stays at the default step on every
- * variant (controls are chrome, they do not ride the display scale). */
+ * variant (controls are chrome, they do not ride the display scale).
+ * The height scale matches Field (sm 1.75 / md 2.25 / lg 2.75rem); xs and
+ * the icon squares extend it below. Icon-only buttons require aria-label
+ * (button.md). */
 .ui-button[data-size='sm'] {
   min-block-size: 1.75rem;
   padding-inline: var(--ui-space-sm);
@@ -60,11 +73,39 @@
   padding-inline: var(--ui-space-lg);
 }
 
-/* Press = the next family step + mechanical response (state model,
- * theme notes). Same specificity as the variant rules below, which come
- * later — pressed filled primary/destructive keep their family fill (only
- * translate lands from this rule); outline re-states its hover fill
- * further down. */
+.ui-button[data-size='xs'] {
+  min-block-size: 1.5rem;
+  padding-inline: var(--ui-space-sm);
+}
+
+.ui-button[data-size='icon'] {
+  min-block-size: 2.25rem;
+  inline-size: 2.25rem;
+  padding: 0;
+}
+
+.ui-button[data-size='icon-sm'] {
+  min-block-size: 1.75rem;
+  inline-size: 1.75rem;
+  padding: 0;
+}
+
+.ui-button[data-size='icon-lg'] {
+  min-block-size: 2.75rem;
+  inline-size: 2.75rem;
+  padding: 0;
+}
+
+.ui-button[data-size='icon-xs'] {
+  min-block-size: 1.5rem;
+  inline-size: 1.5rem;
+  padding: 0;
+}
+
+/* Press = hover fill + mechanical response (state model, theme notes).
+ * Same specificity as the variant rules below, which come later — pressed
+ * variant buttons keep their family fill unless the variant re-states its
+ * hover fill with higher specificity (outline/ghost/secondary). */
 .ui-button:active {
   background: var(--ui-color-neutral-strong);
   translate: 0 1px;
@@ -79,86 +120,81 @@
   translate: none;
 }
 
-/* Filled color variants: solid family fill, on-* text. Declared after
- * :active (same specificity, later) so a press keeps the family fill. */
-.ui-button[data-variant='primary'] {
-  color: var(--ui-color-on-accent);
-  background: var(--ui-color-accent-surface);
+/* Secondary: muted soft fill (no visible border), plain text. */
+.ui-button[data-variant='secondary'] {
+  color: var(--ui-color-text);
+  background: var(--ui-color-secondary-surface);
 }
 
-.ui-button[data-variant='destructive'] {
-  color: var(--ui-color-on-danger);
-  background: var(--ui-color-danger-surface);
+.ui-button[data-variant='secondary']:active {
+  background: var(--ui-color-hover-raised);
 }
 
-/* Outline appearance: the border is the surface, the fill is transparent.
- * The text returns to the plain text color (the base rule carries the
- * on-neutral pair for the filled default). */
-.ui-button[data-appearance='outline'] {
+/* Outline: the border is the surface, the fill is transparent, the text
+ * returns to the plain text color. */
+.ui-button[data-variant='outline'] {
   background: transparent;
   color: var(--ui-color-text);
   border-color: var(--ui-color-border);
 }
 
-.ui-button[data-appearance='outline']:active {
+.ui-button[data-variant='outline']:active {
   background: var(--ui-color-hover);
 }
 
-.ui-button[data-appearance='outline'][data-variant='primary'] {
+/* Ghost: borderless transparent; the hover fill carries the affordance. */
+.ui-button[data-variant='ghost'] {
   background: transparent;
-  color: var(--ui-color-accent-strong);
-  border-color: var(--ui-color-accent);
+  color: var(--ui-color-text);
 }
 
-.ui-button[data-appearance='outline'][data-variant='primary']:active {
-  background: var(--ui-color-accent-tint);
+.ui-button[data-variant='ghost']:active {
+  background: var(--ui-color-hover);
 }
 
-.ui-button[data-appearance='outline'][data-variant='destructive'] {
+/* Link: plain text in the accent color, no chrome; underline on hover. */
+.ui-button[data-variant='link'] {
   background: transparent;
-  color: var(--ui-color-danger-strong);
-  border-color: var(--ui-color-danger);
+  min-block-size: 0;
+  padding-block: 0;
+  padding-inline: 0;
+  color: var(--ui-color-accent);
+  text-underline-offset: 0.15em;
 }
 
-.ui-button[data-appearance='outline'][data-variant='destructive']:active {
-  background: var(--ui-color-danger-tint);
+.ui-button[data-variant='link']:hover {
+  text-decoration: underline;
+}
+
+/* Destructive: solid danger family fill. */
+.ui-button[data-variant='destructive'] {
+  color: var(--ui-color-on-danger);
+  background: var(--ui-color-danger-surface);
 }
 
 /* States — hover never restyles a disabled control. Hover is pointer-gated
- * (sticky :hover on touch would latch the highlight). Outline selectors are
- * more specific and win over the filled hover rules for outline elements. */
+ * (sticky :hover on touch would latch the highlight). Variant selectors
+ * win over the generic default rule for their own fills. */
 @media (hover: hover) and (pointer: fine) {
   .ui-button:hover:not(:disabled, [aria-disabled='true']) {
     background: var(--ui-color-neutral-strong);
   }
 
-  .ui-button[data-variant='primary']:hover:not(:disabled, [aria-disabled='true']) {
-    background: var(--ui-color-accent-hover);
+  .ui-button[data-variant='secondary']:hover:not(:disabled, [aria-disabled='true']) {
+    background: var(--ui-color-hover-raised);
   }
 
-  .ui-button[data-variant='destructive']:hover:not(:disabled, [aria-disabled='true']) {
-    background: var(--ui-color-danger-hover);
-  }
-
-  .ui-button[data-appearance='outline']:hover:not(:disabled, [aria-disabled='true']) {
+  .ui-button[data-variant='outline']:hover:not(:disabled, [aria-disabled='true']) {
     background: var(--ui-color-hover);
     border-color: var(--ui-color-border-strong);
   }
 
-  .ui-button[data-appearance='outline'][data-variant='primary']:hover:not(
-      :disabled,
-      [aria-disabled='true']
-    ) {
-    background: var(--ui-color-accent-tint);
-    border-color: var(--ui-color-accent-strong);
+  .ui-button[data-variant='ghost']:hover:not(:disabled, [aria-disabled='true']) {
+    background: var(--ui-color-hover);
   }
 
-  .ui-button[data-appearance='outline'][data-variant='destructive']:hover:not(
-      :disabled,
-      [aria-disabled='true']
-    ) {
-    background: var(--ui-color-danger-tint);
-    border-color: var(--ui-color-danger-strong);
+  .ui-button[data-variant='destructive']:hover:not(:disabled, [aria-disabled='true']) {
+    background: var(--ui-color-danger-hover);
   }
 }
 

@@ -46,15 +46,12 @@ export const semanticMap = {
   'neutral-surface': { light: 'neutral-900', dark: 'neutral-50' },
   'neutral-strong': { light: 'neutral-950', dark: 'neutral-0' },
   'on-neutral': { light: 'neutral-0', dark: 'neutral-950' },
+  'secondary-surface': { light: 'neutral-50', dark: 'neutral-800' },
   text: { light: 'neutral-900', dark: 'neutral-50' },
   'text-muted': { light: 'neutral-600', dark: 'neutral-300' },
   accent: { light: 'accent-600', dark: 'accent-300' },
   'accent-strong': { light: 'accent-700', dark: 'accent-200' },
   'accent-surface': { light: 'accent-500', dark: 'accent-300' },
-  'accent-hover': {
-    light: { mix: ['accent-surface', 'accent-strong'] },
-    dark: { mix: ['accent-surface', 'accent-strong'] },
-  },
   'on-accent': { light: 'neutral-0', dark: 'neutral-950' },
   danger: { light: 'danger-600', dark: 'danger-300' },
   'danger-strong': { light: 'danger-700', dark: 'danger-200' },
@@ -101,9 +98,11 @@ export const tokenPairs = [
   { fg: 'text', bg: 'surface-subtle', role: 'fluent', note: 'inline code, samp; pre' },
   { fg: 'text', bg: 'surface-raised', role: 'fluent', note: 'kbd' },
 
-  // Hover fills (state model, theme notes): table rows, accordion
+  // Hover fills (state model, theme notes): table rows, accordion,
+  // secondary button hover
   { fg: 'text', bg: 'hover', role: 'body' },
   { fg: 'text', bg: 'hover-raised', role: 'body' },
+  { fg: 'text', bg: 'secondary-surface', role: 'body' },
 
   // Neutral action family (filled default button)
   { fg: 'on-neutral', bg: 'neutral-surface', role: 'body' },
@@ -114,7 +113,6 @@ export const tokenPairs = [
   { fg: 'accent', bg: 'surface-raised', role: 'body' },
   { fg: 'accent-strong', bg: 'surface', role: 'body' },
   { fg: 'on-accent', bg: 'accent-surface', role: 'body' },
-  { fg: 'on-accent', bg: 'accent-hover', role: 'body', note: 'primary button hover' },
 
   // Danger text and controls
   { fg: 'danger', bg: 'surface', role: 'body' },

@@ -35,39 +35,116 @@
       <section>
         <h2>Variants</h2>
         <div class="example">
-          <button class="ui-button" type="button">Neutral</button>
-          <button class="ui-button" type="button" data-appearance="outline">Neutral</button>
-          <button class="ui-button" type="button" data-variant="primary">Primary</button>
-          <button class="ui-button" type="button" data-variant="primary" data-appearance="outline">
-            Primary
-          </button>
+          <button class="ui-button" type="button">Default</button>
+          <button class="ui-button" type="button" data-variant="secondary">Secondary</button>
+          <button class="ui-button" type="button" data-variant="outline">Outline</button>
+          <button class="ui-button" type="button" data-variant="ghost">Ghost</button>
           <button class="ui-button" type="button" data-variant="destructive">Delete</button>
-          <button
-            class="ui-button"
-            type="button"
-            data-variant="destructive"
-            data-appearance="outline"
-          >
-            Delete
-          </button>
+          <a class="ui-button" href="#" data-variant="link">Link</a>
         </div>
         <p>
-          <code>data-variant="primary|destructive"</code> (default is neutral, no attribute) ×
-          <code>data-appearance="outline"</code> (default is filled, no attribute). The neutral
-          family is inverted: a dark fill in the light theme, near-white in the dark. Filled buttons
-          carry no border — the fill is the surface; outline swaps the fill for a border and a
-          colored text identity.
+          <code>data-variant="secondary|outline|ghost|destructive|link"</code>; default is
+          <code>default</code> (no attribute). The default variant is the high-contrast inverted
+          neutral family: a dark fill in the light theme, near-white in the dark. Filled variants
+          carry no border — the fill is the surface.
         </p>
       </section>
 
       <section>
         <h2>Sizes</h2>
         <div class="example">
+          <button class="ui-button" type="button" data-size="xs">Extra small</button>
           <button class="ui-button" type="button" data-size="sm">Small</button>
           <button class="ui-button" type="button">Medium</button>
           <button class="ui-button" type="button" data-size="lg">Large</button>
         </div>
-        <p><code>data-size="sm|lg"</code>; default is md (no attribute).</p>
+        <p>
+          <code>data-size="xs|sm|lg"</code>; default is md (no attribute). Density only — the font
+          stays at the default step on every size.
+        </p>
+      </section>
+
+      <section>
+        <h2>Icon</h2>
+        <div class="example">
+          <button
+            class="ui-button"
+            type="button"
+            data-variant="outline"
+            data-size="icon-xs"
+            aria-label="Settings"
+          >
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+            >
+              <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" />
+            </svg>
+          </button>
+          <button
+            class="ui-button"
+            type="button"
+            data-variant="outline"
+            data-size="icon-sm"
+            aria-label="Settings"
+          >
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+            >
+              <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" />
+            </svg>
+          </button>
+          <button
+            class="ui-button"
+            type="button"
+            data-variant="outline"
+            data-size="icon"
+            aria-label="Settings"
+          >
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+            >
+              <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" />
+            </svg>
+          </button>
+          <button
+            class="ui-button"
+            type="button"
+            data-variant="outline"
+            data-size="icon-lg"
+            aria-label="Settings"
+          >
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+            >
+              <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" />
+            </svg>
+          </button>
+        </div>
+        <p>
+          <code>data-size="icon-xs|icon-sm|icon|icon-lg"</code> — square buttons for icon-only
+          actions. Icons auto-size to <code>1rem</code>. An icon-only button requires
+          <code>aria-label</code>; the icon itself is <code>aria-hidden="true"</code>.
+        </p>
       </section>
 
       <section>
@@ -90,9 +167,9 @@
             Button text is the accessible name; icon-only buttons require <code>aria-label</code>.
           </li>
           <li>
-            APCA pairs: <code>on-accent/accent-surface</code>, <code>text/surface-raised</code>,
-            <code>on-danger/danger-surface</code>, <code>accent-strong/accent-tint</code>,
-            <code>danger-strong/danger-tint</code>.
+            APCA pairs: <code>on-neutral/neutral-surface</code>,
+            <code>on-neutral/neutral-strong</code>, <code>text/secondary-surface</code>,
+            <code>on-danger/danger-surface</code>, <code>accent</code> on surfaces (link variant).
           </li>
         </ul>
       </section>
@@ -106,6 +183,7 @@
           </li>
           <li>No JS for hover/active/disabled states.</li>
           <li>Do not override <code>outline</code> — the focus ring is system-wide.</li>
+          <li>Do not ship an icon-only button without <code>aria-label</code>.</li>
         </ul>
       </section>
     </main>

@@ -45,12 +45,6 @@
   initial-value: gray;
 }
 
-@property --ui-color-accent-hover {
-  syntax: '<color>';
-  inherits: true;
-  initial-value: blue;
-}
-
 @property --ui-color-danger-hover {
   syntax: '<color>';
   inherits: true;
@@ -94,6 +88,12 @@
 }
 
 @property --ui-color-on-neutral {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: white;
+}
+
+@property --ui-color-secondary-surface {
   syntax: '<color>';
   inherits: true;
   initial-value: white;
@@ -223,6 +223,7 @@
     --ui-color-neutral-surface var(--ui-duration-slow) ease,
     --ui-color-neutral-strong var(--ui-duration-slow) ease,
     --ui-color-on-neutral var(--ui-duration-slow) ease,
+    --ui-color-secondary-surface var(--ui-duration-slow) ease,
     --ui-color-accent var(--ui-duration-slow) ease,
     --ui-color-accent-strong var(--ui-duration-slow) ease,
     --ui-color-accent-surface var(--ui-duration-slow) ease,
