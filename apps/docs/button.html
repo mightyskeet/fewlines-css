@@ -36,10 +36,27 @@
         <h2>Variants</h2>
         <div class="example">
           <button class="ui-button" type="button">Secondary</button>
+          <button class="ui-button" type="button" data-appearance="outline">Secondary</button>
           <button class="ui-button" type="button" data-variant="primary">Primary</button>
+          <button class="ui-button" type="button" data-variant="primary" data-appearance="outline">
+            Primary
+          </button>
           <button class="ui-button" type="button" data-variant="destructive">Delete</button>
+          <button
+            class="ui-button"
+            type="button"
+            data-variant="destructive"
+            data-appearance="outline"
+          >
+            Delete
+          </button>
         </div>
-        <p><code>data-variant="primary|destructive"</code>; default is secondary (no attribute).</p>
+        <p>
+          <code>data-variant="primary|destructive"</code> (default is secondary, no attribute) ×
+          <code>data-appearance="outline"</code> (default is filled, no attribute). Filled buttons
+          carry no border — the fill is the surface; outline swaps the fill for a border and a
+          colored text identity.
+        </p>
       </section>
 
       <section>
@@ -73,7 +90,8 @@
           </li>
           <li>
             APCA pairs: <code>on-accent/accent-surface</code>, <code>text/surface-raised</code>,
-            <code>on-danger/danger-surface</code>.
+            <code>on-danger/danger-surface</code>, <code>accent-strong/accent-tint</code>,
+            <code>danger-strong/danger-tint</code>.
           </li>
         </ul>
       </section>

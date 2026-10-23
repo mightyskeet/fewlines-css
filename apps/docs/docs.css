@@ -72,12 +72,12 @@ body {
   color: var(--ui-color-text-muted);
 }
 
+/* Demo containers are layout-only (margins, spacing): no backgrounds,
+ * borders or shadows of our own — everything visible on a docs page must be
+ * reproducible from core components and semantic tokens alone
+
 .example {
-  border: 1px solid var(--ui-color-border);
-  border-radius: var(--ui-radius-md);
-  padding: var(--ui-space-md);
   margin-block: var(--ui-space-md);
-  background: var(--ui-color-surface-raised);
 }
 
 @media (min-width: 72rem) {

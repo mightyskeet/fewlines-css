@@ -44,8 +44,9 @@
   --ui-color-text: light-dark(var(--ui-palette-neutral-900), var(--ui-palette-neutral-50));
   --ui-color-text-muted: light-dark(var(--ui-palette-neutral-600), var(--ui-palette-neutral-300));
 
-  /* Border */
-  --ui-color-border: light-dark(var(--ui-palette-neutral-300), var(--ui-palette-neutral-700));
+  /* Border — a calm hairline: 200 (87%) in the light theme (the shadcn-grade
+   * 92% would need a new palette step), 700 in the dark. */
+  --ui-color-border: light-dark(var(--ui-palette-neutral-200), var(--ui-palette-neutral-700));
   --ui-color-border-strong: light-dark(
     var(--ui-palette-neutral-500),
     var(--ui-palette-neutral-400)
