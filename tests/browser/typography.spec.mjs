@@ -1,14 +1,13 @@
 import { expect, test } from '@playwright/test';
 
 /**
- * Fluid typography and text-style classes.
+ * Fluid typography.
  *
  * The fluid scale (tokens/typography.css) is deterministic at a fixed
  * viewport; these tests verify the behavior contract, not pixel values:
  * sizes respond to the viewport width and pin outside the interpolation
- * window, document text follows the default step, headings map onto the
- * canonical steps (theme notes), and the ui-* classes apply their
- * positions (packages/core/src/text/text.css).
+ * window, document text follows the default step, and headings map onto
+ * the canonical steps (theme notes).
  */
 
 const readFont = (locator) => locator.evaluate((el) => getComputedStyle(el).fontSize);
@@ -48,8 +47,7 @@ test('type sizes grow with the viewport and pin outside the window', async ({ pa
 test('document text follows the default step', async ({ page }) => {
   await page.goto('/typography.html');
   const body = await readFont(page.locator('body'));
-  const uiBody = await readFont(page.locator('.ui-body'));
-  expect(body).toBe(uiBody);
+  expect(await tokenFont(page, '--ui-font-size-default')).toBe(body);
 });
 
 test('headings map onto the canonical scale steps', async ({ page }) => {
@@ -72,32 +70,4 @@ test('headings map onto the canonical scale steps', async ({ page }) => {
       `${selector} weight`,
     ).toBe(weight);
   }
-});
-
-test('text style classes apply their canonical positions', async ({ page }) => {
-  await page.goto('/typography.html');
-
-  const styles = await page
-    .locator('.ui-display, .ui-lead, .ui-body, .ui-overline, .ui-caption')
-    .evaluateAll((els) =>
-      Object.fromEntries(
-        els.map((el) => {
-          const s = getComputedStyle(el);
-          return [el.className, { size: parseFloat(s.fontSize), weight: s.fontWeight }];
-        }),
-      ),
-    );
-
-  // Size order across the scale; overline and caption share the xs step.
-  expect(styles['ui-caption'].size).toBe(styles['ui-overline'].size);
-  expect(styles['ui-caption'].size).toBeLessThan(styles['ui-body'].size);
-  expect(styles['ui-body'].size).toBeLessThan(styles['ui-lead'].size);
-  expect(styles['ui-lead'].size).toBeLessThan(styles['ui-display'].size);
-
-  // Weights follow the canonical mapping.
-  expect(styles['ui-overline'].weight).toBe('500');
-  expect(styles['ui-caption'].weight).toBe('400');
-  expect(styles['ui-body'].weight).toBe('400');
-  expect(styles['ui-lead'].weight).toBe('400');
-  expect(styles['ui-display'].weight).toBe('700');
 });

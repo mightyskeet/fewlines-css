@@ -126,7 +126,7 @@ export const tokenPairs = [
   // Disabled state (tracked, exempt from conformance, spot readable)
   { fg: 'text-muted', bg: 'surface', role: 'disabled', note: 'disabled controls' },
 
-  // Caption position (ui-caption, the xs step ~11-12px): below the fluent
+  // Caption position (the xs step ~11-12px): below the fluent
   // size range, so the strict `small` threshold applies. Only full-contrast
   // text pairs ship — text-muted fails Lc 90 in the dark theme (Lc ~63),
   // same policy as blockquote (theme notes).

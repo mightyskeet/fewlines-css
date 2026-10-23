@@ -4,10 +4,6 @@
  *   component.css, example.html, component.md, component.spec.ts
  * (architecture notes, «Качество как контракт»).
  */
-
-/* Text styles (src/text/) — the type roles as ui-* classes; foundation
- * surface, not a component. */
-@import '../text/text.css';
 @import './button/button.css';
 @import './field/field.css';
 @import './dialog/dialog.css';
