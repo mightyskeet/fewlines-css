@@ -72,45 +72,14 @@ body {
   color: var(--ui-color-text-muted);
 }
 
-/* Demo containers carry a graph-paper backdrop so stacked sections read as
- * separate wells (docs-site concern, not core: the background is decoration
- * of this site, nothing a host reproduces). Dashed 24px grid fading toward
- * the edges (mask-image is supported unprefixed across the matrix —
- * Chrome 120, FF 53, Safari 15.4). Line color per theme: border-strong in
- * the light theme, a half-step toward text-muted in the dark (the plain
- * 60% line vanishes, the full muted 78% is too loud); the two
- * opaque surface bands cut the solid hairlines into dashes — surface on the
- * page surface is invisible, so no fill appears (theme-correct equivalent
- * of the white bands in the reference snippet). */
+/* Demo containers: a pre-style border groups the demoed components into a
+ * well. Backdrop patterns (dots, grid) were tried and rejected in review
+ * (2026-10-24) — the plain bordered box won. */
 .example {
-  position: relative;
   margin-block: var(--ui-space-md);
   padding: var(--ui-space-lg);
   border: 1px solid var(--ui-color-border);
   border-radius: var(--ui-radius-md);
-}
-
-/* The pattern lives on a pseudo-element so the edge-fade mask fades only the
- * backdrop — a mask on .example itself would fade the demoed components too.
- * Polka-dot tile: 1px dots on a 10px grid, no fill — the dots ride the page
- * surface. Dot color per theme: border-strong in the light theme, a
- * half-step toward text-muted in the dark. */
-.example::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  border-radius: inherit;
-  background-image: radial-gradient(
-    light-dark(
-        var(--ui-color-border-strong),
-        color-mix(in oklab, var(--ui-color-border-strong), var(--ui-color-text-muted) 50%)
-      )
-      1px,
-    transparent 1px
-  );
-  background-size: 10px 10px;
-  mask-image: radial-gradient(ellipse at center, rgb(0 0 0 / 70%) 0%, rgb(0 0 0 / 0%) 75%);
 }
 
 /* Docs-page heading rhythm: sections need air between each other; core
