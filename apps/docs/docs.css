@@ -76,7 +76,9 @@ body {
  * separate wells (docs-site concern, not core: the background is decoration
  * of this site, nothing a host reproduces). Dashed 24px grid fading toward
  * the edges (mask-image is supported unprefixed across the matrix —
- * Chrome 120, FF 53, Safari 15.4). Line color is the border token; the two
+ * Chrome 120, FF 53, Safari 15.4). Line color per theme: border-strong in
+ * the light theme, a half-step toward text-muted in the dark (the plain
+ * 60% line vanishes, the full muted 78% is too loud); the two
  * opaque surface bands cut the solid hairlines into dashes — surface on the
  * page surface is invisible, so no fill appears (theme-correct equivalent
  * of the white bands in the reference snippet). */
@@ -115,8 +117,24 @@ body {
       transparent 6px,
       transparent 8px
     ),
-    linear-gradient(to bottom, var(--ui-color-border) 0.72px, transparent 0.72px),
-    linear-gradient(to right, var(--ui-color-border) 0.72px, transparent 0.72px);
+    linear-gradient(
+      to bottom,
+      light-dark(
+          var(--ui-color-border-strong),
+          color-mix(in oklab, var(--ui-color-border-strong), var(--ui-color-text-muted) 50%)
+        )
+        0.72px,
+      transparent 0.72px
+    ),
+    linear-gradient(
+      to right,
+      light-dark(
+          var(--ui-color-border-strong),
+          color-mix(in oklab, var(--ui-color-border-strong), var(--ui-color-text-muted) 50%)
+        )
+        0.72px,
+      transparent 0.72px
+    );
   background-size:
     100% 100%,
     100% 100%,
