@@ -55,17 +55,18 @@
   /* Neutral action family — the high-contrast default button: dark fill in
    * the light theme, near-white in the dark (inverted, like the text
    * polarity). Symmetric with the accent/danger families (surface / strong /
-   * on-*). Hover moves against the fill direction — the dark fill lightens
-   * (one step down the neutral scale), the light fill darkens — a
-   * same-direction shift (900→950 / 50→0) is imperceptible; press stays
+   * on-*). Hover moves against the fill direction and two full steps so the
+   * change is unmistakable: the dark fill lightens (900 -> 700), the light
+   * fill darkens (50 -> 200) — one-step shifts (800/100) and the
+   * same-direction shift (950/0) both read as invisible. Press stays
    * neutral-strong (full next step). */
   --ui-color-neutral-surface: light-dark(
     var(--ui-palette-neutral-900),
     var(--ui-palette-neutral-50)
   );
   --ui-color-neutral-hover: light-dark(
-    var(--ui-palette-neutral-800),
-    var(--ui-palette-neutral-100)
+    var(--ui-palette-neutral-700),
+    var(--ui-palette-neutral-200)
   );
   --ui-color-neutral-strong: light-dark(var(--ui-palette-neutral-950), var(--ui-palette-neutral-0));
   --ui-color-on-neutral: light-dark(var(--ui-palette-neutral-0), var(--ui-palette-neutral-950));

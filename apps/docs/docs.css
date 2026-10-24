@@ -74,23 +74,26 @@ body {
 
 /* Demo containers carry a dotted tile backdrop so stacked sections read as
  * separate wells (docs-site concern, not core: the background is decoration
- * of this site, nothing a host reproduces). Hexagonal dot tiling: two
- * offset radial-gradient dot layers + surface tint. */
+ * of this site, nothing a host reproduces). Hexagonal dot lattice: two
+ * offset dot grids, no fill — the dots ride the page surface directly.
+ * Dot color is border-strong at 40% alpha (token-clean equivalent of the
+ * #aeb3b9/0.8 reference). */
 .example {
   margin-block: var(--ui-space-md);
-  padding: var(--ui-space-md);
-  border-radius: var(--ui-radius-md);
-  background:
-    radial-gradient(var(--ui-space-3xs) 1.5px, transparent 1.6px),
-    radial-gradient(var(--ui-space-3xs) 1.5px, transparent 1.6px), var(--ui-color-surface-subtle);
-  background-size:
-    0.75rem 0.75rem,
-    0.75rem 0.75rem,
-    auto;
+  padding: var(--ui-space-lg);
+  background-image:
+    radial-gradient(
+      color-mix(in oklab, var(--ui-color-border-strong), transparent 60%) 1.2px,
+      transparent 1.3px
+    ),
+    radial-gradient(
+      color-mix(in oklab, var(--ui-color-border-strong), transparent 60%) 1.2px,
+      transparent 1.3px
+    );
+  background-size: 24px 24px;
   background-position:
     0 0,
-    0.375rem 0.375rem,
-    0 0;
+    12px 12px;
 }
 
 /* Docs-page heading rhythm: sections need air between each other; core
@@ -197,6 +200,7 @@ main h3 {
     max-block-size: 100vh;
     overflow: auto;
     font-size: var(--ui-font-size-sm);
+    padding-block-start: var(--ui-space-xl);
   }
 
   site-toc h2 {

@@ -44,7 +44,7 @@ export const semanticMap = {
     dark: { mix: ['surface-raised', 'surface-subtle'] },
   },
   'neutral-surface': { light: 'neutral-900', dark: 'neutral-50' },
-  'neutral-hover': { light: 'neutral-800', dark: 'neutral-100' },
+  'neutral-hover': { light: 'neutral-700', dark: 'neutral-200' },
   'neutral-strong': { light: 'neutral-950', dark: 'neutral-0' },
   'on-neutral': { light: 'neutral-0', dark: 'neutral-950' },
   'secondary-surface': { light: 'neutral-50', dark: 'neutral-800' },
