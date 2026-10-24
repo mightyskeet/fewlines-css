@@ -55,11 +55,11 @@ test('headings map onto the canonical scale steps', async ({ page }) => {
 
   const cases = [
     ['h1', '--ui-font-size-2xl', '700'],
-    ['h2', '--ui-font-size-xl', '600'],
-    ['.example h3', '--ui-font-size-lg', '600'],
-    ['.example h4', '--ui-font-size-md', '600'],
-    ['.example h5', '--ui-font-size-default', '600'],
-    ['.example h6', '--ui-font-size-sm', '600'],
+    ['h2', '--ui-font-size-xl', '700'],
+    ['.example h3', '--ui-font-size-lg', '700'],
+    ['.example h4', '--ui-font-size-md', '700'],
+    ['.example h5', '--ui-font-size-default', '700'],
+    ['.example h6', '--ui-font-size-sm', '700'],
   ];
 
   for (const [selector, token, weight] of cases) {

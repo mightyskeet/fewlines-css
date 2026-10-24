@@ -46,9 +46,9 @@ p {
 
 /* Canonical heading typography: h1–h6 map onto the fluid scale steps
  * (tokens/typography.css) with explicit weights and line heights — the
- * canonical mapping lives in theme notes. The lower levels close up to
- * the text sizes: at the calibrated ratio there is no room for six
- * distinct sizes below h3, the weight carries the distinction. Margins
+ * canonical mapping lives in theme notes. All levels share weight 700;
+ * the lower levels close up to the text sizes: at the calibrated ratio
+ * there is no room for six distinct sizes below h3. Margins
  * stay UA: headings participate in host layout systems; these rules own
  * the font only.
  *
@@ -61,23 +61,23 @@ h1 {
 }
 
 h2 {
-  font: 600 var(--ui-font-size-xl) / 1.25 var(--ui-font-sans);
+  font: 700 var(--ui-font-size-xl) / 1.25 var(--ui-font-sans);
 }
 
 h3 {
-  font: 600 var(--ui-font-size-lg) / 1.3 var(--ui-font-sans);
+  font: 700 var(--ui-font-size-lg) / 1.3 var(--ui-font-sans);
 }
 
 h4 {
-  font: 600 var(--ui-font-size-md) / 1.3 var(--ui-font-sans);
+  font: 700 var(--ui-font-size-md) / 1.3 var(--ui-font-sans);
 }
 
 h5 {
-  font: 600 var(--ui-font-size-default) / 1.3 var(--ui-font-sans);
+  font: 700 var(--ui-font-size-default) / 1.3 var(--ui-font-sans);
 }
 
 h6 {
-  font: 600 var(--ui-font-size-sm) / 1.45 var(--ui-font-sans);
+  font: 700 var(--ui-font-size-sm) / 1.45 var(--ui-font-sans);
 }
 
 /* Inline code family: <code>, <kbd>, <samp>.
