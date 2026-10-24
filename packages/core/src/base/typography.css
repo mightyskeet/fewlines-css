@@ -37,6 +37,13 @@ body {
   font-size: var(--ui-font-size-default);
 }
 
+/* Paragraphs balance their last lines (no single-word orphans) where
+ * supported; engines without the value keep the UA wrap (progressive
+ * enhancement, compatibility notes, 2026-10-24). */
+p {
+  text-wrap: pretty;
+}
+
 /* Canonical heading typography: h1–h6 map onto the fluid scale steps
  * (tokens/typography.css) with explicit weights and line heights — the
  * canonical mapping lives in theme notes. The lower levels close up to
@@ -86,7 +93,11 @@ h6 {
  * every line fragment when inline code wraps. Decorative enhancement —
  * without support the code is fully readable; the matrix floor Safari
  * supports only the -webkit- prefixed form, Chromium/FF the unprefixed one
- * (compatibility notes, 2026-10-03). */
+ * (compatibility notes, 2026-10-03).
+ *
+ * Padding is in em, not space tokens: it scales with the fragment itself
+ * (0.875em of the host context), so the pill proportions hold at any
+ * surrounding font size. */
 code,
 kbd,
 samp {
@@ -95,9 +106,9 @@ samp {
   color: var(--ui-color-text);
   background: var(--ui-color-surface-subtle);
   border: 1px solid var(--ui-color-border);
-  padding-block: var(--ui-space-3xs);
-  padding-inline: var(--ui-space-2xs);
-  border-radius: var(--ui-radius-xs);
+  padding-block: 0.125em;
+  padding-inline: 0.33em;
+  border-radius: var(--ui-radius-sm);
   /* stylelint-disable-next-line property-no-vendor-prefix --
    * the matrix floor Safari (26.6) supports clone only in the -webkit-
    * prefixed form; Chromium/FF take the unprefixed one
@@ -113,7 +124,9 @@ kbd {
   border-radius: var(--ui-radius-sm);
 }
 
-/* Code block: <pre> carries the surface; nested inline code elements reset so
+/* Code block: the border and radius carry the delineation — the fill stays
+ * transparent so code blocks read as page text on the page surface, not as
+ * embedded panels (decision 2026-10-24). Nested inline code elements reset so
  * a canonical <pre><code> pair is not double-padded and does not shrink the
  * font twice. tab-size is an <integer> — direct use, floor is far above
  * (compatibility notes, 2026-10-03). */
@@ -121,7 +134,6 @@ pre {
   font-family: var(--ui-font-mono);
   font-size: 0.875em;
   color: var(--ui-color-text);
-  background: var(--ui-color-surface-subtle);
   border: 1px solid var(--ui-color-border);
   border-radius: var(--ui-radius-md);
   padding-block: var(--ui-space-sm);

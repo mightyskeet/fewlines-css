@@ -84,12 +84,13 @@
   resize: block;
 }
 
-/* Sizes — density only: the font stays at the default step on every
- * variant (controls are chrome, they do not ride the display scale);
- * the height scale applies to single-line controls (textarea sizing is
- * line-based). */
+/* Sizes — density: sm steps the font down to the sm token (the 1.75rem
+ * height alone cannot fit the default label — same model as Button sm/xs,
+ * decision 2026-10-24); the height scale applies to single-line controls
+ * (textarea sizing is line-based). */
 .ui-input[data-size='sm'],
 .ui-select[data-size='sm'] {
+  font-size: var(--ui-font-size-sm);
   block-size: 1.75rem;
   padding-block: var(--ui-space-3xs);
 }

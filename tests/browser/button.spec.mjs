@@ -40,7 +40,10 @@ test('secondary is the muted soft fill with plain text', async ({ page }) => {
 test('outline is a bordered transparent button', async ({ page }) => {
   const styles = await stylesOf(page, '#btn-outline');
   expect(styles.background).toBe('rgba(0, 0, 0, 0)');
-  expect(styles.borderColor).toBe(await token(page, '--ui-color-border'));
+  // Half-step between border and border-strong (decision 2026-10-24) —
+  // distinct from both ends.
+  expect(styles.borderColor).not.toBe(await token(page, '--ui-color-border'));
+  expect(styles.borderColor).not.toBe(await token(page, '--ui-color-border-strong'));
   expect(styles.color).toBe(await token(page, '--ui-color-text'));
 });
 
@@ -51,13 +54,25 @@ test('ghost is borderless and transparent', async ({ page }) => {
   expect(styles.color).toBe(await token(page, '--ui-color-text'));
 });
 
-test('link is bare accent text', async ({ page }) => {
+test('link is bare plain-text link with underline on hover', async ({ page }) => {
   const styles = await stylesOf(page, '#btn-link');
   expect(styles.background).toBe('rgba(0, 0, 0, 0)');
-  expect(styles.color).toBe(await token(page, '--ui-color-accent'));
+  expect(styles.color).toBe(await token(page, '--ui-color-text'));
   expect(
     await page.locator('#btn-link').evaluate((el) => getComputedStyle(el).textDecorationLine),
   ).not.toBe('underline');
+});
+
+test('hover moves the default fill against the fill direction', async ({ page }) => {
+  const background = (id) =>
+    page.locator(id).evaluate((el) => getComputedStyle(el).backgroundColor);
+
+  // Hover lands on neutral-hover (opposite direction: the dark light-theme
+  // fill lightens, decision 2026-10-24), not on neutral-strong.
+  const hoverFill = await token(page, '--ui-color-neutral-hover');
+  await page.hover('#btn-neutral');
+  await expect.poll(() => background('#btn-neutral'), { timeout: 500 }).toBe(hoverFill);
+  expect(hoverFill).not.toBe(await token(page, '--ui-color-neutral-strong'));
 });
 
 test('destructive is the solid danger fill', async ({ page }) => {
@@ -78,9 +93,9 @@ test('hover does not restyle a disabled button', async ({ page }) => {
   const background = (id) =>
     page.locator(id).evaluate((el) => getComputedStyle(el).backgroundColor);
 
-  // Control: hovering the enabled default button lands on the next family
-  // step (poll: the fast background transition needs a frame or two)
-  const hoverFill = await token(page, '--ui-color-neutral-strong');
+  // Control: hovering the enabled default button lands on the hover fill
+  // (poll: the fast background transition needs a frame or two)
+  const hoverFill = await token(page, '--ui-color-neutral-hover');
   await page.hover('#btn-neutral');
   await expect.poll(() => background('#btn-neutral'), { timeout: 500 }).toBe(hoverFill);
 

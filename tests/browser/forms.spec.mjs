@@ -149,10 +149,12 @@ test('single-line controls share the standardized height scale', async ({ page }
   expect(await height('form-submit')).toBe(36);
 
   const font = (id) => page.locator(`#${id}`).evaluate((el) => getComputedStyle(el).fontSize);
-  // Sizes are density only: every variant keeps the default font step
-  // (controls do not ride the display scale, theme notes).
+  // Density: the sm step drops the font to the sm size (same model as
+  // Button sm/xs, decision 2026-10-24); md/lg keep the default step.
   const md = await font('input-md');
-  expect(await font('input-sm')).toBe(md);
+  const sm = await font('input-sm');
+  expect(sm).not.toBe(md);
+  expect(sm).toBe(await font('button-sm'));
   expect(await font('input-lg')).toBe(md);
 });
 

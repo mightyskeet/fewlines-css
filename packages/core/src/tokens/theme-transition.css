@@ -81,6 +81,12 @@
   initial-value: black;
 }
 
+@property --ui-color-neutral-hover {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: black;
+}
+
 @property --ui-color-neutral-strong {
   syntax: '<color>';
   inherits: true;
@@ -221,6 +227,7 @@
     --ui-color-border var(--ui-duration-slow) ease,
     --ui-color-border-strong var(--ui-duration-slow) ease,
     --ui-color-neutral-surface var(--ui-duration-slow) ease,
+    --ui-color-neutral-hover var(--ui-duration-slow) ease,
     --ui-color-neutral-strong var(--ui-duration-slow) ease,
     --ui-color-on-neutral var(--ui-duration-slow) ease,
     --ui-color-secondary-surface var(--ui-duration-slow) ease,

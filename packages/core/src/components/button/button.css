@@ -17,11 +17,11 @@
  * with outline.
  *
  * APCA pairs used (validated in tests/apca):
- *   default:     on-neutral on neutral-surface / neutral-strong
+ *   default:     on-neutral on neutral-surface / neutral-hover
  *   secondary:   text on secondary-surface / hover-raised
  *   outline:     text on hover (hover fill) / surface (border, nonText)
  *   ghost:       text on hover (hover fill)
- *   link:        accent on surface (body)
+ *   link:        text on surface (body)
  *   destructive: on-danger on danger-surface / danger-hover
  */
 
@@ -58,12 +58,15 @@
   pointer-events: none;
 }
 
-/* Sizes — density only: the font stays at the default step on every
- * variant (controls are chrome, they do not ride the display scale).
- * The height scale matches Field (sm 1.75 / md 2.25 / lg 2.75rem); xs and
- * the icon squares extend it below. Icon-only buttons require aria-label
+/* Sizes — density: heights match Field (sm 1.75 / md 2.25 / lg 2.75rem); xs
+ * and the icon squares extend it below. Small sizes step the font down to
+ * --ui-font-size-sm (the control height alone cannot compress the label);
+ * md and above stay at the default step (controls are chrome, they do not
+ * ride the display scale). Icon-only buttons require aria-label
  * (button.md). */
-.ui-button[data-size='sm'] {
+.ui-button[data-size='sm'],
+.ui-button[data-size='icon-sm'] {
+  font-size: var(--ui-font-size-sm);
   min-block-size: 1.75rem;
   padding-inline: var(--ui-space-sm);
 }
@@ -73,7 +76,9 @@
   padding-inline: var(--ui-space-lg);
 }
 
-.ui-button[data-size='xs'] {
+.ui-button[data-size='xs'],
+.ui-button[data-size='icon-xs'] {
+  font-size: var(--ui-font-size-sm);
   min-block-size: 1.5rem;
   padding-inline: var(--ui-space-sm);
 }
@@ -131,35 +136,47 @@
 }
 
 /* Outline: the border is the surface, the fill is transparent, the text
- * returns to the plain text color. */
+ * returns to the plain text color. The resting border is a half-step between
+ * border and border-strong — border alone disappears against hairlines on
+ * dense pages (decision 2026-10-24). */
 .ui-button[data-variant='outline'] {
   background: transparent;
   color: var(--ui-color-text);
-  border-color: var(--ui-color-border);
+  border-color: color-mix(in oklab, var(--ui-color-border), var(--ui-color-border-strong));
 }
 
 .ui-button[data-variant='outline']:active {
   background: var(--ui-color-hover);
 }
 
-/* Ghost: borderless transparent; the hover fill carries the affordance. */
+/* Ghost: borderless transparent; the hover fill carries the affordance. The
+ * hover is the raised half-step (hover-raised), not hover: with no resting
+ * fill the ghost hover may be bolder than secondary's (decision 2026-10-24). */
 .ui-button[data-variant='ghost'] {
   background: transparent;
   color: var(--ui-color-text);
 }
 
+/* Ghost press keeps the bolder raised fill. */
 .ui-button[data-variant='ghost']:active {
-  background: var(--ui-color-hover);
+  background: var(--ui-color-hover-raised);
 }
 
-/* Link: plain text in the accent color, no chrome; underline on hover. */
+/* Link: reads as plain text (not accent — a link-button is an action styled
+ * as a link, decision 2026-10-24), no chrome; underline on hover. No press
+ * fill — the press lands on the generic :active rule, so it is reset here. */
 .ui-button[data-variant='link'] {
   background: transparent;
   min-block-size: 0;
   padding-block: 0;
   padding-inline: 0;
-  color: var(--ui-color-accent);
+  color: var(--ui-color-text);
   text-underline-offset: 0.15em;
+}
+
+.ui-button[data-variant='link']:active {
+  background: transparent;
+  translate: none;
 }
 
 .ui-button[data-variant='link']:hover {
@@ -174,10 +191,12 @@
 
 /* States — hover never restyles a disabled control. Hover is pointer-gated
  * (sticky :hover on touch would latch the highlight). Variant selectors
- * win over the generic default rule for their own fills. */
+ * win over the generic default rule for their own fills. Default hover
+ * moves against the fill direction (dark fill lightens, light fill darkens —
+ * neutral-hover, decision 2026-10-24); link opts out of fills entirely. */
 @media (hover: hover) and (pointer: fine) {
-  .ui-button:hover:not(:disabled, [aria-disabled='true']) {
-    background: var(--ui-color-neutral-strong);
+  .ui-button:hover:not(:disabled, [aria-disabled='true'], [data-variant='link']) {
+    background: var(--ui-color-neutral-hover);
   }
 
   .ui-button[data-variant='secondary']:hover:not(:disabled, [aria-disabled='true']) {
@@ -190,7 +209,7 @@
   }
 
   .ui-button[data-variant='ghost']:hover:not(:disabled, [aria-disabled='true']) {
-    background: var(--ui-color-hover);
+    background: var(--ui-color-hover-raised);
   }
 
   .ui-button[data-variant='destructive']:hover:not(:disabled, [aria-disabled='true']) {
