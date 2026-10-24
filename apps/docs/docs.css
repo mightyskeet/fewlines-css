@@ -91,60 +91,25 @@ body {
 }
 
 /* The pattern lives on a pseudo-element so the edge-fade mask fades only the
- * grid — a mask on .example itself would fade the demoed components too. */
+ * backdrop — a mask on .example itself would fade the demoed components too.
+ * Polka-dot tile: 1px dots on a 10px grid, no fill — the dots ride the page
+ * surface. Dot color per theme: border-strong in the light theme, a
+ * half-step toward text-muted in the dark. */
 .example::before {
   content: '';
   position: absolute;
   inset: 0;
   z-index: -1;
   border-radius: inherit;
-  background-image:
-    repeating-linear-gradient(
-      to right,
-      transparent 0,
-      transparent 2px,
-      var(--ui-color-surface) 2px,
-      var(--ui-color-surface) 6px,
-      transparent 6px,
-      transparent 8px
-    ),
-    repeating-linear-gradient(
-      to bottom,
-      transparent 0,
-      transparent 2px,
-      var(--ui-color-surface) 2px,
-      var(--ui-color-surface) 6px,
-      transparent 6px,
-      transparent 8px
-    ),
-    linear-gradient(
-      to bottom,
-      light-dark(
-          var(--ui-color-border-strong),
-          color-mix(in oklab, var(--ui-color-border-strong), var(--ui-color-text-muted) 50%)
-        )
-        0.72px,
-      transparent 0.72px
-    ),
-    linear-gradient(
-      to right,
-      light-dark(
-          var(--ui-color-border-strong),
-          color-mix(in oklab, var(--ui-color-border-strong), var(--ui-color-text-muted) 50%)
-        )
-        0.72px,
-      transparent 0.72px
-    );
-  background-size:
-    100% 100%,
-    100% 100%,
-    24px 24px,
-    24px 24px;
-  background-position:
-    0 0,
-    0 0,
-    0 -0.24px,
-    -0.24px 0;
+  background-image: radial-gradient(
+    light-dark(
+        var(--ui-color-border-strong),
+        color-mix(in oklab, var(--ui-color-border-strong), var(--ui-color-text-muted) 50%)
+      )
+      1px,
+    transparent 1px
+  );
+  background-size: 10px 10px;
   mask-image: radial-gradient(ellipse at center, rgb(0 0 0 / 70%) 0%, rgb(0 0 0 / 0%) 75%);
 }
 
