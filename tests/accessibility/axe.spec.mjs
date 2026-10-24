@@ -72,7 +72,7 @@ test('keyboard: all interactive elements reachable via Tab', async ({ page }) =>
     if (id === 'popover-trigger') break;
   }
   expect(reachable).toContain('btn-neutral');
-  expect(reachable).toContain('btn-primary');
+  expect(reachable).toContain('btn-secondary');
   expect(reachable).toContain('dialog-open');
   expect(reachable).toContain('popover-trigger');
   // Disabled button must not be reachable
