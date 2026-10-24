@@ -72,28 +72,62 @@ body {
   color: var(--ui-color-text-muted);
 }
 
-/* Demo containers carry a dotted tile backdrop so stacked sections read as
+/* Demo containers carry a graph-paper backdrop so stacked sections read as
  * separate wells (docs-site concern, not core: the background is decoration
- * of this site, nothing a host reproduces). Hexagonal dot lattice: two
- * offset dot grids, no fill — the dots ride the page surface directly.
- * Dot color is border-strong at 40% alpha (token-clean equivalent of the
- * #aeb3b9/0.8 reference). */
+ * of this site, nothing a host reproduces). Dashed 24px grid fading toward
+ * the edges (mask-image is supported unprefixed across the matrix —
+ * Chrome 120, FF 53, Safari 15.4). Line color is the border token; the two
+ * opaque surface bands cut the solid hairlines into dashes — surface on the
+ * page surface is invisible, so no fill appears (theme-correct equivalent
+ * of the white bands in the reference snippet). */
 .example {
+  position: relative;
   margin-block: var(--ui-space-md);
   padding: var(--ui-space-lg);
+  border: 1px solid var(--ui-color-border);
+  border-radius: var(--ui-radius-md);
+}
+
+/* The pattern lives on a pseudo-element so the edge-fade mask fades only the
+ * grid — a mask on .example itself would fade the demoed components too. */
+.example::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
   background-image:
-    radial-gradient(
-      color-mix(in oklab, var(--ui-color-border-strong), transparent 60%) 1.2px,
-      transparent 1.3px
+    repeating-linear-gradient(
+      to right,
+      transparent 0,
+      transparent 2px,
+      var(--ui-color-surface) 2px,
+      var(--ui-color-surface) 6px,
+      transparent 6px,
+      transparent 8px
     ),
-    radial-gradient(
-      color-mix(in oklab, var(--ui-color-border-strong), transparent 60%) 1.2px,
-      transparent 1.3px
-    );
-  background-size: 24px 24px;
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent 2px,
+      var(--ui-color-surface) 2px,
+      var(--ui-color-surface) 6px,
+      transparent 6px,
+      transparent 8px
+    ),
+    linear-gradient(to bottom, var(--ui-color-border) 0.72px, transparent 0.72px),
+    linear-gradient(to right, var(--ui-color-border) 0.72px, transparent 0.72px);
+  background-size:
+    100% 100%,
+    100% 100%,
+    24px 24px,
+    24px 24px;
   background-position:
     0 0,
-    12px 12px;
+    0 0,
+    0 -0.24px,
+    -0.24px 0;
+  mask-image: radial-gradient(ellipse at center, rgb(0 0 0 / 70%) 0%, rgb(0 0 0 / 0%) 75%);
 }
 
 /* Docs-page heading rhythm: sections need air between each other; core
