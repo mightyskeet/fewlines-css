@@ -77,7 +77,9 @@ body {
  * rides a pseudo-element. The SVG cannot read page CSS variables as a
  * background-image, so it acts as an alpha mask and the line color comes
  * from background-color on --ui-* tokens (theme-adaptive for free);
- * non-scaling-stroke inside the SVG keeps hairline widths at any size. */
+ * non-scaling-stroke inside the SVG keeps hairline widths at any size.
+ * The mask scales to the box width and keeps the SVG aspect (100% auto):
+ * extra height is cropped, centered so the design's axes stay in view. */
 .example {
   position: relative;
   margin-block: var(--ui-space-md);
@@ -97,7 +99,8 @@ body {
     color-mix(in oklab, var(--ui-color-border-strong), var(--ui-color-text-muted) 50%)
   );
   mask-image: url('/assets/grid.svg');
-  mask-size: 100% 100%;
+  mask-size: 100% auto;
+  mask-position: center;
   mask-repeat: no-repeat;
 }
 
