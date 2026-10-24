@@ -48,7 +48,12 @@ test('dialog has backdrop in modal mode', async ({ page }) => {
   expect(hasBackdrop).toBe(true);
 });
 
-test('dialog focus moves inside on open and returns to trigger on close', async ({ page }) => {
+test('dialog focus moves inside on open and returns to trigger on close', async ({ page, browserName }) => {
+  // Known WebKit divergence (found 2026-10-16, reproduced on the old CSS —
+  // not our regression): focus does not return to the trigger on close.
+  // test.fail (not skip): the inversion is noticed when WebKit fixes it.
+  test.fail(browserName === 'webkit', 'WebKit: focus does not return to the trigger on close');
+
   const trigger = page.locator('#dialog-open');
   await trigger.click();
 
@@ -74,10 +79,10 @@ test('dialog focus is trapped while modal', async ({ page }) => {
   // and first focusable element, so we assert the meaningful invariant:
   // attempts to focus outside content are refused.
   const outside = await page.evaluate(() => {
-    document.querySelector('#btn-primary').focus();
+    document.querySelector('#btn-outline').focus();
     return document.activeElement.id;
   });
-  expect(outside).not.toBe('btn-primary');
+  expect(outside).not.toBe('btn-outline');
 
   await page.click('#btn-neutral', { force: true }).catch(() => {});
   const afterClick = await page.evaluate(() => document.activeElement.id);

@@ -27,6 +27,12 @@ Playwright или эквивалент покрывает реальное nativ
   positioning, fallback;
 - **Forms** — labels, validation, disabled/required/invalid/focus states.
 
+Известная дивергенция (2026-10-24): WebKit не возвращает фокус на триггер при
+закрытии `<dialog>` (спек ждёт возврата; воспроизводится на старом CSS —
+не наш регресс). Тест `dialog focus … returns to trigger on close` помечен
+`test.fail()` для webkit — при починке WebKit тест «перевернётся» и это
+заметно. Раз в несколько релизов WebKit стоит перепроверять.
+
 Accessibility: automated axe/browser checks — дополнительный слой; они не
 заменяют явные keyboard/focus тесты (accessibility notes).
 
