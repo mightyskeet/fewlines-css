@@ -73,35 +73,13 @@ body {
 }
 
 /* Demo containers: a pre-style border groups the demoed components into a
- * well; the curved-grid backdrop (assets/grid.svg, experiment 2026-10-25)
- * rides a pseudo-element. The SVG cannot read page CSS variables as a
- * background-image, so it acts as an alpha mask and the line color comes
- * from background-color on --ui-* tokens (theme-adaptive for free);
- * non-scaling-stroke inside the SVG keeps hairline widths at any size.
- * The mask scales to the box width and keeps the SVG aspect (100% auto):
- * extra height is cropped, centered so the design's axes stay in view. */
+ * well; no backdrop for now — backdrop variants are under experiment
+ * (dots, grids, SVG masks, 2026-10-24/25). */
 .example {
-  position: relative;
   margin-block: var(--ui-space-md);
   padding: var(--ui-space-lg);
   border: 1px solid var(--ui-color-border);
   border-radius: var(--ui-radius-md);
-}
-
-.example::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  border-radius: inherit;
-  background-color: light-dark(
-    var(--ui-color-border-strong),
-    color-mix(in oklab, var(--ui-color-border-strong), var(--ui-color-text-muted) 50%)
-  );
-  mask-image: url('/assets/grid.svg');
-  mask-size: 100% auto;
-  mask-position: center;
-  mask-repeat: no-repeat;
 }
 
 /* Docs-page heading rhythm: sections need air between each other; core
