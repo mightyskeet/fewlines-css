@@ -7,6 +7,9 @@
     <link rel="stylesheet" href="/core.css" />
     <link rel="stylesheet" href="/docs.css" />
     <script src="/site-sidebar.js" defer></script>
+    <script src="/site-toc.js" defer></script>
+    <script src="/vendor/hljs.min.js" defer></script>
+    <script src="/site-code.js" defer></script>
   </head>
   <body>
     <site-sidebar></site-sidebar>
@@ -59,8 +62,8 @@
           <button class="ui-button" type="button" data-size="lg">Large</button>
         </div>
         <p>
-          <code>data-size="xs|sm|lg"</code>; default is md (no attribute). Density only — the font
-          stays at the default step on every size.
+          <code>data-size="xs|sm|lg"</code>; default is md (no attribute). Small sizes also step the
+          font down to <code>--ui-font-size-sm</code>.
         </p>
       </section>
 
@@ -187,6 +190,7 @@
         </ul>
       </section>
     </main>
+    <site-toc></site-toc>
 
     <footer>
       <p>Full contract: <code>packages/core/src/components/button/button.md</code></p>

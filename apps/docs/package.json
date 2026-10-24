@@ -6,5 +6,8 @@
   "scripts": {
     "dev": "node ../../tests/prepare.mjs && npx serve .",
     "lint": "echo 'no lint for static html yet'"
+  },
+  "dependencies": {
+    "highlight.js": "^11.12.0"
   }
 }
