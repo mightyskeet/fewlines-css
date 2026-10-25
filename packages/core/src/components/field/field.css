@@ -34,6 +34,11 @@
   gap: var(--ui-space-3xs);
 }
 
+/* Stacked fields (host just puts them adjacent, like switch-field). */
+.ui-field + .ui-field {
+  margin-block-start: var(--ui-space-sm);
+}
+
 .ui-field-label {
   /* The label is chrome text: the sm step, 500 — the same level as the rest
    * of the chrome (canonical mapping, theme notes). */

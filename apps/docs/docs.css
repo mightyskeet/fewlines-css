@@ -84,21 +84,33 @@ body {
 }
 
 /* Demo containers: a pre-style border groups the demoed components into a
- * well; no backdrop for now — backdrop variants are under experiment
- * (dots, grids, SVG masks, 2026-10-24/25). */
+ * well; hatched backdrop distinguishes demos from the page itself
+ * (backdrop experiments: dots, grids, SVG masks, 2026-10-24/25). */
 .example {
+  --line-color: color-mix(
+    in oklch,
+    var(--ui-color-border) 25%,
+    var(--ui-color-surface) 75%
+  );
   margin-block: var(--ui-space-md);
   padding: var(--ui-space-lg);
   border: 1px solid var(--ui-color-border);
   border-radius: var(--ui-radius-md);
+  background-size: 0.75rem 0.75rem;
+  background-image: repeating-linear-gradient(
+    -45deg,
+    var(--line-color) 0,
+    var(--line-color) 1px,
+    transparent 0,
+    transparent 50%
+  );
 }
 
-/* Docs-page heading rhythm: sections need air between each other; core
- * keeps UA margins (layout is host concern). */
-main h2,
-main h3 {
-  margin-block-start: 4rem;
-  margin-block-end: 1.5rem;
+/* Docs-page section rhythm: air between sections; core keeps UA margins
+ * (layout is host concern). Section-level spacing, not heading-level —
+ * headings inside demos (dialog, drawer) are unaffected. */
+main > section {
+  margin-block-start: 6rem;
 }
 
 /* Syntax highlighting (highlight.js, vendor/hljs.min.js). Theme on --ui-*
