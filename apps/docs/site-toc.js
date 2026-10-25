@@ -19,24 +19,9 @@ class SiteToc extends HTMLElement {
     const list = document.createElement('ul');
     for (const section of document.querySelectorAll('main section:has(> h2)')) {
       const title = section.querySelector('h2');
-      // Stable id: derived from the title text (docs pages are static). It
-      // lives on the '#' anchor inside the heading, not on the section: the
-      // anchor is the fragment target AND the copy-link affordance — being
-      // focusable, it receives focus on fragment navigation (heading ring),
-      // and keyboard users continue Tab from it (accessibility fix for the
-      // focus lost on in-page navigation).
+      // Stable id: derive from the title text (docs pages are static).
       const id =
-        (title.dataset.sectionId ||= `section-${title.textContent.trim().toLowerCase().replace(/\s+/g, '-')}`);
-      const anchor = document.createElement('a');
-      anchor.href = `#${id}`;
-      anchor.id = id;
-      anchor.className = 'heading-anchor';
-      anchor.setAttribute('aria-label', `Copy link to “${title.textContent.trim()}”`);
-      anchor.addEventListener('click', () =>
-        navigator.clipboard?.writeText(new URL(anchor.href, location.href)),
-      );
-      anchor.append(document.createTextNode('#'));
-      title.append(' ', anchor);
+        (section.id ||= `section-${title.textContent.trim().toLowerCase().replace(/\s+/g, '-')}`);
       const item = document.createElement('li');
       const link = document.createElement('a');
       link.href = `#${id}`;
