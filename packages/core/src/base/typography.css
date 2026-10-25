@@ -44,6 +44,12 @@ p {
   text-wrap: pretty;
 }
 
+/* Multi-line list items wrap like paragraphs — same orphan-avoiding last
+ * line, same enhancement and fallback. */
+li {
+  text-wrap: pretty;
+}
+
 /* Canonical heading typography: h1–h6 map onto the fluid scale steps
  * (tokens/typography.css) with explicit weights and line heights — the
  * canonical mapping lives in theme notes. All levels share weight 700;
