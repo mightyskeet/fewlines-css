@@ -70,6 +70,7 @@ body {
 
 .page-header p {
   color: var(--ui-color-text-muted);
+  font-size: var(--ui-font-size-lg);
 }
 
 /* Demo containers: a pre-style border groups the demoed components into a
@@ -230,15 +231,6 @@ main h3 {
     padding-block: var(--ui-space-lg);
     padding-inline-end: var(--ui-space-lg);
     border-block-end: 0;
-  }
-
-  /* The separator line sits on the content column, not the sticky sidebar:
-   * a border on the sidebar ends where the sidebar ends; a border on the
-   * column runs the full page height (2026-10-24). */
-  main,
-  footer {
-    border-inline-start: 1px solid var(--ui-color-border);
-    padding-inline-start: var(--ui-space-lg);
   }
 
   .site-brand {
