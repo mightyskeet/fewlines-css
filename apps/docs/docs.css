@@ -197,9 +197,9 @@ main h3 {
     max-block-size: 100vh;
     overflow: auto;
     font-size: var(--ui-font-size-sm);
-    padding-block-start: var(--ui-space-xl);
     /* Overflow clips at the padding box: keep enough room for the
      * focus ring (2px outline + 2px offset) not to be cut at the edges. */
+    padding-block: var(--ui-space-xl) var(--ui-space-xs);
     padding-inline: var(--ui-space-xs);
   }
 
