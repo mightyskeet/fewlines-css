@@ -198,6 +198,9 @@ main h3 {
     overflow: auto;
     font-size: var(--ui-font-size-sm);
     padding-block-start: var(--ui-space-xl);
+    /* Overflow clips at the padding box: keep enough room for the
+     * focus ring (2px outline + 2px offset) not to be cut at the edges. */
+    padding-inline: var(--ui-space-xs);
   }
 
   site-toc h2 {
@@ -249,7 +252,10 @@ main h3 {
     overflow: auto;
     margin-block-end: 0;
     padding-block: var(--ui-space-lg);
-    padding-inline-end: var(--ui-space-lg);
+    /* Overflow clips at the padding box: keep enough room for the
+     * focus ring (2px outline + 2px offset) not to be cut on the left;
+     * .site-brand adds its own larger inset for alignment. */
+    padding-inline: var(--ui-space-xs) var(--ui-space-lg);
     border-block-end: 0;
   }
 
