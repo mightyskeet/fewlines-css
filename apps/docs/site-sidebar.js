@@ -2,6 +2,11 @@
 // This is host/tooling JS — the core package stays CSS-only
 // (overview notes, «Не является целью»).
 //
+// Theme persistence: the click handler below writes localStorage['theme'];
+// restoring it before first paint is a tiny inline <script> in every page's
+// <head> (after the viewport meta) — deferred scripts would flash the wrong
+// theme for one frame. Keep the two in sync when renaming the key.
+//
 // Adding a docs page = one entry in PAGES below; every sidebar picks up the
 // link automatically. The page title/description are static markup inside
 // <main> (header.page-header), so they render even if this script never
@@ -84,7 +89,9 @@ class SiteSidebar extends HTMLElement {
       const current =
         root.getAttribute('data-theme') ??
         (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-      root.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
+      const next = current === 'dark' ? 'light' : 'dark';
+      root.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
     });
     return button;
   }
