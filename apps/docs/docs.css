@@ -210,6 +210,11 @@ main h3 {
     margin: 0;
     padding: 0;
     list-style: none;
+    /* Anchor links in the list act as scroll markers: the link to the
+     * section currently in view matches :target-current. Progressive
+     * enhancement (compatibility notes, 2026-10-25): Chrome/Edge 140+;
+     * engines without support render a plain TOC. */
+    scroll-target-group: auto;
   }
 
   site-toc li + li {
@@ -223,6 +228,11 @@ main h3 {
 
   site-toc a:hover {
     color: var(--ui-color-text);
+  }
+
+  site-toc a:target-current {
+    color: var(--ui-color-text);
+    font-weight: 600;
   }
 
   site-sidebar {
