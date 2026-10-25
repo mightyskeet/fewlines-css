@@ -106,6 +106,39 @@
   padding-inline: var(--ui-space-md);
 }
 
+/* Select chevron: the native arrow is engine-drawn and pinned to the
+ * inline-end edge (probe 2026-10-25: padding-inline-end does not move it
+ * in Chromium/Firefox). appearance: none hands the glyph to the stylesheet;
+ * the dropdown, keyboard and form semantics stay native. The conic wedge
+ * follows currentColor, so the glyph tracks the text token in both themes
+ * without an SVG data-URI (which cannot inherit page colors).
+ * Reserved end padding is constant across sizes (clears the glyph). */
+.ui-select {
+  appearance: none;
+  padding-inline-end: var(--ui-space-lg);
+  background-image: conic-gradient(
+    from 315deg at 50% 100%,
+    currentcolor 0,
+    currentcolor 90deg,
+    transparent 90deg
+  );
+  background-position: right var(--ui-space-xs) center;
+  background-repeat: no-repeat;
+  background-size: 0.5rem 0.25rem;
+}
+
+.ui-select[data-size='lg'] {
+  padding-inline-end: var(--ui-space-lg);
+}
+
+/* RTL: the native arrow mirrors to the other inline side; engines without
+ * the :dir() selector keep the physical position (graceful degradation). */
+@supports selector(:dir(rtl)) {
+  .ui-select:dir(rtl) {
+    background-position: left var(--ui-space-xs) center;
+  }
+}
+
 /* Textarea autosize: field-sizing: content is a progressive enhancement
  * (compatibility notes: Chrome 123+, FF 152+, Safari 26.2+). Applied by
  * default inside @supports; the component is fully usable without it
@@ -204,5 +237,12 @@
   .ui-textarea,
   .ui-select {
     forced-color-adjust: auto;
+  }
+
+  /* Forced colors strip background images — the painted chevron would
+   * vanish; the native arrow comes back with system colors. */
+  .ui-select {
+    appearance: auto;
+    background-image: none;
   }
 }

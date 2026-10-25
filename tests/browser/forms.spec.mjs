@@ -76,6 +76,25 @@ test('required select paints the danger border after user-invalid', async ({ pag
   expect(await select.evaluate((el) => el.matches(':user-valid'))).toBe(true);
 });
 
+test('select paints its own chevron inset from the edge', async ({ page }) => {
+  const styles = await page.locator('#select-md').evaluate((el) => {
+    const cs = getComputedStyle(el);
+    return { appearance: cs.appearance, image: cs.backgroundImage, position: cs.backgroundPosition };
+  });
+
+  // The native glyph is engine-drawn and unstylable — the stylesheet owns it
+  expect(styles.appearance).toBe('none');
+  expect(styles.image).toContain('conic-gradient');
+});
+
+test('forced colors restore the native select arrow', async ({ page }) => {
+  await page.emulateMedia({ forcedColors: 'active' });
+  const appearance = await page
+    .locator('#select-md')
+    .evaluate((el) => getComputedStyle(el).appearance);
+  expect(appearance).toBe('auto');
+});
+
 test('disabled input is not focusable and not editable', async ({ page }) => {
   const input = page.locator('#input-disabled');
   const disabled = await input.evaluate((el) => el.matches(':disabled'));
