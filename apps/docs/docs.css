@@ -9,6 +9,13 @@
  * Safari 10.1/13) far above the .browserslistrc matrix; narrow screens get
  * a single-column layout from the mobile-first defaults. */
 
+:root {
+  /* Smooth in-page anchor scrolling; anchors stop 2rem above the target
+   * instead of flush at the viewport edge. */
+  scroll-behavior: smooth;
+  scroll-padding-block-start: 2rem;
+}
+
 site-sidebar {
   display: flex;
   flex-wrap: wrap;
