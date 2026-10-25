@@ -273,4 +273,14 @@ main h3 {
     flex-wrap: nowrap;
     gap: var(--ui-space-2xs);
   }
+
+  /* '#' copy-link on every section heading: the fragment target — id lives on
+   * the anchor itself, so fragment navigation focuses it (site-toc.js).
+   * Always visible: opacity-hidden anchors are unusable on touch. */
+  main h2 .heading-anchor {
+    color: var(--ui-color-text-muted);
+    text-decoration: none;
+    font-size: 0.6em;
+    margin-inline-start: var(--ui-space-sm);
+  }
 }
