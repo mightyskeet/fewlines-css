@@ -38,6 +38,10 @@
   padding-block: var(--ui-space-2xs);
   padding-inline: var(--ui-space-md);
   min-block-size: 2.25rem;
+
+  /* The label never squeezes into a wrapped mess: the button keeps at least
+   * its content width even as a shrunken flex/grid item. */
+  min-inline-size: fit-content;
   cursor: pointer;
   text-decoration: none;
   transition:
