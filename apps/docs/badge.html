@@ -53,11 +53,27 @@
           <span class="ui-badge" data-variant="danger">Failed</span>
         </div>
         <p>
-          <code>data-variant="accent|success|warning|danger"</code>; default is neutral (no
-          attribute). Variant names mirror the semantic token families they consume. Surfaces come
-          from the tint tokens (<code>--ui-color-*-tint</code>), labels from the
-          <code>-strong</code> variant colors — the same feedback model as Alert, all pairs
-          validated by the APCA matrix at the strict body threshold (Lc 75) in both themes.
+          <code>data-variant="accent|success|warning|danger"</code> — soft tint surfaces (the
+          feedback model, like Alert). Default is the inverted neutral family
+          (<code>neutral-surface</code> + <code>on-neutral</code>, the button-default model): a
+          dark pill in the light theme, a light one in the dark — the most contrasty member of
+          the set. All pairs are validated by the APCA matrix at the strict body threshold
+          (Lc 75) in both themes.
+        </p>
+      </section>
+
+      <section>
+        <h2>Solid fill</h2>
+        <div class="example">
+          <span class="ui-badge" data-variant="accent-solid">Accent</span>
+          <span class="ui-badge" data-variant="success-solid">Active</span>
+          <span class="ui-badge" data-variant="danger-solid">Failed</span>
+        </div>
+        <p>
+          <code>data-variant="accent-solid|success-solid|danger-solid"</code> — bright surfaces
+          with light text (<code>*-surface</code> + <code>on-*</code>, the button-default model).
+          No <code>warning-solid</code>: the warning family has no surface token and light text on
+          a warning fill fails the APCA body threshold.
         </p>
       </section>
 

@@ -159,6 +159,12 @@
   initial-value: green;
 }
 
+@property --ui-color-on-success {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: white;
+}
+
 @property --ui-color-warning {
   syntax: '<color>';
   inherits: true;
@@ -234,6 +240,7 @@
     --ui-color-on-danger var(--ui-duration-slow) ease,
     --ui-color-success var(--ui-duration-slow) ease,
     --ui-color-success-surface var(--ui-duration-slow) ease,
+    --ui-color-on-success var(--ui-duration-slow) ease,
     --ui-color-warning var(--ui-duration-slow) ease,
     --ui-color-warning-strong var(--ui-duration-slow) ease,
     --ui-color-success-strong var(--ui-duration-slow) ease,

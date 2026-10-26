@@ -102,6 +102,7 @@
     var(--ui-palette-success-500),
     var(--ui-palette-success-300)
   );
+  --ui-color-on-success: light-dark(var(--ui-palette-neutral-0), var(--ui-palette-neutral-950));
 
   /* Warning */
   --ui-color-warning: light-dark(var(--ui-palette-warning-600), var(--ui-palette-warning-300));

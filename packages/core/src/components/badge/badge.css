@@ -10,36 +10,36 @@
  *   <span class="ui-badge">Beta</span>
  *   <span class="ui-badge" data-variant="success">Active</span>
  *
- * Variants via data-variant: accent | success | warning | danger
- * (default — neutral, attribute omitted). Variant names mirror the semantic
- * token families they consume.
+ * Variants via data-variant. Two models (same families as Button):
+ *   tint (feedback, like Alert): accent | success | warning | danger —
+ *     tint surface + -strong text;
+ *   solid (high-contrast fill): accent-solid | success-solid | danger-solid —
+ *     *-surface fill + on-* text, the button-default model.
+ *   default (attribute omitted) — the inverted neutral family
+ *     (neutral-surface + on-neutral), the most contrasty member.
+ *   No warning-solid: the family has no warning-surface token and light text
+ *   on a warning fill fails the APCA body threshold.
  *
  * Sizes via data-size: sm | lg (default — md, attribute omitted). Geometry
  * scales, typography stays: sm 16px / md 20px / lg 28px (line-height: 1);
  * md is the standard pill.
  *
- * Feedback-family styling (same model as Alert): tint surface + -strong
- * text. All consumed pairs are already validated by the APCA matrix at the
- * strict body threshold, so the 0.75rem label size needs no extra registry
- * entries (tests/apca):
- *   default: text on surface-raised (body)
- *   variants: {accent,success,warning,danger}-strong on *-tint (body)
- *
- * APCA pairs used (validated in tests/apca):
- *   text on surface-raised (body)
- *   {accent,danger,success,warning}-strong on *-tint (body)
+ * APCA pairs used (validated in tests/apca, body threshold):
+ *   default: on-neutral on neutral-surface
+ *   tint:    {accent,success,warning,danger}-strong on *-tint
+ *   solid:   on-{accent,success,danger} on *-surface
  */
 
 .ui-badge {
-  --ui-badge-fg: var(--ui-color-text);
-  --ui-badge-bg: var(--ui-color-surface-raised);
+  --ui-badge-fg: var(--ui-color-on-neutral);
+  --ui-badge-bg: var(--ui-color-neutral-surface);
 
   display: inline-flex;
   align-items: center;
   gap: var(--ui-space-3xs);
   box-sizing: border-box;
   padding-block: var(--ui-space-2xs);
-  padding-inline: var(--ui-space-2xs);
+  padding-inline: var(--ui-space-xs);
   border-radius: var(--ui-radius-full);
   color: var(--ui-badge-fg);
   background: var(--ui-badge-bg);
@@ -60,6 +60,7 @@
   white-space: nowrap;
 }
 
+/* Tint variants (the feedback model, like Alert). */
 .ui-badge[data-variant='accent'] {
   --ui-badge-fg: var(--ui-color-accent-strong);
   --ui-badge-bg: var(--ui-color-accent-tint);
@@ -80,17 +81,33 @@
   --ui-badge-bg: var(--ui-color-danger-tint);
 }
 
+/* Solid variants (the button-default model): bright fill, light text. */
+.ui-badge[data-variant='accent-solid'] {
+  --ui-badge-fg: var(--ui-color-on-accent);
+  --ui-badge-bg: var(--ui-color-accent-surface);
+}
+
+.ui-badge[data-variant='success-solid'] {
+  --ui-badge-fg: var(--ui-color-on-success);
+  --ui-badge-bg: var(--ui-color-success-surface);
+}
+
+.ui-badge[data-variant='danger-solid'] {
+  --ui-badge-fg: var(--ui-color-on-danger);
+  --ui-badge-bg: var(--ui-color-danger-surface);
+}
+
 /* Sizes follow the Field pattern: geometry scales, typography stays — the
  * 0.75rem label is what the APCA pairs were validated at, and --ui-font-size-sm
  * (14.5px at fluid=1) would put the pill on a fractional line box. */
 .ui-badge[data-size='sm'] {
   padding-block: var(--ui-space-3xs);
-  padding-inline: var(--ui-space-3xs);
+  padding-inline: var(--ui-space-2xs);
 }
 
 .ui-badge[data-size='lg'] {
   padding-block: var(--ui-space-xs);
-  padding-inline: var(--ui-space-xs);
+  padding-inline: var(--ui-space-sm);
 }
 
 /* Adjacent badges get a gap automatically (like stacked alerts). */

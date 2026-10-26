@@ -11,23 +11,53 @@ test.beforeEach(async ({ page }) => {
   await page.goto('/fixture.html');
 });
 
-test('default variant uses the raised surface and neutral text', async ({ page }) => {
+test('default variant uses the inverted neutral family', async ({ page }) => {
   const styles = await page.locator('#badge-default').evaluate((el) => {
     const s = getComputedStyle(el);
     return { background: s.backgroundColor, color: s.color };
   });
 
-  const raised = await page
+  const surface = await page
     .evaluate(() =>
-      getComputedStyle(document.documentElement).getPropertyValue('--ui-color-surface-raised'),
+      getComputedStyle(document.documentElement).getPropertyValue('--ui-color-neutral-surface'),
     )
     .then((v) => v.trim());
-  expect(styles.background).toBe(raised);
+  expect(styles.background).toBe(surface);
 
-  const text = await page
-    .evaluate(() => getComputedStyle(document.documentElement).getPropertyValue('--ui-color-text'))
+  const onNeutral = await page
+    .evaluate(() =>
+      getComputedStyle(document.documentElement).getPropertyValue('--ui-color-on-neutral'),
+    )
     .then((v) => v.trim());
-  expect(styles.color).toBe(text);
+  expect(styles.color).toBe(onNeutral);
+});
+
+test('solid variants use the on-* text over their *-surface fill', async ({ page }) => {
+  const cases = [
+    { id: 'badge-accent-solid', surface: '--ui-color-accent-surface', on: '--ui-color-on-accent' },
+    {
+      id: 'badge-success-solid',
+      surface: '--ui-color-success-surface',
+      on: '--ui-color-on-success',
+    },
+    { id: 'badge-danger-solid', surface: '--ui-color-danger-surface', on: '--ui-color-on-danger' },
+  ];
+  for (const { id, surface, on } of cases) {
+    const styles = await page.locator(`#${id}`).evaluate((el) => {
+      const s = getComputedStyle(el);
+      return { background: s.backgroundColor, color: s.color };
+    });
+    const expectedBg = await page
+      .evaluate((name) => getComputedStyle(document.documentElement).getPropertyValue(name), [
+        surface,
+      ])
+      .then((v) => v.trim());
+    const expectedFg = await page
+      .evaluate((name) => getComputedStyle(document.documentElement).getPropertyValue(name), [on])
+      .then((v) => v.trim());
+    expect(styles.background, id).toBe(expectedBg);
+    expect(styles.color, id).toBe(expectedFg);
+  }
 });
 
 test('variants resolve to distinct tint surfaces', async ({ page }) => {
