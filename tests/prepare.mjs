@@ -5,7 +5,16 @@
  * a silently stale dist once made demo/fixture checks validate old CSS.
  * Run before Playwright suites: node prepare.mjs
  */
-import { copyFileSync, existsSync, mkdirSync, readdirSync, statSync } from 'node:fs';
+import {
+  copyFileSync,
+  existsSync,
+  mkdirSync,
+  readdirSync,
+  readFileSync,
+  realpathSync,
+  statSync,
+  writeFileSync,
+} from 'node:fs';
 import { execSync } from 'node:child_process';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -41,4 +50,35 @@ if (distMissing || stale) {
 
 mkdirSync(dirname(target), { recursive: true });
 copyFileSync(distCss, target);
+
+// The palette widget (apps/docs/site-palette.js) imports the token-pair
+// registry and the apca-w3 contrast math as ESM modules — same copy
+// mechanism as core.css, no manual duplication of the registry, and the
+// widget's APCA numbers match the CI gate (tests/apca/check.mjs).
+copyFileSync(
+  join(testsRoot, 'apca', 'token-pairs.mjs'),
+  join(repoRoot, 'apps', 'docs', 'token-pairs.mjs'),
+);
+copyFileSync(
+  join(repoRoot, 'node_modules', 'apca-w3', 'src', 'apca-w3.js'),
+  join(repoRoot, 'apps', 'docs', 'vendor', 'apca-w3.mjs'),
+);
+// apca-w3 imports colorparsley by bare specifier (needed only by its
+// calcAPCA shortcut) — rewrite the import to the vendored sibling copy.
+{
+  const target = join(repoRoot, 'apps', 'docs', 'vendor', 'apca-w3.mjs');
+  writeFileSync(
+    target,
+    readFileSync(target, 'utf8').replaceAll(
+      /import\s*{\s*colorParsley\s*}\s*from\s*'colorparsley'/g,
+      "import { colorParsley } from './colorparsley.mjs'",
+    ),
+  );
+}
+// Resolve colorparsley through apca-w3's real (pnpm-store) location.
+const apcaReal = realpathSync(join(repoRoot, 'node_modules', 'apca-w3'));
+copyFileSync(
+  join(dirname(apcaReal), 'colorparsley', 'src', 'colorparsley.js'),
+  join(repoRoot, 'apps', 'docs', 'vendor', 'colorparsley.mjs'),
+);
 console.log('Copied core CSS to apps/docs/core.css');

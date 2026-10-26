@@ -27,5 +27,11 @@ Thumbs.db
 # Generated test fixture CSS (copied from packages/core/dist by tests/prepare.mjs)
 apps/docs/core.css
 
+# Generated demo assets (copied by tests/prepare.mjs): the token-pair registry
+# for the palette widget and the vendored apca-w3 math it imports
+apps/docs/token-pairs.mjs
+apps/docs/vendor/apca-w3.mjs
+apps/docs/vendor/colorparsley.mjs
+
 # Local experiments
 .experiments/

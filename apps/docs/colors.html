@@ -3,59 +3,62 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <script>try{var t=localStorage.getItem('theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
-    <script>try{var c=JSON.parse(localStorage.getItem('colors')||'{}');for(var k in c)document.documentElement.style.setProperty(k,c[k])}catch(e){}</script>
+    <script>
+      try {
+        var t = localStorage.getItem('theme');
+        if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+      } catch (e) {}
+    </script>
+    <script>
+      try {
+        var b = JSON.parse(localStorage.getItem('colors-bases') || 'null');
+        if (b) {
+          var r = document.documentElement,
+            s = r.style;
+          for (var k in b) s.setProperty(k, b[k]);
+          r.setAttribute('data-palette', 'custom');
+        }
+      } catch (e) {}
+    </script>
     <title>Colors — @fewlines/css</title>
     <link rel="stylesheet" href="/core.css" />
     <link rel="stylesheet" href="/docs.css" />
+    <link rel="stylesheet" href="/colors-derive.css" />
     <style>
-      .color-groups {
+      .swatch-grid {
         display: grid;
-        gap: 16px;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: var(--ui-space-sm);
       }
-      .color-groups fieldset {
+      .swatch {
+        margin: 0;
         border: 1px solid var(--ui-color-border);
-        border-radius: 8px;
-        padding: 12px;
-        display: grid;
-        gap: 8px;
+        border-radius: var(--ui-radius-md);
+        overflow: hidden;
       }
-      .color-groups legend {
-        font-weight: var(--ui-font-weight-medium);
-        padding-inline: 4px;
+      .swatch-chip {
+        block-size: 3rem;
       }
-      .color-row {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        gap: 8px 16px;
+      .swatch figcaption {
+        padding: var(--ui-space-2xs) var(--ui-space-sm);
+        font-size: var(--ui-font-size-xs);
       }
-      .color-row > code {
-        min-inline-size: 220px;
+      .swatch figcaption code {
+        font-size: 10px;
+        word-break: break-all;
       }
-      .color-row label {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        font-size: 13px;
+      .swatch-group {
+        margin-block-end: var(--ui-space-lg);
       }
-      .color-row input[type='color'] {
-        inline-size: 34px;
-        block-size: 24px;
-        padding: 0;
-        border: 1px solid var(--ui-color-border);
-        border-radius: 4px;
-        background: none;
-      }
-      .color-actions {
-        display: flex;
-        gap: 8px;
+      .swatch-group h3 {
+        margin-block: 0 var(--ui-space-sm);
       }
     </style>
     <script src="/site-sidebar.js" defer></script>
-    <script src="/site-colors.js" defer></script>
+    <script src="/site-toc.js" defer></script>
     <script src="/vendor/hljs.min.js" defer></script>
     <script src="/site-code.js" defer></script>
+    <script src="/site-palette.js" type="module"></script>
   </head>
   <body>
     <site-sidebar></site-sidebar>
@@ -64,49 +67,218 @@
       <header class="page-header">
         <h1>Colors</h1>
         <p>
-          Live theming playground: pick semantic token colors and the whole documentation restyles
-          at once. Choices persist in <code>localStorage</code> and apply on every docs page.
+          The color system: base tokens plus formulas. Every semantic token is derived from a
+          handful of OKLCH numbers per family — no color ramps.
         </p>
       </header>
 
       <section>
-        <h2>How it works</h2>
+        <h2>Model: bases + formulas</h2>
         <p>
-          Each picker writes an inline override on <code>:root</code> as
-          <code>light-dark(light, dark)</code>, so the theme toggle keeps working. Inline styles win
-          over <code>core.css</code>. <strong>Reset</strong> removes all overrides;
-          <strong>Copy CSS</strong> gives the same overrides as a host-ready snippet.
+          A palette is five base colors — <strong>Neutral</strong> (chroma, hue, page/raised/sunken
+          lightness) and <strong>Accent / Success / Warning / Danger</strong> (lightness, chroma,
+          hue). Formulas derive every semantic token from them: surfaces, text, borders, fills,
+          <code>on-*</code> contrast poles, hover states and tints.
         </p>
         <p>
-          Defaults are APCA-validated in the repository. Once you override tokens, contrast is your
-          responsibility — check readability in both themes before shipping (the planned formula
-          system adds a live pass/fail table here, see
-          <code>docs/plans/2026-10-26-color-derivation.md</code>).
+          Fills use a polarity branch: a base lightness up to 0.70 produces a vivid fill with a
+          white contrast pole, a lighter base produces a saturated pastel with a near-black pole —
+          the branch jumps the APCA dead zone. The light theme fill maps to the darker step, the
+          dark theme fill to the lighter one, mirroring the current palette.
+        </p>
+        <p>
+          Defaults are calibrated and APCA-validated in CI. Beyond the calibrated defaults the
+          formulas make no guarantees — contrast is the host's responsibility, which is why the
+          palette widget (the floating button in the corner, on every docs page) carries a live
+          pass/fail table for self-checking.
+        </p>
+        <p>
+          Plan and decision log:
+          <code>docs/plans/2026-10-26-color-derivation.md</code>.
         </p>
       </section>
 
       <section>
-        <h2>Tokens</h2>
-        <div id="color-groups" class="color-groups"></div>
-        <div class="color-actions" style="margin-block-start: 12px">
-          <button class="ui-button" type="button" id="reset-button">Reset</button>
-          <button class="ui-button" type="button" id="copy-button">Copy CSS</button>
+        <h2>Semantic tokens</h2>
+        <p>
+          Components consume only these names (<code>theme notes</code>). The swatches show the
+          values currently in effect — open the palette widget to change them and watch this grid
+          follow.
+        </p>
+
+        <div class="swatch-group">
+          <h3>Surfaces</h3>
+          <div class="swatch-grid">
+            <figure class="swatch">
+              <div class="swatch-chip" style="background: var(--ui-color-surface)"></div>
+              <figcaption><code>--ui-color-surface</code></figcaption>
+            </figure>
+            <figure class="swatch">
+              <div class="swatch-chip" style="background: var(--ui-color-surface-raised)"></div>
+              <figcaption><code>--ui-color-surface-raised</code></figcaption>
+            </figure>
+            <figure class="swatch">
+              <div class="swatch-chip" style="background: var(--ui-color-hover)"></div>
+              <figcaption><code>--ui-color-hover</code></figcaption>
+            </figure>
+            <figure class="swatch">
+              <div class="swatch-chip" style="background: var(--ui-color-hover-raised)"></div>
+              <figcaption><code>--ui-color-hover-raised</code></figcaption>
+            </figure>
+            <figure class="swatch">
+              <div class="swatch-chip" style="background: var(--ui-color-secondary-surface)"></div>
+              <figcaption><code>--ui-color-secondary-surface</code></figcaption>
+            </figure>
+          </div>
         </div>
-      </section>
 
-      <section>
-        <h2>Export</h2>
-        <pre><code id="export-code">/* nothing overridden */</code></pre>
-        <p>
-          Paste the snippet into your host stylesheet (or set the same properties on
-          <code>:root</code> inline) to apply the same palette to your application.
-        </p>
+        <div class="swatch-group">
+          <h3>Text and borders</h3>
+          <div class="swatch-grid">
+            <figure class="swatch">
+              <div class="swatch-chip" style="background: var(--ui-color-text)"></div>
+              <figcaption><code>--ui-color-text</code></figcaption>
+            </figure>
+            <figure class="swatch">
+              <div class="swatch-chip" style="background: var(--ui-color-text-muted)"></div>
+              <figcaption><code>--ui-color-text-muted</code></figcaption>
+            </figure>
+            <figure class="swatch">
+              <div class="swatch-chip" style="background: var(--ui-color-border)"></div>
+              <figcaption><code>--ui-color-border</code></figcaption>
+            </figure>
+            <figure class="swatch">
+              <div class="swatch-chip" style="background: var(--ui-color-border-strong)"></div>
+              <figcaption><code>--ui-color-border-strong</code></figcaption>
+            </figure>
+          </div>
+        </div>
+
+        <div class="swatch-group">
+          <h3>Neutral action</h3>
+          <div class="swatch-grid">
+            <figure class="swatch">
+              <div class="swatch-chip" style="background: var(--ui-color-neutral-surface)"></div>
+              <figcaption><code>--ui-color-neutral-surface</code></figcaption>
+            </figure>
+            <figure class="swatch">
+              <div class="swatch-chip" style="background: var(--ui-color-neutral-hover)"></div>
+              <figcaption><code>--ui-color-neutral-hover</code></figcaption>
+            </figure>
+            <figure class="swatch">
+              <div class="swatch-chip" style="background: var(--ui-color-neutral-strong)"></div>
+              <figcaption><code>--ui-color-neutral-strong</code></figcaption>
+            </figure>
+            <figure class="swatch">
+              <div class="swatch-chip" style="background: var(--ui-color-on-neutral)"></div>
+              <figcaption><code>--ui-color-on-neutral</code></figcaption>
+            </figure>
+            <figure class="swatch">
+              <div class="swatch-chip" style="background: var(--ui-color-neutral-tint)"></div>
+              <figcaption><code>--ui-color-neutral-tint</code></figcaption>
+            </figure>
+          </div>
+        </div>
+
+        <div class="swatch-group">
+          <h3>Families</h3>
+          <div class="swatch-grid">
+            <figure class="swatch">
+              <div class="swatch-chip" style="background: var(--ui-color-accent)"></div>
+              <figcaption><code>--ui-color-accent</code></figcaption>
+            </figure>
+            <figure class="swatch">
+              <div class="swatch-chip" style="background: var(--ui-color-accent-strong)"></div>
+              <figcaption><code>--ui-color-accent-strong</code></figcaption>
+            </figure>
+            <figure class="swatch">
+              <div class="swatch-chip" style="background: var(--ui-color-accent-surface)"></div>
+              <figcaption><code>--ui-color-accent-surface</code></figcaption>
+            </figure>
+            <figure class="swatch">
+              <div class="swatch-chip" style="background: var(--ui-color-on-accent)"></div>
+              <figcaption><code>--ui-color-on-accent</code></figcaption>
+            </figure>
+            <figure class="swatch">
+              <div class="swatch-chip" style="background: var(--ui-color-accent-tint)"></div>
+              <figcaption><code>--ui-color-accent-tint</code></figcaption>
+            </figure>
+            <figure class="swatch">
+              <div class="swatch-chip" style="background: var(--ui-color-success)"></div>
+              <figcaption><code>--ui-color-success</code></figcaption>
+            </figure>
+            <figure class="swatch">
+              <div class="swatch-chip" style="background: var(--ui-color-success-strong)"></div>
+              <figcaption><code>--ui-color-success-strong</code></figcaption>
+            </figure>
+            <figure class="swatch">
+              <div class="swatch-chip" style="background: var(--ui-color-success-surface)"></div>
+              <figcaption><code>--ui-color-success-surface</code></figcaption>
+            </figure>
+            <figure class="swatch">
+              <div class="swatch-chip" style="background: var(--ui-color-on-success)"></div>
+              <figcaption><code>--ui-color-on-success</code></figcaption>
+            </figure>
+            <figure class="swatch">
+              <div class="swatch-chip" style="background: var(--ui-color-success-tint)"></div>
+              <figcaption><code>--ui-color-success-tint</code></figcaption>
+            </figure>
+            <figure class="swatch">
+              <div class="swatch-chip" style="background: var(--ui-color-warning)"></div>
+              <figcaption><code>--ui-color-warning</code></figcaption>
+            </figure>
+            <figure class="swatch">
+              <div class="swatch-chip" style="background: var(--ui-color-warning-strong)"></div>
+              <figcaption><code>--ui-color-warning-strong</code></figcaption>
+            </figure>
+            <figure class="swatch">
+              <div class="swatch-chip" style="background: var(--ui-color-on-warning)"></div>
+              <figcaption><code>--ui-color-on-warning</code></figcaption>
+            </figure>
+            <figure class="swatch">
+              <div class="swatch-chip" style="background: var(--ui-color-warning-tint)"></div>
+              <figcaption><code>--ui-color-warning-tint</code></figcaption>
+            </figure>
+            <figure class="swatch">
+              <div class="swatch-chip" style="background: var(--ui-color-danger)"></div>
+              <figcaption><code>--ui-color-danger</code></figcaption>
+            </figure>
+            <figure class="swatch">
+              <div class="swatch-chip" style="background: var(--ui-color-danger-strong)"></div>
+              <figcaption><code>--ui-color-danger-strong</code></figcaption>
+            </figure>
+            <figure class="swatch">
+              <div class="swatch-chip" style="background: var(--ui-color-danger-surface)"></div>
+              <figcaption><code>--ui-color-danger-surface</code></figcaption>
+            </figure>
+            <figure class="swatch">
+              <div class="swatch-chip" style="background: var(--ui-color-danger-hover)"></div>
+              <figcaption><code>--ui-color-danger-hover</code></figcaption>
+            </figure>
+            <figure class="swatch">
+              <div class="swatch-chip" style="background: var(--ui-color-on-danger)"></div>
+              <figcaption><code>--ui-color-on-danger</code></figcaption>
+            </figure>
+            <figure class="swatch">
+              <div class="swatch-chip" style="background: var(--ui-color-danger-tint)"></div>
+              <figcaption><code>--ui-color-danger-tint</code></figcaption>
+            </figure>
+            <figure class="swatch">
+              <div class="swatch-chip" style="background: var(--ui-focus-ring)"></div>
+              <figcaption><code>--ui-focus-ring</code></figcaption>
+            </figure>
+          </div>
+        </div>
       </section>
     </main>
     <site-toc></site-toc>
 
     <footer>
-      <p>Full contract: <code>packages/core/src/tokens/color.css</code></p>
+      <p>
+        Derivation layer (demo): <code>apps/docs/colors-derive.css</code>; full contract:
+        <code>packages/core/src/tokens/color.css</code>.
+      </p>
     </footer>
+    <site-palette></site-palette>
   </body>
 </html>
