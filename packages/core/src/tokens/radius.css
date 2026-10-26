@@ -10,10 +10,12 @@
 /* Squircle corners (compatibility notes, 2026-10-24): Chromium/Edge 139+
  * only, everywhere else the block is skipped and the plain radii above apply.
  * The squircle shape reads tighter than round at the same radius, so each
- * supported token steps up one visual notch; --ui-radius-full is unaffected
- * (a squircle pill is the same pill). corner-shape does NOT inherit
+ * supported token steps up one visual notch. corner-shape does NOT inherit
  * (css-borders-4), so the zero-specificity universal rule is the single
- * place that covers every element; it is inert without border-radius. */
+ * place that covers every element; it is inert without border-radius.
+ * Exception: at a clamped --ui-radius-full the shape spans half the side,
+ * so squircle destroys the stadium — components using the pill token
+ * (switch, badge) must set `corner-shape: round` back on those elements. */
 @supports (corner-shape: squircle) {
   :root {
     --ui-radius-xs: 0.1875rem;

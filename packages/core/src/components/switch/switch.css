@@ -48,6 +48,10 @@
   block-size: 1.25rem;
   border: 1px solid var(--ui-color-border);
   border-radius: var(--ui-radius-full);
+
+  /* corner-shape: round overrides the tokens-layer squircle: at a clamped
+   * full radius squircle flattens the stadium sides into a rounded box. */
+  corner-shape: round;
   background: var(--ui-color-surface-raised);
   position: relative;
   transition:
@@ -63,6 +67,10 @@
   inline-size: 0.875rem;
   block-size: 0.875rem;
   border-radius: var(--ui-radius-full);
+
+  /* corner-shape: round overrides the tokens-layer squircle: at a clamped
+   * full radius squircle flattens the stadium sides into a rounded box. */
+  corner-shape: round;
   background: var(--ui-color-surface);
   box-shadow: var(--ui-elevation-1);
   translate: 0 -50%;
