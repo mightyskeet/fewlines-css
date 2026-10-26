@@ -18,11 +18,11 @@
  *   solid (bright fill, light text): neutral-solid | accent-solid |
  *     success-solid | warning-solid | danger-solid — *-surface fill + on-*
  *     text, the button-default model.
- *   The gray tint sits one step darker than the colored ones (200/700 vs
- *   100/800): gray carries no hue, so it needs the extra step to read with
- *   the same visual weight.
- *   The warning solid fills with the warning token itself (600/300 — the
- *   palette has no 500 step); white on it measures Lc 87.7 (body).
+ *   The gray tint uses the same steps as the colored ones (100/800) — the
+ *   default is simply the neutral member of the tint family.
+ *   The warning solid fills with the warning token (600/300): the palette
+ *   now has a 500 step, but white on it measures Lc 70.5 — below the body
+ *   threshold; white on 600 measures Lc 87.7.
  *
  * Sizes via data-size: sm | lg (default — md, attribute omitted). Geometry
  * scales, typography stays: sm 16px / md 20px / lg 28px (line-height: 1);
@@ -102,8 +102,8 @@
 }
 
 .ui-badge[data-variant='warning-solid'] {
-  /* The palette has no warning-500 step: the fill is the warning token
-   * itself (600/300), white on it passes the body threshold (Lc 87.7). */
+  /* warning-500 exists now but white on it fails the body threshold
+   * (Lc 70.5 < 75): the fill is the warning token itself (600/300). */
   --ui-badge-fg: var(--ui-color-on-warning);
   --ui-badge-bg: var(--ui-color-warning);
 }

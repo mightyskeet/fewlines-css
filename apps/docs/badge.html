@@ -54,10 +54,9 @@
         </div>
         <p>
           <code>data-variant="accent|success|warning|danger"</code> — soft tint surfaces (the
-          feedback model, like Alert). Default (no attribute) is the gray member of the set: a
-          neutral tint one step darker than the colored tints, so it reads with the same visual
-          weight. All pairs are validated by the APCA matrix at the strict body threshold
-          (Lc 75) in both themes.
+          feedback model, like Alert). Default (no attribute) is the gray member of the set: the
+          same tint steps (100/800) as the colored variants. All pairs are validated by the APCA
+          matrix at the strict body threshold (Lc 75) in both themes.
         </p>
       </section>
 
@@ -74,7 +73,8 @@
           <code>data-variant="neutral-solid|accent-solid|success-solid|warning-solid|
           danger-solid"</code> — bright surfaces with light text (<code>*-surface</code> +
           <code>on-*</code>, the button-default model). The warning solid fills with the warning
-          token itself (the palette has no 500 step); white on it passes the APCA body threshold.
+          token itself: white on the lighter 500 step fails the APCA body threshold, on 600 it
+          passes (Lc 87.7).
         </p>
       </section>
 

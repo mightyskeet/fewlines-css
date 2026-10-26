@@ -3,6 +3,15 @@
  * Primitive color values in OKLCH. Components must NOT consume these directly
  * (theme notes) — they exist only as inputs for semantic tokens.
  * Values are APCA-validated through the semantic token matrix (Phase 4).
+ *
+ * Step sets are uniform across families — every step number must exist, a
+ * missing step makes the custom property undefined and the consuming
+ * declaration falls back to an inherited (dark) color, which reads as a
+ * "darker lighter step" (fixed 2026-10-26: 400 was missing in every chromatic
+ * family, warning also lacked 500). Lightness is tuned per family/hue (the
+ * same step number may differ by a few L% between families); within a family
+ * the ramp is strictly monotonic. Neutrals keep the extended 0–950 ramp the
+ * surfaces/text roles need.
  */
 :root {
   /* Neutrals — cool gray ramp */
@@ -23,6 +32,7 @@
   --ui-palette-accent-100: oklch(95% 0.022 255deg);
   --ui-palette-accent-200: oklch(92% 0.11 250deg);
   --ui-palette-accent-300: oklch(86% 0.11 250deg);
+  --ui-palette-accent-400: oklch(71% 0.14 255deg);
   --ui-palette-accent-500: oklch(56% 0.17 255deg);
   --ui-palette-accent-600: oklch(48% 0.18 258deg);
   --ui-palette-accent-700: oklch(38% 0.16 260deg);
@@ -32,6 +42,7 @@
   --ui-palette-danger-100: oklch(95% 0.02 25deg);
   --ui-palette-danger-200: oklch(94% 0.08 25deg);
   --ui-palette-danger-300: oklch(90% 0.1 25deg);
+  --ui-palette-danger-400: oklch(72% 0.15 26deg);
   --ui-palette-danger-500: oklch(55% 0.19 27deg);
   --ui-palette-danger-600: oklch(48% 0.19 28deg);
   --ui-palette-danger-700: oklch(36% 0.16 29deg);
@@ -41,6 +52,7 @@
   --ui-palette-success-100: oklch(95% 0.045 150deg);
   --ui-palette-success-200: oklch(90% 0.1 150deg);
   --ui-palette-success-300: oklch(84% 0.13 150deg);
+  --ui-palette-success-400: oklch(70% 0.145 150deg);
   --ui-palette-success-500: oklch(55% 0.16 150deg);
   --ui-palette-success-600: oklch(47% 0.15 151deg);
   --ui-palette-success-700: oklch(35% 0.13 152deg);
@@ -50,6 +62,8 @@
   --ui-palette-warning-100: oklch(95% 0.045 85deg);
   --ui-palette-warning-200: oklch(94% 0.06 85deg);
   --ui-palette-warning-300: oklch(90% 0.1 85deg);
+  --ui-palette-warning-400: oklch(76% 0.1 82deg);
+  --ui-palette-warning-500: oklch(62% 0.1 78deg);
   --ui-palette-warning-600: oklch(48% 0.1 75deg);
   --ui-palette-warning-700: oklch(36% 0.075 75deg);
   --ui-palette-warning-800: oklch(21% 0.045 80deg);

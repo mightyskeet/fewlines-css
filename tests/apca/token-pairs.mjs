@@ -70,7 +70,7 @@ export const semanticMap = {
   warning: { light: 'warning-600', dark: 'warning-300' },
   'warning-strong': { light: 'warning-700', dark: 'warning-200' },
   'on-warning': { light: 'neutral-0', dark: 'neutral-950' },
-  'neutral-tint': { light: 'neutral-200', dark: 'neutral-700' },
+  'neutral-tint': { light: 'neutral-100', dark: 'neutral-800' },
   'accent-tint': { light: 'accent-100', dark: 'accent-800' },
   'success-tint': { light: 'success-100', dark: 'success-800' },
   'warning-tint': { light: 'warning-100', dark: 'warning-800' },
