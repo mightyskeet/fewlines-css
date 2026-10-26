@@ -56,6 +56,19 @@
   list-style: none;
   user-select: none;
   transition: background-color var(--ui-duration-fast) ease;
+
+  /* The hover fill is the summary's own background: without rounding it
+   * paints over the item border and past the outer corner curve (child
+   * painting is not clipped by the parent radius). inherit copies the
+   * item's per-corner radii, including the stacked-divider zeroing above.
+   * The end corners square again when open — the content, not the summary,
+   * sits at the item's end edge. */
+  border-radius: inherit;
+}
+
+.ui-accordion[open] .ui-accordion-summary {
+  border-end-start-radius: 0;
+  border-end-end-radius: 0;
 }
 
 /* Remove the default disclosure marker; the +/− indicator below replaces it. */
