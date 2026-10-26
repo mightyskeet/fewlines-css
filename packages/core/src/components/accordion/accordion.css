@@ -59,14 +59,24 @@
 
   /* The hover fill is the summary's own background: without rounding it
    * paints over the item border and past the outer corner curve (child
-   * painting is not clipped by the parent radius). inherit copies the
-   * item's per-corner radii, including the stacked-divider zeroing above.
-   * The end corners square again when open — the content, not the summary,
-   * sits at the item's end edge. */
-  border-radius: inherit;
+   * painting is not clipped by the parent radius). Explicit token, not
+   * border-radius: inherit — on children of <details> inherit computes
+   * to 0 in Chromium and Firefox (probe 2026-10-26,
+   * compatibility notes), so the fill would stay square. */
+  border-radius: var(--ui-radius-md);
 }
 
-.ui-accordion[open] .ui-accordion-summary {
+/* Mirror the stacked-divider corner zeroing on the fill: start corners
+ * square on following items, end corners square on preceding ones. */
+.ui-accordion + .ui-accordion .ui-accordion-summary {
+  border-start-start-radius: 0;
+  border-start-end-radius: 0;
+}
+
+/* The end corners square also when open — the content, not the summary,
+ * sits at the item's end edge. */
+.ui-accordion[open] .ui-accordion-summary,
+.ui-accordion:has(+ .ui-accordion) .ui-accordion-summary {
   border-end-start-radius: 0;
   border-end-end-radius: 0;
 }
