@@ -207,6 +207,18 @@
   initial-value: white;
 }
 
+@property --ui-color-neutral-tint {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: gray;
+}
+
+@property --ui-color-on-warning {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: white;
+}
+
 @property --ui-focus-ring {
   syntax: '<color>';
   inherits: true;
@@ -243,11 +255,13 @@
     --ui-color-on-success var(--ui-duration-slow) ease,
     --ui-color-warning var(--ui-duration-slow) ease,
     --ui-color-warning-strong var(--ui-duration-slow) ease,
+    --ui-color-on-warning var(--ui-duration-slow) ease,
     --ui-color-success-strong var(--ui-duration-slow) ease,
     --ui-color-accent-tint var(--ui-duration-slow) ease,
     --ui-color-success-tint var(--ui-duration-slow) ease,
     --ui-color-warning-tint var(--ui-duration-slow) ease,
     --ui-color-danger-tint var(--ui-duration-slow) ease,
+    --ui-color-neutral-tint var(--ui-duration-slow) ease,
     --ui-focus-ring var(--ui-duration-slow) ease;
 }
 

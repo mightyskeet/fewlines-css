@@ -11,35 +11,40 @@ test.beforeEach(async ({ page }) => {
   await page.goto('/fixture.html');
 });
 
-test('default variant uses the inverted neutral family', async ({ page }) => {
+test('default variant uses the gray tint with plain text', async ({ page }) => {
   const styles = await page.locator('#badge-default').evaluate((el) => {
     const s = getComputedStyle(el);
     return { background: s.backgroundColor, color: s.color };
   });
 
-  const surface = await page
+  const tint = await page
     .evaluate(() =>
-      getComputedStyle(document.documentElement).getPropertyValue('--ui-color-neutral-surface'),
+      getComputedStyle(document.documentElement).getPropertyValue('--ui-color-neutral-tint'),
     )
     .then((v) => v.trim());
-  expect(styles.background).toBe(surface);
+  expect(styles.background).toBe(tint);
 
-  const onNeutral = await page
-    .evaluate(() =>
-      getComputedStyle(document.documentElement).getPropertyValue('--ui-color-on-neutral'),
-    )
+  const text = await page
+    .evaluate(() => getComputedStyle(document.documentElement).getPropertyValue('--ui-color-text'))
     .then((v) => v.trim());
-  expect(styles.color).toBe(onNeutral);
+  expect(styles.color).toBe(text);
 });
 
 test('solid variants use the on-* text over their *-surface fill', async ({ page }) => {
   const cases = [
+    {
+      id: 'badge-neutral-solid',
+      surface: '--ui-color-neutral-surface',
+      on: '--ui-color-on-neutral',
+    },
     { id: 'badge-accent-solid', surface: '--ui-color-accent-surface', on: '--ui-color-on-accent' },
     {
       id: 'badge-success-solid',
       surface: '--ui-color-success-surface',
       on: '--ui-color-on-success',
     },
+    // The warning family has no 500 palette step: the fill is the warning token.
+    { id: 'badge-warning-solid', surface: '--ui-color-warning', on: '--ui-color-on-warning' },
     { id: 'badge-danger-solid', surface: '--ui-color-danger-surface', on: '--ui-color-on-danger' },
   ];
   for (const { id, surface, on } of cases) {

@@ -69,6 +69,8 @@ export const semanticMap = {
   'on-success': { light: 'neutral-0', dark: 'neutral-950' },
   warning: { light: 'warning-600', dark: 'warning-300' },
   'warning-strong': { light: 'warning-700', dark: 'warning-200' },
+  'on-warning': { light: 'neutral-0', dark: 'neutral-950' },
+  'neutral-tint': { light: 'neutral-200', dark: 'neutral-700' },
   'accent-tint': { light: 'accent-100', dark: 'accent-800' },
   'success-tint': { light: 'success-100', dark: 'success-800' },
   'warning-tint': { light: 'warning-100', dark: 'warning-800' },
@@ -86,6 +88,7 @@ export const tokenPairs = [
   // Core text on surfaces
   { fg: 'text', bg: 'surface', role: 'body' },
   { fg: 'text', bg: 'surface-raised', role: 'body' },
+  { fg: 'text', bg: 'neutral-tint', role: 'body', note: 'badge default: gray tint' },
   { fg: 'text-muted', bg: 'surface', role: 'fluent' },
   { fg: 'text-muted', bg: 'surface-raised', role: 'fluent' },
 
@@ -139,6 +142,11 @@ export const tokenPairs = [
   { fg: 'warning-strong', bg: 'warning-tint', role: 'body' },
   { fg: 'text', bg: 'warning-tint', role: 'body' },
   { fg: 'warning', bg: 'warning-tint', role: 'nonText' },
+
+  // Solid badge fills (the button-default model; Badge): the warning family
+  // has no 500 palette step, so its solid fill is the warning token itself
+  // (600/300) — white on it measures Lc 87.7 (body).
+  { fg: 'on-warning', bg: 'warning', role: 'body' },
 
   // Focus indicator (non-text contrast)
   { fg: 'focus-ring', bg: 'surface', role: 'nonText' },

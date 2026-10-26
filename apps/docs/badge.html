@@ -54,10 +54,9 @@
         </div>
         <p>
           <code>data-variant="accent|success|warning|danger"</code> — soft tint surfaces (the
-          feedback model, like Alert). Default is the inverted neutral family
-          (<code>neutral-surface</code> + <code>on-neutral</code>, the button-default model): a
-          dark pill in the light theme, a light one in the dark — the most contrasty member of
-          the set. All pairs are validated by the APCA matrix at the strict body threshold
+          feedback model, like Alert). Default (no attribute) is the gray member of the set: a
+          neutral tint one step darker than the colored tints, so it reads with the same visual
+          weight. All pairs are validated by the APCA matrix at the strict body threshold
           (Lc 75) in both themes.
         </p>
       </section>
@@ -65,15 +64,17 @@
       <section>
         <h2>Solid fill</h2>
         <div class="example">
+          <span class="ui-badge" data-variant="neutral-solid">Neutral</span>
           <span class="ui-badge" data-variant="accent-solid">Accent</span>
           <span class="ui-badge" data-variant="success-solid">Active</span>
+          <span class="ui-badge" data-variant="warning-solid">Pending</span>
           <span class="ui-badge" data-variant="danger-solid">Failed</span>
         </div>
         <p>
-          <code>data-variant="accent-solid|success-solid|danger-solid"</code> — bright surfaces
-          with light text (<code>*-surface</code> + <code>on-*</code>, the button-default model).
-          No <code>warning-solid</code>: the warning family has no surface token and light text on
-          a warning fill fails the APCA body threshold.
+          <code>data-variant="neutral-solid|accent-solid|success-solid|warning-solid|
+          danger-solid"</code> — bright surfaces with light text (<code>*-surface</code> +
+          <code>on-*</code>, the button-default model). The warning solid fills with the warning
+          token itself (the palette has no 500 step); white on it passes the APCA body threshold.
         </p>
       </section>
 

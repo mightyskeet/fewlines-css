@@ -10,29 +10,33 @@
  *   <span class="ui-badge">Beta</span>
  *   <span class="ui-badge" data-variant="success">Active</span>
  *
- * Variants via data-variant. Two models (same families as Button):
- *   tint (feedback, like Alert): accent | success | warning | danger —
- *     tint surface + -strong text;
- *   solid (high-contrast fill): accent-solid | success-solid | danger-solid —
- *     *-surface fill + on-* text, the button-default model.
- *   default (attribute omitted) — the inverted neutral family
- *     (neutral-surface + on-neutral), the most contrasty member.
- *   No warning-solid: the family has no warning-surface token and light text
- *   on a warning fill fails the APCA body threshold.
+ * Variants via data-variant. Two mirrored sets of five (same families as
+ * Button):
+ *   pastel (feedback, like Alert): default (attribute omitted, the gray tint
+ *     member) + accent | success | warning | danger — tint surface +
+ *     -strong text;
+ *   solid (bright fill, light text): neutral-solid | accent-solid |
+ *     success-solid | warning-solid | danger-solid — *-surface fill + on-*
+ *     text, the button-default model.
+ *   The gray tint sits one step darker than the colored ones (200/700 vs
+ *   100/800): gray carries no hue, so it needs the extra step to read with
+ *   the same visual weight.
+ *   The warning solid fills with the warning token itself (600/300 — the
+ *   palette has no 500 step); white on it measures Lc 87.7 (body).
  *
  * Sizes via data-size: sm | lg (default — md, attribute omitted). Geometry
  * scales, typography stays: sm 16px / md 20px / lg 28px (line-height: 1);
  * md is the standard pill.
  *
  * APCA pairs used (validated in tests/apca, body threshold):
- *   default: on-neutral on neutral-surface
- *   tint:    {accent,success,warning,danger}-strong on *-tint
- *   solid:   on-{accent,success,danger} on *-surface
+ *   default: text on neutral-tint
+ *   pastel:  {accent,success,warning,danger}-strong on *-tint
+ *   solid:   on-{neutral,accent,success,warning,danger} on *-fill
  */
 
 .ui-badge {
-  --ui-badge-fg: var(--ui-color-on-neutral);
-  --ui-badge-bg: var(--ui-color-neutral-surface);
+  --ui-badge-fg: var(--ui-color-text);
+  --ui-badge-bg: var(--ui-color-neutral-tint);
 
   display: inline-flex;
   align-items: center;
@@ -82,6 +86,11 @@
 }
 
 /* Solid variants (the button-default model): bright fill, light text. */
+.ui-badge[data-variant='neutral-solid'] {
+  --ui-badge-fg: var(--ui-color-on-neutral);
+  --ui-badge-bg: var(--ui-color-neutral-surface);
+}
+
 .ui-badge[data-variant='accent-solid'] {
   --ui-badge-fg: var(--ui-color-on-accent);
   --ui-badge-bg: var(--ui-color-accent-surface);
@@ -90,6 +99,13 @@
 .ui-badge[data-variant='success-solid'] {
   --ui-badge-fg: var(--ui-color-on-success);
   --ui-badge-bg: var(--ui-color-success-surface);
+}
+
+.ui-badge[data-variant='warning-solid'] {
+  /* The palette has no warning-500 step: the fill is the warning token
+   * itself (600/300), white on it passes the body threshold (Lc 87.7). */
+  --ui-badge-fg: var(--ui-color-on-warning);
+  --ui-badge-bg: var(--ui-color-warning);
 }
 
 .ui-badge[data-variant='danger-solid'] {
