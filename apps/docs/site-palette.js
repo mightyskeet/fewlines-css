@@ -182,6 +182,13 @@ function updateTable(rows) {
     }
   }
   root.style.colorScheme = '';
+  // Land the restore in its own forced recalc BEFORE re-enabling the
+  // transition: both property writes would otherwise land in one style
+  // recalc, where the values change dark->light with the transition list
+  // already active — a transition starts from the dark values and the page
+  // visibly flashes (light theme only: with a dark saved theme the restore
+  // changes no values).
+  getComputedStyle(root).getPropertyValue('--ui-color-text');
   root.style.transition = '';
   root.style.transition = '';
 
