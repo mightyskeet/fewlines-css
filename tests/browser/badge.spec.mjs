@@ -11,18 +11,18 @@ test.beforeEach(async ({ page }) => {
   await page.goto('/fixture.html');
 });
 
-test('default variant uses the subtle surface and neutral text', async ({ page }) => {
+test('default variant uses the raised surface and neutral text', async ({ page }) => {
   const styles = await page.locator('#badge-default').evaluate((el) => {
     const s = getComputedStyle(el);
     return { background: s.backgroundColor, color: s.color };
   });
 
-  const subtle = await page
+  const raised = await page
     .evaluate(() =>
-      getComputedStyle(document.documentElement).getPropertyValue('--ui-color-surface-subtle'),
+      getComputedStyle(document.documentElement).getPropertyValue('--ui-color-surface-raised'),
     )
     .then((v) => v.trim());
-  expect(styles.background).toBe(subtle);
+  expect(styles.background).toBe(raised);
 
   const text = await page
     .evaluate(() => getComputedStyle(document.documentElement).getPropertyValue('--ui-color-text'))

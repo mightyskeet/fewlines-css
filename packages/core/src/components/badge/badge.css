@@ -18,17 +18,17 @@
  * text. All consumed pairs are already validated by the APCA matrix at the
  * strict body threshold, so the 0.75rem label size needs no extra registry
  * entries (tests/apca):
- *   default: text on surface-subtle (body)
+ *   default: text on surface-raised (body)
  *   variants: {accent,success,warning,danger}-strong on *-tint (body)
  *
  * APCA pairs used (validated in tests/apca):
- *   text on surface-subtle (body)
+ *   text on surface-raised (body)
  *   {accent,danger,success,warning}-strong on *-tint (body)
  */
 
 .ui-badge {
   --ui-badge-fg: var(--ui-color-text);
-  --ui-badge-bg: var(--ui-color-surface-subtle);
+  --ui-badge-bg: var(--ui-color-surface-raised);
 
   display: inline-flex;
   align-items: center;

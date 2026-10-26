@@ -210,12 +210,12 @@ test('file input button is styled by the component', async ({ page }) => {
       paddingInlineStart: s.paddingInlineStart,
     };
   });
-  const subtle = await page
+  const raised = await page
     .evaluate(() =>
-      getComputedStyle(document.documentElement).getPropertyValue('--ui-color-surface-subtle'),
+      getComputedStyle(document.documentElement).getPropertyValue('--ui-color-surface-raised'),
     )
     .then((v) => v.trim());
-  expect(button.background).toBe(subtle);
+  expect(button.background).toBe(raised);
   expect(button.divider).toBe('1px');
   expect(button.cursor).toBe('pointer');
   expect(button.paddingInlineStart).not.toBe('0px');

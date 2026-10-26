@@ -48,7 +48,7 @@
   block-size: 1.25rem;
   border: 1px solid var(--ui-color-border);
   border-radius: var(--ui-radius-full);
-  background: var(--ui-color-surface-subtle);
+  background: var(--ui-color-surface-raised);
   position: relative;
   transition:
     background-color var(--ui-duration-fast) ease,

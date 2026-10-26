@@ -34,14 +34,15 @@
 export const semanticMap = {
   surface: { light: 'neutral-0', dark: 'neutral-900' },
   'surface-raised': { light: 'neutral-50', dark: 'neutral-800' },
-  'surface-subtle': { light: 'neutral-100', dark: 'neutral-700' },
   hover: {
     light: 'neutral-100',
     dark: { mix: ['surface', 'surface-raised'] },
   },
   'hover-raised': {
     light: 'neutral-100',
-    dark: { mix: ['surface-raised', 'surface-subtle'] },
+    // The up-neighbor of raised lost its semantic role (surface-subtle
+    // collapse, 2026-10-26) — the midpoint is declared in palette steps.
+    dark: { mix: ['surface-raised', 'neutral-700'] },
   },
   'neutral-surface': { light: 'neutral-900', dark: 'neutral-50' },
   'neutral-hover': { light: 'neutral-700', dark: 'neutral-200' },
@@ -85,19 +86,13 @@ export const tokenPairs = [
   // Core text on surfaces
   { fg: 'text', bg: 'surface', role: 'body' },
   { fg: 'text', bg: 'surface-raised', role: 'body' },
-  { fg: 'text', bg: 'surface-subtle', role: 'body' },
   { fg: 'text-muted', bg: 'surface', role: 'fluent' },
   { fg: 'text-muted', bg: 'surface-raised', role: 'fluent' },
-  // text-muted on surface-subtle is intentionally NOT registered: the darker
-  // dark-theme subtle fill (700) drops the pair below the fluent threshold
-  // (Lc ~60.0), and no core component consumes it. Full-contrast text only
-  // on subtle (same policy as blockquote).
 
   // Base typography (base/typography.css): the inline code family renders at
   // 0.875em (fluent role at 16px body). Blockquote deliberately keeps the
   // text/surface body pair — text-muted fails the body threshold in dark
-  { fg: 'text', bg: 'surface-subtle', role: 'fluent', note: 'inline code, samp; pre' },
-  { fg: 'text', bg: 'surface-raised', role: 'fluent', note: 'kbd' },
+  { fg: 'text', bg: 'surface-raised', role: 'fluent', note: 'inline code, samp, pre, kbd' },
 
   // Hover fills (state model, theme notes): table rows, accordion,
   // secondary button hover
@@ -169,7 +164,6 @@ export const tokenPairs = [
   // same policy as blockquote (theme notes).
   { fg: 'text', bg: 'surface', role: 'small', note: 'caption' },
   { fg: 'text', bg: 'surface-raised', role: 'small', note: 'caption' },
-  { fg: 'text', bg: 'surface-subtle', role: 'small', note: 'caption' },
 ];
 
 /** Minimum APCA Lc per role (accessibility notes). */

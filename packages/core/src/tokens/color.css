@@ -8,36 +8,32 @@
  * All text/surface pairs are validated by the APCA token matrix (Phase 4).
  */
 :root {
-  /* Surfaces */
+  /* Surfaces — two persistent roles: the page and anything lifted above it
+   * (controls, panels, soft fills: zebra rows, switch track, badges, code
+   * wells). Dark theme follows the elevation direction: the page surface is
+   * the darkest step, every role above it is lighter (surface 900 -> raised
+   * 800). Former `surface-subtle` collapsed into `raised` (2026-10-26):
+   * one soft surface, hover lives only in state tokens. */
   --ui-color-surface: light-dark(var(--ui-palette-neutral-0), var(--ui-palette-neutral-900));
   --ui-color-surface-raised: light-dark(
     var(--ui-palette-neutral-50),
     var(--ui-palette-neutral-800)
   );
 
-  /* Subtle fill: persistent soft surfaces (zebra rows, switch track,
-   * read-only fields, code wells, secondary chrome). Dark theme follows the
-   * elevation direction: the page surface is the darkest step, every role
-   * above it is lighter (surface 900 -> raised 800 -> subtle 700). */
-  --ui-color-surface-subtle: light-dark(
-    var(--ui-palette-neutral-100),
-    var(--ui-palette-neutral-700)
-  );
-
   /* Hover fills — derived state tokens, no new palette entries (theme notes,
    * state model). In the dark theme the surface steps are wide (6-8 L units),
    * so hover is the midpoint to the next step via color-mix; in the light
-   * theme the steps are already tight (3 units) and hover is the first step
-   * that does not collide with a neighboring surface (subtle). Inputs are
-   * light-dark() tokens, so one expression serves both themes and follows
-   * the theme transition. */
+   * theme the steps are tight (3 units) and hover is the first step above the
+   * fill (neutral-100 — the former subtle value). Inputs are light-dark()
+   * tokens, so one expression serves both themes and follows the theme
+   * transition. */
   --ui-color-hover: light-dark(
-    var(--ui-color-surface-subtle),
+    var(--ui-palette-neutral-100),
     color-mix(in oklab, var(--ui-color-surface), var(--ui-color-surface-raised))
   );
   --ui-color-hover-raised: light-dark(
-    var(--ui-color-surface-subtle),
-    color-mix(in oklab, var(--ui-color-surface-raised), var(--ui-color-surface-subtle))
+    var(--ui-palette-neutral-100),
+    color-mix(in oklab, var(--ui-color-surface-raised), var(--ui-palette-neutral-700))
   );
 
   /* Text */

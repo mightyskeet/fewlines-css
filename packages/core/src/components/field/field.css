@@ -201,7 +201,7 @@
   margin-inline-end: var(--ui-space-sm);
   border: none;
   border-inline-end: 1px solid var(--ui-color-border);
-  background: var(--ui-color-surface-subtle);
+  background: var(--ui-color-surface-raised);
   color: var(--ui-color-text);
   font: inherit;
   font-weight: var(--ui-font-weight-medium);

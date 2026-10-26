@@ -89,11 +89,11 @@ h6 {
 /* Inline code family: <code>, <kbd>, <samp>.
  *
  * Monospaced via --ui-font-mono, slightly smaller than the surrounding text
- * (0.875em — scales with the host context). Surface is subtle (the validated
- * pair is text/surface-subtle at the fluent role — 0.875em of 16px body);
+ * (0.875em — scales with the host context). Surface is raised (the validated
+ * pair is text/surface-raised at the fluent role — 0.875em of 16px body);
  * the border delineates the fill in both themes — near-black steps compress
  * perceptually in the dark theme, so background lightness alone is too
- * subtle for small fragments (same model as <pre>: subtle + border).
+ * subtle for small fragments (same model as <pre>: raised + border).
  *
  * box-decoration-break: clone repeats the padding, border and radius on
  * every line fragment when inline code wraps. Decorative enhancement —
@@ -110,7 +110,7 @@ samp {
   font-family: var(--ui-font-mono);
   font-size: 0.875em;
   color: var(--ui-color-text);
-  background: var(--ui-color-surface-subtle);
+  background: var(--ui-color-surface-raised);
   border: 1px solid var(--ui-color-border);
   padding-block: 0.125em;
   padding-inline: 0.33em;
@@ -123,11 +123,10 @@ samp {
   box-decoration-break: clone;
 }
 
-/* <kbd> reads as a key cap: raised surface (the raised variant of the same
- * validated text pair) and a slightly larger radius. */
+/* <kbd> reads as a key cap: same raised surface as <code> (one soft surface
+ * since the subtle collapse), the strong border gives the keycap edge. */
 kbd {
-  background: var(--ui-color-surface-raised);
-  border-radius: var(--ui-radius-sm);
+  border-color: var(--ui-color-border-strong);
 }
 
 /* Code block: the border and radius carry the delineation — the fill stays

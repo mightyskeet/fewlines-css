@@ -107,7 +107,10 @@ function resolveColor(semanticName, theme) {
   // the color-mix() values in tokens/color.css.
   if (typeof spec === 'object') {
     const [a, b] = spec.mix.map((name) => {
-      const key = semanticMap[name][theme];
+      // Mix members are semantic names; a bare palette name ('neutral-700')
+      // is allowed for state tokens whose neighbors lost their semantic role
+      // (surface-subtle collapse, 2026-10-26).
+      const key = semanticMap[name]?.[theme] ?? name;
       return oklchToOkLab(paletteMap[key]);
     });
     return okLabToSrgb({

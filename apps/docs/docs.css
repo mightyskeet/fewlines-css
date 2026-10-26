@@ -57,7 +57,7 @@ site-sidebar {
 
 .site-nav a:hover,
 .site-nav a[aria-current='page'] {
-  background: var(--ui-color-surface-subtle);
+  background: var(--ui-color-hover);
 }
 
 .site-nav a[aria-current='page'] {

@@ -58,11 +58,11 @@ test('cells carry a hairline bottom border under the separate border model', asy
 });
 
 test('zebra stripes apply to odd body rows only', async ({ page }) => {
-  const subtle = await token(page, '--ui-color-surface-subtle');
+  const raised = await token(page, '--ui-color-surface-raised');
   const rows = page.locator('#table-zebra tbody tr');
   const odd = await rows.nth(0).evaluate((el) => getComputedStyle(el).backgroundColor);
   const even = await rows.nth(1).evaluate((el) => getComputedStyle(el).backgroundColor);
-  expect(odd).toBe(subtle);
+  expect(odd).toBe(raised);
   expect(even).toBe('rgba(0, 0, 0, 0)');
 });
 

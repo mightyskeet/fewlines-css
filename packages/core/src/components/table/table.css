@@ -91,9 +91,10 @@
   }
 }
 
-/* Zebra: odd body rows on the subtle surface (text/surface-subtle — body). */
+/* Zebra: odd body rows on the raised surface (text/surface-raised — body).
+ * Hover stays a step above via --ui-color-hover — visible on zebra rows. */
 .ui-table[data-zebra] tbody tr:nth-child(odd) {
-  background: var(--ui-color-surface-subtle);
+  background: var(--ui-color-surface-raised);
 }
 
 /* Footer: summary band with a stronger separator above it. */
