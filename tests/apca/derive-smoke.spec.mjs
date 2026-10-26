@@ -108,3 +108,90 @@ test('palette widget: slider, persistence, reset', async ({ page }) => {
   await expect(page.locator('html')).not.toHaveAttribute('data-palette', 'custom');
   await expect(page.evaluate(() => localStorage.getItem('colors-bases'))).resolves.toBeNull();
 });
+
+test('derivation: strong and tint keep the family hue', async ({ page }) => {
+  await page.goto('/colors');
+  const hueOf = (token) =>
+    page.evaluate(
+      ({ token }) => {
+        const probe = document.createElement('div');
+        probe.style.cssText = 'position:absolute;visibility:hidden;';
+        document.body.append(probe);
+        // Project the token into explicit oklch channels so the hue is
+        // readable regardless of the engine's computed-value serialization.
+        probe.style.color = `oklch(from var(${token}) l c h)`;
+        const m = getComputedStyle(probe).color.match(/oklch\(\s*[\d.]+%?\s+[\d.]+%?\s+(-?[\d.]+)/);
+        probe.remove();
+        if (!m) throw new Error(`no hue in ${getComputedStyle(probe).color}`);
+        return Number(m[1]);
+      },
+      { token },
+    );
+
+  await page.evaluate(() => {
+    const root = document.documentElement;
+    root.setAttribute('data-palette', 'custom');
+    root.style.setProperty('--ui-base-warning-h', '160');
+  });
+
+  for (const token of [
+    '--ui-color-warning-strong',
+    '--ui-color-warning-tint',
+    '--ui-color-warning',
+  ]) {
+    const hue = await hueOf(token);
+    const drift = Math.abs(((hue - 160 + 540) % 360) - 180);
+    expect(drift, `${token} keeps the family hue (got ${hue})`).toBeLessThanOrEqual(2);
+  }
+});
+
+test('derivation: colors are a pure function of the bases (no stickiness)', async ({ page }) => {
+  // The sticky-prone configuration: data-theme set (token transitions armed).
+  await p_addInitThemeLight(page);
+  await page.goto('/colors');
+
+  const baseline = await readStrongWithDefaults(page);
+  // drag the hue away and back — the shades must land on the same values
+  await page.evaluate(() => {
+    const root = document.documentElement;
+    root.setAttribute('data-palette', 'custom');
+    root.style.setProperty('--ui-base-warning-h', '160');
+  });
+  await page.waitForTimeout(50);
+  await page.evaluate(() =>
+    document.documentElement.style.setProperty('--ui-base-warning-h', '75'),
+  );
+  await page.waitForTimeout(50);
+  expect(await readStrong(page), 'strong returns to the default value').toBe(baseline);
+});
+
+/** Set the sidebar-style saved theme before page load (data-theme present). */
+async function p_addInitThemeLight(page) {
+  await page.addInitScript(() => localStorage.setItem('theme', 'light'));
+}
+
+/** Activate the scope at default bases, then read the warning strong color. */
+async function readStrongWithDefaults(page) {
+  await page.evaluate(() => {
+    const root = document.documentElement;
+    root.setAttribute('data-palette', 'custom');
+    root.style.setProperty('--ui-base-warning-h', '75');
+  });
+  return readStrong(page);
+}
+
+async function readStrong(page) {
+  return page.evaluate(() => {
+    const probe = document.createElement('div');
+    probe.style.cssText = 'position:absolute;visibility:hidden;';
+    document.body.append(probe);
+    probe.style.color = 'var(--ui-color-warning-strong)';
+    const ctx = document.createElement('canvas').getContext('2d');
+    ctx.fillStyle = '#000';
+    ctx.fillStyle = getComputedStyle(probe).color;
+    ctx.fillRect(0, 0, 1, 1);
+    const rgb = [...ctx.getImageData(0, 0, 1, 1).data].slice(0, 3).join(',');
+    probe.remove();
+    return rgb;
+  });
+}

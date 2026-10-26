@@ -50,6 +50,14 @@
   --ui-base-danger-c: 0.19;
   --ui-base-danger-h: 28;
 
+  /* No token transitions while the palette session is active: dragging
+   * sliders retargets dozens of registered-token transitions and the
+   * measurement machinery interacts with them (retarget/cancel artifacts,
+   * observed as stuck shades). Predictability beats smoothness here;
+   * equal specificity with :root[data-theme] — later source order (this
+   * file follows core.css) wins. */
+  transition: none;
+
   /* ---- Neutral halves (theme-split plain colors) ---- */
   --pl-surface-light: oklch(var(--ui-base-n-page) var(--ui-base-n-c) var(--ui-base-n-h));
   --pl-surface-dark: oklch(14% var(--ui-base-n-c) var(--ui-base-n-h));
@@ -119,6 +127,9 @@
   );
   --pl-accent-sel: round(nearest, 0.5 * (sign(var(--ui-base-accent-l) - 0.7) + 1), 1);
   --pl-accent-notsel: calc(1 - var(--pl-accent-sel));
+  /* lightness mix weight toward the pole text lightness (vivid/pastel) */
+  --pl-accent-p-light: calc(0.25 * var(--pl-accent-notsel) + 0.83 * var(--pl-accent-sel));
+  --pl-accent-p-dark: calc(0.85 * var(--pl-accent-notsel) + 0.2 * var(--pl-accent-sel));
   --pl-accent-fill-light: oklch(
     from var(--pl-accent-source)
       calc(
@@ -146,15 +157,13 @@
 
   --ui-color-accent: light-dark(var(--pl-accent-fill-light), var(--pl-accent-fill-dark));
   --ui-color-accent-strong: light-dark(
-    color-mix(
-      in oklch,
-      var(--pl-accent-fill-light),
-      var(--pl-text-light) calc(25% * var(--pl-accent-notsel) + 83% * var(--pl-accent-sel))
+    oklch(
+      from var(--pl-accent-fill-light)
+        calc((1 - var(--pl-accent-p-light)) * l + var(--pl-accent-p-light) * 0.14) calc(0.9 * c) h
     ),
-    color-mix(
-      in oklch,
-      var(--pl-accent-fill-dark),
-      var(--pl-text-dark) calc(85% * var(--pl-accent-notsel) + 20% * var(--pl-accent-sel))
+    oklch(
+      from var(--pl-accent-fill-dark)
+        calc((1 - var(--pl-accent-p-dark)) * l + var(--pl-accent-p-dark) * 0.97) calc(0.9 * c) h
     )
   );
   --ui-color-accent-surface: light-dark(
@@ -163,8 +172,8 @@
   );
   --ui-color-on-accent: light-dark(var(--pl-accent-pole-light), var(--pl-pole-dark));
   --ui-color-accent-tint: light-dark(
-    color-mix(in oklch, var(--pl-surface-light), var(--pl-accent-fill-light) 12%),
-    color-mix(in oklch, var(--pl-surface-dark), var(--pl-accent-fill-dark) 12%)
+    oklch(from var(--pl-accent-fill-light) calc(0.88 + 0.12 * l) calc(0.12 * c) h),
+    oklch(from var(--pl-accent-fill-dark) calc(0.123 + 0.12 * l) calc(0.12 * c) h)
   );
   --ui-focus-ring: light-dark(var(--pl-accent-fill-light), var(--pl-accent-fill-dark));
 
@@ -174,6 +183,9 @@
   );
   --pl-danger-sel: round(nearest, 0.5 * (sign(var(--ui-base-danger-l) - 0.7) + 1), 1);
   --pl-danger-notsel: calc(1 - var(--pl-danger-sel));
+  /* lightness mix weight toward the pole text lightness (vivid/pastel) */
+  --pl-danger-p-light: calc(0.25 * var(--pl-danger-notsel) + 0.83 * var(--pl-danger-sel));
+  --pl-danger-p-dark: calc(0.85 * var(--pl-danger-notsel) + 0.2 * var(--pl-danger-sel));
   --pl-danger-fill-light: oklch(
     from var(--pl-danger-source)
       calc(
@@ -201,15 +213,13 @@
 
   --ui-color-danger: light-dark(var(--pl-danger-fill-light), var(--pl-danger-fill-dark));
   --ui-color-danger-strong: light-dark(
-    color-mix(
-      in oklch,
-      var(--pl-danger-fill-light),
-      var(--pl-text-light) calc(25% * var(--pl-danger-notsel) + 83% * var(--pl-danger-sel))
+    oklch(
+      from var(--pl-danger-fill-light)
+        calc((1 - var(--pl-danger-p-light)) * l + var(--pl-danger-p-light) * 0.14) calc(0.9 * c) h
     ),
-    color-mix(
-      in oklch,
-      var(--pl-danger-fill-dark),
-      var(--pl-text-dark) calc(85% * var(--pl-danger-notsel) + 20% * var(--pl-danger-sel))
+    oklch(
+      from var(--pl-danger-fill-dark)
+        calc((1 - var(--pl-danger-p-dark)) * l + var(--pl-danger-p-dark) * 0.97) calc(0.9 * c) h
     )
   );
   --ui-color-danger-surface: light-dark(
@@ -223,8 +233,8 @@
   );
   --ui-color-on-danger: light-dark(var(--pl-danger-pole-light), var(--pl-pole-dark));
   --ui-color-danger-tint: light-dark(
-    color-mix(in oklch, var(--pl-surface-light), var(--pl-danger-fill-light) 12%),
-    color-mix(in oklch, var(--pl-surface-dark), var(--pl-danger-fill-dark) 12%)
+    oklch(from var(--pl-danger-fill-light) calc(0.88 + 0.12 * l) calc(0.12 * c) h),
+    oklch(from var(--pl-danger-fill-dark) calc(0.123 + 0.12 * l) calc(0.12 * c) h)
   );
 
   /* success */
@@ -233,6 +243,9 @@
   );
   --pl-success-sel: round(nearest, 0.5 * (sign(var(--ui-base-success-l) - 0.7) + 1), 1);
   --pl-success-notsel: calc(1 - var(--pl-success-sel));
+  /* lightness mix weight toward the pole text lightness (vivid/pastel) */
+  --pl-success-p-light: calc(0.25 * var(--pl-success-notsel) + 0.83 * var(--pl-success-sel));
+  --pl-success-p-dark: calc(0.85 * var(--pl-success-notsel) + 0.2 * var(--pl-success-sel));
   --pl-success-fill-light: oklch(
     from var(--pl-success-source)
       calc(
@@ -260,15 +273,13 @@
 
   --ui-color-success: light-dark(var(--pl-success-fill-light), var(--pl-success-fill-dark));
   --ui-color-success-strong: light-dark(
-    color-mix(
-      in oklch,
-      var(--pl-success-fill-light),
-      var(--pl-text-light) calc(25% * var(--pl-success-notsel) + 83% * var(--pl-success-sel))
+    oklch(
+      from var(--pl-success-fill-light)
+        calc((1 - var(--pl-success-p-light)) * l + var(--pl-success-p-light) * 0.14) calc(0.9 * c) h
     ),
-    color-mix(
-      in oklch,
-      var(--pl-success-fill-dark),
-      var(--pl-text-dark) calc(85% * var(--pl-success-notsel) + 20% * var(--pl-success-sel))
+    oklch(
+      from var(--pl-success-fill-dark)
+        calc((1 - var(--pl-success-p-dark)) * l + var(--pl-success-p-dark) * 0.97) calc(0.9 * c) h
     )
   );
   --ui-color-success-surface: light-dark(
@@ -277,8 +288,8 @@
   );
   --ui-color-on-success: light-dark(var(--pl-success-pole-light), var(--pl-pole-dark));
   --ui-color-success-tint: light-dark(
-    color-mix(in oklch, var(--pl-surface-light), var(--pl-success-fill-light) 12%),
-    color-mix(in oklch, var(--pl-surface-dark), var(--pl-success-fill-dark) 12%)
+    oklch(from var(--pl-success-fill-light) calc(0.88 + 0.12 * l) calc(0.12 * c) h),
+    oklch(from var(--pl-success-fill-dark) calc(0.123 + 0.12 * l) calc(0.12 * c) h)
   );
 
   /* warning (no -surface role in core: no solid-fill slot) */
@@ -287,6 +298,9 @@
   );
   --pl-warning-sel: round(nearest, 0.5 * (sign(var(--ui-base-warning-l) - 0.7) + 1), 1);
   --pl-warning-notsel: calc(1 - var(--pl-warning-sel));
+  /* lightness mix weight toward the pole text lightness (vivid/pastel) */
+  --pl-warning-p-light: calc(0.25 * var(--pl-warning-notsel) + 0.83 * var(--pl-warning-sel));
+  --pl-warning-p-dark: calc(0.85 * var(--pl-warning-notsel) + 0.2 * var(--pl-warning-sel));
   --pl-warning-fill-light: oklch(
     from var(--pl-warning-source)
       calc(
@@ -314,20 +328,18 @@
 
   --ui-color-warning: light-dark(var(--pl-warning-fill-light), var(--pl-warning-fill-dark));
   --ui-color-warning-strong: light-dark(
-    color-mix(
-      in oklch,
-      var(--pl-warning-fill-light),
-      var(--pl-text-light) calc(25% * var(--pl-warning-notsel) + 83% * var(--pl-warning-sel))
+    oklch(
+      from var(--pl-warning-fill-light)
+        calc((1 - var(--pl-warning-p-light)) * l + var(--pl-warning-p-light) * 0.14) calc(0.9 * c) h
     ),
-    color-mix(
-      in oklch,
-      var(--pl-warning-fill-dark),
-      var(--pl-text-dark) calc(85% * var(--pl-warning-notsel) + 20% * var(--pl-warning-sel))
+    oklch(
+      from var(--pl-warning-fill-dark)
+        calc((1 - var(--pl-warning-p-dark)) * l + var(--pl-warning-p-dark) * 0.97) calc(0.9 * c) h
     )
   );
   --ui-color-on-warning: light-dark(var(--pl-warning-pole-light), var(--pl-pole-dark));
   --ui-color-warning-tint: light-dark(
-    color-mix(in oklch, var(--pl-surface-light), var(--pl-warning-fill-light) 12%),
-    color-mix(in oklch, var(--pl-surface-dark), var(--pl-warning-fill-dark) 12%)
+    oklch(from var(--pl-warning-fill-light) calc(0.88 + 0.12 * l) calc(0.12 * c) h),
+    oklch(from var(--pl-warning-fill-dark) calc(0.123 + 0.12 * l) calc(0.12 * c) h)
   );
 }
