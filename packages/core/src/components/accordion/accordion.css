@@ -17,7 +17,7 @@
  *     Safari 18.4+); used only for the entry animation inside @supports,
  *     the component is fully functional without it (content simply appears).
  *   summary::-webkit-details-marker — legacy Safari marker, hidden for the
- *     custom chevron; modern engines use ::marker.
+ *     custom +/− indicator; modern engines use ::marker.
  */
 
 .ui-accordion {
@@ -58,7 +58,7 @@
   transition: background-color var(--ui-duration-fast) ease;
 }
 
-/* Remove the default disclosure marker; the chevron below replaces it. */
+/* Remove the default disclosure marker; the +/− indicator below replaces it. */
 .ui-accordion-summary::-webkit-details-marker {
   display: none;
 }
@@ -67,22 +67,33 @@
   content: '';
 }
 
-/* Chevron rotates when the accordion is open — native [open] attribute. */
+/* Plus/minus indicator on ::after, painted with gradient bars on the muted
+ * text token — the house pattern of the select chevron (css-gencontent,
+ * css-gradients, background-size: all universal, floor матрицы выше).
+ * [open] collapses the vertical bar → minus; background-size interpolates,
+ * so the morph is smooth without rotation geometry. Forced colors strip
+ * background images — the text glyph in the forced-colors block carries
+ * the state there. */
 .ui-accordion-summary::after {
   content: '';
-  inline-size: 0.5rem;
-  block-size: 0.5rem;
+  inline-size: 0.75rem;
+  block-size: 0.75rem;
   margin-inline-start: auto;
-  border-inline-end: 2px solid var(--ui-color-text-muted);
-  border-block-end: 2px solid var(--ui-color-text-muted);
-  rotate: 45deg;
-  translate: 0 -0.125rem;
-  transition: rotate var(--ui-duration-fast) ease;
+  background-image:
+    linear-gradient(var(--ui-color-text-muted) 0 0),
+    linear-gradient(var(--ui-color-text-muted) 0 0);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size:
+    100% 2px,
+    2px 100%;
+  transition: background-size var(--ui-duration-fast) ease;
 }
 
 .ui-accordion[open] .ui-accordion-summary::after {
-  rotate: 225deg;
-  translate: 0 0.125rem;
+  background-size:
+    100% 2px,
+    2px 0%;
 }
 
 /* Hover is pointer-gated: on touch (sticky :hover) the summary would latch
@@ -149,5 +160,20 @@
 @media (forced-colors: active) {
   .ui-accordion {
     forced-color-adjust: auto;
+  }
+
+  /* Forced colors strip background images — the painted bars would vanish.
+   * The indicator falls back to a text glyph, which the engine recolors
+   * natively (same role as the select's return to the native arrow). */
+  .ui-accordion-summary::after {
+    content: '+';
+    inline-size: auto;
+    block-size: auto;
+    background-image: none;
+    font: 400 var(--ui-font-size-md) / 1 var(--ui-font-sans);
+  }
+
+  .ui-accordion[open] .ui-accordion-summary::after {
+    content: '−';
   }
 }
