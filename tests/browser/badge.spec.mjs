@@ -86,6 +86,18 @@ test('badges stay inline (adjacent badges share a line)', async ({ page }) => {
   }
 });
 
+test('sizes scale the pill monotonically (sm < md < lg)', async ({ page }) => {
+  const heightOf = (id) =>
+    page.locator(`#${id}`).evaluate((el) => el.getBoundingClientRect().height);
+  const sm = await heightOf('badge-sm');
+  const md = await heightOf('badge-default');
+  const lg = await heightOf('badge-lg');
+  expect(sm).toBeLessThan(md);
+  expect(md).toBeLessThan(lg);
+  // Integer heights: the pill keeps the device-pixel grid of the flow below.
+  for (const h of [sm, md, lg]) expect(Number.isInteger(h)).toBe(true);
+});
+
 test('badge exposes no interactive semantics', async ({ page }) => {
   const badge = page.locator('#badge-default');
   await expect(badge).not.toHaveRole('button');

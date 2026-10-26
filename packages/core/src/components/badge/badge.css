@@ -14,6 +14,10 @@
  * (default — neutral, attribute omitted). Variant names mirror the semantic
  * token families they consume.
  *
+ * Sizes via data-size: sm | lg (default — md, attribute omitted). Geometry
+ * scales, typography stays: sm 16px / md 20px / lg 28px (line-height: 1);
+ * md is the standard pill.
+ *
  * Feedback-family styling (same model as Alert): tint surface + -strong
  * text. All consumed pairs are already validated by the APCA matrix at the
  * strict body threshold, so the 0.75rem label size needs no extra registry
@@ -74,6 +78,19 @@
 .ui-badge[data-variant='danger'] {
   --ui-badge-fg: var(--ui-color-danger-strong);
   --ui-badge-bg: var(--ui-color-danger-tint);
+}
+
+/* Sizes follow the Field pattern: geometry scales, typography stays — the
+ * 0.75rem label is what the APCA pairs were validated at, and --ui-font-size-sm
+ * (14.5px at fluid=1) would put the pill on a fractional line box. */
+.ui-badge[data-size='sm'] {
+  padding-block: var(--ui-space-3xs);
+  padding-inline: var(--ui-space-3xs);
+}
+
+.ui-badge[data-size='lg'] {
+  padding-block: var(--ui-space-xs);
+  padding-inline: var(--ui-space-xs);
 }
 
 /* Adjacent badges get a gap automatically (like stacked alerts). */
