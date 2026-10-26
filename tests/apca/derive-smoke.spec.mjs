@@ -70,6 +70,13 @@ test('palette widget: slider, persistence, reset', async ({ page }) => {
   expect(await page.evaluate(() => document.getElementById('site-palette-drawer').scrollTop)).toBe(
     0,
   );
+  // The measurement must not leave inline residue on :root.
+  expect(
+    await page.evaluate(() => {
+      const s = document.documentElement.style;
+      return [s.colorScheme, s.transition].join('|');
+    }),
+  ).toBe('|');
 
   const accentLightness = page
     .locator('.palette-drawer fieldset', { hasText: 'Accent' })
@@ -79,8 +86,11 @@ test('palette widget: slider, persistence, reset', async ({ page }) => {
 
   // The first drag activates the derivation scope and saves the full map.
   await expect(page.locator('html')).toHaveAttribute('data-palette', 'custom');
+  // The first drag seeds the FULL map from the (scoped) CSS defaults —
+  // no empty-string entries that would poison the restored palette.
   const stored = await page.evaluate(() => JSON.parse(localStorage.getItem('colors-bases')));
   expect(stored['--ui-base-accent-l']).toBe('0.3');
+  expect(Object.values(stored).every((v) => typeof v === 'string' && v.length > 0)).toBe(true);
   // Vivid branch: light fill L = 0.28 + 0.37 * 0.3 = 0.391.
   const accent = await page.evaluate(() => {
     const d = document.createElement('div');

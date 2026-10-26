@@ -83,11 +83,20 @@ function valueOf(slider, raw) {
 }
 
 /** Base-token values as resolved right now (CSS defaults, or the restored
- * inline bases) — used to seed the full map on the first drag and after Reset. */
+ * inline bases) — used to seed the full map on the first drag and after Reset.
+ * The scope must be active while reading: without data-palette the CSS
+ * defaults are not applied and every value would come back as an empty
+ * string, poisoning the saved snapshot. The temporary attribute flip is
+ * synchronous, so it never paints. */
 function readComputed() {
-  const styles = getComputedStyle(document.documentElement);
+  const root = document.documentElement;
+  const saved = root.getAttribute('data-palette');
+  root.setAttribute('data-palette', 'custom');
+  const styles = getComputedStyle(root);
   const values = {};
   for (const prop of PROPS) values[prop] = styles.getPropertyValue(prop).trim();
+  if (saved) root.setAttribute('data-palette', saved);
+  else root.removeAttribute('data-palette');
   return values;
 }
 
@@ -150,27 +159,30 @@ function cssVar(name) {
 const tablePairs = tokenPairs.filter((pair) => pair.role !== 'disabled');
 const tableTokens = [...new Set(tablePairs.flatMap((pair) => [pair.fg, pair.bg]))];
 
-/** Resolve every table token in both themes (synchronous style reads flip the
- * theme without an intermediate paint), then fill the table. */
+/** Resolve every table token in both themes, then fill the table.
+ *
+ * The themes are switched by an INLINE color-scheme flip on :root, NOT by
+ * the data-theme attribute: touching the attribute toggles the
+ * `:root[data-theme]` transition rule from theme-transition.css on and off
+ * around every measurement — churn the page visibly reacts to. Flipping
+ * color-scheme directly re-resolves the (registered) tokens the same way
+ * while leaving the theme machinery alone. The token transition is still
+ * suppressed for the measurement (values do change), and the restore happens
+ * before it is re-enabled, so nothing animates and no frame can show an
+ * intermediate theme. */
 function updateTable(rows) {
   const root = document.documentElement;
-  const savedTheme = root.getAttribute('data-theme');
-  // theme-transition.css animates the registered color tokens on theme
-  // switch — reading right after the flip would return the starting values.
-  // Suppress the transition for the measurement AND for the restore —
-  // re-enabling it before data-theme is restored would animate every
-  // registered token back (visible flash after each measurement).
   root.style.transition = 'none';
   const colors = {};
   for (const theme of ['light', 'dark']) {
-    root.setAttribute('data-theme', theme);
+    root.style.colorScheme = theme;
     for (const name of tableTokens) {
       probe.style.color = `var(${cssVar(name)})`;
       colors[`${theme} ${name}`] = toRgb(getComputedStyle(probe).color);
     }
   }
-  if (savedTheme) root.setAttribute('data-theme', savedTheme);
-  else root.removeAttribute('data-theme');
+  root.style.colorScheme = '';
+  root.style.transition = '';
   root.style.transition = '';
 
   for (const { pair, cells, pills } of rows) {
