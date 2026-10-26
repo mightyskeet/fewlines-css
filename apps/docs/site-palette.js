@@ -157,7 +157,9 @@ function updateTable(rows) {
   const savedTheme = root.getAttribute('data-theme');
   // theme-transition.css animates the registered color tokens on theme
   // switch — reading right after the flip would return the starting values.
-  // Suppress the transition for the measurement, restore afterwards.
+  // Suppress the transition for the measurement AND for the restore —
+  // re-enabling it before data-theme is restored would animate every
+  // registered token back (visible flash after each measurement).
   root.style.transition = 'none';
   const colors = {};
   for (const theme of ['light', 'dark']) {
@@ -167,9 +169,9 @@ function updateTable(rows) {
       colors[`${theme} ${name}`] = toRgb(getComputedStyle(probe).color);
     }
   }
-  root.style.transition = '';
   if (savedTheme) root.setAttribute('data-theme', savedTheme);
   else root.removeAttribute('data-theme');
+  root.style.transition = '';
 
   for (const { pair, cells, pills } of rows) {
     const threshold = roleThresholds[pair.role];
@@ -196,6 +198,8 @@ class SitePalette extends HTMLElement {
   /** Slider input hook, wired up in connectedCallback (private field must be
    * initialized so early events are a no-op). */
   #onInput = () => {};
+  /** Timer id of the debounced table recompute (slider drags fire rapidly). */
+  #tableTimer = 0;
 
   connectedCallback() {
     // Idempotent: connectedCallback re-runs whenever the element is moved.
@@ -211,10 +215,12 @@ class SitePalette extends HTMLElement {
     this.#syncInputs();
 
     // Recompute the table when the drawer opens (values may have changed
-    // elsewhere) and after every slider drag while it is open.
+    // elsewhere) and, debounced, after slider drags while it is open.
     let opened = false;
     this.#onInput = () => {
-      if (opened) updateTable(this.rows);
+      if (!opened) return;
+      clearTimeout(this.#tableTimer);
+      this.#tableTimer = setTimeout(() => updateTable(this.rows), 150);
     };
     drawer.addEventListener('toggle', () => {
       if (!drawer.matches(':popover-open')) return;
@@ -283,9 +289,12 @@ class SitePalette extends HTMLElement {
     close.className = 'ui-button';
     close.popoverTargetElement = drawer;
     close.popoverTargetAction = 'hide';
-    close.autofocus = true;
     close.textContent = 'Close';
     drawer.append(close);
+
+    // Focus lands on the first control (top of the panel) — autofocus on the
+    // bottom Close button would scroll the opened drawer to the end.
+    drawer.querySelector('input, button')?.setAttribute('autofocus', '');
 
     return drawer;
   }

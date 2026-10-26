@@ -59,6 +59,18 @@ test('palette widget: slider, persistence, reset', async ({ page }) => {
   await page.goto('/colors');
   await page.click('.site-palette-fab');
 
+  // Opening the drawer must not disturb the theme (the measurement used to
+  // restore it with the token transition re-enabled — a visible flash) and
+  // must not scroll to the bottom (autofocus used to sit on the Close
+  // button at the end of the panel).
+  await expect(page.locator('#site-palette-drawer')).toBeVisible();
+  expect(await page.evaluate(() => document.documentElement.hasAttribute('data-theme'))).toBe(
+    false,
+  );
+  expect(await page.evaluate(() => document.getElementById('site-palette-drawer').scrollTop)).toBe(
+    0,
+  );
+
   const accentLightness = page
     .locator('.palette-drawer fieldset', { hasText: 'Accent' })
     .locator('input[type="range"]')
