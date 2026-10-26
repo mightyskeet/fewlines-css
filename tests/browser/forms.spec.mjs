@@ -95,6 +95,17 @@ test('forced colors restore the native select arrow', async ({ page }) => {
   expect(appearance).toBe('auto');
 });
 
+test('anything after a field keeps the stack gap (button included)', async ({ page }) => {
+  const gap = async (locator) =>
+    locator.evaluate((el) => getComputedStyle(el).marginBlockStart);
+
+  // The submit button follows the last field — same gap as field after field
+  const field = page.locator('#test-form label.ui-field').last();
+  const button = page.locator('#form-submit');
+  expect(await gap(button)).toBe(await gap(field));
+  expect(await gap(button)).not.toBe('0px');
+});
+
 test('disabled input is not focusable and not editable', async ({ page }) => {
   const input = page.locator('#input-disabled');
   const disabled = await input.evaluate((el) => el.matches(':disabled'));

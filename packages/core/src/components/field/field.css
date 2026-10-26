@@ -34,8 +34,10 @@
   gap: var(--ui-space-3xs);
 }
 
-/* Stacked fields (host just puts them adjacent, like switch-field). */
-.ui-field + .ui-field {
+/* Stack: any element after a field gets the same air — the next field, the
+ * submit button, a form-level alert (host just puts members adjacent; no
+ * margin pair per member type). */
+.ui-field + * {
   margin-block-start: var(--ui-space-sm);
 }
 
