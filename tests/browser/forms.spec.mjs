@@ -188,16 +188,16 @@ test('single-line controls share the standardized height scale', async ({ page }
   expect(await font('input-lg')).toBe(md);
 });
 
-test('read-only field uses the subtle surface', async ({ page }) => {
+test('read-only field recedes below the editable surface (flat, not raised)', async ({ page }) => {
   const background = await page
     .locator('#input-readonly')
     .evaluate((el) => getComputedStyle(el).backgroundColor);
-  const subtle = await page
+  const surface = await page
     .evaluate(() =>
-      getComputedStyle(document.documentElement).getPropertyValue('--ui-color-surface-subtle'),
+      getComputedStyle(document.documentElement).getPropertyValue('--ui-color-surface'),
     )
     .then((v) => v.trim());
-  expect(background).toBe(subtle);
+  expect(background).toBe(surface);
 });
 
 test('file input button is styled by the component', async ({ page }) => {

@@ -179,10 +179,12 @@
 }
 
 /* Read-only (not disabled): selectable and copyable, not editable — the
- * subtle surface signals "fixed value" (text/surface-subtle — registered). */
+ * value is data, not an active control. The flat page-level surface recedes
+ * behind the raised editable fields (subtle sat ABOVE raised — inverted
+ * hierarchy); text/surface is the registered body pair. */
 .ui-input:read-only:not(:disabled),
 .ui-textarea:read-only:not(:disabled) {
-  background: var(--ui-color-surface-subtle);
+  background: var(--ui-color-surface);
   cursor: default;
 }
 
