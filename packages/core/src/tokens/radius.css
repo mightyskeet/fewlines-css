@@ -11,15 +11,20 @@
  * only, everywhere else the block is skipped and the plain radii above apply.
  * The squircle shape reads tighter than round at the same radius, so each
  * supported token steps up one visual notch; --ui-radius-full is unaffected
- * (a squircle pill is the same pill). corner-shape inherits, so one
- * declaration on :root covers every descendant — no per-component rules. */
+ * (a squircle pill is the same pill). corner-shape does NOT inherit
+ * (css-borders-4), so the zero-specificity universal rule is the single
+ * place that covers every element; it is inert without border-radius. */
 @supports (corner-shape: squircle) {
   :root {
     --ui-radius-xs: 0.1875rem;
     --ui-radius-sm: 0.375rem;
     --ui-radius-md: 0.625rem;
     --ui-radius-lg: 1rem;
+  }
 
+  *,
+  ::before,
+  ::after {
     corner-shape: squircle;
   }
 }
