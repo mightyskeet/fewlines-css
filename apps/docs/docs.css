@@ -294,7 +294,11 @@ main > section {
   inline-size: 2.75rem;
   block-size: 2.75rem;
   border: 1px solid var(--ui-color-border);
-  border-radius: 999px;
+  border-radius: var(--ui-radius-full);
+
+  /* corner-shape: round overrides the tokens-layer squircle: at a clamped
+   * full radius squircle flattens the circle into a rounded box. */
+  corner-shape: round;
   background: var(--ui-color-neutral-surface);
   color: var(--ui-color-on-neutral);
   cursor: pointer;
