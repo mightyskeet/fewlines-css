@@ -4,6 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script>try{var t=localStorage.getItem('theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+    <script>try{var c=JSON.parse(localStorage.getItem('colors')||'{}');for(var k in c)document.documentElement.style.setProperty(k,c[k])}catch(e){}</script>
     <title>Popover — @fewlines/css</title>
     <link rel="stylesheet" href="/core.css" />
     <link rel="stylesheet" href="/docs.css" />

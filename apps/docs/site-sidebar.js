@@ -22,6 +22,7 @@
 /** Single source of truth for docs navigation. */
 const PAGES = [
   { href: 'index.html', label: 'Overview' },
+  { href: 'colors.html', label: 'Colors' },
   { href: 'typography.html', label: 'Typography' },
   { href: 'button.html', label: 'Button' },
   { href: 'field.html', label: 'Field' },

@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script>try{var t=localStorage.getItem('theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+    <script>try{var c=JSON.parse(localStorage.getItem('colors')||'{}');for(var k in c)document.documentElement.style.setProperty(k,c[k])}catch(e){}</script>
+    <title>Colors — @fewlines/css</title>
+    <link rel="stylesheet" href="/core.css" />
+    <link rel="stylesheet" href="/docs.css" />
+    <style>
+      .color-groups {
+        display: grid;
+        gap: 16px;
+      }
+      .color-groups fieldset {
+        border: 1px solid var(--ui-color-border);
+        border-radius: 8px;
+        padding: 12px;
+        display: grid;
+        gap: 8px;
+      }
+      .color-groups legend {
+        font-weight: var(--ui-font-weight-medium);
+        padding-inline: 4px;
+      }
+      .color-row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 8px 16px;
+      }
+      .color-row > code {
+        min-inline-size: 220px;
+      }
+      .color-row label {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 13px;
+      }
+      .color-row input[type='color'] {
+        inline-size: 34px;
+        block-size: 24px;
+        padding: 0;
+        border: 1px solid var(--ui-color-border);
+        border-radius: 4px;
+        background: none;
+      }
+      .color-actions {
+        display: flex;
+        gap: 8px;
+      }
+    </style>
+    <script src="/site-sidebar.js" defer></script>
+    <script src="/site-colors.js" defer></script>
+    <script src="/vendor/hljs.min.js" defer></script>
+    <script src="/site-code.js" defer></script>
+  </head>
+  <body>
+    <site-sidebar></site-sidebar>
+
+    <main>
+      <header class="page-header">
+        <h1>Colors</h1>
+        <p>
+          Live theming playground: pick semantic token colors and the whole documentation restyles
+          at once. Choices persist in <code>localStorage</code> and apply on every docs page.
+        </p>
+      </header>
+
+      <section>
+        <h2>How it works</h2>
+        <p>
+          Each picker writes an inline override on <code>:root</code> as
+          <code>light-dark(light, dark)</code>, so the theme toggle keeps working. Inline styles win
+          over <code>core.css</code>. <strong>Reset</strong> removes all overrides;
+          <strong>Copy CSS</strong> gives the same overrides as a host-ready snippet.
+        </p>
+        <p>
+          Defaults are APCA-validated in the repository. Once you override tokens, contrast is your
+          responsibility — check readability in both themes before shipping (the planned formula
+          system adds a live pass/fail table here, see
+          <code>docs/plans/2026-10-26-color-derivation.md</code>).
+        </p>
+      </section>
+
+      <section>
+        <h2>Tokens</h2>
+        <div id="color-groups" class="color-groups"></div>
+        <div class="color-actions" style="margin-block-start: 12px">
+          <button class="ui-button" type="button" id="reset-button">Reset</button>
+          <button class="ui-button" type="button" id="copy-button">Copy CSS</button>
+        </div>
+      </section>
+
+      <section>
+        <h2>Export</h2>
+        <pre><code id="export-code">/* nothing overridden */</code></pre>
+        <p>
+          Paste the snippet into your host stylesheet (or set the same properties on
+          <code>:root</code> inline) to apply the same palette to your application.
+        </p>
+      </section>
+    </main>
+    <site-toc></site-toc>
+
+    <footer>
+      <p>Full contract: <code>packages/core/src/tokens/color.css</code></p>
+    </footer>
+  </body>
+</html>
