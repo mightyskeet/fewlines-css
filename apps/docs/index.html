@@ -3,8 +3,23 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <script>try{var t=localStorage.getItem('theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
-    <script>try{var b=JSON.parse(localStorage.getItem('colors-bases')||'null');if(b){var r=document.documentElement,s=r.style;for(var k in b)s.setProperty(k,b[k]);r.setAttribute('data-palette','custom')}}catch(e){}</script>
+    <script>
+      try {
+        var t = localStorage.getItem('theme');
+        if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+      } catch (e) {}
+    </script>
+    <script>
+      try {
+        var b = JSON.parse(localStorage.getItem('colors-bases') || 'null');
+        if (b) {
+          var r = document.documentElement,
+            s = r.style;
+          for (var k in b) s.setProperty(k, b[k]);
+          r.setAttribute('data-palette', 'custom');
+        }
+      } catch (e) {}
+    </script>
     <title>@fewlines/css — Documentation</title>
     <link rel="stylesheet" href="/core.css" />
     <link rel="stylesheet" href="/docs.css" />
@@ -51,10 +66,12 @@
       <section>
         <h2>Button</h2>
         <div class="example">
-          <button class="ui-button" type="button">Secondary</button>
-          <button class="ui-button" type="button" data-variant="primary">Primary</button>
+          <button class="ui-button" type="button">Default</button>
+          <button class="ui-button" type="button" data-variant="secondary">Secondary</button>
+          <button class="ui-button" type="button" data-variant="outline">Outline</button>
+          <button class="ui-button" type="button" data-variant="ghost">Ghost</button>
           <button class="ui-button" type="button" data-variant="destructive">Delete</button>
-          <button class="ui-button" type="button" disabled>Disabled</button>
+          <a class="ui-button" href="#" data-variant="link">Link</a>
         </div>
         <p><a href="./button.html">Button documentation →</a></p>
       </section>
