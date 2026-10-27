@@ -3,8 +3,23 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <script>try{var t=localStorage.getItem('theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
-    <script>try{var b=JSON.parse(localStorage.getItem('colors-bases')||'null');if(b){var r=document.documentElement,s=r.style;for(var k in b)s.setProperty(k,b[k]);r.setAttribute('data-palette','custom')}}catch(e){}</script>
+    <script>
+      try {
+        var t = localStorage.getItem('theme');
+        if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+      } catch (e) {}
+    </script>
+    <script>
+      try {
+        var b = JSON.parse(localStorage.getItem('colors-bases') || 'null');
+        if (b) {
+          var r = document.documentElement,
+            s = r.style;
+          for (var k in b) s.setProperty(k, b[k]);
+          r.setAttribute('data-palette', 'custom');
+        }
+      } catch (e) {}
+    </script>
     <title>Base typography — @fewlines/css</title>
     <link rel="stylesheet" href="/core.css" />
     <link rel="stylesheet" href="/docs.css" />
@@ -139,6 +154,8 @@
       <section>
         <h2>Heading ladder</h2>
         <div class="example">
+          <h1>Heading 1 — 2xl step</h1>
+          <h2>Heading 2 — xl step</h2>
           <h3>Heading 3 — lg step</h3>
           <h4>Heading 4 — md step</h4>
           <h5>Heading 5 — default step</h5>
@@ -146,9 +163,9 @@
         </div>
         <p>
           <code>h1</code>&ndash;<code>h6</code> map onto the fluid scale steps with explicit weights
-          (<code>h1</code> 700, the rest 600); the lower levels close up to the text sizes — at the
-          calibrated ratio there is no room for six distinct sizes below <code>h3</code>, the weight
-          carries the distinction (theme notes).
+          (700 throughout); the lower levels close up to the text sizes — at the calibrated ratio
+          there is no room for six distinct sizes below <code>h3</code>
+          (theme notes).
         </p>
       </section>
 

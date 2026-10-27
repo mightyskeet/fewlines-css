@@ -27,20 +27,20 @@ test('type sizes grow with the viewport and pin outside the window', async ({ pa
   await page.goto('/typography.html');
 
   await page.setViewportSize({ width: 300, height: 800 });
-  const belowVmin = await readFont(page.locator('h1'));
+  const belowVmin = await readFont(page.locator('.page-header h1'));
   await page.setViewportSize({ width: 400, height: 800 });
   // Below --ui-fluid-vmin the factor clamps to 0: same size as 300px.
-  expect(await readFont(page.locator('h1'))).toBe(belowVmin);
+  expect(await readFont(page.locator('.page-header h1'))).toBe(belowVmin);
 
   await page.setViewportSize({ width: 800, height: 800 });
-  const middle = await readFont(page.locator('h1'));
+  const middle = await readFont(page.locator('.page-header h1'));
   expect(parseFloat(middle)).toBeGreaterThan(parseFloat(belowVmin));
 
   await page.setViewportSize({ width: 1400, height: 800 });
-  const aboveVmax = await readFont(page.locator('h1'));
+  const aboveVmax = await readFont(page.locator('.page-header h1'));
   await page.setViewportSize({ width: 2000, height: 800 });
   // Above --ui-fluid-vmax the factor clamps to 1: same size as 1400px.
-  expect(await readFont(page.locator('h1'))).toBe(aboveVmax);
+  expect(await readFont(page.locator('.page-header h1'))).toBe(aboveVmax);
   expect(parseFloat(aboveVmax)).toBeGreaterThan(parseFloat(middle));
 });
 
