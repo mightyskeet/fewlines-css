@@ -50,12 +50,12 @@
 
   /* Neutral action family — the high-contrast default button: dark fill in
    * the light theme, near-white in the dark (inverted, like the text
-   * polarity). Symmetric with the accent/danger families (surface / strong /
+   * polarity). Symmetric with the info/danger families (surface / hover /
    * on-*). Hover moves against the fill direction and two full steps so the
    * change is unmistakable: the dark fill lightens (900 -> 700), the light
    * fill darkens (50 -> 200) — one-step shifts (800/100) and the
-   * same-direction shift (950/0) both read as invisible. Press stays
-   * neutral-strong (full next step). */
+   * same-direction shift (950/0) both read as invisible. Press = the hover
+   * fill + mechanical response (state model), like every filled button. */
   --ui-color-neutral-surface: light-dark(
     var(--ui-palette-neutral-900),
     var(--ui-palette-neutral-50)
@@ -64,7 +64,6 @@
     var(--ui-palette-neutral-700),
     var(--ui-palette-neutral-200)
   );
-  --ui-color-neutral-strong: light-dark(var(--ui-palette-neutral-950), var(--ui-palette-neutral-0));
   --ui-color-on-neutral: light-dark(var(--ui-palette-neutral-0), var(--ui-palette-neutral-950));
 
   /* Secondary action family — the muted button: a soft panel-gray fill,
@@ -75,11 +74,17 @@
     var(--ui-palette-neutral-800)
   );
 
-  /* Accent */
-  --ui-color-accent: light-dark(var(--ui-palette-accent-600), var(--ui-palette-accent-300));
-  --ui-color-accent-strong: light-dark(var(--ui-palette-accent-700), var(--ui-palette-accent-200));
-  --ui-color-accent-surface: light-dark(var(--ui-palette-accent-500), var(--ui-palette-accent-300));
-  --ui-color-on-accent: light-dark(var(--ui-palette-neutral-0), var(--ui-palette-neutral-950));
+  /* Info family — the blue tone: links, focus, native accent-color, the info
+   * Alert/Badge. The primary action family is neutral; info carries the
+   * brand tone of the non-action roles. Role schema is identical across
+   * families: bare token = the family tone, -surface = solid fill,
+   * -hover = derived hover fill (color-mix), -strong = readable variant
+   * text, on-* = text on the fill, -tint = soft surface. */
+  --ui-color-info: light-dark(var(--ui-palette-info-600), var(--ui-palette-info-300));
+  --ui-color-info-strong: light-dark(var(--ui-palette-info-700), var(--ui-palette-info-200));
+  --ui-color-info-surface: light-dark(var(--ui-palette-info-500), var(--ui-palette-info-300));
+  --ui-color-on-info: light-dark(var(--ui-palette-neutral-0), var(--ui-palette-neutral-950));
+  --ui-color-info-hover: color-mix(in oklab, var(--ui-color-info-surface), var(--ui-color-info-strong));
 
   /* Danger */
   --ui-color-danger: light-dark(var(--ui-palette-danger-600), var(--ui-palette-danger-300));
@@ -103,6 +108,11 @@
     var(--ui-palette-success-300)
   );
   --ui-color-on-success: light-dark(var(--ui-palette-neutral-0), var(--ui-palette-neutral-950));
+  --ui-color-success-hover: color-mix(
+    in oklab,
+    var(--ui-color-success-surface),
+    var(--ui-color-success-strong)
+  );
 
   /* Warning */
   --ui-color-warning: light-dark(var(--ui-palette-warning-600), var(--ui-palette-warning-300));
@@ -110,20 +120,30 @@
     var(--ui-palette-warning-700),
     var(--ui-palette-warning-200)
   );
+
+  /* Solid fill calibrated to the 600 step: white on warning-500 fails the
+   * body APCA threshold (Lc 70.5 < 75), on 600 it measures 87.7 — unlike the
+   * info/danger/success families, the fill is one step below the raw 500. */
+  --ui-color-warning-surface: light-dark(var(--ui-palette-warning-600), var(--ui-palette-warning-300));
   --ui-color-on-warning: light-dark(var(--ui-palette-neutral-0), var(--ui-palette-neutral-950));
+  --ui-color-warning-hover: color-mix(
+    in oklab,
+    var(--ui-color-warning-surface),
+    var(--ui-color-warning-strong)
+  );
 
   /* Tint surfaces — soft variant backgrounds (Alert and future feedback components) */
   --ui-color-neutral-tint: light-dark(
     var(--ui-palette-neutral-100),
     var(--ui-palette-neutral-800)
   );
-  --ui-color-accent-tint: light-dark(var(--ui-palette-accent-100), var(--ui-palette-accent-800));
+  --ui-color-info-tint: light-dark(var(--ui-palette-info-100), var(--ui-palette-info-800));
   --ui-color-success-tint: light-dark(var(--ui-palette-success-100), var(--ui-palette-success-800));
   --ui-color-warning-tint: light-dark(var(--ui-palette-warning-100), var(--ui-palette-warning-800));
   --ui-color-danger-tint: light-dark(var(--ui-palette-danger-100), var(--ui-palette-danger-800));
 
   /* Focus */
-  --ui-focus-ring: light-dark(var(--ui-palette-accent-600), var(--ui-palette-accent-300));
+  --ui-focus-ring: light-dark(var(--ui-palette-info-600), var(--ui-palette-info-300));
 
   /* Scrim — shared overlay backdrop (Dialog, Drawer). Constant black in
    * both themes (non-text layer, exempt from the APCA text matrix —

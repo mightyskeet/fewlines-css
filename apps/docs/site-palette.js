@@ -39,11 +39,11 @@ const FAMILIES = [
     ],
   },
   {
-    legend: 'Accent',
+    legend: 'Info',
     sliders: [
-      { prop: '--ui-base-accent-l', label: 'Lightness', min: 0.15, max: 0.95, step: 0.01 },
-      { prop: '--ui-base-accent-c', label: 'Chroma', min: 0, max: 0.37, step: 0.01 },
-      { prop: '--ui-base-accent-h', label: 'Hue', min: 0, max: 360, step: 1 },
+      { prop: '--ui-base-info-l', label: 'Lightness', min: 0.15, max: 0.95, step: 0.01 },
+      { prop: '--ui-base-info-c', label: 'Chroma', min: 0, max: 0.37, step: 0.01 },
+      { prop: '--ui-base-info-h', label: 'Hue', min: 0, max: 360, step: 1 },
     ],
   },
   {

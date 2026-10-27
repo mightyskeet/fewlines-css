@@ -186,18 +186,18 @@ abbr[title] {
   cursor: help;
 }
 
-/* Links: accent color, underlined with a small optical offset. Hover deepens
+/* Links: info color, underlined with a small optical offset. Hover deepens
  * to -strong. The visited state is intentionally not restyled — it stays
  * identical to unvisited. The focus ring comes from the base focus contract;
  * in forced-colors mode the system repaints links natively. */
 a {
-  color: var(--ui-color-accent);
+  color: var(--ui-color-info);
   text-decoration: underline;
   text-underline-offset: 0.15em;
 }
 
 a:hover {
-  color: var(--ui-color-accent-strong);
+  color: var(--ui-color-info-strong);
 }
 
 /* Block quotation: hanging border on the inline-start edge carries the
@@ -238,8 +238,8 @@ sub {
   bottom: -0.25em;
 }
 
-/* Text selection: accent tint under the author text color (validated pair).
+/* Text selection: info tint under the author text color (validated pair).
  * Forced colors mode repaints the selection natively. */
 ::selection {
-  background: var(--ui-color-accent-tint);
+  background: var(--ui-color-info-tint);
 }

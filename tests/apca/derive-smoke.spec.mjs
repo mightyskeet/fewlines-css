@@ -78,30 +78,30 @@ test('palette widget: slider, persistence, reset', async ({ page }) => {
     }),
   ).toBe('|');
 
-  const accentLightness = page
-    .locator('.palette-drawer fieldset', { hasText: 'Accent' })
+  const infoLightness = page
+    .locator('.palette-drawer fieldset', { hasText: 'Info' })
     .locator('input[type="range"]')
     .first();
-  await accentLightness.fill('0.3');
+  await infoLightness.fill('0.3');
 
   // The first drag activates the derivation scope and saves the full map.
   await expect(page.locator('html')).toHaveAttribute('data-palette', 'custom');
   // The first drag seeds the FULL map from the (scoped) CSS defaults —
   // no empty-string entries that would poison the restored palette.
   const stored = await page.evaluate(() => JSON.parse(localStorage.getItem('colors-bases')));
-  expect(stored['--ui-base-accent-l']).toBe('0.3');
+  expect(stored['--ui-base-info-l']).toBe('0.3');
   expect(Object.values(stored).every((v) => typeof v === 'string' && v.length > 0)).toBe(true);
   // Vivid branch: light fill L = 0.28 + 0.37 * 0.3 = 0.391.
-  const accent = await page.evaluate(() => {
+  const info = await page.evaluate(() => {
     const d = document.createElement('div');
     document.body.append(d);
     document.documentElement.setAttribute('data-theme', 'light');
-    d.style.color = 'var(--ui-color-accent)';
+    d.style.color = 'var(--ui-color-info)';
     const value = getComputedStyle(d).color;
     d.remove();
     return value;
   });
-  expect(accent).toContain('0.391');
+  expect(info).toContain('0.391');
 
   // Reset removes the scope, the storage and returns tokens to core values.
   await page.getByRole('button', { name: 'Reset' }).click();

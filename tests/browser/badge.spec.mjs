@@ -37,14 +37,14 @@ test('solid variants use the on-* text over their *-surface fill', async ({ page
       surface: '--ui-color-neutral-surface',
       on: '--ui-color-on-neutral',
     },
-    { id: 'badge-accent-solid', surface: '--ui-color-accent-surface', on: '--ui-color-on-accent' },
+    { id: 'badge-info-solid', surface: '--ui-color-info-surface', on: '--ui-color-on-info' },
     {
       id: 'badge-success-solid',
       surface: '--ui-color-success-surface',
       on: '--ui-color-on-success',
     },
-    // The warning family has no 500 palette step: the fill is the warning token.
-    { id: 'badge-warning-solid', surface: '--ui-color-warning', on: '--ui-color-on-warning' },
+    // warning-surface is calibrated to the 600 step (white on 500 fails body).
+    { id: 'badge-warning-solid', surface: '--ui-color-warning-surface', on: '--ui-color-on-warning' },
     { id: 'badge-danger-solid', surface: '--ui-color-danger-surface', on: '--ui-color-on-danger' },
   ];
   for (const { id, surface, on } of cases) {
@@ -66,7 +66,7 @@ test('solid variants use the on-* text over their *-surface fill', async ({ page
 });
 
 test('variants resolve to distinct tint surfaces', async ({ page }) => {
-  const ids = ['badge-default', 'badge-accent', 'badge-success', 'badge-warning', 'badge-danger'];
+  const ids = ['badge-default', 'badge-info', 'badge-success', 'badge-warning', 'badge-danger'];
   const backgrounds = new Set();
   const colors = new Set();
   for (const id of ids) {

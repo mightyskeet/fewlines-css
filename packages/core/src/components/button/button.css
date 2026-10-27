@@ -17,7 +17,7 @@
  * with outline.
  *
  * APCA pairs used (validated in tests/apca):
- *   default:     on-neutral on neutral-surface / neutral-hover
+ *   default:     on-neutral on neutral-surface / neutral-hover (hover = press)
  *   secondary:   text on secondary-surface / hover-raised
  *   outline:     text on hover (hover fill) / surface (border, nonText)
  *   ghost:       text on hover (hover fill)
@@ -116,12 +116,13 @@
   padding: 0;
 }
 
-/* Press = hover fill + mechanical response (state model, theme notes).
- * Same specificity as the variant rules below, which come later — pressed
- * variant buttons keep their family fill unless the variant re-states its
- * hover fill with higher specificity (outline/ghost/secondary). */
+/* Press = hover fill + mechanical response (state model, theme notes) —
+ * the same model as the destructive variant. Same specificity as the variant
+ * rules below, which come later — pressed variant buttons keep their family
+ * fill unless the variant re-states its hover fill with higher specificity
+ * (outline/ghost/secondary). */
 .ui-button:active {
-  background: var(--ui-color-neutral-strong);
+  background: var(--ui-color-neutral-hover);
   translate: 0 1px;
 }
 
@@ -200,9 +201,9 @@
 
 /* States — hover never restyles a disabled control. Hover is pointer-gated
  * (sticky :hover on touch would latch the highlight). Variant selectors
- * win over the generic default rule for their own fills. Default hover
- * moves against the fill direction (dark fill lightens, light fill darkens —
- * neutral-hover, decision 2026-10-24); link opts out of fills entirely. */
+ * win over the generic default rule for their own fills. Default hover and
+ * press move against the fill direction (dark fill lightens, light fill
+ * darkens — neutral-hover, decision 2026-10-24); link opts out of fills. */
 @media (hover: hover) and (pointer: fine) {
   .ui-button:hover:not(:disabled, [aria-disabled='true'], [data-variant='link']) {
     background: var(--ui-color-neutral-hover);

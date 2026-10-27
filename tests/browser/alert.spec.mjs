@@ -11,7 +11,7 @@ test.beforeEach(async ({ page }) => {
   await page.goto('/fixture.html');
 });
 
-test('default variant uses the accent tint surface and accent border', async ({ page }) => {
+test('default variant uses the info tint surface and info border', async ({ page }) => {
   const styles = await page.locator('#alert-info').evaluate((el) => {
     const s = getComputedStyle(el);
     return { background: s.backgroundColor, borderColor: s.borderTopColor };
@@ -25,10 +25,10 @@ test('default variant uses the accent tint surface and accent border', async ({ 
   expect(styles.background).not.toBe(surface.trim());
 
   // Border carries the variant color: same as the title color token.
-  const accent = await page.evaluate(() =>
-    getComputedStyle(document.documentElement).getPropertyValue('--ui-color-accent').trim(),
+  const info = await page.evaluate(() =>
+    getComputedStyle(document.documentElement).getPropertyValue('--ui-color-info').trim(),
   );
-  expect(styles.borderColor).toBe(accent);
+  expect(styles.borderColor).toBe(info);
 });
 
 test('variants resolve to distinct tint surfaces', async ({ page }) => {

@@ -37,9 +37,9 @@
   --ui-base-n-page: 100%;
   --ui-base-n-raised: 97%;
   --ui-base-n-sunken: 94%;
-  --ui-base-accent-l: 0.48;
-  --ui-base-accent-c: 0.18;
-  --ui-base-accent-h: 258;
+  --ui-base-info-l: 0.48;
+  --ui-base-info-c: 0.18;
+  --ui-base-info-h: 258;
   --ui-base-success-l: 0.47;
   --ui-base-success-c: 0.15;
   --ui-base-success-h: 151;
@@ -109,7 +109,6 @@
     color-mix(in oklch, var(--pl-text-light), var(--pl-surface-light) 16%),
     color-mix(in oklch, var(--pl-text-dark), var(--pl-surface-dark) 12%)
   );
-  --ui-color-neutral-strong: light-dark(var(--pl-pole-dark), oklch(100% 0 0));
   --ui-color-on-neutral: light-dark(oklch(100% 0 0), var(--pl-pole-dark));
   --ui-color-secondary-surface: light-dark(var(--pl-raised-light), var(--pl-raised-dark));
   --ui-color-neutral-tint: light-dark(var(--pl-soft-light), var(--pl-raised-dark));
@@ -121,61 +120,66 @@
    * defaults land on the current core steps (600/500 in the light theme,
    * 300 in the dark). */
 
-  /* accent */
-  --pl-accent-source: oklch(
-    var(--ui-base-accent-l) var(--ui-base-accent-c) var(--ui-base-accent-h)
+  /* info */
+  --pl-info-source: oklch(
+    var(--ui-base-info-l) var(--ui-base-info-c) var(--ui-base-info-h)
   );
-  --pl-accent-sel: round(nearest, 0.5 * (sign(var(--ui-base-accent-l) - 0.7) + 1), 1);
-  --pl-accent-notsel: calc(1 - var(--pl-accent-sel));
+  --pl-info-sel: round(nearest, 0.5 * (sign(var(--ui-base-info-l) - 0.7) + 1), 1);
+  --pl-info-notsel: calc(1 - var(--pl-info-sel));
   /* lightness mix weight toward the pole text lightness (vivid/pastel) */
-  --pl-accent-p-light: calc(0.25 * var(--pl-accent-notsel) + 0.83 * var(--pl-accent-sel));
-  --pl-accent-p-dark: calc(0.85 * var(--pl-accent-notsel) + 0.2 * var(--pl-accent-sel));
-  --pl-accent-fill-light: oklch(
-    from var(--pl-accent-source)
+  --pl-info-p-light: calc(0.25 * var(--pl-info-notsel) + 0.83 * var(--pl-info-sel));
+  --pl-info-p-dark: calc(0.85 * var(--pl-info-notsel) + 0.2 * var(--pl-info-sel));
+  --pl-info-fill-light: oklch(
+    from var(--pl-info-source)
       calc(
-        (0.28 + 0.37 * l) * var(--pl-accent-notsel) + (0.8 + 0.38 * (l - 0.7)) *
-          var(--pl-accent-sel)
+        (0.28 + 0.37 * l) * var(--pl-info-notsel) + (0.8 + 0.38 * (l - 0.7)) *
+          var(--pl-info-sel)
       )
-      calc(min(c, 0.32) * var(--pl-accent-notsel) + min(0.55 * c, 0.13) * var(--pl-accent-sel)) h
+      calc(min(c, 0.32) * var(--pl-info-notsel) + min(0.55 * c, 0.13) * var(--pl-info-sel)) h
   );
-  --pl-accent-fill-dark: oklch(
-    from var(--pl-accent-source)
+  --pl-info-fill-dark: oklch(
+    from var(--pl-info-source)
       calc(
-        (0.78 + 0.25 * l) * var(--pl-accent-notsel) + (0.8 + 0.38 * (l - 0.7)) *
-          var(--pl-accent-sel)
+        (0.78 + 0.25 * l) * var(--pl-info-notsel) + (0.8 + 0.38 * (l - 0.7)) *
+          var(--pl-info-sel)
       )
       calc(
-        min(0.6 * c, 0.15) * var(--pl-accent-notsel) + min(0.55 * c, 0.13) * var(--pl-accent-sel)
+        min(0.6 * c, 0.15) * var(--pl-info-notsel) + min(0.55 * c, 0.13) * var(--pl-info-sel)
       )
       h
   );
-  --pl-accent-pole-light: color-mix(
+  --pl-info-pole-light: color-mix(
     in oklch,
     oklch(100% 0 0),
-    oklch(9% 0 0) calc(var(--pl-accent-sel) * 100%)
+    oklch(9% 0 0) calc(var(--pl-info-sel) * 100%)
   );
 
-  --ui-color-accent: light-dark(var(--pl-accent-fill-light), var(--pl-accent-fill-dark));
-  --ui-color-accent-strong: light-dark(
+  --ui-color-info: light-dark(var(--pl-info-fill-light), var(--pl-info-fill-dark));
+  --ui-color-info-strong: light-dark(
     oklch(
-      from var(--pl-accent-fill-light)
-        calc((1 - var(--pl-accent-p-light)) * l + var(--pl-accent-p-light) * 0.14) calc(0.9 * c) h
+      from var(--pl-info-fill-light)
+        calc((1 - var(--pl-info-p-light)) * l + var(--pl-info-p-light) * 0.14) calc(0.9 * c) h
     ),
     oklch(
-      from var(--pl-accent-fill-dark)
-        calc((1 - var(--pl-accent-p-dark)) * l + var(--pl-accent-p-dark) * 0.97) calc(0.9 * c) h
+      from var(--pl-info-fill-dark)
+        calc((1 - var(--pl-info-p-dark)) * l + var(--pl-info-p-dark) * 0.97) calc(0.9 * c) h
     )
   );
-  --ui-color-accent-surface: light-dark(
-    color-mix(in oklch, var(--pl-accent-fill-light), oklch(100% 0 0) 10%),
-    var(--pl-accent-fill-dark)
+  --ui-color-info-surface: light-dark(
+    color-mix(in oklch, var(--pl-info-fill-light), oklch(100% 0 0) 10%),
+    var(--pl-info-fill-dark)
   );
-  --ui-color-on-accent: light-dark(var(--pl-accent-pole-light), var(--pl-pole-dark));
-  --ui-color-accent-tint: light-dark(
-    oklch(from var(--pl-accent-fill-light) calc(0.88 + 0.12 * l) calc(0.12 * c) h),
-    oklch(from var(--pl-accent-fill-dark) calc(0.123 + 0.12 * l) calc(0.12 * c) h)
+  --ui-color-info-hover: color-mix(
+    in oklab,
+    var(--ui-color-info-surface),
+    var(--ui-color-info-strong)
   );
-  --ui-focus-ring: light-dark(var(--pl-accent-fill-light), var(--pl-accent-fill-dark));
+  --ui-color-on-info: light-dark(var(--pl-info-pole-light), var(--pl-pole-dark));
+  --ui-color-info-tint: light-dark(
+    oklch(from var(--pl-info-fill-light) calc(0.88 + 0.12 * l) calc(0.12 * c) h),
+    oklch(from var(--pl-info-fill-dark) calc(0.123 + 0.12 * l) calc(0.12 * c) h)
+  );
+  --ui-focus-ring: light-dark(var(--pl-info-fill-light), var(--pl-info-fill-dark));
 
   /* danger */
   --pl-danger-source: oklch(
@@ -286,13 +290,18 @@
     color-mix(in oklch, var(--pl-success-fill-light), oklch(100% 0 0) 10%),
     var(--pl-success-fill-dark)
   );
+  --ui-color-success-hover: color-mix(
+    in oklab,
+    var(--ui-color-success-surface),
+    var(--ui-color-success-strong)
+  );
   --ui-color-on-success: light-dark(var(--pl-success-pole-light), var(--pl-pole-dark));
   --ui-color-success-tint: light-dark(
     oklch(from var(--pl-success-fill-light) calc(0.88 + 0.12 * l) calc(0.12 * c) h),
     oklch(from var(--pl-success-fill-dark) calc(0.123 + 0.12 * l) calc(0.12 * c) h)
   );
 
-  /* warning (no -surface role in core: no solid-fill slot) */
+  /* warning — the solid fill keeps the 600 step (white on 500 fails body) */
   --pl-warning-source: oklch(
     var(--ui-base-warning-l) var(--ui-base-warning-c) var(--ui-base-warning-h)
   );
@@ -336,6 +345,15 @@
       from var(--pl-warning-fill-dark)
         calc((1 - var(--pl-warning-p-dark)) * l + var(--pl-warning-p-dark) * 0.97) calc(0.9 * c) h
     )
+  );
+  --ui-color-warning-surface: light-dark(
+    color-mix(in oklch, var(--pl-warning-fill-light), oklch(100% 0 0) 6%),
+    var(--pl-warning-fill-dark)
+  );
+  --ui-color-warning-hover: color-mix(
+    in oklab,
+    var(--ui-color-warning-surface),
+    var(--ui-color-warning-strong)
   );
   --ui-color-on-warning: light-dark(var(--pl-warning-pole-light), var(--pl-pole-dark));
   --ui-color-warning-tint: light-dark(

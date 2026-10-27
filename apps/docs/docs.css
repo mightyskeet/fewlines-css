@@ -111,7 +111,7 @@ main > section {
 }
 
 /* Syntax highlighting (highlight.js, vendor/hljs.min.js). Theme on --ui-*
- * tokens, one rule set for both themes: keyword = accent family, string =
+ * tokens, one rule set for both themes: keyword = info family, string =
  * success, literal/number = warning, comment = muted. Only the classes the
  * registered languages (xml/css/javascript/bash/json) actually emit. */
 .hljs-comment,
@@ -126,7 +126,7 @@ main > section {
 .hljs-name,
 .hljs-doctag,
 .hljs-meta {
-  color: var(--ui-color-accent);
+  color: var(--ui-color-info);
 }
 
 .hljs-string,
@@ -159,7 +159,7 @@ main > section {
 .hljs-title.class_,
 .hljs-title.function_,
 .hljs-section {
-  color: var(--ui-color-accent-strong);
+  color: var(--ui-color-info-strong);
   font-weight: 600;
 }
 
@@ -334,7 +334,7 @@ main > section {
 
 .palette-slider input {
   grid-column: 1 / -1;
-  accent-color: var(--ui-color-accent);
+  accent-color: var(--ui-color-info);
 }
 
 .palette-slider output {

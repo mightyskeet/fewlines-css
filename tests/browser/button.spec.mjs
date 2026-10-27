@@ -68,11 +68,10 @@ test('hover moves the default fill against the fill direction', async ({ page })
     page.locator(id).evaluate((el) => getComputedStyle(el).backgroundColor);
 
   // Hover lands on neutral-hover (opposite direction: the dark light-theme
-  // fill lightens, decision 2026-10-24), not on neutral-strong.
+  // fill lightens, decision 2026-10-24).
   const hoverFill = await token(page, '--ui-color-neutral-hover');
   await page.hover('#btn-neutral');
   await expect.poll(() => background('#btn-neutral'), { timeout: 500 }).toBe(hoverFill);
-  expect(hoverFill).not.toBe(await token(page, '--ui-color-neutral-strong'));
 });
 
 test('destructive is the solid danger fill', async ({ page }) => {

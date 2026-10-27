@@ -46,15 +46,18 @@ export const semanticMap = {
   },
   'neutral-surface': { light: 'neutral-900', dark: 'neutral-50' },
   'neutral-hover': { light: 'neutral-700', dark: 'neutral-200' },
-  'neutral-strong': { light: 'neutral-950', dark: 'neutral-0' },
   'on-neutral': { light: 'neutral-0', dark: 'neutral-950' },
   'secondary-surface': { light: 'neutral-50', dark: 'neutral-800' },
   text: { light: 'neutral-900', dark: 'neutral-50' },
   'text-muted': { light: 'neutral-600', dark: 'neutral-300' },
-  accent: { light: 'accent-600', dark: 'accent-300' },
-  'accent-strong': { light: 'accent-700', dark: 'accent-200' },
-  'accent-surface': { light: 'accent-500', dark: 'accent-300' },
-  'on-accent': { light: 'neutral-0', dark: 'neutral-950' },
+  info: { light: 'info-600', dark: 'info-300' },
+  'info-strong': { light: 'info-700', dark: 'info-200' },
+  'info-surface': { light: 'info-500', dark: 'info-300' },
+  'on-info': { light: 'neutral-0', dark: 'neutral-950' },
+  'info-hover': {
+    light: { mix: ['info-surface', 'info-strong'] },
+    dark: { mix: ['info-surface', 'info-strong'] },
+  },
   danger: { light: 'danger-600', dark: 'danger-300' },
   'danger-strong': { light: 'danger-700', dark: 'danger-200' },
   'danger-surface': { light: 'danger-500', dark: 'danger-300' },
@@ -67,15 +70,24 @@ export const semanticMap = {
   'success-strong': { light: 'success-700', dark: 'success-200' },
   'success-surface': { light: 'success-500', dark: 'success-300' },
   'on-success': { light: 'neutral-0', dark: 'neutral-950' },
+  'success-hover': {
+    light: { mix: ['success-surface', 'success-strong'] },
+    dark: { mix: ['success-surface', 'success-strong'] },
+  },
   warning: { light: 'warning-600', dark: 'warning-300' },
   'warning-strong': { light: 'warning-700', dark: 'warning-200' },
+  'warning-surface': { light: 'warning-600', dark: 'warning-300' },
   'on-warning': { light: 'neutral-0', dark: 'neutral-950' },
+  'warning-hover': {
+    light: { mix: ['warning-surface', 'warning-strong'] },
+    dark: { mix: ['warning-surface', 'warning-strong'] },
+  },
   'neutral-tint': { light: 'neutral-100', dark: 'neutral-800' },
-  'accent-tint': { light: 'accent-100', dark: 'accent-800' },
+  'info-tint': { light: 'info-100', dark: 'info-800' },
   'success-tint': { light: 'success-100', dark: 'success-800' },
   'warning-tint': { light: 'warning-100', dark: 'warning-800' },
   'danger-tint': { light: 'danger-100', dark: 'danger-800' },
-  'focus-ring': { light: 'accent-600', dark: 'accent-300' },
+  'focus-ring': { light: 'info-600', dark: 'info-300' },
 };
 
 /**
@@ -104,17 +116,19 @@ export const tokenPairs = [
   { fg: 'text', bg: 'secondary-surface', role: 'body' },
 
   // Neutral action family (filled default button). neutral-hover: the hover
-  // moves against the fill direction (light 800 / dark 100, decision
+  // moves against the fill direction (light 700 / dark 200, decision
   // 2026-10-24) — imperceptible same-direction shifts (950/0) replaced.
+  // Press = the hover fill + translate (uniform model, 2026-10-26) — no
+  // separate neutral-strong pair.
   { fg: 'on-neutral', bg: 'neutral-surface', role: 'body', note: 'default button, kbd keycap' },
   { fg: 'on-neutral', bg: 'neutral-hover', role: 'body' },
-  { fg: 'on-neutral', bg: 'neutral-strong', role: 'body' },
 
-  // Accent text and controls
-  { fg: 'accent', bg: 'surface', role: 'body' },
-  { fg: 'accent', bg: 'surface-raised', role: 'body' },
-  { fg: 'accent-strong', bg: 'surface', role: 'body' },
-  { fg: 'on-accent', bg: 'accent-surface', role: 'body' },
+  // Info text and controls
+  { fg: 'info', bg: 'surface', role: 'body' },
+  { fg: 'info', bg: 'surface-raised', role: 'body' },
+  { fg: 'info-strong', bg: 'surface', role: 'body' },
+  { fg: 'on-info', bg: 'info-surface', role: 'body' },
+  { fg: 'on-info', bg: 'info-hover', role: 'body', note: 'reserved: info solid fill' },
 
   // Danger text and controls
   { fg: 'danger', bg: 'surface', role: 'body' },
@@ -126,13 +140,14 @@ export const tokenPairs = [
   // Success
   { fg: 'success', bg: 'surface', role: 'body' },
   { fg: 'on-success', bg: 'success-surface', role: 'body' },
+  { fg: 'on-success', bg: 'success-hover', role: 'body', note: 'reserved: success solid fill' },
 
   // Feedback tint surfaces (Alert, Badge): title/label uses -strong (body),
   // body text uses text (body), 1px border uses the base variant color
   // (nonText)
-  { fg: 'accent-strong', bg: 'accent-tint', role: 'body' },
-  { fg: 'text', bg: 'accent-tint', role: 'body' },
-  { fg: 'accent', bg: 'accent-tint', role: 'nonText' },
+  { fg: 'info-strong', bg: 'info-tint', role: 'body' },
+  { fg: 'text', bg: 'info-tint', role: 'body' },
+  { fg: 'info', bg: 'info-tint', role: 'nonText' },
   { fg: 'danger-strong', bg: 'danger-tint', role: 'body' },
   { fg: 'text', bg: 'danger-tint', role: 'body' },
   { fg: 'danger', bg: 'danger-tint', role: 'nonText' },
@@ -143,10 +158,11 @@ export const tokenPairs = [
   { fg: 'text', bg: 'warning-tint', role: 'body' },
   { fg: 'warning', bg: 'warning-tint', role: 'nonText' },
 
-  // Solid badge fills (the button-default model; Badge): the warning family
-  // has no 500 palette step, so its solid fill is the warning token itself
-  // (600/300) — white on it measures Lc 87.7 (body).
-  { fg: 'on-warning', bg: 'warning', role: 'body' },
+  // Solid badge fills (the button-default model; Badge): the warning solid
+  // fill is warning-surface, calibrated to the 600 step (white on 500 fails
+  // the body threshold) — white on it measures Lc 87.7 (body).
+  { fg: 'on-warning', bg: 'warning-surface', role: 'body' },
+  { fg: 'on-warning', bg: 'warning-hover', role: 'body', note: 'reserved: warning solid fill' },
 
   // Focus indicator (non-text contrast)
   { fg: 'focus-ring', bg: 'surface', role: 'nonText' },

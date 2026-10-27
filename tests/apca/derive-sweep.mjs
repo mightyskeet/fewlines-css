@@ -116,7 +116,7 @@ const grid = async (browserName, type) => {
       out.neutral = neutral;
 
       // ---- chromatic families: lightness x chroma x hue ----
-      for (const family of ['accent', 'success', 'warning', 'danger']) {
+      for (const family of ['info', 'success', 'warning', 'danger']) {
         const min = {};
         for (const l of [0.15, 0.3, 0.55, 0.7, 0.75, 0.95]) {
           set(`--ui-base-${family}-l`, l);

@@ -81,12 +81,6 @@
   initial-value: black;
 }
 
-@property --ui-color-neutral-strong {
-  syntax: '<color>';
-  inherits: true;
-  initial-value: black;
-}
-
 @property --ui-color-on-neutral {
   syntax: '<color>';
   inherits: true;
@@ -99,28 +93,37 @@
   initial-value: white;
 }
 
-@property --ui-color-accent {
+@property --ui-color-info {
   syntax: '<color>';
   inherits: true;
   initial-value: blue;
 }
 
-@property --ui-color-accent-strong {
+@property --ui-color-info-strong {
   syntax: '<color>';
   inherits: true;
   initial-value: blue;
 }
 
-@property --ui-color-accent-surface {
+@property --ui-color-info-surface {
   syntax: '<color>';
   inherits: true;
   initial-value: blue;
 }
 
-@property --ui-color-on-accent {
+@property --ui-color-on-info {
   syntax: '<color>';
   inherits: true;
   initial-value: white;
+}
+
+/* Info/success/warning hover fills are derived (color-mix of animated
+ * inputs) — registered for color serialization, not transitioned; see the
+ * hover note above. */
+@property --ui-color-info-hover {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: blue;
 }
 
 @property --ui-color-danger {
@@ -159,6 +162,12 @@
   initial-value: green;
 }
 
+@property --ui-color-success-hover {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: green;
+}
+
 @property --ui-color-on-success {
   syntax: '<color>';
   inherits: true;
@@ -177,13 +186,25 @@
   initial-value: orange;
 }
 
+@property --ui-color-warning-surface {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: orange;
+}
+
+@property --ui-color-warning-hover {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: orange;
+}
+
 @property --ui-color-success-strong {
   syntax: '<color>';
   inherits: true;
   initial-value: green;
 }
 
-@property --ui-color-accent-tint {
+@property --ui-color-info-tint {
   syntax: '<color>';
   inherits: true;
   initial-value: white;
@@ -239,13 +260,12 @@
     --ui-color-border-strong var(--ui-duration-slow) ease,
     --ui-color-neutral-surface var(--ui-duration-slow) ease,
     --ui-color-neutral-hover var(--ui-duration-slow) ease,
-    --ui-color-neutral-strong var(--ui-duration-slow) ease,
     --ui-color-on-neutral var(--ui-duration-slow) ease,
     --ui-color-secondary-surface var(--ui-duration-slow) ease,
-    --ui-color-accent var(--ui-duration-slow) ease,
-    --ui-color-accent-strong var(--ui-duration-slow) ease,
-    --ui-color-accent-surface var(--ui-duration-slow) ease,
-    --ui-color-on-accent var(--ui-duration-slow) ease,
+    --ui-color-info var(--ui-duration-slow) ease,
+    --ui-color-info-strong var(--ui-duration-slow) ease,
+    --ui-color-info-surface var(--ui-duration-slow) ease,
+    --ui-color-on-info var(--ui-duration-slow) ease,
     --ui-color-danger var(--ui-duration-slow) ease,
     --ui-color-danger-strong var(--ui-duration-slow) ease,
     --ui-color-danger-surface var(--ui-duration-slow) ease,
@@ -255,9 +275,10 @@
     --ui-color-on-success var(--ui-duration-slow) ease,
     --ui-color-warning var(--ui-duration-slow) ease,
     --ui-color-warning-strong var(--ui-duration-slow) ease,
+    --ui-color-warning-surface var(--ui-duration-slow) ease,
     --ui-color-on-warning var(--ui-duration-slow) ease,
     --ui-color-success-strong var(--ui-duration-slow) ease,
-    --ui-color-accent-tint var(--ui-duration-slow) ease,
+    --ui-color-info-tint var(--ui-duration-slow) ease,
     --ui-color-success-tint var(--ui-duration-slow) ease,
     --ui-color-warning-tint var(--ui-duration-slow) ease,
     --ui-color-danger-tint var(--ui-duration-slow) ease,
