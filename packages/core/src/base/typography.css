@@ -123,10 +123,11 @@ samp {
   box-decoration-break: clone;
 }
 
-/* <kbd> reads as a key cap: same raised surface as <code> (one soft surface
- * since the subtle collapse), the strong border gives the keycap edge. */
+/* <kbd> reads as a key cap: same raised surface and border as <code> (one
+ * soft surface since the subtle collapse); the danger text color sets the
+ * keycap apart from inline code (danger/surface-raised pair — tests/apca). */
 kbd {
-  border-color: var(--ui-color-border-strong);
+  color: var(--ui-color-danger);
 }
 
 /* Code block: the border and radius carry the delineation — the fill stays

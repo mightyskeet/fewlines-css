@@ -95,7 +95,7 @@ export const tokenPairs = [
   // Base typography (base/typography.css): the inline code family renders at
   // 0.875em (fluent role at 16px body). Blockquote deliberately keeps the
   // text/surface body pair — text-muted fails the body threshold in dark
-  { fg: 'text', bg: 'surface-raised', role: 'fluent', note: 'inline code, samp, pre, kbd' },
+  { fg: 'text', bg: 'surface-raised', role: 'fluent', note: 'inline code, samp, pre' },
 
   // Hover fills (state model, theme notes): table rows, accordion,
   // secondary button hover
@@ -118,7 +118,7 @@ export const tokenPairs = [
 
   // Danger text and controls
   { fg: 'danger', bg: 'surface', role: 'body' },
-  { fg: 'danger', bg: 'surface-raised', role: 'body' },
+  { fg: 'danger', bg: 'surface-raised', role: 'body', note: 'kbd keycap text' },
   { fg: 'danger-strong', bg: 'surface', role: 'body' },
   { fg: 'on-danger', bg: 'danger-surface', role: 'body' },
   { fg: 'on-danger', bg: 'danger-hover', role: 'body', note: 'destructive button hover' },
