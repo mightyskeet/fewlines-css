@@ -26,22 +26,31 @@
     <link rel="stylesheet" href="/colors-derive.css" />
     <style>
       .swatch-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-        gap: var(--ui-space-sm);
+        columns: 2;
+        column-gap: var(--ui-space-md);
       }
       .swatch {
+        display: flex;
+        align-items: center;
+        gap: var(--ui-space-sm);
         margin: 0;
-        border: 1px solid var(--ui-color-border);
-        border-radius: var(--ui-radius-md);
-        overflow: hidden;
+        padding-block: var(--ui-space-2xs);
+        break-inside: avoid;
       }
       .swatch-chip {
-        block-size: 3rem;
+        inline-size: 4rem;
+        block-size: 4rem;
+        flex: none;
+        border: 1px solid var(--ui-color-border);
+        border-radius: 50%;
       }
       .swatch figcaption {
-        padding: var(--ui-space-2xs) var(--ui-space-sm);
         font-size: var(--ui-font-size-xs);
+      }
+      @media (max-width: 40rem) {
+        .swatch-grid {
+          columns: 1;
+        }
       }
       .swatch figcaption code {
         font-size: 10px;
@@ -181,7 +190,7 @@
         </div>
 
         <div class="swatch-group">
-          <h3>Families</h3>
+          <h3>Accent</h3>
           <div class="swatch-grid">
             <figure class="swatch">
               <div class="swatch-chip" style="background: var(--ui-color-accent)"></div>
@@ -203,6 +212,12 @@
               <div class="swatch-chip" style="background: var(--ui-color-accent-tint)"></div>
               <figcaption><code>--ui-color-accent-tint</code></figcaption>
             </figure>
+          </div>
+        </div>
+
+        <div class="swatch-group">
+          <h3>Success</h3>
+          <div class="swatch-grid">
             <figure class="swatch">
               <div class="swatch-chip" style="background: var(--ui-color-success)"></div>
               <figcaption><code>--ui-color-success</code></figcaption>
@@ -223,6 +238,12 @@
               <div class="swatch-chip" style="background: var(--ui-color-success-tint)"></div>
               <figcaption><code>--ui-color-success-tint</code></figcaption>
             </figure>
+          </div>
+        </div>
+
+        <div class="swatch-group">
+          <h3>Warning</h3>
+          <div class="swatch-grid">
             <figure class="swatch">
               <div class="swatch-chip" style="background: var(--ui-color-warning)"></div>
               <figcaption><code>--ui-color-warning</code></figcaption>
@@ -239,6 +260,12 @@
               <div class="swatch-chip" style="background: var(--ui-color-warning-tint)"></div>
               <figcaption><code>--ui-color-warning-tint</code></figcaption>
             </figure>
+          </div>
+        </div>
+
+        <div class="swatch-group">
+          <h3>Danger</h3>
+          <div class="swatch-grid">
             <figure class="swatch">
               <div class="swatch-chip" style="background: var(--ui-color-danger)"></div>
               <figcaption><code>--ui-color-danger</code></figcaption>
@@ -263,6 +290,12 @@
               <div class="swatch-chip" style="background: var(--ui-color-danger-tint)"></div>
               <figcaption><code>--ui-color-danger-tint</code></figcaption>
             </figure>
+          </div>
+        </div>
+
+        <div class="swatch-group">
+          <h3>Other</h3>
+          <div class="swatch-grid">
             <figure class="swatch">
               <div class="swatch-chip" style="background: var(--ui-focus-ring)"></div>
               <figcaption><code>--ui-focus-ring</code></figcaption>
