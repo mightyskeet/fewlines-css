@@ -47,6 +47,7 @@
    * its content width even as a shrunken flex/grid item. */
   min-inline-size: fit-content;
   cursor: pointer;
+  user-select: none;
   text-decoration: none;
   transition:
     background-color var(--ui-duration-fast) ease,
