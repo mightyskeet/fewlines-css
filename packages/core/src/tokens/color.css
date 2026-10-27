@@ -50,13 +50,13 @@
 
   /* Neutral action family — the high-contrast default button: dark fill in
    * the light theme, near-white in the dark (inverted, like the text
-   * polarity). Symmetric with the info/danger families (surface / hover /
+   * polarity). Symmetric with the info/danger families (fill / hover /
    * on-*). Hover moves against the fill direction and two full steps so the
    * change is unmistakable: the dark fill lightens (900 -> 700), the light
    * fill darkens (50 -> 200) — one-step shifts (800/100) and the
    * same-direction shift (950/0) both read as invisible. Press = the hover
    * fill + mechanical response (state model), like every filled button. */
-  --ui-color-neutral-surface: light-dark(
+  --ui-color-neutral-fill: light-dark(
     var(--ui-palette-neutral-900),
     var(--ui-palette-neutral-50)
   );
@@ -66,34 +66,26 @@
   );
   --ui-color-on-neutral: light-dark(var(--ui-palette-neutral-0), var(--ui-palette-neutral-950));
 
-  /* Secondary action family — the muted button: a soft panel-gray fill,
-   * quiet next to the high-contrast default. Text sits on it directly as
-   * `text` (the same value in both themes — no on-secondary token). */
-  --ui-color-secondary-surface: light-dark(
-    var(--ui-palette-neutral-50),
-    var(--ui-palette-neutral-800)
-  );
-
   /* Info family — the blue tone: links, focus, native accent-color, the info
    * Alert/Badge. The primary action family is neutral; info carries the
    * brand tone of the non-action roles. Role schema is identical across
-   * families: bare token = the family tone, -surface = solid fill,
+   * families: bare token = the family tone, -fill = solid fill,
    * -hover = derived hover fill (color-mix), -strong = readable variant
    * text, on-* = text on the fill, -tint = soft surface. */
   --ui-color-info: light-dark(var(--ui-palette-info-600), var(--ui-palette-info-300));
   --ui-color-info-strong: light-dark(var(--ui-palette-info-700), var(--ui-palette-info-200));
-  --ui-color-info-surface: light-dark(var(--ui-palette-info-500), var(--ui-palette-info-300));
+  --ui-color-info-fill: light-dark(var(--ui-palette-info-500), var(--ui-palette-info-300));
   --ui-color-on-info: light-dark(var(--ui-palette-neutral-0), var(--ui-palette-neutral-950));
-  --ui-color-info-hover: color-mix(in oklab, var(--ui-color-info-surface), var(--ui-color-info-strong));
+  --ui-color-info-hover: color-mix(in oklab, var(--ui-color-info-fill), var(--ui-color-info-strong));
 
   /* Danger */
   --ui-color-danger: light-dark(var(--ui-palette-danger-600), var(--ui-palette-danger-300));
   --ui-color-danger-strong: light-dark(var(--ui-palette-danger-700), var(--ui-palette-danger-200));
-  --ui-color-danger-surface: light-dark(var(--ui-palette-danger-500), var(--ui-palette-danger-300));
+  --ui-color-danger-fill: light-dark(var(--ui-palette-danger-500), var(--ui-palette-danger-300));
   --ui-color-on-danger: light-dark(var(--ui-palette-neutral-0), var(--ui-palette-neutral-950));
   --ui-color-danger-hover: color-mix(
     in oklab,
-    var(--ui-color-danger-surface),
+    var(--ui-color-danger-fill),
     var(--ui-color-danger-strong)
   );
 
@@ -103,14 +95,14 @@
     var(--ui-palette-success-700),
     var(--ui-palette-success-200)
   );
-  --ui-color-success-surface: light-dark(
+  --ui-color-success-fill: light-dark(
     var(--ui-palette-success-500),
     var(--ui-palette-success-300)
   );
   --ui-color-on-success: light-dark(var(--ui-palette-neutral-0), var(--ui-palette-neutral-950));
   --ui-color-success-hover: color-mix(
     in oklab,
-    var(--ui-color-success-surface),
+    var(--ui-color-success-fill),
     var(--ui-color-success-strong)
   );
 
@@ -124,11 +116,11 @@
   /* Solid fill calibrated to the 600 step: white on warning-500 fails the
    * body APCA threshold (Lc 70.5 < 75), on 600 it measures 87.7 — unlike the
    * info/danger/success families, the fill is one step below the raw 500. */
-  --ui-color-warning-surface: light-dark(var(--ui-palette-warning-600), var(--ui-palette-warning-300));
+  --ui-color-warning-fill: light-dark(var(--ui-palette-warning-600), var(--ui-palette-warning-300));
   --ui-color-on-warning: light-dark(var(--ui-palette-neutral-0), var(--ui-palette-neutral-950));
   --ui-color-warning-hover: color-mix(
     in oklab,
-    var(--ui-color-warning-surface),
+    var(--ui-color-warning-fill),
     var(--ui-color-warning-strong)
   );
 

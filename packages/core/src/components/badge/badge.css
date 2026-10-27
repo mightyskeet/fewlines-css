@@ -16,11 +16,11 @@
  *     member) + info | success | warning | danger — tint surface +
  *     -strong text;
  *   solid (bright fill, light text): neutral-solid | info-solid |
- *     success-solid | warning-solid | danger-solid — *-surface fill + on-*
+ *     success-solid | warning-solid | danger-solid — *-fill + on-*
  *     text, the button-default model.
  *   The gray tint uses the same steps as the colored ones (100/800) — the
  *   default is simply the neutral member of the tint family.
- *   The warning solid fills with warning-surface, calibrated to the 600
+ *   The warning solid fills with warning-fill, calibrated to the 600
  *   step: white on warning-500 measures Lc 70.5 — below the body threshold;
  *   white on 600 measures Lc 87.7.
  *
@@ -31,7 +31,7 @@
  * APCA pairs used (validated in tests/apca, body threshold):
  *   default: text on neutral-tint
  *   pastel:  {info,success,warning,danger}-strong on *-tint
- *   solid:   on-{neutral,info,success,warning,danger} on *-surface
+ *   solid:   on-{neutral,info,success,warning,danger} on *-fill
  */
 
 .ui-badge {
@@ -92,27 +92,27 @@
 /* Solid variants (the button-default model): bright fill, light text. */
 .ui-badge[data-variant='neutral-solid'] {
   --ui-badge-fg: var(--ui-color-on-neutral);
-  --ui-badge-bg: var(--ui-color-neutral-surface);
+  --ui-badge-bg: var(--ui-color-neutral-fill);
 }
 
 .ui-badge[data-variant='info-solid'] {
   --ui-badge-fg: var(--ui-color-on-info);
-  --ui-badge-bg: var(--ui-color-info-surface);
+  --ui-badge-bg: var(--ui-color-info-fill);
 }
 
 .ui-badge[data-variant='success-solid'] {
   --ui-badge-fg: var(--ui-color-on-success);
-  --ui-badge-bg: var(--ui-color-success-surface);
+  --ui-badge-bg: var(--ui-color-success-fill);
 }
 
 .ui-badge[data-variant='warning-solid'] {
   --ui-badge-fg: var(--ui-color-on-warning);
-  --ui-badge-bg: var(--ui-color-warning-surface);
+  --ui-badge-bg: var(--ui-color-warning-fill);
 }
 
 .ui-badge[data-variant='danger-solid'] {
   --ui-badge-fg: var(--ui-color-on-danger);
-  --ui-badge-bg: var(--ui-color-danger-surface);
+  --ui-badge-bg: var(--ui-color-danger-fill);
 }
 
 /* Sizes follow the Field pattern: geometry scales, typography stays — the

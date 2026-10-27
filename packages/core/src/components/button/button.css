@@ -17,12 +17,12 @@
  * with outline.
  *
  * APCA pairs used (validated in tests/apca):
- *   default:     on-neutral on neutral-surface / neutral-hover (hover = press)
- *   secondary:   text on secondary-surface / hover-raised
+ *   default:     on-neutral on neutral-fill / neutral-hover (hover = press)
+ *   secondary:   text on surface-raised / hover-raised
  *   outline:     text on hover (hover fill) / surface (border, nonText)
  *   ghost:       text on hover (hover fill)
  *   link:        text on surface (body)
- *   destructive: on-danger on danger-surface / danger-hover
+ *   destructive: on-danger on danger-fill / danger-hover
  */
 
 .ui-button {
@@ -56,7 +56,7 @@
   /* Default variant: the high-contrast inverted neutral family (dark fill in
    * light theme, near-white in dark). */
   color: var(--ui-color-on-neutral);
-  background: var(--ui-color-neutral-surface);
+  background: var(--ui-color-neutral-fill);
 }
 
 /* Icons auto-size to 1rem and never intercept the pointer. */
@@ -138,7 +138,7 @@
 /* Secondary: muted soft fill (no visible border), plain text. */
 .ui-button[data-variant='secondary'] {
   color: var(--ui-color-text);
-  background: var(--ui-color-secondary-surface);
+  background: var(--ui-color-surface-raised);
 }
 
 .ui-button[data-variant='secondary']:active {
@@ -196,7 +196,7 @@
 /* Destructive: solid danger family fill. */
 .ui-button[data-variant='destructive'] {
   color: var(--ui-color-on-danger);
-  background: var(--ui-color-danger-surface);
+  background: var(--ui-color-danger-fill);
 }
 
 /* States — hover never restyles a disabled control. Hover is pointer-gated

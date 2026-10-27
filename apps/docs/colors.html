@@ -117,6 +117,12 @@
 
         <div class="swatch-group">
           <h3>Surfaces</h3>
+          <p>
+            Page-level roles only. The two hover fills differ in the dark theme:
+            <code>hover</code> is relative to the page, <code>hover-raised</code> to raised panels
+            (secondary button, accordion) — one shared token would make their dark-theme hover
+            invisible.
+          </p>
           <div class="swatch-grid">
             <figure class="swatch">
               <div class="swatch-chip" style="background: var(--ui-color-surface)"></div>
@@ -133,10 +139,6 @@
             <figure class="swatch">
               <div class="swatch-chip" style="background: var(--ui-color-hover-raised)"></div>
               <figcaption><code>--ui-color-hover-raised</code></figcaption>
-            </figure>
-            <figure class="swatch">
-              <div class="swatch-chip" style="background: var(--ui-color-secondary-surface)"></div>
-              <figcaption><code>--ui-color-secondary-surface</code></figcaption>
             </figure>
           </div>
         </div>
@@ -164,11 +166,16 @@
         </div>
 
         <div class="swatch-group">
-          <h3>Neutral action</h3>
+          <h3>Neutral</h3>
+          <p>
+            Four tokens, not six: the neutral text roles (bare tone, strong text) are carried by
+            the global <code>text</code>/<code>text-muted</code>/<code>border</code> — a neutral
+            family tone would duplicate them.
+          </p>
           <div class="swatch-grid">
             <figure class="swatch">
-              <div class="swatch-chip" style="background: var(--ui-color-neutral-surface)"></div>
-              <figcaption><code>--ui-color-neutral-surface</code></figcaption>
+              <div class="swatch-chip" style="background: var(--ui-color-neutral-fill)"></div>
+              <figcaption><code>--ui-color-neutral-fill</code></figcaption>
             </figure>
             <figure class="swatch">
               <div class="swatch-chip" style="background: var(--ui-color-neutral-hover)"></div>
@@ -197,8 +204,8 @@
               <figcaption><code>--ui-color-info-strong</code></figcaption>
             </figure>
             <figure class="swatch">
-              <div class="swatch-chip" style="background: var(--ui-color-info-surface)"></div>
-              <figcaption><code>--ui-color-info-surface</code></figcaption>
+              <div class="swatch-chip" style="background: var(--ui-color-info-fill)"></div>
+              <figcaption><code>--ui-color-info-fill</code></figcaption>
             </figure>
             <figure class="swatch">
               <div class="swatch-chip" style="background: var(--ui-color-info-hover)"></div>
@@ -227,8 +234,8 @@
               <figcaption><code>--ui-color-success-strong</code></figcaption>
             </figure>
             <figure class="swatch">
-              <div class="swatch-chip" style="background: var(--ui-color-success-surface)"></div>
-              <figcaption><code>--ui-color-success-surface</code></figcaption>
+              <div class="swatch-chip" style="background: var(--ui-color-success-fill)"></div>
+              <figcaption><code>--ui-color-success-fill</code></figcaption>
             </figure>
             <figure class="swatch">
               <div class="swatch-chip" style="background: var(--ui-color-success-hover)"></div>
@@ -257,8 +264,8 @@
               <figcaption><code>--ui-color-warning-strong</code></figcaption>
             </figure>
             <figure class="swatch">
-              <div class="swatch-chip" style="background: var(--ui-color-warning-surface)"></div>
-              <figcaption><code>--ui-color-warning-surface</code></figcaption>
+              <div class="swatch-chip" style="background: var(--ui-color-warning-fill)"></div>
+              <figcaption><code>--ui-color-warning-fill</code></figcaption>
             </figure>
             <figure class="swatch">
               <div class="swatch-chip" style="background: var(--ui-color-warning-hover)"></div>
@@ -287,8 +294,8 @@
               <figcaption><code>--ui-color-danger-strong</code></figcaption>
             </figure>
             <figure class="swatch">
-              <div class="swatch-chip" style="background: var(--ui-color-danger-surface)"></div>
-              <figcaption><code>--ui-color-danger-surface</code></figcaption>
+              <div class="swatch-chip" style="background: var(--ui-color-danger-fill)"></div>
+              <figcaption><code>--ui-color-danger-fill</code></figcaption>
             </figure>
             <figure class="swatch">
               <div class="swatch-chip" style="background: var(--ui-color-danger-hover)"></div>

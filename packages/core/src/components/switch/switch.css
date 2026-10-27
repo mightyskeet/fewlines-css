@@ -81,7 +81,7 @@
  * model): the toggle-on state reads as the system's primary fill, not as
  * the blue info tone. */
 .ui-switch:checked {
-  background: var(--ui-color-neutral-surface);
+  background: var(--ui-color-neutral-fill);
   border-color: transparent;
 }
 

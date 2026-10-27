@@ -25,14 +25,14 @@ const stylesOf = (page, id) =>
 
 test('default is the high-contrast inverted neutral fill', async ({ page }) => {
   const styles = await stylesOf(page, '#btn-neutral');
-  expect(styles.background).toBe(await token(page, '--ui-color-neutral-surface'));
+  expect(styles.background).toBe(await token(page, '--ui-color-neutral-fill'));
   expect(styles.color).toBe(await token(page, '--ui-color-on-neutral'));
   expect(styles.borderColor).toBe('rgba(0, 0, 0, 0)');
 });
 
 test('secondary is the muted soft fill with plain text', async ({ page }) => {
   const styles = await stylesOf(page, '#btn-secondary');
-  expect(styles.background).toBe(await token(page, '--ui-color-secondary-surface'));
+  expect(styles.background).toBe(await token(page, '--ui-color-surface-raised'));
   expect(styles.color).toBe(await token(page, '--ui-color-text'));
   expect(styles.borderColor).toBe('rgba(0, 0, 0, 0)');
 });
@@ -76,7 +76,7 @@ test('hover moves the default fill against the fill direction', async ({ page })
 
 test('destructive is the solid danger fill', async ({ page }) => {
   const styles = await stylesOf(page, '#btn-destructive');
-  expect(styles.background).toBe(await token(page, '--ui-color-danger-surface'));
+  expect(styles.background).toBe(await token(page, '--ui-color-danger-fill'));
   expect(styles.color).toBe(await token(page, '--ui-color-on-danger'));
   expect(styles.borderColor).toBe('rgba(0, 0, 0, 0)');
 });

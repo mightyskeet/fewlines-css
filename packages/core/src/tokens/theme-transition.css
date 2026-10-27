@@ -69,7 +69,7 @@
   initial-value: gray;
 }
 
-@property --ui-color-neutral-surface {
+@property --ui-color-neutral-fill {
   syntax: '<color>';
   inherits: true;
   initial-value: black;
@@ -87,12 +87,6 @@
   initial-value: white;
 }
 
-@property --ui-color-secondary-surface {
-  syntax: '<color>';
-  inherits: true;
-  initial-value: white;
-}
-
 @property --ui-color-info {
   syntax: '<color>';
   inherits: true;
@@ -105,7 +99,7 @@
   initial-value: blue;
 }
 
-@property --ui-color-info-surface {
+@property --ui-color-info-fill {
   syntax: '<color>';
   inherits: true;
   initial-value: blue;
@@ -138,7 +132,7 @@
   initial-value: red;
 }
 
-@property --ui-color-danger-surface {
+@property --ui-color-danger-fill {
   syntax: '<color>';
   inherits: true;
   initial-value: red;
@@ -156,7 +150,7 @@
   initial-value: green;
 }
 
-@property --ui-color-success-surface {
+@property --ui-color-success-fill {
   syntax: '<color>';
   inherits: true;
   initial-value: green;
@@ -186,7 +180,7 @@
   initial-value: orange;
 }
 
-@property --ui-color-warning-surface {
+@property --ui-color-warning-fill {
   syntax: '<color>';
   inherits: true;
   initial-value: orange;
@@ -258,24 +252,23 @@
     --ui-color-text-muted var(--ui-duration-slow) ease,
     --ui-color-border var(--ui-duration-slow) ease,
     --ui-color-border-strong var(--ui-duration-slow) ease,
-    --ui-color-neutral-surface var(--ui-duration-slow) ease,
+    --ui-color-neutral-fill var(--ui-duration-slow) ease,
     --ui-color-neutral-hover var(--ui-duration-slow) ease,
     --ui-color-on-neutral var(--ui-duration-slow) ease,
-    --ui-color-secondary-surface var(--ui-duration-slow) ease,
     --ui-color-info var(--ui-duration-slow) ease,
     --ui-color-info-strong var(--ui-duration-slow) ease,
-    --ui-color-info-surface var(--ui-duration-slow) ease,
+    --ui-color-info-fill var(--ui-duration-slow) ease,
     --ui-color-on-info var(--ui-duration-slow) ease,
     --ui-color-danger var(--ui-duration-slow) ease,
     --ui-color-danger-strong var(--ui-duration-slow) ease,
-    --ui-color-danger-surface var(--ui-duration-slow) ease,
+    --ui-color-danger-fill var(--ui-duration-slow) ease,
     --ui-color-on-danger var(--ui-duration-slow) ease,
     --ui-color-success var(--ui-duration-slow) ease,
-    --ui-color-success-surface var(--ui-duration-slow) ease,
+    --ui-color-success-fill var(--ui-duration-slow) ease,
     --ui-color-on-success var(--ui-duration-slow) ease,
     --ui-color-warning var(--ui-duration-slow) ease,
     --ui-color-warning-strong var(--ui-duration-slow) ease,
-    --ui-color-warning-surface var(--ui-duration-slow) ease,
+    --ui-color-warning-fill var(--ui-duration-slow) ease,
     --ui-color-on-warning var(--ui-duration-slow) ease,
     --ui-color-success-strong var(--ui-duration-slow) ease,
     --ui-color-info-tint var(--ui-duration-slow) ease,

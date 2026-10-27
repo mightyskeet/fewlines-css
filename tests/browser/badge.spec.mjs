@@ -30,22 +30,22 @@ test('default variant uses the gray tint with plain text', async ({ page }) => {
   expect(styles.color).toBe(text);
 });
 
-test('solid variants use the on-* text over their *-surface fill', async ({ page }) => {
+test('solid variants use the on-* text over their *-fill', async ({ page }) => {
   const cases = [
     {
       id: 'badge-neutral-solid',
-      surface: '--ui-color-neutral-surface',
+      surface: '--ui-color-neutral-fill',
       on: '--ui-color-on-neutral',
     },
-    { id: 'badge-info-solid', surface: '--ui-color-info-surface', on: '--ui-color-on-info' },
+    { id: 'badge-info-solid', surface: '--ui-color-info-fill', on: '--ui-color-on-info' },
     {
       id: 'badge-success-solid',
-      surface: '--ui-color-success-surface',
+      surface: '--ui-color-success-fill',
       on: '--ui-color-on-success',
     },
-    // warning-surface is calibrated to the 600 step (white on 500 fails body).
-    { id: 'badge-warning-solid', surface: '--ui-color-warning-surface', on: '--ui-color-on-warning' },
-    { id: 'badge-danger-solid', surface: '--ui-color-danger-surface', on: '--ui-color-on-danger' },
+    // warning-fill is calibrated to the 600 step (white on 500 fails body).
+    { id: 'badge-warning-solid', surface: '--ui-color-warning-fill', on: '--ui-color-on-warning' },
+    { id: 'badge-danger-solid', surface: '--ui-color-danger-fill', on: '--ui-color-on-danger' },
   ];
   for (const { id, surface, on } of cases) {
     const styles = await page.locator(`#${id}`).evaluate((el) => {

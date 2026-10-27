@@ -44,43 +44,42 @@ export const semanticMap = {
     // collapse, 2026-10-26) — the midpoint is declared in palette steps.
     dark: { mix: ['surface-raised', 'neutral-700'] },
   },
-  'neutral-surface': { light: 'neutral-900', dark: 'neutral-50' },
+  'neutral-fill': { light: 'neutral-900', dark: 'neutral-50' },
   'neutral-hover': { light: 'neutral-700', dark: 'neutral-200' },
   'on-neutral': { light: 'neutral-0', dark: 'neutral-950' },
-  'secondary-surface': { light: 'neutral-50', dark: 'neutral-800' },
   text: { light: 'neutral-900', dark: 'neutral-50' },
   'text-muted': { light: 'neutral-600', dark: 'neutral-300' },
   info: { light: 'info-600', dark: 'info-300' },
   'info-strong': { light: 'info-700', dark: 'info-200' },
-  'info-surface': { light: 'info-500', dark: 'info-300' },
+  'info-fill': { light: 'info-500', dark: 'info-300' },
   'on-info': { light: 'neutral-0', dark: 'neutral-950' },
   'info-hover': {
-    light: { mix: ['info-surface', 'info-strong'] },
-    dark: { mix: ['info-surface', 'info-strong'] },
+    light: { mix: ['info-fill', 'info-strong'] },
+    dark: { mix: ['info-fill', 'info-strong'] },
   },
   danger: { light: 'danger-600', dark: 'danger-300' },
   'danger-strong': { light: 'danger-700', dark: 'danger-200' },
-  'danger-surface': { light: 'danger-500', dark: 'danger-300' },
+  'danger-fill': { light: 'danger-500', dark: 'danger-300' },
   'danger-hover': {
-    light: { mix: ['danger-surface', 'danger-strong'] },
-    dark: { mix: ['danger-surface', 'danger-strong'] },
+    light: { mix: ['danger-fill', 'danger-strong'] },
+    dark: { mix: ['danger-fill', 'danger-strong'] },
   },
   'on-danger': { light: 'neutral-0', dark: 'neutral-950' },
   success: { light: 'success-600', dark: 'success-300' },
   'success-strong': { light: 'success-700', dark: 'success-200' },
-  'success-surface': { light: 'success-500', dark: 'success-300' },
+  'success-fill': { light: 'success-500', dark: 'success-300' },
   'on-success': { light: 'neutral-0', dark: 'neutral-950' },
   'success-hover': {
-    light: { mix: ['success-surface', 'success-strong'] },
-    dark: { mix: ['success-surface', 'success-strong'] },
+    light: { mix: ['success-fill', 'success-strong'] },
+    dark: { mix: ['success-fill', 'success-strong'] },
   },
   warning: { light: 'warning-600', dark: 'warning-300' },
   'warning-strong': { light: 'warning-700', dark: 'warning-200' },
-  'warning-surface': { light: 'warning-600', dark: 'warning-300' },
+  'warning-fill': { light: 'warning-600', dark: 'warning-300' },
   'on-warning': { light: 'neutral-0', dark: 'neutral-950' },
   'warning-hover': {
-    light: { mix: ['warning-surface', 'warning-strong'] },
-    dark: { mix: ['warning-surface', 'warning-strong'] },
+    light: { mix: ['warning-fill', 'warning-strong'] },
+    dark: { mix: ['warning-fill', 'warning-strong'] },
   },
   'neutral-tint': { light: 'neutral-100', dark: 'neutral-800' },
   'info-tint': { light: 'info-100', dark: 'info-800' },
@@ -113,33 +112,33 @@ export const tokenPairs = [
   // secondary button hover
   { fg: 'text', bg: 'hover', role: 'body' },
   { fg: 'text', bg: 'hover-raised', role: 'body' },
-  { fg: 'text', bg: 'secondary-surface', role: 'body' },
+  { fg: 'text', bg: 'surface-raised', role: 'body', note: 'secondary button fill' },
 
   // Neutral action family (filled default button). neutral-hover: the hover
   // moves against the fill direction (light 700 / dark 200, decision
   // 2026-10-24) — imperceptible same-direction shifts (950/0) replaced.
   // Press = the hover fill + translate (uniform model, 2026-10-26) — no
   // separate neutral-strong pair.
-  { fg: 'on-neutral', bg: 'neutral-surface', role: 'body', note: 'default button, kbd keycap' },
+  { fg: 'on-neutral', bg: 'neutral-fill', role: 'body', note: 'default button, kbd keycap' },
   { fg: 'on-neutral', bg: 'neutral-hover', role: 'body' },
 
   // Info text and controls
   { fg: 'info', bg: 'surface', role: 'body' },
   { fg: 'info', bg: 'surface-raised', role: 'body' },
   { fg: 'info-strong', bg: 'surface', role: 'body' },
-  { fg: 'on-info', bg: 'info-surface', role: 'body' },
+  { fg: 'on-info', bg: 'info-fill', role: 'body' },
   { fg: 'on-info', bg: 'info-hover', role: 'body', note: 'reserved: info solid fill' },
 
   // Danger text and controls
   { fg: 'danger', bg: 'surface', role: 'body' },
   { fg: 'danger', bg: 'surface-raised', role: 'body' },
   { fg: 'danger-strong', bg: 'surface', role: 'body' },
-  { fg: 'on-danger', bg: 'danger-surface', role: 'body' },
+  { fg: 'on-danger', bg: 'danger-fill', role: 'body' },
   { fg: 'on-danger', bg: 'danger-hover', role: 'body', note: 'destructive button hover' },
 
   // Success
   { fg: 'success', bg: 'surface', role: 'body' },
-  { fg: 'on-success', bg: 'success-surface', role: 'body' },
+  { fg: 'on-success', bg: 'success-fill', role: 'body' },
   { fg: 'on-success', bg: 'success-hover', role: 'body', note: 'reserved: success solid fill' },
 
   // Feedback tint surfaces (Alert, Badge): title/label uses -strong (body),
@@ -159,9 +158,9 @@ export const tokenPairs = [
   { fg: 'warning', bg: 'warning-tint', role: 'nonText' },
 
   // Solid badge fills (the button-default model; Badge): the warning solid
-  // fill is warning-surface, calibrated to the 600 step (white on 500 fails
+  // fill is warning-fill, calibrated to the 600 step (white on 500 fails
   // the body threshold) — white on it measures Lc 87.7 (body).
-  { fg: 'on-warning', bg: 'warning-surface', role: 'body' },
+  { fg: 'on-warning', bg: 'warning-fill', role: 'body' },
   { fg: 'on-warning', bg: 'warning-hover', role: 'body', note: 'reserved: warning solid fill' },
 
   // Focus indicator (non-text contrast)

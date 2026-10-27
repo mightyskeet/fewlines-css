@@ -62,7 +62,7 @@ test('disabled switch is not focusable and not editable', async ({ page }) => {
   expect(isFocusable).toBe(false);
 });
 
-test('checked state applies the neutral surface token to the track', async ({ page }) => {
+test('checked state applies the neutral fill token to the track', async ({ page }) => {
   const off = await page
     .locator('#switch-basic')
     .evaluate((el) => getComputedStyle(el).backgroundColor);
@@ -72,7 +72,7 @@ test('checked state applies the neutral surface token to the track', async ({ pa
   expect(off).not.toBe(on);
 
   const neutralSurface = await page.evaluate(() =>
-    getComputedStyle(document.documentElement).getPropertyValue('--ui-color-neutral-surface'),
+    getComputedStyle(document.documentElement).getPropertyValue('--ui-color-neutral-fill'),
   );
   // Registered tokens resolve to concrete colors on :root (theme-transition
   // @property); the checked track must consume the neutral surface token.
