@@ -76,7 +76,6 @@ test('non-zebra rows stay unstriped', async ({ page }) => {
 
 test('hover fills the row with the hover token (zebra-safe)', async ({ page }) => {
   const hover = await token(page, '--ui-color-hover');
-  const surface = await token(page, '--ui-color-surface');
 
   const row = page.locator('#table-default tbody tr').nth(0);
   await row.locator('td').first().hover();
@@ -84,7 +83,7 @@ test('hover fills the row with the hover token (zebra-safe)', async ({ page }) =
 
   const zebraRow = page.locator('#table-zebra tbody tr').nth(0);
   await zebraRow.locator('td').first().hover();
-  expect(await zebraRow.evaluate((el) => getComputedStyle(el).backgroundColor)).toBe(surface);
+  expect(await zebraRow.evaluate((el) => getComputedStyle(el).backgroundColor)).toBe(hover);
 });
 
 test('data-align="end" right-aligns and uses tabular numerals', async ({ page }) => {

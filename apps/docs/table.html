@@ -117,7 +117,17 @@
               </tr>
             </tfoot>
           </table>
+        </div>
+        <p>
+          Default: even rows, hairline separators, muted headers. Numeric columns take
+          <code>data-align="end"</code> on every cell of the column (header included) — it
+          right-aligns and enables tabular numerals.
+        </p>
+      </section>
 
+      <section>
+        <h2>Zebra</h2>
+        <div class="example">
           <table class="ui-table" data-zebra>
             <caption>
               Deployments
@@ -145,10 +155,8 @@
           </table>
         </div>
         <p>
-          <code>data-zebra</code> stripes odd body rows with the subtle surface. Row hover flips to
-          the opposite surface, so the affordance stays visible on zebra tables. Numeric columns
-          take <code>data-align="end"</code> on every cell of the column (header included) — it
-          right-aligns and enables tabular numerals.
+          <code>data-zebra</code> stripes odd body rows with the raised surface. Row hover uses the
+          same fill as plain rows — one step above both surfaces.
         </p>
       </section>
 

@@ -77,22 +77,20 @@
 }
 
 /* Row hover: the hover fill (--ui-color-hover, state model theme notes) is
- * visible against both the base surface and the zebra fill. A zebra row
- * flips to the full opposite surface so the affordance never coincides with
- * its own stripe. Pointer-gated like Button/Switch (sticky :hover on touch
- * would latch the highlight). */
+ * visible against both the base surface and the zebra fill — the zebra
+ * selector repeats because the stripe rule outspecifies the plain :hover.
+ * Pointer-gated like Button/Switch (sticky :hover on touch would latch the
+ * highlight). */
 @media (hover: hover) and (pointer: fine) {
-  .ui-table tbody tr:hover {
-    background: var(--ui-color-hover);
-  }
-
+  .ui-table tbody tr:hover,
   .ui-table[data-zebra] tbody tr:nth-child(odd):hover {
-    background: var(--ui-color-surface);
+    background: var(--ui-color-hover);
   }
 }
 
 /* Zebra: odd body rows on the raised surface (text/surface-raised — body).
- * Hover stays a step above via --ui-color-hover — visible on zebra rows. */
+ * Hover uses the same --ui-color-hover fill as plain rows — one step above
+ * both surfaces (2026-10-27: uniform hover, no zebra-specific branch). */
 .ui-table[data-zebra] tbody tr:nth-child(odd) {
   background: var(--ui-color-surface-raised);
 }
