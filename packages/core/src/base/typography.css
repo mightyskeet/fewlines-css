@@ -123,12 +123,12 @@ samp {
   box-decoration-break: clone;
 }
 
-/* <kbd> reads as a key cap: inverted — the neutral action fill with its
- * on-color (the default button family; on-neutral/neutral-fill pair,
- * tests/apca). No border: the dark fill carries the edge in both themes. */
+/* <kbd> reads as a key cap: inverted — the primary fill with its on-color
+ * (the default button family; on-primary/primary pair, tests/apca). No
+ * border: the dark fill carries the edge in both themes. */
 kbd {
-  color: var(--ui-color-on-neutral);
-  background: var(--ui-color-neutral-fill);
+  color: var(--ui-color-on-primary);
+  background: var(--ui-color-primary);
   border: 0;
 }
 

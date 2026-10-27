@@ -5,8 +5,10 @@
  * :active, :disabled — no JS state classes (architecture notes, CSS как слой presentation и state).
  *
  * Six variants via data-variant (shadcn model):
- *   default (attribute omitted) — high-contrast inverted neutral family;
- *   secondary                   — muted soft fill;
+ *   default (attribute omitted) — the primary family, inverted polarity by
+ *     default (dark fill in the light theme, near-white in the dark); the
+ *     brand look is one --ui-color-primary override away;
+ *   secondary                   — muted soft fill (page gamut);
  *   outline                     — border, transparent fill;
  *   ghost                       — borderless transparent;
  *   link                        — plain text link styled as a button;
@@ -17,12 +19,12 @@
  * with outline.
  *
  * APCA pairs used (validated in tests/apca):
- *   default:     on-neutral on neutral-fill / neutral-hover (hover = press)
- *   secondary:   text on surface-raised / hover-raised
+ *   default:     on-primary on primary / primary-hover (hover = press)
+ *   secondary:   text on surface-raised / hover
  *   outline:     text on hover (hover fill) / surface (border, nonText)
  *   ghost:       text on hover (hover fill)
  *   link:        text on surface (body)
- *   destructive: on-danger on danger-fill / danger-hover
+ *   destructive: on-danger on danger / danger-hover
  */
 
 .ui-button {
@@ -53,10 +55,10 @@
     background-color var(--ui-duration-fast) ease,
     border-color var(--ui-duration-fast) ease;
 
-  /* Default variant: the high-contrast inverted neutral family (dark fill in
-   * light theme, near-white in dark). */
-  color: var(--ui-color-on-neutral);
-  background: var(--ui-color-neutral-fill);
+  /* Default variant: the primary family, inverted polarity by default (the
+   * fill IS the text color flipped — the shadcn primary model). */
+  color: var(--ui-color-on-primary);
+  background: var(--ui-color-primary);
 }
 
 /* Icons auto-size to 1rem and never intercept the pointer. */
@@ -122,7 +124,7 @@
  * fill unless the variant re-states its hover fill with higher specificity
  * (outline/ghost/secondary). */
 .ui-button:active {
-  background: var(--ui-color-neutral-hover);
+  background: var(--ui-color-primary-hover);
   translate: 0 1px;
 }
 
@@ -142,7 +144,7 @@
 }
 
 .ui-button[data-variant='secondary']:active {
-  background: var(--ui-color-hover-raised);
+  background: var(--ui-color-hover);
 }
 
 /* Outline: the border is the surface, the fill is transparent, the text
@@ -160,16 +162,16 @@
 }
 
 /* Ghost: borderless transparent; the hover fill carries the affordance. The
- * hover is the raised half-step (hover-raised), not hover: with no resting
- * fill the ghost hover may be bolder than secondary's (decision 2026-10-24). */
+ * single hover fill is the raised step (2026-10-26 merge): bold enough for a
+ * control with no resting fill, and identical to the secondary hover. */
 .ui-button[data-variant='ghost'] {
   background: transparent;
   color: var(--ui-color-text);
 }
 
-/* Ghost press keeps the bolder raised fill. */
+/* Ghost press keeps the hover fill. */
 .ui-button[data-variant='ghost']:active {
-  background: var(--ui-color-hover-raised);
+  background: var(--ui-color-hover);
 }
 
 /* Link: reads as plain text (not accent — a link-button is an action styled
@@ -196,21 +198,21 @@
 /* Destructive: solid danger family fill. */
 .ui-button[data-variant='destructive'] {
   color: var(--ui-color-on-danger);
-  background: var(--ui-color-danger-fill);
+  background: var(--ui-color-danger);
 }
 
 /* States — hover never restyles a disabled control. Hover is pointer-gated
  * (sticky :hover on touch would latch the highlight). Variant selectors
  * win over the generic default rule for their own fills. Default hover and
- * press move against the fill direction (dark fill lightens, light fill
- * darkens — neutral-hover, decision 2026-10-24); link opts out of fills. */
+ * press move toward the on-primary contrast pole (derived primary-hover);
+ * link opts out of fills. */
 @media (hover: hover) and (pointer: fine) {
   .ui-button:hover:not(:disabled, [aria-disabled='true'], [data-variant='link']) {
-    background: var(--ui-color-neutral-hover);
+    background: var(--ui-color-primary-hover);
   }
 
   .ui-button[data-variant='secondary']:hover:not(:disabled, [aria-disabled='true']) {
-    background: var(--ui-color-hover-raised);
+    background: var(--ui-color-hover);
   }
 
   .ui-button[data-variant='outline']:hover:not(:disabled, [aria-disabled='true']) {
@@ -219,7 +221,7 @@
   }
 
   .ui-button[data-variant='ghost']:hover:not(:disabled, [aria-disabled='true']) {
-    background: var(--ui-color-hover-raised);
+    background: var(--ui-color-hover);
   }
 
   .ui-button[data-variant='destructive']:hover:not(:disabled, [aria-disabled='true']) {

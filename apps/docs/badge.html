@@ -65,23 +65,28 @@
         <h2>Variants</h2>
         <div class="example">
           <span class="ui-badge">Neutral</span>
+          <span class="ui-badge" data-variant="neutral">Neutral (explicit)</span>
+          <span class="ui-badge" data-variant="primary">Primary</span>
           <span class="ui-badge" data-variant="info">Info</span>
           <span class="ui-badge" data-variant="success">Success</span>
           <span class="ui-badge" data-variant="warning">Warning</span>
           <span class="ui-badge" data-variant="danger">Danger</span>
         </div>
         <p>
-          <code>data-variant="info|success|warning|danger"</code> — soft tint surfaces (the
-          feedback model, like Alert). Default (no attribute) is the gray member of the set: the
-          same tint steps (100/800) as the colored variants. All pairs are validated by the APCA
-          matrix at the strict body threshold (Lc 75) in both themes.
+          <code>data-variant="neutral|primary|info|success|warning|danger"</code> — soft tint
+          surfaces (the feedback model, like Alert). Default (no attribute) is the gray member of
+          the set: <code>surface-tint</code> + <code>text</code> from the page gamut, so it stays
+          gray under primary branding; <code>neutral</code> restates it explicitly.
+          <code>primary</code> is the brand pastel (<code>primary-tint</code> +
+          <code>primary-strong</code>) and follows a re-themed primary. All pairs are validated by
+          the APCA matrix at the strict body threshold (Lc 75) in both themes.
         </p>
       </section>
 
       <section>
         <h2>Solid fill</h2>
         <div class="example">
-          <span class="ui-badge" data-variant="neutral-solid">Neutral</span>
+          <span class="ui-badge" data-variant="primary-solid">Primary</span>
           <span class="ui-badge" data-variant="info-solid">Info</span>
           <span class="ui-badge" data-variant="success-solid">Success</span>
           <span class="ui-badge" data-variant="warning-solid">Warning</span>
@@ -89,12 +94,12 @@
         </div>
         <p>
           <code
-            >data-variant="neutral-solid|info-solid|success-solid|warning-solid|
+            >data-variant="primary-solid|info-solid|success-solid|warning-solid|
             danger-solid"</code
           >
-          — bright surfaces with light text (<code>*-fill</code> + <code>on-*</code>, the
-          button-default model). The warning solid fills with the warning token itself: white on the
-          lighter 500 step fails the APCA body threshold, on 600 it passes (Lc 87.7).
+          — the bare family tone as the fill with <code>on-*</code> text (the button-default
+          model). The warning tone doubles as its own solid fill: white on the lighter 500 step
+          fails the APCA body threshold, on 600 it passes (Lc 87.7).
         </p>
       </section>
 

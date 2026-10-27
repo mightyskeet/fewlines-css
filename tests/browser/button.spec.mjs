@@ -23,10 +23,10 @@ const stylesOf = (page, id) =>
     };
   });
 
-test('default is the high-contrast inverted neutral fill', async ({ page }) => {
-  const styles = await stylesOf(page, '#btn-neutral');
-  expect(styles.background).toBe(await token(page, '--ui-color-neutral-fill'));
-  expect(styles.color).toBe(await token(page, '--ui-color-on-neutral'));
+test('default is the primary fill (inverted gray by default)', async ({ page }) => {
+  const styles = await stylesOf(page, '#btn-primary');
+  expect(styles.background).toBe(await token(page, '--ui-color-primary'));
+  expect(styles.color).toBe(await token(page, '--ui-color-on-primary'));
   expect(styles.borderColor).toBe('rgba(0, 0, 0, 0)');
 });
 
@@ -67,16 +67,16 @@ test('hover moves the default fill against the fill direction', async ({ page })
   const background = (id) =>
     page.locator(id).evaluate((el) => getComputedStyle(el).backgroundColor);
 
-  // Hover lands on neutral-hover (opposite direction: the dark light-theme
+  // Hover lands on primary-hover (derived toward the contrast pole: the
   // fill lightens, decision 2026-10-24).
-  const hoverFill = await token(page, '--ui-color-neutral-hover');
-  await page.hover('#btn-neutral');
-  await expect.poll(() => background('#btn-neutral'), { timeout: 500 }).toBe(hoverFill);
+  const hoverFill = await token(page, '--ui-color-primary-hover');
+  await page.hover('#btn-primary');
+  await expect.poll(() => background('#btn-primary'), { timeout: 500 }).toBe(hoverFill);
 });
 
 test('destructive is the solid danger fill', async ({ page }) => {
   const styles = await stylesOf(page, '#btn-destructive');
-  expect(styles.background).toBe(await token(page, '--ui-color-danger-fill'));
+  expect(styles.background).toBe(await token(page, '--ui-color-danger'));
   expect(styles.color).toBe(await token(page, '--ui-color-on-danger'));
   expect(styles.borderColor).toBe('rgba(0, 0, 0, 0)');
 });
@@ -94,9 +94,9 @@ test('hover does not restyle a disabled button', async ({ page }) => {
 
   // Control: hovering the enabled default button lands on the hover fill
   // (poll: the fast background transition needs a frame or two)
-  const hoverFill = await token(page, '--ui-color-neutral-hover');
-  await page.hover('#btn-neutral');
-  await expect.poll(() => background('#btn-neutral'), { timeout: 500 }).toBe(hoverFill);
+  const hoverFill = await token(page, '--ui-color-primary-hover');
+  await page.hover('#btn-primary');
+  await expect.poll(() => background('#btn-primary'), { timeout: 500 }).toBe(hoverFill);
 
   // The disabled button keeps its base surface under the pointer
   const disabledIdle = await background('#btn-disabled');

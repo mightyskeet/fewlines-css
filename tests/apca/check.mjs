@@ -103,10 +103,14 @@ function resolveColor(semanticName, theme) {
   }
   const spec = paletteRef[theme];
 
-  // Derived token: oklab color-mix of two semantic tokens (50/50) — mirrors
-  // the color-mix() values in tokens/color.css.
+  // Derived token: oklab color-mix of two members — mirrors the color-mix()
+  // values in tokens/color.css. mix: [a, b, weight?] where weight (0..100,
+  // default 50) is the share of the FIRST member.
   if (typeof spec === 'object') {
-    const [a, b] = spec.mix.map((name) => {
+    const [aName, bName, weight = 50] = spec.mix;
+    const wa = weight / 100;
+    const wb = 1 - wa;
+    const [a, b] = [aName, bName].map((name) => {
       // Mix members are semantic names; a bare palette name ('neutral-700')
       // is allowed for state tokens whose neighbors lost their semantic role
       // (surface-subtle collapse, 2026-10-26).
@@ -114,9 +118,9 @@ function resolveColor(semanticName, theme) {
       return oklchToOkLab(paletteMap[key]);
     });
     return okLabToSrgb({
-      L: (a.L + b.L) / 2,
-      a: (a.a + b.a) / 2,
-      b: (a.b + b.b) / 2,
+      L: a.L * wa + b.L * wb,
+      a: a.a * wa + b.a * wb,
+      b: a.b * wa + b.b * wb,
     });
   }
 

@@ -67,7 +67,7 @@
   --pl-sunken-dark: oklch(10% var(--ui-base-n-c) var(--ui-base-n-h));
   --pl-text-light: oklch(14% var(--ui-base-n-c) var(--ui-base-n-h));
   --pl-text-dark: oklch(97% var(--ui-base-n-c) var(--ui-base-n-h));
-  /* One soft fill above the page: hover (light theme), neutral tint (light) */
+  /* One soft fill above the page: hover and the gray tint (light theme) */
   --pl-soft-light: color-mix(in oklch, var(--pl-surface-light), var(--pl-text-light) 8%);
   /* The dark contrast pole (core: neutral-950) */
   --pl-pole-dark: oklch(9% var(--ui-base-n-c) var(--ui-base-n-h));
@@ -78,10 +78,6 @@
 
   /* Hover fills — core formulas (oklab mixes against the surface steps) */
   --ui-color-hover: light-dark(
-    var(--pl-soft-light),
-    color-mix(in oklab, var(--pl-surface-dark), var(--pl-raised-dark))
-  );
-  --ui-color-hover-raised: light-dark(
     var(--pl-soft-light),
     color-mix(in oklab, var(--pl-raised-dark), var(--pl-border-dark))
   );
@@ -102,15 +98,18 @@
     color-mix(in oklch, var(--pl-surface-dark), var(--pl-text-dark) 55%)
   );
 
-  /* Neutral action family — the fill is the text color with inverted roles;
-   * hover moves against the fill direction (core decision 2026-10-24). */
-  --ui-color-neutral-fill: light-dark(var(--pl-text-light), var(--pl-text-dark));
-  --ui-color-neutral-hover: light-dark(
-    color-mix(in oklch, var(--pl-text-light), var(--pl-surface-light) 16%),
-    color-mix(in oklch, var(--pl-text-dark), var(--pl-surface-dark) 12%)
+  /* Primary family — the tone is the text color with inverted roles (the
+   * shadcn primary model); hover derives toward the on-primary pole. */
+  --ui-color-primary: light-dark(var(--pl-text-light), var(--pl-text-dark));
+  --ui-color-primary-strong: light-dark(var(--pl-pole-dark), oklch(100% 0 0));
+  --ui-color-on-primary: light-dark(oklch(100% 0 0), var(--pl-pole-dark));
+  --ui-color-primary-hover: color-mix(
+    in oklab,
+    var(--ui-color-primary) 86%,
+    var(--ui-color-on-primary)
   );
-  --ui-color-on-neutral: light-dark(oklch(100% 0 0), var(--pl-pole-dark));
-  --ui-color-neutral-tint: light-dark(var(--pl-soft-light), var(--pl-raised-dark));
+  --ui-color-primary-tint: light-dark(var(--pl-soft-light), var(--pl-raised-dark));
+  --ui-color-surface-tint: light-dark(var(--pl-soft-light), var(--pl-raised-dark));
 
   /* ---- Chromatic families ----
    * Per family: source (the base L/C/H), a binary branch selector (vivid fill
@@ -164,13 +163,9 @@
         calc((1 - var(--pl-info-p-dark)) * l + var(--pl-info-p-dark) * 0.97) calc(0.9 * c) h
     )
   );
-  --ui-color-info-fill: light-dark(
-    color-mix(in oklch, var(--pl-info-fill-light), oklch(100% 0 0) 10%),
-    var(--pl-info-fill-dark)
-  );
   --ui-color-info-hover: color-mix(
     in oklab,
-    var(--ui-color-info-fill),
+    var(--ui-color-info),
     var(--ui-color-info-strong)
   );
   --ui-color-on-info: light-dark(var(--pl-info-pole-light), var(--pl-pole-dark));
@@ -225,13 +220,9 @@
         calc((1 - var(--pl-danger-p-dark)) * l + var(--pl-danger-p-dark) * 0.97) calc(0.9 * c) h
     )
   );
-  --ui-color-danger-fill: light-dark(
-    color-mix(in oklch, var(--pl-danger-fill-light), oklch(100% 0 0) 10%),
-    var(--pl-danger-fill-dark)
-  );
   --ui-color-danger-hover: color-mix(
     in oklab,
-    var(--ui-color-danger-fill),
+    var(--ui-color-danger),
     var(--ui-color-danger-strong)
   );
   --ui-color-on-danger: light-dark(var(--pl-danger-pole-light), var(--pl-pole-dark));
@@ -285,13 +276,9 @@
         calc((1 - var(--pl-success-p-dark)) * l + var(--pl-success-p-dark) * 0.97) calc(0.9 * c) h
     )
   );
-  --ui-color-success-fill: light-dark(
-    color-mix(in oklch, var(--pl-success-fill-light), oklch(100% 0 0) 10%),
-    var(--pl-success-fill-dark)
-  );
   --ui-color-success-hover: color-mix(
     in oklab,
-    var(--ui-color-success-fill),
+    var(--ui-color-success),
     var(--ui-color-success-strong)
   );
   --ui-color-on-success: light-dark(var(--pl-success-pole-light), var(--pl-pole-dark));
@@ -345,13 +332,9 @@
         calc((1 - var(--pl-warning-p-dark)) * l + var(--pl-warning-p-dark) * 0.97) calc(0.9 * c) h
     )
   );
-  --ui-color-warning-fill: light-dark(
-    color-mix(in oklch, var(--pl-warning-fill-light), oklch(100% 0 0) 6%),
-    var(--pl-warning-fill-dark)
-  );
   --ui-color-warning-hover: color-mix(
     in oklab,
-    var(--ui-color-warning-fill),
+    var(--ui-color-warning),
     var(--ui-color-warning-strong)
   );
   --ui-color-on-warning: light-dark(var(--pl-warning-pole-light), var(--pl-pole-dark));

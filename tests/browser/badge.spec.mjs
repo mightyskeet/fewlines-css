@@ -19,7 +19,7 @@ test('default variant uses the gray tint with plain text', async ({ page }) => {
 
   const tint = await page
     .evaluate(() =>
-      getComputedStyle(document.documentElement).getPropertyValue('--ui-color-neutral-tint'),
+      getComputedStyle(document.documentElement).getPropertyValue('--ui-color-surface-tint'),
     )
     .then((v) => v.trim());
   expect(styles.background).toBe(tint);
@@ -30,22 +30,22 @@ test('default variant uses the gray tint with plain text', async ({ page }) => {
   expect(styles.color).toBe(text);
 });
 
-test('solid variants use the on-* text over their *-fill', async ({ page }) => {
+test('solid variants use the on-* text over the bare family tone', async ({ page }) => {
   const cases = [
     {
-      id: 'badge-neutral-solid',
-      surface: '--ui-color-neutral-fill',
-      on: '--ui-color-on-neutral',
+      id: 'badge-primary-solid',
+      surface: '--ui-color-primary',
+      on: '--ui-color-on-primary',
     },
-    { id: 'badge-info-solid', surface: '--ui-color-info-fill', on: '--ui-color-on-info' },
+    { id: 'badge-info-solid', surface: '--ui-color-info', on: '--ui-color-on-info' },
     {
       id: 'badge-success-solid',
-      surface: '--ui-color-success-fill',
+      surface: '--ui-color-success',
       on: '--ui-color-on-success',
     },
-    // warning-fill is calibrated to the 600 step (white on 500 fails body).
-    { id: 'badge-warning-solid', surface: '--ui-color-warning-fill', on: '--ui-color-on-warning' },
-    { id: 'badge-danger-solid', surface: '--ui-color-danger-fill', on: '--ui-color-on-danger' },
+    // warning tone doubles as its fill (calibrated to the 600 step to the 600 step (white on 500 fails body).
+    { id: 'badge-warning-solid', surface: '--ui-color-warning', on: '--ui-color-on-warning' },
+    { id: 'badge-danger-solid', surface: '--ui-color-danger', on: '--ui-color-on-danger' },
   ];
   for (const { id, surface, on } of cases) {
     const styles = await page.locator(`#${id}`).evaluate((el) => {
@@ -66,7 +66,15 @@ test('solid variants use the on-* text over their *-fill', async ({ page }) => {
 });
 
 test('variants resolve to distinct tint surfaces', async ({ page }) => {
-  const ids = ['badge-default', 'badge-info', 'badge-success', 'badge-warning', 'badge-danger'];
+  const ids = [
+    'badge-default',
+    'badge-neutral',
+    'badge-primary',
+    'badge-info',
+    'badge-success',
+    'badge-warning',
+    'badge-danger',
+  ];
   const backgrounds = new Set();
   const colors = new Set();
   for (const id of ids) {
@@ -77,8 +85,21 @@ test('variants resolve to distinct tint surfaces', async ({ page }) => {
     backgrounds.add(styles.background);
     colors.add(styles.color);
   }
+  // 6 distinct label colors: default and the explicit neutral variant are the
+  // same gray by design (the explicit variant only pins it against a
+  // re-themed default). Backgrounds collapse to 5 at the default values:
+  // primary-tint defaults to the same gray as surface-tint.
   expect(backgrounds.size).toBe(5);
-  expect(colors.size).toBe(5);
+  expect(colors.size).toBe(6);
+});
+
+test('the explicit neutral variant matches the default', async ({ page }) => {
+  const read = (id) =>
+    page.locator(`#${id}`).evaluate((el) => {
+      const s = getComputedStyle(el);
+      return `${s.backgroundColor}/${s.color}`;
+    });
+  expect(await read('badge-neutral')).toBe(await read('badge-default'));
 });
 
 test('variant label color uses the -strong token of its family', async ({ page }) => {

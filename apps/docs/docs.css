@@ -299,8 +299,8 @@ main > section {
   /* corner-shape: round overrides the tokens-layer squircle: at a clamped
    * full radius squircle flattens the circle into a rounded box. */
   corner-shape: round;
-  background: var(--ui-color-neutral-fill);
-  color: var(--ui-color-on-neutral);
+  background: var(--ui-color-primary);
+  color: var(--ui-color-on-primary);
   cursor: pointer;
   box-shadow: var(--ui-elevation-2);
   /* Above page content; the Drawer opens in the top layer regardless. */

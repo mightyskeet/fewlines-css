@@ -118,10 +118,10 @@
         <div class="swatch-group">
           <h3>Surfaces</h3>
           <p>
-            Page-level roles only. The two hover fills differ in the dark theme:
-            <code>hover</code> is relative to the page, <code>hover-raised</code> to raised panels
-            (secondary button, accordion) — one shared token would make their dark-theme hover
-            invisible.
+            The gray page gamut — every neutral look of a component (badge without a variant,
+            secondary/outline/ghost buttons, table rows, fields) is built from exactly these
+            tokens, so it never follows a re-themed brand family. Dark-theme hover takes the full
+            raised step: a half-step reads as invisible on the wide dark surface ramp.
           </p>
           <div class="swatch-grid">
             <figure class="swatch">
@@ -133,12 +133,12 @@
               <figcaption><code>--ui-color-surface-raised</code></figcaption>
             </figure>
             <figure class="swatch">
-              <div class="swatch-chip" style="background: var(--ui-color-hover)"></div>
-              <figcaption><code>--ui-color-hover</code></figcaption>
+              <div class="swatch-chip" style="background: var(--ui-color-surface-tint)"></div>
+              <figcaption><code>--ui-color-surface-tint</code></figcaption>
             </figure>
             <figure class="swatch">
-              <div class="swatch-chip" style="background: var(--ui-color-hover-raised)"></div>
-              <figcaption><code>--ui-color-hover-raised</code></figcaption>
+              <div class="swatch-chip" style="background: var(--ui-color-hover)"></div>
+              <figcaption><code>--ui-color-hover</code></figcaption>
             </figure>
           </div>
         </div>
@@ -166,28 +166,32 @@
         </div>
 
         <div class="swatch-group">
-          <h3>Neutral</h3>
+          <h3>Primary</h3>
           <p>
-            Four tokens, not six: the neutral text roles (bare tone, strong text) are carried by
-            the global <code>text</code>/<code>text-muted</code>/<code>border</code> — a neutral
-            family tone would duplicate them.
+            The action family — default buttons, kbd, the checked Switch. Defaults to the inverted
+            gray; a brand look is one <code>--ui-color-primary</code> override away, and the hover
+            follows automatically (derived toward the <code>on-primary</code> pole).
           </p>
           <div class="swatch-grid">
             <figure class="swatch">
-              <div class="swatch-chip" style="background: var(--ui-color-neutral-fill)"></div>
-              <figcaption><code>--ui-color-neutral-fill</code></figcaption>
+              <div class="swatch-chip" style="background: var(--ui-color-primary)"></div>
+              <figcaption><code>--ui-color-primary</code></figcaption>
             </figure>
             <figure class="swatch">
-              <div class="swatch-chip" style="background: var(--ui-color-neutral-hover)"></div>
-              <figcaption><code>--ui-color-neutral-hover</code></figcaption>
+              <div class="swatch-chip" style="background: var(--ui-color-primary-strong)"></div>
+              <figcaption><code>--ui-color-primary-strong</code></figcaption>
             </figure>
             <figure class="swatch">
-              <div class="swatch-chip" style="background: var(--ui-color-on-neutral)"></div>
-              <figcaption><code>--ui-color-on-neutral</code></figcaption>
+              <div class="swatch-chip" style="background: var(--ui-color-primary-hover)"></div>
+              <figcaption><code>--ui-color-primary-hover</code></figcaption>
             </figure>
             <figure class="swatch">
-              <div class="swatch-chip" style="background: var(--ui-color-neutral-tint)"></div>
-              <figcaption><code>--ui-color-neutral-tint</code></figcaption>
+              <div class="swatch-chip" style="background: var(--ui-color-on-primary)"></div>
+              <figcaption><code>--ui-color-on-primary</code></figcaption>
+            </figure>
+            <figure class="swatch">
+              <div class="swatch-chip" style="background: var(--ui-color-primary-tint)"></div>
+              <figcaption><code>--ui-color-primary-tint</code></figcaption>
             </figure>
           </div>
         </div>
@@ -202,10 +206,6 @@
             <figure class="swatch">
               <div class="swatch-chip" style="background: var(--ui-color-info-strong)"></div>
               <figcaption><code>--ui-color-info-strong</code></figcaption>
-            </figure>
-            <figure class="swatch">
-              <div class="swatch-chip" style="background: var(--ui-color-info-fill)"></div>
-              <figcaption><code>--ui-color-info-fill</code></figcaption>
             </figure>
             <figure class="swatch">
               <div class="swatch-chip" style="background: var(--ui-color-info-hover)"></div>
@@ -234,10 +234,6 @@
               <figcaption><code>--ui-color-success-strong</code></figcaption>
             </figure>
             <figure class="swatch">
-              <div class="swatch-chip" style="background: var(--ui-color-success-fill)"></div>
-              <figcaption><code>--ui-color-success-fill</code></figcaption>
-            </figure>
-            <figure class="swatch">
               <div class="swatch-chip" style="background: var(--ui-color-success-hover)"></div>
               <figcaption><code>--ui-color-success-hover</code></figcaption>
             </figure>
@@ -264,10 +260,6 @@
               <figcaption><code>--ui-color-warning-strong</code></figcaption>
             </figure>
             <figure class="swatch">
-              <div class="swatch-chip" style="background: var(--ui-color-warning-fill)"></div>
-              <figcaption><code>--ui-color-warning-fill</code></figcaption>
-            </figure>
-            <figure class="swatch">
               <div class="swatch-chip" style="background: var(--ui-color-warning-hover)"></div>
               <figcaption><code>--ui-color-warning-hover</code></figcaption>
             </figure>
@@ -292,10 +284,6 @@
             <figure class="swatch">
               <div class="swatch-chip" style="background: var(--ui-color-danger-strong)"></div>
               <figcaption><code>--ui-color-danger-strong</code></figcaption>
-            </figure>
-            <figure class="swatch">
-              <div class="swatch-chip" style="background: var(--ui-color-danger-fill)"></div>
-              <figcaption><code>--ui-color-danger-fill</code></figcaption>
             </figure>
             <figure class="swatch">
               <div class="swatch-chip" style="background: var(--ui-color-danger-hover)"></div>

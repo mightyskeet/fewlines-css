@@ -71,7 +71,7 @@ test('keyboard: all interactive elements reachable via Tab', async ({ page }) =>
     reachable.push(id);
     if (id === 'popover-trigger') break;
   }
-  expect(reachable).toContain('btn-neutral');
+  expect(reachable).toContain('btn-primary');
   expect(reachable).toContain('btn-secondary');
   expect(reachable).toContain('dialog-open');
   expect(reachable).toContain('popover-trigger');
@@ -82,7 +82,7 @@ test('keyboard: all interactive elements reachable via Tab', async ({ page }) =>
 test('focus ring uses the shared token color', async ({ page }) => {
   await page.keyboard.press('Tab');
   const outlineColor = await page
-    .locator('#btn-neutral')
+    .locator('#btn-primary')
     .evaluate((el) => getComputedStyle(el).outlineColor);
   // Focus ring token resolves to a concrete color; must not be transparent
   expect(outlineColor).not.toBe('transparent');

@@ -27,61 +27,60 @@
  * Semantic token -> palette reference, per theme.
  * Mirrors packages/core/src/tokens/color.css light-dark() arguments.
  *
- * Derived tokens (hover fills) may declare a `mix`: an oklab color-mix of two
- * semantic tokens (50/50), resolved per theme — mirrors the color-mix() in
- * color.css.
+ * Derived tokens (hover fills) may declare a `mix`: an oklab color-mix of
+ * two members — mix: [a, b, weight?] where weight (0..100, default 50) is
+ * the share of the FIRST member; mirrors the color-mix() in color.css.
  */
 export const semanticMap = {
   surface: { light: 'neutral-0', dark: 'neutral-900' },
   'surface-raised': { light: 'neutral-50', dark: 'neutral-800' },
+  'surface-tint': { light: 'neutral-100', dark: 'neutral-800' },
   hover: {
-    light: 'neutral-100',
-    dark: { mix: ['surface', 'surface-raised'] },
-  },
-  'hover-raised': {
-    light: 'neutral-100',
-    // The up-neighbor of raised lost its semantic role (surface-subtle
-    // collapse, 2026-10-26) — the midpoint is declared in palette steps.
+    // Light: a small step from the page surface toward text (~94%).
+    // Dark: the full raised step — a half-step reads as invisible.
+    light: { mix: ['text', 'surface', 8] },
     dark: { mix: ['surface-raised', 'neutral-700'] },
   },
-  'neutral-fill': { light: 'neutral-900', dark: 'neutral-50' },
-  'neutral-hover': { light: 'neutral-700', dark: 'neutral-200' },
-  'on-neutral': { light: 'neutral-0', dark: 'neutral-950' },
   text: { light: 'neutral-900', dark: 'neutral-50' },
   'text-muted': { light: 'neutral-600', dark: 'neutral-300' },
+  primary: { light: 'neutral-900', dark: 'neutral-50' },
+  'primary-strong': { light: 'neutral-950', dark: 'neutral-0' },
+  'on-primary': { light: 'neutral-0', dark: 'neutral-950' },
+  'primary-hover': {
+    // Toward the on-primary contrast pole (~two gray steps at the default
+    // calibration) — follows the brand color automatically.
+    light: { mix: ['primary', 'on-primary', 86] },
+    dark: { mix: ['primary', 'on-primary', 86] },
+  },
+  'primary-tint': { light: 'neutral-100', dark: 'neutral-800' },
   info: { light: 'info-600', dark: 'info-300' },
   'info-strong': { light: 'info-700', dark: 'info-200' },
-  'info-fill': { light: 'info-500', dark: 'info-300' },
   'on-info': { light: 'neutral-0', dark: 'neutral-950' },
   'info-hover': {
-    light: { mix: ['info-fill', 'info-strong'] },
-    dark: { mix: ['info-fill', 'info-strong'] },
+    light: { mix: ['info', 'info-strong'] },
+    dark: { mix: ['info', 'info-strong'] },
   },
   danger: { light: 'danger-600', dark: 'danger-300' },
   'danger-strong': { light: 'danger-700', dark: 'danger-200' },
-  'danger-fill': { light: 'danger-500', dark: 'danger-300' },
-  'danger-hover': {
-    light: { mix: ['danger-fill', 'danger-strong'] },
-    dark: { mix: ['danger-fill', 'danger-strong'] },
-  },
   'on-danger': { light: 'neutral-0', dark: 'neutral-950' },
+  'danger-hover': {
+    light: { mix: ['danger', 'danger-strong'] },
+    dark: { mix: ['danger', 'danger-strong'] },
+  },
   success: { light: 'success-600', dark: 'success-300' },
   'success-strong': { light: 'success-700', dark: 'success-200' },
-  'success-fill': { light: 'success-500', dark: 'success-300' },
   'on-success': { light: 'neutral-0', dark: 'neutral-950' },
   'success-hover': {
-    light: { mix: ['success-fill', 'success-strong'] },
-    dark: { mix: ['success-fill', 'success-strong'] },
+    light: { mix: ['success', 'success-strong'] },
+    dark: { mix: ['success', 'success-strong'] },
   },
   warning: { light: 'warning-600', dark: 'warning-300' },
   'warning-strong': { light: 'warning-700', dark: 'warning-200' },
-  'warning-fill': { light: 'warning-600', dark: 'warning-300' },
   'on-warning': { light: 'neutral-0', dark: 'neutral-950' },
   'warning-hover': {
-    light: { mix: ['warning-fill', 'warning-strong'] },
-    dark: { mix: ['warning-fill', 'warning-strong'] },
+    light: { mix: ['warning', 'warning-strong'] },
+    dark: { mix: ['warning', 'warning-strong'] },
   },
-  'neutral-tint': { light: 'neutral-100', dark: 'neutral-800' },
   'info-tint': { light: 'info-100', dark: 'info-800' },
   'success-tint': { light: 'success-100', dark: 'success-800' },
   'warning-tint': { light: 'warning-100', dark: 'warning-800' },
@@ -99,7 +98,7 @@ export const tokenPairs = [
   // Core text on surfaces
   { fg: 'text', bg: 'surface', role: 'body' },
   { fg: 'text', bg: 'surface-raised', role: 'body' },
-  { fg: 'text', bg: 'neutral-tint', role: 'body', note: 'badge default: gray tint' },
+  { fg: 'text', bg: 'surface-tint', role: 'body', note: 'badge default: gray tint' },
   { fg: 'text-muted', bg: 'surface', role: 'fluent' },
   { fg: 'text-muted', bg: 'surface-raised', role: 'fluent' },
 
@@ -108,38 +107,36 @@ export const tokenPairs = [
   // text/surface body pair — text-muted fails the body threshold in dark
   { fg: 'text', bg: 'surface-raised', role: 'fluent', note: 'inline code, samp, pre' },
 
-  // Hover fills (state model, theme notes): table rows, accordion,
-  // secondary button hover
+  // Hover fill (state model, theme notes): table rows, accordion,
+  // secondary/outline/ghost buttons. The dark value is the full raised step.
   { fg: 'text', bg: 'hover', role: 'body' },
-  { fg: 'text', bg: 'hover-raised', role: 'body' },
   { fg: 'text', bg: 'surface-raised', role: 'body', note: 'secondary button fill' },
 
-  // Neutral action family (filled default button). neutral-hover: the hover
-  // moves against the fill direction (light 700 / dark 200, decision
-  // 2026-10-24) — imperceptible same-direction shifts (950/0) replaced.
-  // Press = the hover fill + translate (uniform model, 2026-10-26) — no
-  // separate neutral-strong pair.
-  { fg: 'on-neutral', bg: 'neutral-fill', role: 'body', note: 'default button, kbd keycap' },
-  { fg: 'on-neutral', bg: 'neutral-hover', role: 'body' },
+  // Primary family (filled default button, kbd, switch checked, primary
+  // badge). primary-hover is derived toward the on-primary contrast pole;
+  // press = the hover fill + translate (uniform model).
+  { fg: 'on-primary', bg: 'primary', role: 'body', note: 'default button, kbd keycap' },
+  { fg: 'on-primary', bg: 'primary-hover', role: 'body' },
+  { fg: 'primary-strong', bg: 'primary-tint', role: 'body', note: 'primary badge pastel' },
 
   // Info text and controls
   { fg: 'info', bg: 'surface', role: 'body' },
   { fg: 'info', bg: 'surface-raised', role: 'body' },
   { fg: 'info-strong', bg: 'surface', role: 'body' },
-  { fg: 'on-info', bg: 'info-fill', role: 'body' },
-  { fg: 'on-info', bg: 'info-hover', role: 'body', note: 'reserved: info solid fill' },
+  { fg: 'on-info', bg: 'info', role: 'body', note: 'info solid badge' },
+  { fg: 'on-info', bg: 'info-hover', role: 'body' },
 
   // Danger text and controls
   { fg: 'danger', bg: 'surface', role: 'body' },
   { fg: 'danger', bg: 'surface-raised', role: 'body' },
   { fg: 'danger-strong', bg: 'surface', role: 'body' },
-  { fg: 'on-danger', bg: 'danger-fill', role: 'body' },
+  { fg: 'on-danger', bg: 'danger', role: 'body', note: 'destructive button fill' },
   { fg: 'on-danger', bg: 'danger-hover', role: 'body', note: 'destructive button hover' },
 
   // Success
   { fg: 'success', bg: 'surface', role: 'body' },
-  { fg: 'on-success', bg: 'success-fill', role: 'body' },
-  { fg: 'on-success', bg: 'success-hover', role: 'body', note: 'reserved: success solid fill' },
+  { fg: 'on-success', bg: 'success', role: 'body', note: 'success solid badge' },
+  { fg: 'on-success', bg: 'success-hover', role: 'body' },
 
   // Feedback tint surfaces (Alert, Badge): title/label uses -strong (body),
   // body text uses text (body), 1px border uses the base variant color
@@ -157,11 +154,11 @@ export const tokenPairs = [
   { fg: 'text', bg: 'warning-tint', role: 'body' },
   { fg: 'warning', bg: 'warning-tint', role: 'nonText' },
 
-  // Solid badge fills (the button-default model; Badge): the warning solid
-  // fill is warning-fill, calibrated to the 600 step (white on 500 fails
-  // the body threshold) — white on it measures Lc 87.7 (body).
-  { fg: 'on-warning', bg: 'warning-fill', role: 'body' },
-  { fg: 'on-warning', bg: 'warning-hover', role: 'body', note: 'reserved: warning solid fill' },
+  // Solid badge fills (the button-default model; Badge): the warning bare
+  // tone doubles as the solid fill — it is calibrated to the 600 step
+  // (white on 500 fails the body threshold), white on it measures Lc 87.7.
+  { fg: 'on-warning', bg: 'warning', role: 'body' },
+  { fg: 'on-warning', bg: 'warning-hover', role: 'body' },
 
   // Focus indicator (non-text contrast)
   { fg: 'focus-ring', bg: 'surface', role: 'nonText' },

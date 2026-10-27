@@ -23,26 +23,21 @@
   initial-value: white;
 }
 
-/* Hover tokens are derived (color-mix of animated inputs) — they recompute
- * per frame during the theme transition and are NOT in the transition list.
+@property --ui-color-surface-tint {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: gray;
+}
+
+/* Derived hover fills (color-mix of animated inputs) recompute per frame
+ * during the theme transition and are NOT in the transition list — adding
+ * them would retarget a transition on every animated frame (laggy follow).
  * Registered as <color> so the computed value serializes as a color
  * (browser tests compare it against computed backgrounds). */
 @property --ui-color-hover {
   syntax: '<color>';
   inherits: true;
   initial-value: gray;
-}
-
-@property --ui-color-hover-raised {
-  syntax: '<color>';
-  inherits: true;
-  initial-value: gray;
-}
-
-@property --ui-color-danger-hover {
-  syntax: '<color>';
-  inherits: true;
-  initial-value: red;
 }
 
 @property --ui-color-text {
@@ -69,22 +64,34 @@
   initial-value: gray;
 }
 
-@property --ui-color-neutral-fill {
+@property --ui-color-primary {
   syntax: '<color>';
   inherits: true;
   initial-value: black;
 }
 
-@property --ui-color-neutral-hover {
+@property --ui-color-primary-strong {
   syntax: '<color>';
   inherits: true;
   initial-value: black;
 }
 
-@property --ui-color-on-neutral {
+@property --ui-color-on-primary {
   syntax: '<color>';
   inherits: true;
   initial-value: white;
+}
+
+@property --ui-color-primary-tint {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: gray;
+}
+
+@property --ui-color-primary-hover {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: gray;
 }
 
 @property --ui-color-info {
@@ -99,21 +106,12 @@
   initial-value: blue;
 }
 
-@property --ui-color-info-fill {
-  syntax: '<color>';
-  inherits: true;
-  initial-value: blue;
-}
-
 @property --ui-color-on-info {
   syntax: '<color>';
   inherits: true;
   initial-value: white;
 }
 
-/* Info/success/warning hover fills are derived (color-mix of animated
- * inputs) — registered for color serialization, not transitioned; see the
- * hover note above. */
 @property --ui-color-info-hover {
   syntax: '<color>';
   inherits: true;
@@ -132,16 +130,16 @@
   initial-value: red;
 }
 
-@property --ui-color-danger-fill {
-  syntax: '<color>';
-  inherits: true;
-  initial-value: red;
-}
-
 @property --ui-color-on-danger {
   syntax: '<color>';
   inherits: true;
   initial-value: white;
+}
+
+@property --ui-color-danger-hover {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: red;
 }
 
 @property --ui-color-success {
@@ -150,13 +148,7 @@
   initial-value: green;
 }
 
-@property --ui-color-success-fill {
-  syntax: '<color>';
-  inherits: true;
-  initial-value: green;
-}
-
-@property --ui-color-success-hover {
+@property --ui-color-success-strong {
   syntax: '<color>';
   inherits: true;
   initial-value: green;
@@ -166,6 +158,12 @@
   syntax: '<color>';
   inherits: true;
   initial-value: white;
+}
+
+@property --ui-color-success-hover {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: green;
 }
 
 @property --ui-color-warning {
@@ -180,22 +178,16 @@
   initial-value: orange;
 }
 
-@property --ui-color-warning-fill {
+@property --ui-color-on-warning {
   syntax: '<color>';
   inherits: true;
-  initial-value: orange;
+  initial-value: white;
 }
 
 @property --ui-color-warning-hover {
   syntax: '<color>';
   inherits: true;
   initial-value: orange;
-}
-
-@property --ui-color-success-strong {
-  syntax: '<color>';
-  inherits: true;
-  initial-value: green;
 }
 
 @property --ui-color-info-tint {
@@ -222,18 +214,6 @@
   initial-value: white;
 }
 
-@property --ui-color-neutral-tint {
-  syntax: '<color>';
-  inherits: true;
-  initial-value: gray;
-}
-
-@property --ui-color-on-warning {
-  syntax: '<color>';
-  inherits: true;
-  initial-value: white;
-}
-
 @property --ui-focus-ring {
   syntax: '<color>';
   inherits: true;
@@ -242,40 +222,39 @@
 
 /* Transition applies only during an explicit data-theme switch.
  * The attribute-selector change re-evaluates these rules, so the transition
- * runs exactly when the host application flips data-theme.
+ * runs exactly when the host application flips data-theme. Derived hover
+ * fills are excluded (see the note above) — they follow their animated
+ * inputs frame by frame.
  */
 :root[data-theme] {
   transition:
     --ui-color-surface var(--ui-duration-slow) ease,
     --ui-color-surface-raised var(--ui-duration-slow) ease,
+    --ui-color-surface-tint var(--ui-duration-slow) ease,
     --ui-color-text var(--ui-duration-slow) ease,
     --ui-color-text-muted var(--ui-duration-slow) ease,
     --ui-color-border var(--ui-duration-slow) ease,
     --ui-color-border-strong var(--ui-duration-slow) ease,
-    --ui-color-neutral-fill var(--ui-duration-slow) ease,
-    --ui-color-neutral-hover var(--ui-duration-slow) ease,
-    --ui-color-on-neutral var(--ui-duration-slow) ease,
+    --ui-color-primary var(--ui-duration-slow) ease,
+    --ui-color-primary-strong var(--ui-duration-slow) ease,
+    --ui-color-on-primary var(--ui-duration-slow) ease,
+    --ui-color-primary-tint var(--ui-duration-slow) ease,
     --ui-color-info var(--ui-duration-slow) ease,
     --ui-color-info-strong var(--ui-duration-slow) ease,
-    --ui-color-info-fill var(--ui-duration-slow) ease,
     --ui-color-on-info var(--ui-duration-slow) ease,
     --ui-color-danger var(--ui-duration-slow) ease,
     --ui-color-danger-strong var(--ui-duration-slow) ease,
-    --ui-color-danger-fill var(--ui-duration-slow) ease,
     --ui-color-on-danger var(--ui-duration-slow) ease,
     --ui-color-success var(--ui-duration-slow) ease,
-    --ui-color-success-fill var(--ui-duration-slow) ease,
+    --ui-color-success-strong var(--ui-duration-slow) ease,
     --ui-color-on-success var(--ui-duration-slow) ease,
     --ui-color-warning var(--ui-duration-slow) ease,
     --ui-color-warning-strong var(--ui-duration-slow) ease,
-    --ui-color-warning-fill var(--ui-duration-slow) ease,
     --ui-color-on-warning var(--ui-duration-slow) ease,
-    --ui-color-success-strong var(--ui-duration-slow) ease,
     --ui-color-info-tint var(--ui-duration-slow) ease,
     --ui-color-success-tint var(--ui-duration-slow) ease,
     --ui-color-warning-tint var(--ui-duration-slow) ease,
     --ui-color-danger-tint var(--ui-duration-slow) ease,
-    --ui-color-neutral-tint var(--ui-duration-slow) ease,
     --ui-focus-ring var(--ui-duration-slow) ease;
 }
 
