@@ -79,7 +79,7 @@
       </section>
 
       <section>
-        <h2>Default and zebra</h2>
+        <h2>Default</h2>
         <div class="example">
           <table class="ui-table">
             <caption>
@@ -96,24 +96,24 @@
               <tr>
                 <th scope="row">EMEA</th>
                 <td>Growing</td>
-                <td data-align="end">1 250 000</td>
+                <td data-align="end" data-mono>1 250 000</td>
               </tr>
               <tr>
                 <th scope="row">APAC</th>
                 <td>Steady</td>
-                <td data-align="end">980 000</td>
+                <td data-align="end" data-mono>980 000</td>
               </tr>
               <tr>
                 <th scope="row">Americas</th>
                 <td>Growing</td>
-                <td data-align="end">1 730 000</td>
+                <td data-align="end" data-mono>1 730 000</td>
               </tr>
             </tbody>
             <tfoot>
               <tr>
                 <th scope="row">Total</th>
                 <td></td>
-                <td data-align="end">3 960 000</td>
+                <td data-align="end" data-mono>3 960 000</td>
               </tr>
             </tfoot>
           </table>
@@ -121,7 +121,8 @@
         <p>
           Default: even rows, hairline separators, muted headers. Numeric columns take
           <code>data-align="end"</code> on every cell of the column (header included) — it
-          right-aligns and enables tabular numerals.
+          right-aligns and enables tabular numerals; <code>data-mono</code> switches the cell to the
+          mono font (prices, ids, hashes).
         </p>
       </section>
 
@@ -161,7 +162,7 @@
       </section>
 
       <section>
-        <h2>Wide tables and sticky header</h2>
+        <h2>Sticky header</h2>
         <div class="example">
           <div
             class="ui-table-wrap"

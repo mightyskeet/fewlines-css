@@ -95,10 +95,11 @@
   background: var(--ui-color-surface-raised);
 }
 
-/* Footer: summary band with a stronger separator above it; th bold, td keeps
- * the medium weight. */
+/* Footer: summary band, same hairline as body rows (2026-10-27: the strong
+ * separator dropped — uniform line colors); th bold, td keeps the medium
+ * weight. */
 .ui-table tfoot :is(th, td) {
-  border-block-start: 1px solid var(--ui-color-border-strong);
+  border-block-start: 1px solid var(--ui-color-border);
 }
 
 .ui-table tfoot th {
@@ -115,6 +116,12 @@
 .ui-table :is(th, td)[data-align='end'] {
   text-align: end;
   font-variant-numeric: tabular-nums;
+}
+
+/* Monospaced cells: numeric/code columns (prices, ids, hashes) set
+ * data-mono on every cell of the column, like data-align. */
+.ui-table :is(th, td)[data-mono] {
+  font-family: var(--ui-font-mono);
 }
 
 /* Sticky header: opaque surface so scrolled rows do not show through.
