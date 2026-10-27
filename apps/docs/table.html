@@ -3,8 +3,23 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <script>try{var t=localStorage.getItem('theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
-    <script>try{var b=JSON.parse(localStorage.getItem('colors-bases')||'null');if(b){var r=document.documentElement,s=r.style;for(var k in b)s.setProperty(k,b[k]);r.setAttribute('data-palette','custom')}}catch(e){}</script>
+    <script>
+      try {
+        var t = localStorage.getItem('theme');
+        if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+      } catch (e) {}
+    </script>
+    <script>
+      try {
+        var b = JSON.parse(localStorage.getItem('colors-bases') || 'null');
+        if (b) {
+          var r = document.documentElement,
+            s = r.style;
+          for (var k in b) s.setProperty(k, b[k]);
+          r.setAttribute('data-palette', 'custom');
+        }
+      } catch (e) {}
+    </script>
     <title>Table — @fewlines/css</title>
     <link rel="stylesheet" href="/core.css" />
     <link rel="stylesheet" href="/docs.css" />
@@ -14,6 +29,13 @@
     <script src="/vendor/hljs.min.js" defer></script>
     <script src="/site-code.js" defer></script>
     <script src="/site-palette.js" type="module"></script>
+    <style>
+      /* Layout is a host concern (table.md): stretch demo tables to the
+       * available column width. */
+      .ui-table {
+        width: 100%;
+      }
+    </style>
   </head>
   <body>
     <site-sidebar></site-sidebar>
