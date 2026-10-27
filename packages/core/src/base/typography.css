@@ -123,11 +123,13 @@ samp {
   box-decoration-break: clone;
 }
 
-/* <kbd> reads as a key cap: same raised surface and border as <code> (one
- * soft surface since the subtle collapse); the danger text color sets the
- * keycap apart from inline code (danger/surface-raised pair — tests/apca). */
+/* <kbd> reads as a key cap: inverted — the neutral action fill with its
+ * on-color (the default button family; on-neutral/neutral-surface pair,
+ * tests/apca). No border: the dark fill carries the edge in both themes. */
 kbd {
-  color: var(--ui-color-danger);
+  color: var(--ui-color-on-neutral);
+  background: var(--ui-color-neutral-surface);
+  border: 0;
 }
 
 /* Code block: the border and radius carry the delineation — the fill stays
@@ -154,6 +156,12 @@ pre :is(code, kbd, samp) {
   border: 0;
   border-radius: 0;
   padding: 0;
+}
+
+/* The inverted kbd fill is reset above, so its on-color would vanish on the
+ * page surface — nested kbd reads as plain pre text. */
+pre kbd {
+  color: var(--ui-color-text);
 }
 
 /* <mark>: highlighted text on the warning tint — the same soft-surface model

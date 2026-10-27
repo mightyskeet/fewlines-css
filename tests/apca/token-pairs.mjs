@@ -106,7 +106,7 @@ export const tokenPairs = [
   // Neutral action family (filled default button). neutral-hover: the hover
   // moves against the fill direction (light 800 / dark 100, decision
   // 2026-10-24) — imperceptible same-direction shifts (950/0) replaced.
-  { fg: 'on-neutral', bg: 'neutral-surface', role: 'body' },
+  { fg: 'on-neutral', bg: 'neutral-surface', role: 'body', note: 'default button, kbd keycap' },
   { fg: 'on-neutral', bg: 'neutral-hover', role: 'body' },
   { fg: 'on-neutral', bg: 'neutral-strong', role: 'body' },
 
@@ -118,7 +118,7 @@ export const tokenPairs = [
 
   // Danger text and controls
   { fg: 'danger', bg: 'surface', role: 'body' },
-  { fg: 'danger', bg: 'surface-raised', role: 'body', note: 'kbd keycap text' },
+  { fg: 'danger', bg: 'surface-raised', role: 'body' },
   { fg: 'danger-strong', bg: 'surface', role: 'body' },
   { fg: 'on-danger', bg: 'danger-surface', role: 'body' },
   { fg: 'on-danger', bg: 'danger-hover', role: 'body', note: 'destructive button hover' },
