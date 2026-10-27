@@ -3,8 +3,23 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <script>try{var t=localStorage.getItem('theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
-    <script>try{var b=JSON.parse(localStorage.getItem('colors-bases')||'null');if(b){var r=document.documentElement,s=r.style;for(var k in b)s.setProperty(k,b[k]);r.setAttribute('data-palette','custom')}}catch(e){}</script>
+    <script>
+      try {
+        var t = localStorage.getItem('theme');
+        if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+      } catch (e) {}
+    </script>
+    <script>
+      try {
+        var b = JSON.parse(localStorage.getItem('colors-bases') || 'null');
+        if (b) {
+          var r = document.documentElement,
+            s = r.style;
+          for (var k in b) s.setProperty(k, b[k]);
+          r.setAttribute('data-palette', 'custom');
+        }
+      } catch (e) {}
+    </script>
     <title>Button — @fewlines/css</title>
     <link rel="stylesheet" href="/core.css" />
     <link rel="stylesheet" href="/docs.css" />
@@ -74,13 +89,7 @@
       <section>
         <h2>Icon</h2>
         <div class="example">
-          <button
-            class="ui-button"
-            type="button"
-            data-variant="outline"
-            data-size="icon-xs"
-            aria-label="Settings"
-          >
+          <button class="ui-button" type="button" data-size="icon-xs" aria-label="Settings">
             <svg
               width="24"
               height="24"
@@ -92,13 +101,7 @@
               <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" />
             </svg>
           </button>
-          <button
-            class="ui-button"
-            type="button"
-            data-variant="outline"
-            data-size="icon-sm"
-            aria-label="Settings"
-          >
+          <button class="ui-button" type="button" data-size="icon-sm" aria-label="Settings">
             <svg
               width="24"
               height="24"
@@ -110,13 +113,7 @@
               <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" />
             </svg>
           </button>
-          <button
-            class="ui-button"
-            type="button"
-            data-variant="outline"
-            data-size="icon"
-            aria-label="Settings"
-          >
+          <button class="ui-button" type="button" data-size="icon" aria-label="Settings">
             <svg
               width="24"
               height="24"
@@ -128,13 +125,7 @@
               <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" />
             </svg>
           </button>
-          <button
-            class="ui-button"
-            type="button"
-            data-variant="outline"
-            data-size="icon-lg"
-            aria-label="Settings"
-          >
+          <button class="ui-button" type="button" data-size="icon-lg" aria-label="Settings">
             <svg
               width="24"
               height="24"
