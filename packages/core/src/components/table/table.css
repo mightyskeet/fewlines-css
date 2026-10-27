@@ -106,9 +106,11 @@
   font-weight: var(--ui-font-weight-bold);
 }
 
-/* The footer separator replaces the last body row's bottom hairline;
- * otherwise the two adjacent borders stack into a 2px line. */
-.ui-table:has(tfoot) tbody tr:last-child :is(th, td) {
+/* The last hairline is dropped: the footer separator replaces the last body
+ * row's bottom border (else the two stack into a 2px line), and a table
+ * without tfoot does not draw a closing line at all (2026-10-27). */
+.ui-table:has(tfoot) tbody tr:last-child :is(th, td),
+.ui-table tfoot :is(th, td) {
   border-block-end: none;
 }
 

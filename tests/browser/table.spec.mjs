@@ -55,6 +55,15 @@ test('cells carry a hairline bottom border under the separate border model', asy
     });
   expect(cell.width).toBe('1px');
   expect(cell.style).toBe('solid');
+
+  // No closing line: the last body row (and tfoot cells) drop the hairline.
+  const last = await page
+    .locator('#table-default tbody tr')
+    .last()
+    .locator('td')
+    .first()
+    .evaluate((el) => getComputedStyle(el).borderBottomStyle);
+  expect(last).toBe('none');
 });
 
 test('zebra stripes apply to odd body rows only', async ({ page }) => {
