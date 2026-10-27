@@ -3,8 +3,23 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <script>try{var t=localStorage.getItem('theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
-    <script>try{var b=JSON.parse(localStorage.getItem('colors-bases')||'null');if(b){var r=document.documentElement,s=r.style;for(var k in b)s.setProperty(k,b[k]);r.setAttribute('data-palette','custom')}}catch(e){}</script>
+    <script>
+      try {
+        var t = localStorage.getItem('theme');
+        if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+      } catch (e) {}
+    </script>
+    <script>
+      try {
+        var b = JSON.parse(localStorage.getItem('colors-bases') || 'null');
+        if (b) {
+          var r = document.documentElement,
+            s = r.style;
+          for (var k in b) s.setProperty(k, b[k]);
+          r.setAttribute('data-palette', 'custom');
+        }
+      } catch (e) {}
+    </script>
     <title>Badge — @fewlines/css</title>
     <link rel="stylesheet" href="/core.css" />
     <link rel="stylesheet" href="/docs.css" />
@@ -49,11 +64,11 @@
       <section>
         <h2>Variants</h2>
         <div class="example">
-          <span class="ui-badge">Default</span>
-          <span class="ui-badge" data-variant="accent">New</span>
-          <span class="ui-badge" data-variant="success">Active</span>
-          <span class="ui-badge" data-variant="warning">Pending</span>
-          <span class="ui-badge" data-variant="danger">Failed</span>
+          <span class="ui-badge">Neutral</span>
+          <span class="ui-badge" data-variant="accent">Accent</span>
+          <span class="ui-badge" data-variant="success">Success</span>
+          <span class="ui-badge" data-variant="warning">Warning</span>
+          <span class="ui-badge" data-variant="danger">Danger</span>
         </div>
         <p>
           <code>data-variant="accent|success|warning|danger"</code> — soft tint surfaces (the
@@ -68,16 +83,18 @@
         <div class="example">
           <span class="ui-badge" data-variant="neutral-solid">Neutral</span>
           <span class="ui-badge" data-variant="accent-solid">Accent</span>
-          <span class="ui-badge" data-variant="success-solid">Active</span>
-          <span class="ui-badge" data-variant="warning-solid">Pending</span>
-          <span class="ui-badge" data-variant="danger-solid">Failed</span>
+          <span class="ui-badge" data-variant="success-solid">Success</span>
+          <span class="ui-badge" data-variant="warning-solid">Warning</span>
+          <span class="ui-badge" data-variant="danger-solid">Danger</span>
         </div>
         <p>
-          <code>data-variant="neutral-solid|accent-solid|success-solid|warning-solid|
-          danger-solid"</code> — bright surfaces with light text (<code>*-surface</code> +
-          <code>on-*</code>, the button-default model). The warning solid fills with the warning
-          token itself: white on the lighter 500 step fails the APCA body threshold, on 600 it
-          passes (Lc 87.7).
+          <code
+            >data-variant="neutral-solid|accent-solid|success-solid|warning-solid|
+            danger-solid"</code
+          >
+          — bright surfaces with light text (<code>*-surface</code> + <code>on-*</code>, the
+          button-default model). The warning solid fills with the warning token itself: white on the
+          lighter 500 step fails the APCA body threshold, on 600 it passes (Lc 87.7).
         </p>
       </section>
 
@@ -90,8 +107,8 @@
         </div>
         <p>
           <code>data-size="sm|lg"</code>; default is md (no attribute) — the standard pill shown in
-          the Variants block above. Geometry scales, the label size stays: sm 16px, md 20px,
-          lg 28px.
+          the Variants block above. Geometry scales, the label size stays: sm 16px, md 20px, lg
+          28px.
         </p>
       </section>
 
