@@ -89,3 +89,12 @@
     forced-color-adjust: auto;
   }
 }
+
+/* Page scroll lock while open — pure CSS via :has() (direct use,
+ * compatibility notes). scrollbar-gutter reserves the classic scrollbar
+ * track so the page does not shift. iOS Safari may still scroll the
+ * background (UA limitation). */
+html:has(.ui-dialog[open]) {
+  overflow: hidden;
+  scrollbar-gutter: stable;
+}

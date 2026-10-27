@@ -48,7 +48,10 @@ test('dialog has backdrop in modal mode', async ({ page }) => {
   expect(hasBackdrop).toBe(true);
 });
 
-test('dialog focus moves inside on open and returns to trigger on close', async ({ page, browserName }) => {
+test('dialog focus moves inside on open and returns to trigger on close', async ({
+  page,
+  browserName,
+}) => {
   // Known WebKit divergence (found 2026-10-16, reproduced on the old CSS —
   // not our regression): focus does not return to the trigger on close.
   // test.fail (not skip): the inversion is noticed when WebKit fixes it.
@@ -159,4 +162,20 @@ test('dialog animates out on close (reverse transition)', async ({ page }) => {
     .toEqual(expect.arrayContaining(['translate', 'opacity']));
 
   await expect(page.locator('#testDialog')).not.toBeVisible();
+});
+
+// Scroll lock (dialog.css): html overflow hidden while open; the classic
+// scrollbar track stays reserved so the page content does not shift.
+test('open dialog locks page scroll without layout shift', async ({ page }) => {
+  const before = await page.evaluate(() => document.documentElement.clientWidth);
+  await page.click('#dialog-open');
+  await expect(page.locator('#testDialog')).toBeVisible();
+  const state = await page.evaluate(() => {
+    const s = getComputedStyle(document.documentElement);
+    return { overflow: s.overflow, gutter: s.scrollbarGutter };
+  });
+  expect(state.overflow).toBe('hidden');
+  expect(state.gutter).toBe('stable');
+  await page.keyboard.press('Escape');
+  expect(await page.evaluate(() => document.documentElement.clientWidth)).toBe(before);
 });

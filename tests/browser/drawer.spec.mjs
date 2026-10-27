@@ -233,3 +233,19 @@ test('drawer follows the theme switch (light-dark tokens)', async ({ page }) => 
 
   expect(light).not.toBe(dark);
 });
+
+// Scroll lock (drawer.css): html overflow hidden while open; the classic
+// scrollbar track stays reserved so the page content does not shift.
+test('open drawer locks page scroll without layout shift', async ({ page }) => {
+  const before = await page.evaluate(() => document.documentElement.clientWidth);
+  await page.click('#drawer-trigger');
+  await expect(page.locator('#testDrawer')).toBeVisible();
+  const state = await page.evaluate(() => {
+    const s = getComputedStyle(document.documentElement);
+    return { overflow: s.overflow, gutter: s.scrollbarGutter };
+  });
+  expect(state.overflow).toBe('hidden');
+  expect(state.gutter).toBe('stable');
+  await page.keyboard.press('Escape');
+  expect(await page.evaluate(() => document.documentElement.clientWidth)).toBe(before);
+});
