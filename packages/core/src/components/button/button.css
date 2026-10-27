@@ -26,6 +26,10 @@
  */
 
 .ui-button {
+  /* UA <button> is border-box, <a> is content-box: without the declaration
+   * an anchor button adds padding+border on top of min-block-size and grows
+   * taller than its button twin. */
+  box-sizing: border-box;
   display: inline-flex;
   align-items: center;
   justify-content: center;

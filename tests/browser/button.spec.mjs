@@ -104,3 +104,14 @@ test('hover does not restyle a disabled button', async ({ page }) => {
   await page.hover('#btn-disabled', { force: true });
   expect(await background('#btn-disabled')).toBe(disabledIdle);
 });
+
+// UA <button> is border-box, <a> is content-box: an anchor button must
+// declare box-sizing or min-block-size ignores padding+border and it grows
+// taller than its button twin (states demo, button.html).
+test('anchor button matches its button twin in height', async ({ page }) => {
+  await page.goto('/button.html');
+  const height = (locator) => locator.evaluate((el) => el.getBoundingClientRect().height);
+  const button = page.getByRole('button', { name: 'Disabled', exact: true });
+  const anchor = page.getByRole('link', { name: 'Link as button' });
+  expect(await height(anchor)).toBe(await height(button));
+});
