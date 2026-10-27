@@ -38,7 +38,7 @@
   font-weight: var(--ui-font-weight-medium);
   line-height: var(--ui-line-height-tight);
   border: 1px solid transparent;
-  border-radius: var(--ui-radius-sm);
+  border-radius: var(--ui-radius-md);
   padding-block: var(--ui-space-2xs);
   padding-inline: var(--ui-space-md);
   min-block-size: 2.25rem;
