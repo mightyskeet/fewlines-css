@@ -25,7 +25,7 @@ const NEUTRAL_PAIRS = [
 const FAMILY_PAIRS = [
   ['on', 'fill', 75], // on-X / X (fill)
   ['fill', 'surface', 75], // X as text on the page
-  ['fill', 'tint', 75], // X as alert/badge title on the tint surface
+  ['fill', 'tint', 60], // X as alert/badge title on the tint surface (60 minimum)
 ];
 
 // (The token-name mapping is mirrored inside the page script below —

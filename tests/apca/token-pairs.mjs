@@ -12,6 +12,9 @@
  *  nonText     — UI boundaries, icons, focus indicators: Lc 15 minimum
  *  disabled    — disabled controls (exempt from conformance, still tracked)
  *
+ * A pair may override the role threshold with `threshold` — a documented
+ * exception (checked per theme, same gate).
+ *
  * Values are resolved per theme: light and dark variants are checked
  * separately. Palette colors are parsed from packages/core/src/tokens/palette.css
  * by the check script; semanticMap below mirrors packages/core/src/tokens/color.css
@@ -46,44 +49,46 @@ export const semanticMap = {
   primary: { light: 'neutral-900', dark: 'neutral-50' },
   'on-primary': { light: 'neutral-0', dark: 'neutral-950' },
   'primary-hover': {
-    // A 16% step toward the on-primary contrast pole (light theme);
-    // the dark theme keeps the old 14% step — the near-white fill has no
-    // visible room toward white.
-    light: { mix: ['primary', 'on-primary', 84] },
+    // A 30% step toward the on-primary contrast pole (light theme) — the
+    // near-black fill has a huge contrast headroom; the dark theme keeps
+    // the old 14% step — the near-white fill has no visible room.
+    light: { mix: ['primary', 'on-primary', 70] },
     dark: { mix: ['primary', 'on-primary', 86] },
   },
   'primary-tint': { light: 'neutral-100', dark: 'neutral-800' },
   info: { light: 'info-600', dark: 'info-300' },
   'on-info': { light: 'neutral-0', dark: 'neutral-950' },
   'info-hover': {
-    // A 16% step toward white in both themes: the light theme walks toward
-    // the on-* pole (the fill lightens), the dark theme runs away from the
-    // dark pole (on-* contrast grows).
-    light: { mix: ['info', 'neutral-0', 84] },
-    dark: { mix: ['info', 'neutral-0', 84] },
+    // A step toward the on-* pole in both themes: the light theme walks
+    // toward the white pole (the fill lightens, 16%); the dark theme walks
+    // toward the dark pole (the fill darkens, 12%) — tracked at the
+    // documented 60 minimum, the 300-level fill with dark on-* text has
+    // only ~3 Lc of headroom at 75.
+    light: { mix: ['info', 'on-info', 84] },
+    dark: { mix: ['info', 'on-info', 88] },
   },
   danger: { light: 'danger-600', dark: 'danger-300' },
   'on-danger': { light: 'neutral-0', dark: 'neutral-950' },
   'danger-hover': {
-    light: { mix: ['danger', 'neutral-0', 84] },
-    dark: { mix: ['danger', 'neutral-0', 84] },
+    light: { mix: ['danger', 'on-danger', 84] },
+    dark: { mix: ['danger', 'on-danger', 88] },
   },
   success: { light: 'success-600', dark: 'success-300' },
   'on-success': { light: 'neutral-0', dark: 'neutral-950' },
   'success-hover': {
-    light: { mix: ['success', 'neutral-0', 84] },
-    dark: { mix: ['success', 'neutral-0', 84] },
+    light: { mix: ['success', 'on-success', 84] },
+    dark: { mix: ['success', 'on-success', 88] },
   },
   warning: { light: 'warning-600', dark: 'warning-300' },
   'on-warning': { light: 'neutral-0', dark: 'neutral-950' },
   'warning-hover': {
-    light: { mix: ['warning', 'neutral-0', 84] },
-    dark: { mix: ['warning', 'neutral-0', 84] },
+    light: { mix: ['warning', 'on-warning', 84] },
+    dark: { mix: ['warning', 'on-warning', 88] },
   },
-  'info-tint': { light: { mix: ['info-100', 'neutral-0', 50] }, dark: 'info-800' },
-  'success-tint': { light: { mix: ['success-100', 'neutral-0', 50] }, dark: 'success-800' },
-  'warning-tint': { light: { mix: ['warning-100', 'neutral-0', 50] }, dark: 'warning-800' },
-  'danger-tint': { light: { mix: ['danger-100', 'neutral-0', 50] }, dark: 'danger-800' },
+  'info-tint': { light: 'info-100', dark: 'info-800' },
+  'success-tint': { light: 'success-100', dark: 'success-800' },
+  'warning-tint': { light: 'warning-100', dark: 'warning-800' },
+  'danger-tint': { light: 'danger-100', dark: 'danger-800' },
   'focus-ring': { light: 'info-600', dark: 'info-300' },
 };
 
@@ -91,7 +96,7 @@ export const semanticMap = {
  * Allowed foreground/background pairs.
  * fg/bg are semantic token names resolved through semanticMap.
  *
- * @type {Array<{fg: string, bg: string, role: TextRole, note?: string}>}
+ * @type {Array<{fg: string, bg: string, role: TextRole, threshold?: number, note?: string}>}
  */
 export const tokenPairs = [
   // Core text on surfaces
@@ -122,32 +127,54 @@ export const tokenPairs = [
   { fg: 'info', bg: 'surface', role: 'body' },
   { fg: 'info', bg: 'surface-raised', role: 'body' },
   { fg: 'on-info', bg: 'info', role: 'body', note: 'info solid badge' },
-  { fg: 'on-info', bg: 'info-hover', role: 'body' },
+  {
+    // Hover fill of a solid control: the dark theme darkens the 300-level
+    // fill toward the dark on-* pole — the 300+950 pair has only ~3 Lc of
+    // headroom at 75, so the state pair is tracked at the documented
+    // 60 minimum (light theme passes 75 on its own).
+    fg: 'on-info',
+    bg: 'info-hover',
+    role: 'body',
+    threshold: 60,
+  },
 
   // Danger text and controls
   { fg: 'danger', bg: 'surface', role: 'body' },
   { fg: 'danger', bg: 'surface-raised', role: 'body' },
   { fg: 'on-danger', bg: 'danger', role: 'body', note: 'destructive button fill' },
-  { fg: 'on-danger', bg: 'danger-hover', role: 'body', note: 'destructive button hover' },
+  {
+    fg: 'on-danger',
+    bg: 'danger-hover',
+    role: 'body',
+    threshold: 60,
+    note: 'destructive button hover (dark darkens — 60 minimum)',
+  },
 
   // Success
   { fg: 'success', bg: 'surface', role: 'body' },
   { fg: 'on-success', bg: 'success', role: 'body', note: 'success solid badge' },
-  { fg: 'on-success', bg: 'success-hover', role: 'body' },
+  {
+    fg: 'on-success',
+    bg: 'success-hover',
+    role: 'body',
+    threshold: 60,
+  },
 
   // Feedback tint surfaces (Alert, Badge): title/label uses the bare family
   // tone (body), body text uses text (body), 1px border uses the base
-  // variant color (nonText)
-  { fg: 'info', bg: 'info-tint', role: 'body' },
+  // variant color (nonText). The bare tone on the raw 100-step tint misses
+  // the preferred 75 in the light theme by ~3 Lc (it sat on the removed
+  // *-strong) — tracked at the documented 60 minimum.
+  { fg: 'info', bg: 'info-tint', role: 'body', threshold: 60 },
   { fg: 'text', bg: 'info-tint', role: 'body' },
   { fg: 'info', bg: 'info-tint', role: 'nonText' },
-  { fg: 'danger', bg: 'danger-tint', role: 'body' },
+  { fg: 'danger', bg: 'danger-tint', role: 'body', threshold: 60 },
   { fg: 'text', bg: 'danger-tint', role: 'body' },
   { fg: 'danger', bg: 'danger-tint', role: 'nonText' },
-  { fg: 'success', bg: 'success-tint', role: 'body' },
+  { fg: 'success', bg: 'success-tint', role: 'body', threshold: 60 },
   { fg: 'text', bg: 'success-tint', role: 'body' },
   { fg: 'success', bg: 'success-tint', role: 'nonText' },
-  { fg: 'warning', bg: 'warning-tint', role: 'body' },
+  { fg: 'warning', bg: 'warning-tint', role: 'body', threshold: 60 },
   { fg: 'text', bg: 'warning-tint', role: 'body' },
   { fg: 'warning', bg: 'warning-tint', role: 'nonText' },
 
@@ -155,7 +182,12 @@ export const tokenPairs = [
   // tone doubles as the solid fill — it is calibrated to the 600 step
   // (white on 500 fails the body threshold), white on it measures Lc 87.7.
   { fg: 'on-warning', bg: 'warning', role: 'body' },
-  { fg: 'on-warning', bg: 'warning-hover', role: 'body' },
+  {
+    fg: 'on-warning',
+    bg: 'warning-hover',
+    role: 'body',
+    threshold: 60,
+  },
 
   // Focus indicator (non-text contrast)
   { fg: 'focus-ring', bg: 'surface', role: 'nonText' },

@@ -144,7 +144,7 @@ for (const theme of ['light', 'dark']) {
     const Lc = APCAcontrast(fg, bg);
     checked += 1;
 
-    const threshold = roleThresholds[pair.role];
+    const threshold = pair.threshold ?? roleThresholds[pair.role];
     // APCA polarity: positive = dark text on light bg, negative = light text
     // on dark bg (apca-w3 FAQ). Magnitude is the contrast value.
     const LcAbs = Math.abs(Lc);

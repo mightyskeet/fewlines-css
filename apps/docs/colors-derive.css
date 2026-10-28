@@ -103,7 +103,7 @@
   --ui-color-primary: light-dark(var(--pl-text-light), var(--pl-text-dark));
   --ui-color-on-primary: light-dark(oklch(100% 0 0), var(--pl-pole-dark));
   --ui-color-primary-hover: light-dark(
-    color-mix(in oklab, var(--ui-color-primary) 84%, var(--ui-color-on-primary)),
+    color-mix(in oklab, var(--ui-color-primary) 70%, var(--ui-color-on-primary)),
     color-mix(in oklab, var(--ui-color-primary) 86%, var(--ui-color-on-primary))
   );
   --ui-color-primary-tint: light-dark(var(--pl-soft-light), var(--pl-raised-dark));
@@ -148,14 +148,13 @@
   );
 
   --ui-color-info: light-dark(var(--pl-info-fill-light), var(--pl-info-fill-dark));
-  --ui-color-info-hover: color-mix(
-    in oklab,
-    var(--ui-color-info) 84%,
-    oklch(100% 0 0)
+  --ui-color-info-hover: light-dark(
+    color-mix(in oklab, var(--ui-color-info) 84%, oklch(100% 0 0)),
+    color-mix(in oklab, var(--ui-color-info) 88%, var(--pl-pole-dark))
   );
   --ui-color-on-info: light-dark(var(--pl-info-pole-light), var(--pl-pole-dark));
   --ui-color-info-tint: light-dark(
-    oklch(from var(--pl-info-fill-light) calc(0.94 + 0.06 * l) calc(0.06 * c) h),
+    oklch(from var(--pl-info-fill-light) calc(0.88 + 0.12 * l) calc(0.12 * c) h),
     oklch(from var(--pl-info-fill-dark) calc(0.123 + 0.12 * l) calc(0.12 * c) h)
   );
   --ui-focus-ring: light-dark(var(--pl-info-fill-light), var(--pl-info-fill-dark));
@@ -192,14 +191,13 @@
   );
 
   --ui-color-danger: light-dark(var(--pl-danger-fill-light), var(--pl-danger-fill-dark));
-  --ui-color-danger-hover: color-mix(
-    in oklab,
-    var(--ui-color-danger) 84%,
-    oklch(100% 0 0)
+  --ui-color-danger-hover: light-dark(
+    color-mix(in oklab, var(--ui-color-danger) 84%, oklch(100% 0 0)),
+    color-mix(in oklab, var(--ui-color-danger) 88%, var(--pl-pole-dark))
   );
   --ui-color-on-danger: light-dark(var(--pl-danger-pole-light), var(--pl-pole-dark));
   --ui-color-danger-tint: light-dark(
-    oklch(from var(--pl-danger-fill-light) calc(0.94 + 0.06 * l) calc(0.06 * c) h),
+    oklch(from var(--pl-danger-fill-light) calc(0.88 + 0.12 * l) calc(0.12 * c) h),
     oklch(from var(--pl-danger-fill-dark) calc(0.123 + 0.12 * l) calc(0.12 * c) h)
   );
 
@@ -235,14 +233,13 @@
   );
 
   --ui-color-success: light-dark(var(--pl-success-fill-light), var(--pl-success-fill-dark));
-  --ui-color-success-hover: color-mix(
-    in oklab,
-    var(--ui-color-success) 84%,
-    oklch(100% 0 0)
+  --ui-color-success-hover: light-dark(
+    color-mix(in oklab, var(--ui-color-success) 84%, oklch(100% 0 0)),
+    color-mix(in oklab, var(--ui-color-success) 88%, var(--pl-pole-dark))
   );
   --ui-color-on-success: light-dark(var(--pl-success-pole-light), var(--pl-pole-dark));
   --ui-color-success-tint: light-dark(
-    oklch(from var(--pl-success-fill-light) calc(0.94 + 0.06 * l) calc(0.06 * c) h),
+    oklch(from var(--pl-success-fill-light) calc(0.88 + 0.12 * l) calc(0.12 * c) h),
     oklch(from var(--pl-success-fill-dark) calc(0.123 + 0.12 * l) calc(0.12 * c) h)
   );
 
@@ -278,14 +275,13 @@
   );
 
   --ui-color-warning: light-dark(var(--pl-warning-fill-light), var(--pl-warning-fill-dark));
-  --ui-color-warning-hover: color-mix(
-    in oklab,
-    var(--ui-color-warning) 84%,
-    oklch(100% 0 0)
+  --ui-color-warning-hover: light-dark(
+    color-mix(in oklab, var(--ui-color-warning) 84%, oklch(100% 0 0)),
+    color-mix(in oklab, var(--ui-color-warning) 88%, var(--pl-pole-dark))
   );
   --ui-color-on-warning: light-dark(var(--pl-warning-pole-light), var(--pl-pole-dark));
   --ui-color-warning-tint: light-dark(
-    oklch(from var(--pl-warning-fill-light) calc(0.94 + 0.06 * l) calc(0.06 * c) h),
+    oklch(from var(--pl-warning-fill-light) calc(0.88 + 0.12 * l) calc(0.12 * c) h),
     oklch(from var(--pl-warning-fill-dark) calc(0.123 + 0.12 * l) calc(0.12 * c) h)
   );
 }

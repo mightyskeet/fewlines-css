@@ -193,7 +193,7 @@ function updateTable(rows) {
   root.style.transition = '';
 
   for (const { pair, cells, pills } of rows) {
-    const threshold = roleThresholds[pair.role];
+    const threshold = pair.threshold ?? roleThresholds[pair.role];
     const values = ['light', 'dark'].map((theme) => {
       const fg = colors[`${theme} ${pair.fg}`];
       const bg = colors[`${theme} ${pair.bg}`];
