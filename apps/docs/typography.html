@@ -93,9 +93,9 @@
           </p>
         </div>
         <p>
-          <code>mark</code> uses the warning tint — the same soft-surface model as Alert/Badge.
-          <code>abbr[title]</code> gets a normalized dotted underline with an explicit thickness and
-          offset (Safari renders none by default, Chromium's is barely visible); the
+          <code>mark</code> uses the neutral gray tint — the same soft-surface model as the neutral
+          Alert/Badge. <code>abbr[title]</code> gets a normalized dotted underline with an explicit
+          thickness and offset (Safari renders none by default, Chromium's is barely visible); the
           <code>title</code> attribute is the expansion for assistive tech.
         </p>
       </section>
@@ -106,8 +106,10 @@
           <p>Read the <a href="./index.html">overview page</a> next.</p>
         </div>
         <p>
-          Accent color with an underline and a small optical offset. The visited state is
-          intentionally not restyled. The focus ring comes from the base focus contract.
+          The utility link color with an underline and a small optical offset — independent of the
+          brand family (a re-branded UI keeps blue links unless the host re-themes
+          <code>--ui-color-link</code>). The visited state is intentionally not restyled. The focus
+          ring comes from the base focus contract.
         </p>
       </section>
 
@@ -142,11 +144,11 @@
       <section>
         <h2>Selection</h2>
         <div class="example">
-          <p>Select any text on this page to see the info-tint highlight.</p>
+          <p>Select any text on this page to see the selection tint highlight.</p>
         </div>
         <p>
-          <code>::selection</code> paints the info tint under the author text color — a validated
-          pair; forced-colors modes repaint the selection natively.
+          <code>::selection</code> paints the utility selection tint under the author text color — a
+          validated pair; forced-colors modes repaint the selection natively.
         </p>
       </section>
 

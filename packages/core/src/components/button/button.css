@@ -13,9 +13,10 @@
  *   outline                     — border, transparent fill;
  *   ghost                       — borderless transparent;
  *   link                        — plain text link styled as a button;
- *   destructive                 — solid danger family fill.
+ *   attention                   — solid attention family fill (errors,
+ *                                 destructive actions).
  *
- * Filled variants (default/secondary/destructive) carry no visible border —
+ * Filled variants (default/secondary/attention) carry no visible border —
  * the fill is the surface; the 1px transparent border keeps geometry shared
  * with outline.
  *
@@ -26,7 +27,7 @@
  *   outline:     text on hover (hover fill) / surface (border, nonText)
  *   ghost:       text on hover (hover fill)
  *   link:        text on surface (body)
- *   destructive: on-danger on danger / danger-hover
+ *   attention:   on-attention on attention / attention-hover
  */
 
 .ui-button {
@@ -121,7 +122,7 @@
 }
 
 /* Press = hover fill + mechanical response (state model, theme notes) —
- * the same model as the destructive variant. Same specificity as the variant
+ * the same model as the attention variant. Same specificity as the variant
  * rules below, which come later — pressed variant buttons keep their family
  * fill unless the variant re-states its hover fill with higher specificity
  * (outline/ghost/secondary). */
@@ -198,10 +199,10 @@
   text-decoration: underline;
 }
 
-/* Destructive: solid danger family fill. */
-.ui-button[data-variant='destructive'] {
-  color: var(--ui-color-on-danger);
-  background: var(--ui-color-danger);
+/* Attention: solid urgency fill (errors, destructive actions). */
+.ui-button[data-variant='attention'] {
+  color: var(--ui-color-on-attention);
+  background: var(--ui-color-attention);
 }
 
 /* States — hover never restyles a disabled control. Hover is pointer-gated
@@ -227,8 +228,8 @@
     background: var(--ui-color-hover);
   }
 
-  .ui-button[data-variant='destructive']:hover:not(:disabled, [aria-disabled='true']) {
-    background: var(--ui-color-danger-hover);
+  .ui-button[data-variant='attention']:hover:not(:disabled, [aria-disabled='true']) {
+    background: var(--ui-color-attention-hover);
   }
 }
 

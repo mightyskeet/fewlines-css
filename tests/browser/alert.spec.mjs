@@ -11,66 +11,83 @@ test.beforeEach(async ({ page }) => {
   await page.goto('/fixture.html');
 });
 
-test('default variant uses the info tint surface and info border', async ({ page }) => {
+test('default variant is the neutral gray tint (surface-tint + border-strong)', async ({
+  page,
+}) => {
   const styles = await page.locator('#alert-info').evaluate((el) => {
     const s = getComputedStyle(el);
     return { background: s.backgroundColor, borderColor: s.borderTopColor };
   });
 
-  // Tint background must differ from the neutral surfaces (component consumes
-  // the dedicated tint token, not surface/surface-raised).
-  const surface = await page.evaluate(() =>
-    getComputedStyle(document.documentElement).getPropertyValue('--ui-color-surface'),
-  );
-  expect(styles.background).not.toBe(surface.trim());
+  const tint = await page
+    .evaluate(() =>
+      getComputedStyle(document.documentElement).getPropertyValue('--ui-color-surface-tint'),
+    )
+    .then((v) => v.trim());
+  expect(styles.background).toBe(tint);
 
-  // Border carries the variant color: same as the title color token.
-  const info = await page.evaluate(() =>
-    getComputedStyle(document.documentElement).getPropertyValue('--ui-color-info').trim(),
-  );
-  expect(styles.borderColor).toBe(info);
+  const border = await page
+    .evaluate(() =>
+      getComputedStyle(document.documentElement).getPropertyValue('--ui-color-border-strong'),
+    )
+    .then((v) => v.trim());
+  expect(styles.borderColor).toBe(border);
 });
 
-test('variants resolve to distinct tint surfaces', async ({ page }) => {
-  const ids = ['alert-info', 'alert-success', 'alert-warning', 'alert-danger'];
-  const backgrounds = new Set();
-  const borders = new Set();
-  for (const id of ids) {
-    const styles = await page.locator(`#${id}`).evaluate((el) => {
-      const s = getComputedStyle(el);
-      return { background: s.backgroundColor, border: s.borderTopColor };
-    });
-    backgrounds.add(styles.background);
-    borders.add(styles.border);
-  }
-  expect(backgrounds.size).toBe(4);
-  expect(borders.size).toBe(4);
+test('attention variant carries the urgency family tokens', async ({ page }) => {
+  const styles = await page.locator('#alert-attention').evaluate((el) => {
+    const s = getComputedStyle(el);
+    return { background: s.backgroundColor, borderColor: s.borderTopColor };
+  });
+
+  const tint = await page
+    .evaluate(() =>
+      getComputedStyle(document.documentElement).getPropertyValue('--ui-color-attention-tint'),
+    )
+    .then((v) => v.trim());
+  expect(styles.background).toBe(tint);
+
+  const accent = await page
+    .evaluate(() =>
+      getComputedStyle(document.documentElement).getPropertyValue('--ui-color-attention'),
+    )
+    .then((v) => v.trim());
+  expect(styles.borderColor).toBe(accent);
 });
 
-test('title color follows the variant via family tokens', async ({ page }) => {
-  const titleColors = new Set();
-  for (const id of ['alert-info', 'alert-success', 'alert-warning', 'alert-danger']) {
-    const color = await page
-      .locator(`#${id} .ui-alert-title`)
-      .evaluate((el) => getComputedStyle(el).color);
-    titleColors.add(color);
-  }
-  expect(titleColors.size).toBe(4);
+test('title color follows the variant', async ({ page }) => {
+  const neutralTitle = await page
+    .locator('#alert-info .ui-alert-title')
+    .evaluate((el) => getComputedStyle(el).color);
+  const text = await page
+    .evaluate(() => getComputedStyle(document.documentElement).getPropertyValue('--ui-color-text'))
+    .then((v) => v.trim());
+  expect(neutralTitle).toBe(text);
+
+  const attentionTitle = await page
+    .locator('#alert-attention .ui-alert-title')
+    .evaluate((el) => getComputedStyle(el).color);
+  const attention = await page
+    .evaluate(() =>
+      getComputedStyle(document.documentElement).getPropertyValue('--ui-color-attention'),
+    )
+    .then((v) => v.trim());
+  expect(attentionTitle).toBe(attention);
 });
 
 test('body text stays neutral across variants (max readability)', async ({ page }) => {
   const text = await page
     .locator('#alert-info .ui-alert-body')
     .evaluate((el) => getComputedStyle(el).color);
-  const textOnSunken = await page
-    .locator('#alert-danger .ui-alert-body')
+  const textOnAttention = await page
+    .locator('#alert-attention .ui-alert-body')
     .evaluate((el) => getComputedStyle(el).color);
-  expect(text).toBe(textOnSunken);
+  expect(text).toBe(textOnAttention);
 });
 
 test('tint surfaces follow the theme switch (light-dark tokens)', async ({ page }) => {
   const readBg = () =>
-    page.locator('#alert-warning').evaluate((el) => getComputedStyle(el).backgroundColor);
+    page.locator('#alert-attention').evaluate((el) => getComputedStyle(el).backgroundColor);
 
   await page.emulateMedia({ colorScheme: 'light' });
   const light = await readBg();
@@ -83,7 +100,6 @@ test('tint surfaces follow the theme switch (light-dark tokens)', async ({ page 
 
 test('host-owned live region roles are exposed to the accessibility tree', async ({ page }) => {
   await expect(page.getByRole('alert')).toHaveCount(1);
-  await expect(page.getByRole('status')).toHaveCount(1);
 });
 
 test('alert box hugs its content (edge margins trimmed)', async ({ page }) => {

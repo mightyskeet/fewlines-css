@@ -4,12 +4,12 @@
  * (theme notes) — they exist only as inputs for semantic tokens.
  * Values are APCA-validated through the semantic token matrix (Phase 4).
  *
- * Step sets are uniform across families — every step number must exist, a
+ * Step sets are uniform across ramps — every step number must exist, a
  * missing step makes the custom property undefined and the consuming
  * declaration falls back to an inherited (dark) color, which reads as a
  * "darker lighter step" (fixed 2026-10-26: 400 was missing in every chromatic
- * family, warning also lacked 500). Lightness is tuned per family/hue (the
- * same step number may differ by a few L% between families); within a family
+ * ramp). Lightness is tuned per ramp/hue (the
+ * same step number may differ by a few L% between ramps); within a ramp
  * the ramp is strictly monotonic. Neutrals keep the extended 0–950 ramp the
  * surfaces/text roles need.
  */
@@ -28,45 +28,26 @@
   --ui-palette-neutral-900: oklch(14% 0.008 260deg);
   --ui-palette-neutral-950: oklch(9% 0.005 260deg);
 
-  /* Info — blue */
-  --ui-palette-info-100: oklch(95% 0.022 255deg);
-  --ui-palette-info-200: oklch(92% 0.11 250deg);
-  --ui-palette-info-300: oklch(86% 0.11 250deg);
-  --ui-palette-info-400: oklch(71% 0.14 255deg);
-  --ui-palette-info-500: oklch(56% 0.17 255deg);
-  --ui-palette-info-600: oklch(48% 0.18 258deg);
-  --ui-palette-info-700: oklch(38% 0.16 260deg);
-  --ui-palette-info-800: oklch(21% 0.05 258deg);
+  /* Link — blue. Not a family: the ramp feeds only the utility roles
+   * (--ui-color-link, --ui-color-selection); hosts re-theme them
+   * independently of each other and of the families. */
+  --ui-palette-link-100: oklch(95% 0.022 255deg);
+  --ui-palette-link-200: oklch(92% 0.11 250deg);
+  --ui-palette-link-300: oklch(86% 0.11 250deg);
+  --ui-palette-link-400: oklch(71% 0.14 255deg);
+  --ui-palette-link-500: oklch(56% 0.17 255deg);
+  --ui-palette-link-600: oklch(48% 0.18 258deg);
+  --ui-palette-link-700: oklch(38% 0.16 260deg);
+  --ui-palette-link-800: oklch(21% 0.05 258deg);
 
-  /* Danger — red */
-  --ui-palette-danger-100: oklch(95% 0.02 25deg);
-  --ui-palette-danger-200: oklch(94% 0.08 25deg);
-  --ui-palette-danger-300: oklch(90% 0.1 25deg);
-  --ui-palette-danger-400: oklch(72% 0.15 26deg);
-  --ui-palette-danger-500: oklch(55% 0.19 27deg);
-  --ui-palette-danger-600: oklch(48% 0.19 28deg);
-  --ui-palette-danger-700: oklch(36% 0.16 29deg);
-  --ui-palette-danger-800: oklch(21% 0.045 27deg);
-
-  /* Success — green */
-  --ui-palette-success-100: oklch(95% 0.045 150deg);
-  --ui-palette-success-200: oklch(90% 0.1 150deg);
-  --ui-palette-success-300: oklch(84% 0.13 150deg);
-  --ui-palette-success-400: oklch(70% 0.145 150deg);
-  --ui-palette-success-500: oklch(55% 0.16 150deg);
-  --ui-palette-success-600: oklch(47% 0.15 151deg);
-  --ui-palette-success-700: oklch(35% 0.13 152deg);
-  --ui-palette-success-800: oklch(21% 0.05 151deg);
-
-  /* Warning — orange (hue ~60, chroma raised — the former amber ramp with
-   * C 0.045-0.1 read brown; 2026-10-28). Lightnesses unchanged — the solid
-   * fill calibration (600 step, theme notes) survives the re-chroma. */
-  --ui-palette-warning-100: oklch(95% 0.075 70deg);
-  --ui-palette-warning-200: oklch(94% 0.095 68deg);
-  --ui-palette-warning-300: oklch(90% 0.13 66deg);
-  --ui-palette-warning-400: oklch(76% 0.15 64deg);
-  --ui-palette-warning-500: oklch(62% 0.165 62deg);
-  --ui-palette-warning-600: oklch(48% 0.155 60deg);
-  --ui-palette-warning-700: oklch(36% 0.115 58deg);
-  --ui-palette-warning-800: oklch(21% 0.065 58deg);
+  /* Attention — red. The urgency family: errors, destructive actions,
+   * validation failures. Defaults calibrated to the former danger ramp. */
+  --ui-palette-attention-100: oklch(95% 0.02 25deg);
+  --ui-palette-attention-200: oklch(94% 0.08 25deg);
+  --ui-palette-attention-300: oklch(90% 0.1 25deg);
+  --ui-palette-attention-400: oklch(72% 0.15 26deg);
+  --ui-palette-attention-500: oklch(55% 0.19 27deg);
+  --ui-palette-attention-600: oklch(48% 0.19 28deg);
+  --ui-palette-attention-700: oklch(36% 0.16 29deg);
+  --ui-palette-attention-800: oklch(21% 0.045 27deg);
 }

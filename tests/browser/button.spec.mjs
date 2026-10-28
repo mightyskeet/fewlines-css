@@ -74,10 +74,10 @@ test('hover moves the default fill against the fill direction', async ({ page })
   await expect.poll(() => background('#btn-primary'), { timeout: 500 }).toBe(hoverFill);
 });
 
-test('destructive is the solid danger fill', async ({ page }) => {
-  const styles = await stylesOf(page, '#btn-destructive');
-  expect(styles.background).toBe(await token(page, '--ui-color-danger'));
-  expect(styles.color).toBe(await token(page, '--ui-color-on-danger'));
+test('attention is the solid attention fill', async ({ page }) => {
+  const styles = await stylesOf(page, '#btn-attention');
+  expect(styles.background).toBe(await token(page, '--ui-color-attention'));
+  expect(styles.color).toBe(await token(page, '--ui-color-on-attention'));
   expect(styles.borderColor).toBe('rgba(0, 0, 0, 0)');
 });
 

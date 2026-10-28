@@ -78,8 +78,7 @@
 }
 
 /* Native states. Checked = the brand family (the default button model):
- * the toggle-on state reads as the system's brand fill, not as the blue
- * info tone. */
+ * the toggle-on state reads as the system's brand fill. */
 .ui-switch:checked {
   background: var(--ui-color-brand);
   border-color: transparent;
@@ -89,10 +88,10 @@
   translate: 0.875rem -50%;
 }
 
-/* Required consent switches: danger border only after user interaction,
+/* Required consent switches: attention border only after user interaction,
  * same intent gate as ui-input (Field contract). */
 .ui-switch:user-invalid {
-  border-color: var(--ui-color-danger);
+  border-color: var(--ui-color-attention);
 }
 
 .ui-switch:disabled,

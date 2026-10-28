@@ -3,8 +3,23 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <script>try{var t=localStorage.getItem('theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
-    <script>try{var b=JSON.parse(localStorage.getItem('colors-bases')||'null');if(b){var r=document.documentElement,s=r.style;for(var k in b)s.setProperty(k,b[k]);r.setAttribute('data-palette','custom')}}catch(e){}</script>
+    <script>
+      try {
+        var t = localStorage.getItem('theme');
+        if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+      } catch (e) {}
+    </script>
+    <script>
+      try {
+        var b = JSON.parse(localStorage.getItem('colors-bases') || 'null');
+        if (b) {
+          var r = document.documentElement,
+            s = r.style;
+          for (var k in b) s.setProperty(k, b[k]);
+          r.setAttribute('data-palette', 'custom');
+        }
+      } catch (e) {}
+    </script>
     <title>Alert — @fewlines/css</title>
     <link rel="stylesheet" href="/core.css" />
     <link rel="stylesheet" href="/docs.css" />
@@ -44,9 +59,9 @@
 
       <section>
         <h2>Canonical markup</h2>
-        <pre><code>&lt;div class="ui-alert" data-variant="success"&gt;
-  &lt;p class="ui-alert-title"&gt;Saved&lt;/p&gt;
-  &lt;p class="ui-alert-body"&gt;Your changes were stored.&lt;/p&gt;
+        <pre><code>&lt;div class="ui-alert"&gt;
+  &lt;p class="ui-alert-title"&gt;Heads up&lt;/p&gt;
+  &lt;p class="ui-alert-body"&gt;A new version is available.&lt;/p&gt;
 &lt;/div&gt;</code></pre>
         <p>
           <code>ui-alert-title</code> and <code>ui-alert-body</code> are optional — a short message
@@ -59,31 +74,28 @@
         <div class="example">
           <div class="ui-alert">
             <p class="ui-alert-title">Heads up</p>
-            <p class="ui-alert-body">Default variant — info. The attribute is not needed.</p>
+            <p class="ui-alert-body">
+              Default variant — neutral gray. The attribute is not needed.
+            </p>
           </div>
-          <div class="ui-alert" data-variant="success">
-            <p class="ui-alert-title">Saved</p>
-            <p class="ui-alert-body">Your changes were stored.</p>
-          </div>
-          <div class="ui-alert" data-variant="warning">
-            <p class="ui-alert-title">Session expiring</p>
-            <p class="ui-alert-body">You will be signed out in 5 minutes.</p>
-          </div>
-          <div class="ui-alert" data-variant="danger">
+          <div class="ui-alert" data-variant="attention">
             <p class="ui-alert-title">Payment failed</p>
             <p class="ui-alert-body">Card was declined. Try another card.</p>
           </div>
         </div>
         <p>
-          Surfaces come from the tint tokens (<code>--ui-color-*-tint</code>), titles from the bare
-          family colors — both validated by the APCA matrix in both themes.
+          The default is the neutral gray member of the pastel set (<code>surface-tint</code> +
+          <code>border-strong</code>); <code>data-variant="attention"</code> switches to the urgency
+          family (errors, destructive outcomes). Surfaces come from the tint tokens
+          (<code>--ui-color-attention-tint</code>), the title from the bare family tone — both
+          validated by the APCA matrix in both themes.
         </p>
       </section>
 
       <section>
         <h2>Host content</h2>
         <div class="example">
-          <div class="ui-alert" data-variant="warning">
+          <div class="ui-alert" data-variant="attention">
             <p class="ui-alert-title">Fix 2 validation errors</p>
             <ul>
               <li>Email is missing an @.</li>
@@ -109,7 +121,8 @@
             state the situation.
           </li>
           <li>
-            Titles use the bare family colors as the readable variant color on the tint surface.
+            Titles use the bare family tone as the readable variant color on the tint surface; the
+            neutral default keeps the plain text color.
           </li>
         </ul>
       </section>

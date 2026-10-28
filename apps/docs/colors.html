@@ -84,9 +84,9 @@
       <section>
         <h2>Model: bases + formulas</h2>
         <p>
-          A palette is five base colors — <strong>Neutral</strong> (chroma, hue, page/raised/sunken
-          lightness) and <strong>Accent / Success / Warning / Danger</strong> (lightness, chroma,
-          hue). Formulas derive every semantic token from them: surfaces, text, borders, fills,
+          A palette is four base colors — <strong>Neutral</strong> (chroma, hue, page/raised/sunken
+          lightness), <strong>Link</strong> and <strong>Attention</strong> (lightness, chroma, hue).
+          Formulas derive every semantic token from them: surfaces, text, borders, fills,
           <code>on-*</code> contrast poles, hover states and tints.
         </p>
         <p>
@@ -193,96 +193,42 @@
         </div>
 
         <div class="swatch-group">
-          <h3>Info</h3>
+          <h3>Attention</h3>
           <div class="swatch-grid">
             <figure class="swatch">
-              <div class="swatch-chip" style="background: var(--ui-color-info)"></div>
-              <figcaption><code>--ui-color-info</code></figcaption>
+              <div class="swatch-chip" style="background: var(--ui-color-attention)"></div>
+              <figcaption><code>--ui-color-attention</code></figcaption>
             </figure>
             <figure class="swatch">
-              <div class="swatch-chip" style="background: var(--ui-color-info-hover)"></div>
-              <figcaption><code>--ui-color-info-hover</code></figcaption>
+              <div class="swatch-chip" style="background: var(--ui-color-attention-hover)"></div>
+              <figcaption><code>--ui-color-attention-hover</code></figcaption>
             </figure>
             <figure class="swatch">
-              <div class="swatch-chip" style="background: var(--ui-color-on-info)"></div>
-              <figcaption><code>--ui-color-on-info</code></figcaption>
+              <div class="swatch-chip" style="background: var(--ui-color-on-attention)"></div>
+              <figcaption><code>--ui-color-on-attention</code></figcaption>
             </figure>
             <figure class="swatch">
-              <div class="swatch-chip" style="background: var(--ui-color-info-tint)"></div>
-              <figcaption><code>--ui-color-info-tint</code></figcaption>
-            </figure>
-          </div>
-        </div>
-
-        <div class="swatch-group">
-          <h3>Success</h3>
-          <div class="swatch-grid">
-            <figure class="swatch">
-              <div class="swatch-chip" style="background: var(--ui-color-success)"></div>
-              <figcaption><code>--ui-color-success</code></figcaption>
-            </figure>
-            <figure class="swatch">
-              <div class="swatch-chip" style="background: var(--ui-color-success-hover)"></div>
-              <figcaption><code>--ui-color-success-hover</code></figcaption>
-            </figure>
-            <figure class="swatch">
-              <div class="swatch-chip" style="background: var(--ui-color-on-success)"></div>
-              <figcaption><code>--ui-color-on-success</code></figcaption>
-            </figure>
-            <figure class="swatch">
-              <div class="swatch-chip" style="background: var(--ui-color-success-tint)"></div>
-              <figcaption><code>--ui-color-success-tint</code></figcaption>
-            </figure>
-          </div>
-        </div>
-
-        <div class="swatch-group">
-          <h3>Warning</h3>
-          <div class="swatch-grid">
-            <figure class="swatch">
-              <div class="swatch-chip" style="background: var(--ui-color-warning)"></div>
-              <figcaption><code>--ui-color-warning</code></figcaption>
-            </figure>
-            <figure class="swatch">
-              <div class="swatch-chip" style="background: var(--ui-color-warning-hover)"></div>
-              <figcaption><code>--ui-color-warning-hover</code></figcaption>
-            </figure>
-            <figure class="swatch">
-              <div class="swatch-chip" style="background: var(--ui-color-on-warning)"></div>
-              <figcaption><code>--ui-color-on-warning</code></figcaption>
-            </figure>
-            <figure class="swatch">
-              <div class="swatch-chip" style="background: var(--ui-color-warning-tint)"></div>
-              <figcaption><code>--ui-color-warning-tint</code></figcaption>
-            </figure>
-          </div>
-        </div>
-
-        <div class="swatch-group">
-          <h3>Danger</h3>
-          <div class="swatch-grid">
-            <figure class="swatch">
-              <div class="swatch-chip" style="background: var(--ui-color-danger)"></div>
-              <figcaption><code>--ui-color-danger</code></figcaption>
-            </figure>
-            <figure class="swatch">
-              <div class="swatch-chip" style="background: var(--ui-color-danger-hover)"></div>
-              <figcaption><code>--ui-color-danger-hover</code></figcaption>
-            </figure>
-            <figure class="swatch">
-              <div class="swatch-chip" style="background: var(--ui-color-on-danger)"></div>
-              <figcaption><code>--ui-color-on-danger</code></figcaption>
-            </figure>
-            <figure class="swatch">
-              <div class="swatch-chip" style="background: var(--ui-color-danger-tint)"></div>
-              <figcaption><code>--ui-color-danger-tint</code></figcaption>
+              <div class="swatch-chip" style="background: var(--ui-color-attention-tint)"></div>
+              <figcaption><code>--ui-color-attention-tint</code></figcaption>
             </figure>
           </div>
         </div>
 
         <div class="swatch-group">
           <h3>Other</h3>
+          <p>
+            Utility roles — not families: independent defaults, re-themed separately of each other
+            and of the families.
+          </p>
           <div class="swatch-grid">
+            <figure class="swatch">
+              <div class="swatch-chip" style="background: var(--ui-color-link)"></div>
+              <figcaption><code>--ui-color-link</code></figcaption>
+            </figure>
+            <figure class="swatch">
+              <div class="swatch-chip" style="background: var(--ui-color-selection)"></div>
+              <figcaption><code>--ui-color-selection</code></figcaption>
+            </figure>
             <figure class="swatch">
               <div class="swatch-chip" style="background: var(--ui-focus-ring)"></div>
               <figcaption><code>--ui-focus-ring</code></figcaption>

@@ -49,20 +49,26 @@ test('user-invalid applies only after interaction', async ({ page }) => {
   expect(after).toBe(true);
 });
 
-test('user-valid applies after valid input', async ({ page }) => {
+test('user-valid matches the platform state but paints nothing', async ({ page }) => {
   const input = page.locator('#input-email');
+  const border = () => input.evaluate((el) => getComputedStyle(el).borderColor);
+
+  await input.fill('not-quite-valid');
+  const idle = await border();
   await input.fill('user@example.com');
   await input.blur();
 
+  // The platform state exists; core intentionally styles no valid border.
   const userValid = await input.evaluate((el) => el.matches(':user-valid'));
   expect(userValid).toBe(true);
+  expect(await border()).toBe(idle);
 });
 
-test('required select paints the danger border after user-invalid', async ({ page }) => {
+test('required select paints the attention border after user-invalid', async ({ page }) => {
   const select = page.locator('#select-required');
   const border = () => select.evaluate((el) => getComputedStyle(el).borderColor);
 
-  // Before interaction: :invalid matches, but no danger border yet
+  // Before interaction: :invalid matches, but no attention border yet
   expect(await select.evaluate((el) => el.matches(':user-invalid'))).toBe(false);
   const idle = await border();
 
@@ -221,17 +227,17 @@ test('file input button is styled by the component', async ({ page }) => {
   expect(button.paddingInlineStart).not.toBe('0px');
 });
 
-test('field error text uses the danger token and is linked via aria-describedby', async ({
+test('field error text uses the attention token and is linked via aria-describedby', async ({
   page,
 }) => {
   const describedBy = await page.locator('#input-invalid-demo').getAttribute('aria-describedby');
   expect(describedBy).toBe('email-error');
 
   const color = await page.locator('#email-error').evaluate((el) => getComputedStyle(el).color);
-  const danger = await page
+  const attention = await page
     .evaluate(() =>
-      getComputedStyle(document.documentElement).getPropertyValue('--ui-color-danger'),
+      getComputedStyle(document.documentElement).getPropertyValue('--ui-color-attention'),
     )
     .then((v) => v.trim());
-  expect(color).toBe(danger);
+  expect(color).toBe(attention);
 });

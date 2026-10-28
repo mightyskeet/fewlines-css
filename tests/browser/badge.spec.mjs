@@ -62,15 +62,7 @@ test('solid model uses the on-* text over the bare family tone', async ({ page }
       surface: '--ui-color-text',
       on: '--ui-color-surface',
     },
-    { id: 'badge-info-solid', surface: '--ui-color-info', on: '--ui-color-on-info' },
-    {
-      id: 'badge-success-solid',
-      surface: '--ui-color-success',
-      on: '--ui-color-on-success',
-    },
-    // warning tone doubles as its fill (calibrated to the 600 step to the 600 step (white on 500 fails body).
-    { id: 'badge-warning-solid', surface: '--ui-color-warning', on: '--ui-color-on-warning' },
-    { id: 'badge-danger-solid', surface: '--ui-color-danger', on: '--ui-color-on-danger' },
+    { id: 'badge-attention-solid', surface: '--ui-color-attention', on: '--ui-color-on-attention' },
   ];
   for (const { id, surface, on } of cases) {
     const styles = await page.locator(`#${id}`).evaluate((el) => {
@@ -94,11 +86,9 @@ test('solid model uses the on-* text over the bare family tone', async ({ page }
 test('variants resolve to distinct tint surfaces', async ({ page }) => {
   const ids = [
     'badge-default',
+    'badge-brand',
     'badge-neutral',
-    'badge-info',
-    'badge-success',
-    'badge-warning',
-    'badge-danger',
+    'badge-attention',
   ];
   const backgrounds = new Set();
   const colors = new Set();
@@ -110,27 +100,29 @@ test('variants resolve to distinct tint surfaces', async ({ page }) => {
     backgrounds.add(styles.background);
     colors.add(styles.color);
   }
-  // Label colors collapse to 5 (2026-10-28, *-strong removed): the default
-  // (brand pastel) and neutral variants share the gray text under the
-  // gray brand — the brand pastel IS the default look. Backgrounds collapse
-  // the same way: brand-tint defaults to the same gray as surface-tint.
-  expect(backgrounds.size).toBe(5);
-  expect(colors.size).toBe(5);
+  // brand == default (the explicit twin shares the values), and in the
+  // default calibration the brand pastel IS the gray look (brand-tint ==
+  // surface-tint, brand == text): the surfaces and colors collapse to 2
+  // (the gray pair and attention).
+  expect(backgrounds.size).toBe(2);
+  expect(colors.size).toBe(2);
 });
 
 test('variant label color uses the bare token of its family', async ({ page }) => {
   const bare = await page
     .evaluate(() =>
-      getComputedStyle(document.documentElement).getPropertyValue('--ui-color-danger'),
+      getComputedStyle(document.documentElement).getPropertyValue('--ui-color-attention'),
     )
     .then((v) => v.trim());
-  const color = await page.locator('#badge-danger').evaluate((el) => getComputedStyle(el).color);
+  const color = await page
+    .locator('#badge-attention')
+    .evaluate((el) => getComputedStyle(el).color);
   expect(color).toBe(bare);
 });
 
 test('tint surfaces follow the theme switch (light-dark tokens)', async ({ page }) => {
   const readBg = () =>
-    page.locator('#badge-warning').evaluate((el) => getComputedStyle(el).backgroundColor);
+    page.locator('#badge-attention').evaluate((el) => getComputedStyle(el).backgroundColor);
 
   await page.emulateMedia({ colorScheme: 'light' });
   const light = await readBg();

@@ -111,8 +111,8 @@ main > section {
 }
 
 /* Syntax highlighting (highlight.js, vendor/hljs.min.js). Theme on --ui-*
- * tokens, one rule set for both themes: keyword = info family, string =
- * success, literal/number = warning, comment = muted. Only the classes the
+ * tokens, one rule set for both themes: keyword = link utility, string =
+ * text, literal/number = text-muted, comment = muted. Only the classes the
  * registered languages (xml/css/javascript/bash/json) actually emit. */
 .hljs-comment,
 .hljs-quote {
@@ -126,13 +126,13 @@ main > section {
 .hljs-name,
 .hljs-doctag,
 .hljs-meta {
-  color: var(--ui-color-info);
+  color: var(--ui-color-link);
 }
 
 .hljs-string,
 .hljs-regexp,
 .hljs-addition {
-  color: var(--ui-color-success);
+  color: var(--ui-color-text);
 }
 
 .hljs-number,
@@ -140,7 +140,7 @@ main > section {
 .hljs-built_in,
 .hljs-builtin-name,
 .hljs-symbol {
-  color: var(--ui-color-warning);
+  color: var(--ui-color-text-muted);
 }
 
 .hljs-attr,
@@ -152,19 +152,19 @@ main > section {
 .hljs-selector-id,
 .hljs-selector-attr,
 .hljs-selector-pseudo {
-  color: var(--ui-color-danger);
+  color: var(--ui-color-attention);
 }
 
 .hljs-title,
 .hljs-title.class_,
 .hljs-title.function_,
 .hljs-section {
-  color: var(--ui-color-info);
+  color: var(--ui-color-link);
   font-weight: 600;
 }
 
 .hljs-deletion {
-  color: var(--ui-color-danger);
+  color: var(--ui-color-attention);
 }
 
 .hljs-emphasis {
@@ -334,7 +334,7 @@ main > section {
 
 .palette-slider input {
   grid-column: 1 / -1;
-  accent-color: var(--ui-color-info);
+  accent-color: var(--ui-color-brand);
 }
 
 .palette-slider output {

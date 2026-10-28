@@ -7,19 +7,22 @@
  *
  * All text/surface pairs are validated by the APCA token matrix (Phase 4).
  *
- * Model (2026-10-26): the gray PAGE GAMUT carries every neutral role of the
- * interface — the explicit `neutral` look of a component consumes only this
- * gamut and never follows a re-themed brand. Defaults are the BRAND look:
- * attribute-omitted states render the brand family (Badge pastel, Button
- * solid fill), the gray look is addressed by an explicit `neutral` variant.
- * On top of the gamut sit five color
- * FAMILIES of identical shape (brand + info/danger/success/warning), each
- * with four roles: the bare tone (readable text on the page AND the solid
- * fill, text `on-*`), `-hover` (derived hover fill: a step toward the
- * `on-*` contrast pole — the fill lightens in the light theme, darkens in
- * the dark one, like `brand-hover`), `on-*` (text on the fill) and
- * `-tint` (soft surface). Re-theming the brand family
- * never touches the page gamut.
+ * Model (2026-10-28, "three families + utilities"): the gray PAGE GAMUT
+ * carries every neutral role of the interface — the explicit `neutral` look
+ * of a component consumes only this gamut and never follows a re-themed
+ * brand. Defaults are the BRAND look: attribute-omitted states render the
+ * brand family (Badge pastel, Button solid fill), the gray look is
+ * addressed by an explicit `neutral` variant. On top of the gamut sit two
+ * color FAMILIES of identical shape (brand + attention), each with four
+ * roles: the bare tone (readable text on the page AND the solid fill, text
+ * `on-*`), `-hover` (derived hover fill: a step toward the `on-*` contrast
+ * pole), `on-*` (text on the fill) and `-tint` (soft surface). Re-theming
+ * the brand family never touches the page gamut.
+ *
+ * Utility roles (NOT families — no hover/on/tint shape): --ui-color-link
+ * (hyperlink text), --ui-color-selection (text selection background) and
+ * --ui-focus-ring (focus indicator). They carry independent defaults and
+ * are re-themed independently of each other and of the families.
  */
 :root {
   /* ---- Page gamut (grays) ---- */
@@ -73,19 +76,16 @@
   /* ---- Families ----
    * Identical four-role shape: bare tone = text on the page AND the solid
    * fill (text `on-*`), `-hover` = derived hover fill — a step toward the
-   * `on-*` pole in both themes (16% in the light theme: the pole is white,
-   * the fill lightens; 12% in the dark: the pole is near-black, the fill
-   * darkens — the 300-level fill with dark text has no headroom above the
-   * preferred APCA 75, so the state pair is tracked at the documented 60
-   * minimum), `-tint` = soft surface (Alert, Badge). */
+   * `on-*` pole in both themes, `-tint` = soft surface (Alert, Badge). */
 
   /* Brand — the action color: default buttons, kbd, the checked Switch,
-   * the default Badge. Defaults to the inverted gray (dark fill in the light
-   * theme, near-white in the dark — the shadcn inverted-polarity model): the brand
-   * look is one override away, and the hover follows automatically because
-   * it is derived toward the `on-brand` contrast pole (30% in the light
-   * theme — a visible jump; the dark theme keeps the 14% step — the
-   * near-white fill has no visible room toward white). */
+   * native accent-color, the default Badge. Defaults to the inverted gray
+   * (dark fill in the light theme, near-white in the dark — the shadcn
+   * inverted-polarity model): the brand look is one override away, and the
+   * hover follows automatically because it is derived toward the `on-brand`
+   * contrast pole (30% in the light theme — a visible jump; the dark theme
+   * keeps the 14% step — the near-white fill has no visible room toward
+   * white). */
   --ui-color-brand: light-dark(var(--ui-palette-neutral-900), var(--ui-palette-neutral-50));
   --ui-color-on-brand: light-dark(var(--ui-palette-neutral-0), var(--ui-palette-neutral-950));
   --ui-color-brand-hover: light-dark(
@@ -107,48 +107,34 @@
     color-mix(in oklab, var(--ui-color-brand-tint), var(--ui-color-on-brand))
   );
 
-  /* Info — the blue tone: links, focus, native accent-color, the info
-   * Alert/Badge. The action color is the brand family; info carries the tone of the
-   * non-action informational roles. */
-  --ui-color-info: light-dark(var(--ui-palette-info-600), var(--ui-palette-info-300));
-  --ui-color-on-info: light-dark(var(--ui-palette-neutral-0), var(--ui-palette-neutral-950));
-  --ui-color-info-hover: light-dark(
-    color-mix(in oklab, var(--ui-color-info) 84%, var(--ui-palette-neutral-0)),
-    color-mix(in oklab, var(--ui-color-info) 88%, var(--ui-palette-neutral-950))
+  /* Attention — the urgency family: errors, destructive actions, validation
+   * failures. Shape mirrors brand exactly. */
+  --ui-color-attention: light-dark(var(--ui-palette-attention-600), var(--ui-palette-attention-300));
+  --ui-color-on-attention: light-dark(var(--ui-palette-neutral-0), var(--ui-palette-neutral-950));
+  --ui-color-attention-hover: light-dark(
+    color-mix(in oklab, var(--ui-color-attention) 84%, var(--ui-palette-neutral-0)),
+    color-mix(in oklab, var(--ui-color-attention) 88%, var(--ui-palette-neutral-950))
   );
-  --ui-color-info-tint: light-dark(var(--ui-palette-info-100), var(--ui-palette-info-800));
+  --ui-color-attention-tint: light-dark(
+    var(--ui-palette-attention-100),
+    var(--ui-palette-attention-800)
+  );
 
-  /* Danger */
-  --ui-color-danger: light-dark(var(--ui-palette-danger-600), var(--ui-palette-danger-300));
-  --ui-color-on-danger: light-dark(var(--ui-palette-neutral-0), var(--ui-palette-neutral-950));
-  --ui-color-danger-hover: light-dark(
-    color-mix(in oklab, var(--ui-color-danger) 84%, var(--ui-palette-neutral-0)),
-    color-mix(in oklab, var(--ui-color-danger) 88%, var(--ui-palette-neutral-950))
-  );
-  --ui-color-danger-tint: light-dark(var(--ui-palette-danger-100), var(--ui-palette-danger-800));
+  /* ---- Utility roles ----
+   * Not families: single-purpose defaults with independent overrides. The
+   * blue link ramp (palette.css) feeds link and selection; hosts re-theme
+   * them separately (a re-branded UI keeps the blue selection, a re-linked
+   * UI keeps the gray brand). */
 
-  /* Success */
-  --ui-color-success: light-dark(var(--ui-palette-success-600), var(--ui-palette-success-300));
-  --ui-color-on-success: light-dark(var(--ui-palette-neutral-0), var(--ui-palette-neutral-950));
-  --ui-color-success-hover: light-dark(
-    color-mix(in oklab, var(--ui-color-success) 84%, var(--ui-palette-neutral-0)),
-    color-mix(in oklab, var(--ui-color-success) 88%, var(--ui-palette-neutral-950))
-  );
-  --ui-color-success-tint: light-dark(var(--ui-palette-success-100), var(--ui-palette-success-800));
+  /* Link — hyperlink text. Reads as actionable chrome, not as the action
+   * fill; underline carries the affordance. */
+  --ui-color-link: light-dark(var(--ui-palette-link-600), var(--ui-palette-link-300));
 
-  /* Warning — the bare tone doubles as the solid fill: white on warning-500
-   * fails the body APCA threshold (Lc 70.4 < 75), on 600 it measures 87.8,
-   * so the family ramp has no lighter fill step. */
-  --ui-color-warning: light-dark(var(--ui-palette-warning-600), var(--ui-palette-warning-300));
-  --ui-color-on-warning: light-dark(var(--ui-palette-neutral-0), var(--ui-palette-neutral-950));
-  --ui-color-warning-hover: light-dark(
-    color-mix(in oklab, var(--ui-color-warning) 84%, var(--ui-palette-neutral-0)),
-    color-mix(in oklab, var(--ui-color-warning) 88%, var(--ui-palette-neutral-950))
-  );
-  --ui-color-warning-tint: light-dark(var(--ui-palette-warning-100), var(--ui-palette-warning-800));
+  /* Selection — ::selection background under the author text color. */
+  --ui-color-selection: light-dark(var(--ui-palette-link-100), var(--ui-palette-link-800));
 
   /* Focus */
-  --ui-focus-ring: light-dark(var(--ui-palette-info-600), var(--ui-palette-info-300));
+  --ui-focus-ring: light-dark(var(--ui-palette-neutral-500), var(--ui-palette-neutral-400));
 
   /* Scrim — shared overlay backdrop (Dialog, Drawer). Constant black in
    * both themes (non-text layer, exempt from the APCA text matrix —

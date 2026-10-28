@@ -37,18 +37,12 @@
   --ui-base-n-page: 100%;
   --ui-base-n-raised: 97%;
   --ui-base-n-sunken: 94%;
-  --ui-base-info-l: 0.48;
-  --ui-base-info-c: 0.18;
-  --ui-base-info-h: 258;
-  --ui-base-success-l: 0.47;
-  --ui-base-success-c: 0.15;
-  --ui-base-success-h: 151;
-  --ui-base-warning-l: 0.48;
-  --ui-base-warning-c: 0.155;
-  --ui-base-warning-h: 60;
-  --ui-base-danger-l: 0.48;
-  --ui-base-danger-c: 0.19;
-  --ui-base-danger-h: 28;
+  --ui-base-attention-l: 0.48;
+  --ui-base-attention-c: 0.19;
+  --ui-base-attention-h: 28;
+  --ui-base-link-l: 0.48;
+  --ui-base-link-c: 0.18;
+  --ui-base-link-h: 258;
 
   /* No token transitions while the palette session is active: dragging
    * sliders retargets dozens of registered-token transitions and the
@@ -114,174 +108,84 @@
    * at base L <= 0.70, pastel above), per-theme fill halves, and the derived
    * semantic tokens. Formulas recalibrate the experiment's constants so the
    * defaults land on the current core steps (600/500 in the light theme,
-   * 300 in the dark). */
+   * 300 in the dark). The three-former-family demo is reduced to attention;
+   * the utility roles (link, selection) keep core defaults here — hosts
+   * override them directly. */
 
-  /* info */
-  --pl-info-source: oklch(
-    var(--ui-base-info-l) var(--ui-base-info-c) var(--ui-base-info-h)
+  /* attention */
+  --pl-attention-source: oklch(
+    var(--ui-base-attention-l) var(--ui-base-attention-c) var(--ui-base-attention-h)
   );
-  --pl-info-sel: round(nearest, 0.5 * (sign(var(--ui-base-info-l) - 0.7) + 1), 1);
-  --pl-info-notsel: calc(1 - var(--pl-info-sel));
-  --pl-info-fill-light: oklch(
-    from var(--pl-info-source)
+  --pl-attention-sel: round(nearest, 0.5 * (sign(var(--ui-base-attention-l) - 0.7) + 1), 1);
+  --pl-attention-notsel: calc(1 - var(--pl-attention-sel));
+  --pl-attention-fill-light: oklch(
+    from var(--pl-attention-source)
       calc(
-        (0.28 + 0.37 * l) * var(--pl-info-notsel) + (0.8 + 0.38 * (l - 0.7)) *
-          var(--pl-info-sel)
-      )
-      calc(min(c, 0.32) * var(--pl-info-notsel) + min(0.55 * c, 0.13) * var(--pl-info-sel)) h
-  );
-  --pl-info-fill-dark: oklch(
-    from var(--pl-info-source)
-      calc(
-        (0.78 + 0.25 * l) * var(--pl-info-notsel) + (0.8 + 0.38 * (l - 0.7)) *
-          var(--pl-info-sel)
+        (0.28 + 0.37 * l) * var(--pl-attention-notsel) + (0.8 + 0.38 * (l - 0.7)) *
+          var(--pl-attention-sel)
       )
       calc(
-        min(0.6 * c, 0.15) * var(--pl-info-notsel) + min(0.55 * c, 0.13) * var(--pl-info-sel)
+        min(c, 0.32) * var(--pl-attention-notsel) + min(0.55 * c, 0.13) * var(--pl-attention-sel)
       )
       h
   );
-  --pl-info-pole-light: color-mix(
-    in oklch,
-    oklch(100% 0 0),
-    oklch(9% 0 0) calc(var(--pl-info-sel) * 100%)
-  );
-
-  --ui-color-info: light-dark(var(--pl-info-fill-light), var(--pl-info-fill-dark));
-  --ui-color-info-hover: light-dark(
-    color-mix(in oklab, var(--ui-color-info) 84%, oklch(100% 0 0)),
-    color-mix(in oklab, var(--ui-color-info) 88%, var(--pl-pole-dark))
-  );
-  --ui-color-on-info: light-dark(var(--pl-info-pole-light), var(--pl-pole-dark));
-  --ui-color-info-tint: light-dark(
-    oklch(from var(--pl-info-fill-light) calc(0.88 + 0.12 * l) calc(0.12 * c) h),
-    oklch(from var(--pl-info-fill-dark) calc(0.123 + 0.12 * l) calc(0.12 * c) h)
-  );
-  --ui-focus-ring: light-dark(var(--pl-info-fill-light), var(--pl-info-fill-dark));
-
-  /* danger */
-  --pl-danger-source: oklch(
-    var(--ui-base-danger-l) var(--ui-base-danger-c) var(--ui-base-danger-h)
-  );
-  --pl-danger-sel: round(nearest, 0.5 * (sign(var(--ui-base-danger-l) - 0.7) + 1), 1);
-  --pl-danger-notsel: calc(1 - var(--pl-danger-sel));
-  --pl-danger-fill-light: oklch(
-    from var(--pl-danger-source)
+  --pl-attention-fill-dark: oklch(
+    from var(--pl-attention-source)
       calc(
-        (0.28 + 0.37 * l) * var(--pl-danger-notsel) + (0.8 + 0.38 * (l - 0.7)) *
-          var(--pl-danger-sel)
-      )
-      calc(min(c, 0.32) * var(--pl-danger-notsel) + min(0.55 * c, 0.13) * var(--pl-danger-sel)) h
-  );
-  --pl-danger-fill-dark: oklch(
-    from var(--pl-danger-source)
-      calc(
-        (0.78 + 0.25 * l) * var(--pl-danger-notsel) + (0.8 + 0.38 * (l - 0.7)) *
-          var(--pl-danger-sel)
+        (0.78 + 0.25 * l) * var(--pl-attention-notsel) + (0.8 + 0.38 * (l - 0.7)) *
+          var(--pl-attention-sel)
       )
       calc(
-        min(0.6 * c, 0.15) * var(--pl-danger-notsel) + min(0.55 * c, 0.13) * var(--pl-danger-sel)
+        min(0.6 * c, 0.15) * var(--pl-attention-notsel) + min(0.55 * c, 0.13) *
+          var(--pl-attention-sel)
       )
       h
   );
-  --pl-danger-pole-light: color-mix(
+  --pl-attention-pole-light: color-mix(
     in oklch,
     oklch(100% 0 0),
-    oklch(9% 0 0) calc(var(--pl-danger-sel) * 100%)
+    oklch(9% 0 0) calc(var(--pl-attention-sel) * 100%)
   );
 
-  --ui-color-danger: light-dark(var(--pl-danger-fill-light), var(--pl-danger-fill-dark));
-  --ui-color-danger-hover: light-dark(
-    color-mix(in oklab, var(--ui-color-danger) 84%, oklch(100% 0 0)),
-    color-mix(in oklab, var(--ui-color-danger) 88%, var(--pl-pole-dark))
+  --ui-color-attention: light-dark(var(--pl-attention-fill-light), var(--pl-attention-fill-dark));
+  --ui-color-attention-hover: light-dark(
+    color-mix(in oklab, var(--ui-color-attention) 84%, oklch(100% 0 0)),
+    color-mix(in oklab, var(--ui-color-attention) 88%, var(--pl-pole-dark))
   );
-  --ui-color-on-danger: light-dark(var(--pl-danger-pole-light), var(--pl-pole-dark));
-  --ui-color-danger-tint: light-dark(
-    oklch(from var(--pl-danger-fill-light) calc(0.88 + 0.12 * l) calc(0.12 * c) h),
-    oklch(from var(--pl-danger-fill-dark) calc(0.123 + 0.12 * l) calc(0.12 * c) h)
-  );
-
-  /* success */
-  --pl-success-source: oklch(
-    var(--ui-base-success-l) var(--ui-base-success-c) var(--ui-base-success-h)
-  );
-  --pl-success-sel: round(nearest, 0.5 * (sign(var(--ui-base-success-l) - 0.7) + 1), 1);
-  --pl-success-notsel: calc(1 - var(--pl-success-sel));
-  --pl-success-fill-light: oklch(
-    from var(--pl-success-source)
-      calc(
-        (0.28 + 0.37 * l) * var(--pl-success-notsel) + (0.8 + 0.38 * (l - 0.7)) *
-          var(--pl-success-sel)
-      )
-      calc(min(c, 0.32) * var(--pl-success-notsel) + min(0.55 * c, 0.13) * var(--pl-success-sel)) h
-  );
-  --pl-success-fill-dark: oklch(
-    from var(--pl-success-source)
-      calc(
-        (0.78 + 0.25 * l) * var(--pl-success-notsel) + (0.8 + 0.38 * (l - 0.7)) *
-          var(--pl-success-sel)
-      )
-      calc(
-        min(0.6 * c, 0.15) * var(--pl-success-notsel) + min(0.55 * c, 0.13) * var(--pl-success-sel)
-      )
-      h
-  );
-  --pl-success-pole-light: color-mix(
-    in oklch,
-    oklch(100% 0 0),
-    oklch(9% 0 0) calc(var(--pl-success-sel) * 100%)
+  --ui-color-on-attention: light-dark(var(--pl-attention-pole-light), var(--pl-pole-dark));
+  --ui-color-attention-tint: light-dark(
+    oklch(from var(--pl-attention-fill-light) calc(0.88 + 0.12 * l) calc(0.12 * c) h),
+    oklch(from var(--pl-attention-fill-dark) calc(0.123 + 0.12 * l) calc(0.12 * c) h)
   );
 
-  --ui-color-success: light-dark(var(--pl-success-fill-light), var(--pl-success-fill-dark));
-  --ui-color-success-hover: light-dark(
-    color-mix(in oklab, var(--ui-color-success) 84%, oklch(100% 0 0)),
-    color-mix(in oklab, var(--ui-color-success) 88%, var(--pl-pole-dark))
+  /* Utilities — link/selection derive from the link base with the same
+   * family formulas (core: a dedicated blue ramp; here one base for both).
+   * Focus ring is the neutral boundary step (core: neutral-500/400). */
+  --pl-link-source: oklch(var(--ui-base-link-l) var(--ui-base-link-c) var(--ui-base-link-h));
+  --pl-link-sel: round(nearest, 0.5 * (sign(var(--ui-base-link-l) - 0.7) + 1), 1);
+  --pl-link-notsel: calc(1 - var(--pl-link-sel));
+  --pl-link-fill-light: oklch(
+    from var(--pl-link-source)
+      calc(
+        (0.28 + 0.37 * l) * var(--pl-link-notsel) + (0.8 + 0.38 * (l - 0.7)) * var(--pl-link-sel)
+      )
+      calc(min(c, 0.32) * var(--pl-link-notsel) + min(0.55 * c, 0.13) * var(--pl-link-sel)) h
   );
-  --ui-color-on-success: light-dark(var(--pl-success-pole-light), var(--pl-pole-dark));
-  --ui-color-success-tint: light-dark(
-    oklch(from var(--pl-success-fill-light) calc(0.88 + 0.12 * l) calc(0.12 * c) h),
-    oklch(from var(--pl-success-fill-dark) calc(0.123 + 0.12 * l) calc(0.12 * c) h)
+  --pl-link-fill-dark: oklch(
+    from var(--pl-link-source)
+      calc(
+        (0.78 + 0.25 * l) * var(--pl-link-notsel) + (0.8 + 0.38 * (l - 0.7)) * var(--pl-link-sel)
+      )
+      calc(min(0.6 * c, 0.15) * var(--pl-link-notsel) + min(0.55 * c, 0.13) * var(--pl-link-sel)) h
   );
 
-  /* warning — the solid fill keeps the 600 step (white on 500 fails body) */
-  --pl-warning-source: oklch(
-    var(--ui-base-warning-l) var(--ui-base-warning-c) var(--ui-base-warning-h)
+  --ui-color-link: light-dark(var(--pl-link-fill-light), var(--pl-link-fill-dark));
+  --ui-color-selection: light-dark(
+    oklch(from var(--pl-link-fill-light) calc(0.88 + 0.12 * l) calc(0.12 * c) h),
+    oklch(from var(--pl-link-fill-dark) calc(0.123 + 0.12 * l) calc(0.12 * c) h)
   );
-  --pl-warning-sel: round(nearest, 0.5 * (sign(var(--ui-base-warning-l) - 0.7) + 1), 1);
-  --pl-warning-notsel: calc(1 - var(--pl-warning-sel));
-  --pl-warning-fill-light: oklch(
-    from var(--pl-warning-source)
-      calc(
-        (0.28 + 0.37 * l) * var(--pl-warning-notsel) + (0.8 + 0.38 * (l - 0.7)) *
-          var(--pl-warning-sel)
-      )
-      calc(min(c, 0.32) * var(--pl-warning-notsel) + min(0.55 * c, 0.13) * var(--pl-warning-sel)) h
-  );
-  --pl-warning-fill-dark: oklch(
-    from var(--pl-warning-source)
-      calc(
-        (0.78 + 0.25 * l) * var(--pl-warning-notsel) + (0.8 + 0.38 * (l - 0.7)) *
-          var(--pl-warning-sel)
-      )
-      calc(
-        min(0.6 * c, 0.15) * var(--pl-warning-notsel) + min(0.55 * c, 0.13) * var(--pl-warning-sel)
-      )
-      h
-  );
-  --pl-warning-pole-light: color-mix(
-    in oklch,
-    oklch(100% 0 0),
-    oklch(9% 0 0) calc(var(--pl-warning-sel) * 100%)
-  );
-
-  --ui-color-warning: light-dark(var(--pl-warning-fill-light), var(--pl-warning-fill-dark));
-  --ui-color-warning-hover: light-dark(
-    color-mix(in oklab, var(--ui-color-warning) 84%, oklch(100% 0 0)),
-    color-mix(in oklab, var(--ui-color-warning) 88%, var(--pl-pole-dark))
-  );
-  --ui-color-on-warning: light-dark(var(--pl-warning-pole-light), var(--pl-pole-dark));
-  --ui-color-warning-tint: light-dark(
-    oklch(from var(--pl-warning-fill-light) calc(0.88 + 0.12 * l) calc(0.12 * c) h),
-    oklch(from var(--pl-warning-fill-dark) calc(0.123 + 0.12 * l) calc(0.12 * c) h)
+  --ui-focus-ring: light-dark(
+    color-mix(in oklch, var(--pl-surface-light), var(--pl-text-light) 60%),
+    color-mix(in oklch, var(--pl-surface-dark), var(--pl-text-dark) 55%)
   );
 }

@@ -8,31 +8,35 @@
  * Core adds no JS and no state machines.
  *
  * Canonical structure:
- *   <div class="ui-alert" data-variant="success">
- *     <p class="ui-alert-title">Saved</p>
- *     <p class="ui-alert-body">Your changes were stored.</p>
+ *   <div class="ui-alert">
+ *     <p class="ui-alert-title">Heads up</p>
+ *     <p class="ui-alert-body">A new version is available.</p>
  *   </div>
  *
- * Variants via data-variant: success | warning | danger
- * (default — info, attribute omitted).
+ * Variants via data-variant: attention. The default (attribute omitted) is
+ * the neutral gray member of the pastel set: surface-tint + text — a plain
+ * callout carries no meaning, meaning comes with a variant.
  *
  * Variant colors are surfaced through derived local properties so each
  * variant block only remaps two values. They consume semantic tokens only
  * (theme notes).
  *
  * APCA pairs used (validated in tests/apca):
- *   title:  {info,danger,success,warning} on *-tint (body)
- *   body:   text on *-tint (body)
- *   border: {info,danger,success,warning} on *-tint (nonText)
+ *   default: text/surface-tint (body); border-strong on surface-tint
+ *     (nonText border)
+ *   attention: attention on attention-tint (body, threshold 60 — the bare
+ *     tone title), text/attention-tint (body), attention/attention-tint
+ *     (nonText border)
  */
 
 .ui-alert {
-  --ui-alert-accent: var(--ui-color-info);
-  --ui-alert-surface: var(--ui-color-info-tint);
+  --ui-alert-accent: var(--ui-color-border-strong);
+  --ui-alert-surface: var(--ui-color-surface-tint);
 
   /* Variant title colors: the bare family tone is the readable variant
-   * color on the tint surface. */
-  --ui-alert-title: var(--ui-color-info);
+   * color on the tint surface. The neutral default keeps the plain text
+   * color on the gray tint (registered body pair). */
+  --ui-alert-title: var(--ui-color-text);
 
   color: var(--ui-color-text);
   background: var(--ui-alert-surface);
@@ -41,22 +45,10 @@
   padding: var(--ui-space-sm) var(--ui-space-md);
 }
 
-.ui-alert[data-variant='success'] {
-  --ui-alert-accent: var(--ui-color-success);
-  --ui-alert-surface: var(--ui-color-success-tint);
-  --ui-alert-title: var(--ui-color-success);
-}
-
-.ui-alert[data-variant='warning'] {
-  --ui-alert-accent: var(--ui-color-warning);
-  --ui-alert-surface: var(--ui-color-warning-tint);
-  --ui-alert-title: var(--ui-color-warning);
-}
-
-.ui-alert[data-variant='danger'] {
-  --ui-alert-accent: var(--ui-color-danger);
-  --ui-alert-surface: var(--ui-color-danger-tint);
-  --ui-alert-title: var(--ui-color-danger);
+.ui-alert[data-variant='attention'] {
+  --ui-alert-accent: var(--ui-color-attention);
+  --ui-alert-surface: var(--ui-color-attention-tint);
+  --ui-alert-title: var(--ui-color-attention);
 }
 
 /* Title carries the variant color (--ui-alert-title); the message text stays

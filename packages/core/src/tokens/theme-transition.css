@@ -94,97 +94,37 @@
   initial-value: gray;
 }
 
-@property --ui-color-info {
-  syntax: '<color>';
-  inherits: true;
-  initial-value: blue;
-}
-
-@property --ui-color-on-info {
-  syntax: '<color>';
-  inherits: true;
-  initial-value: white;
-}
-
-@property --ui-color-info-hover {
-  syntax: '<color>';
-  inherits: true;
-  initial-value: blue;
-}
-
-@property --ui-color-danger {
+@property --ui-color-attention {
   syntax: '<color>';
   inherits: true;
   initial-value: red;
 }
 
-@property --ui-color-on-danger {
+@property --ui-color-on-attention {
   syntax: '<color>';
   inherits: true;
   initial-value: white;
 }
 
-@property --ui-color-danger-hover {
+@property --ui-color-attention-hover {
   syntax: '<color>';
   inherits: true;
   initial-value: red;
 }
 
-@property --ui-color-success {
-  syntax: '<color>';
-  inherits: true;
-  initial-value: green;
-}
-
-@property --ui-color-on-success {
+@property --ui-color-attention-tint {
   syntax: '<color>';
   inherits: true;
   initial-value: white;
 }
 
-@property --ui-color-success-hover {
+@property --ui-color-link {
   syntax: '<color>';
   inherits: true;
-  initial-value: green;
+  initial-value: blue;
 }
 
-@property --ui-color-warning {
-  syntax: '<color>';
-  inherits: true;
-  initial-value: orange;
-}
-
-@property --ui-color-on-warning {
-  syntax: '<color>';
-  inherits: true;
-  initial-value: white;
-}
-
-@property --ui-color-warning-hover {
-  syntax: '<color>';
-  inherits: true;
-  initial-value: orange;
-}
-
-@property --ui-color-info-tint {
-  syntax: '<color>';
-  inherits: true;
-  initial-value: white;
-}
-
-@property --ui-color-success-tint {
-  syntax: '<color>';
-  inherits: true;
-  initial-value: white;
-}
-
-@property --ui-color-warning-tint {
-  syntax: '<color>';
-  inherits: true;
-  initial-value: white;
-}
-
-@property --ui-color-danger-tint {
+@property --ui-color-selection {
   syntax: '<color>';
   inherits: true;
   initial-value: white;
@@ -214,18 +154,11 @@
     --ui-color-brand var(--ui-duration-slow) ease,
     --ui-color-on-brand var(--ui-duration-slow) ease,
     --ui-color-brand-tint var(--ui-duration-slow) ease,
-    --ui-color-info var(--ui-duration-slow) ease,
-    --ui-color-on-info var(--ui-duration-slow) ease,
-    --ui-color-danger var(--ui-duration-slow) ease,
-    --ui-color-on-danger var(--ui-duration-slow) ease,
-    --ui-color-success var(--ui-duration-slow) ease,
-    --ui-color-on-success var(--ui-duration-slow) ease,
-    --ui-color-warning var(--ui-duration-slow) ease,
-    --ui-color-on-warning var(--ui-duration-slow) ease,
-    --ui-color-info-tint var(--ui-duration-slow) ease,
-    --ui-color-success-tint var(--ui-duration-slow) ease,
-    --ui-color-warning-tint var(--ui-duration-slow) ease,
-    --ui-color-danger-tint var(--ui-duration-slow) ease,
+    --ui-color-attention var(--ui-duration-slow) ease,
+    --ui-color-on-attention var(--ui-duration-slow) ease,
+    --ui-color-attention-tint var(--ui-duration-slow) ease,
+    --ui-color-link var(--ui-duration-slow) ease,
+    --ui-color-selection var(--ui-duration-slow) ease,
     --ui-focus-ring var(--ui-duration-slow) ease;
 }
 

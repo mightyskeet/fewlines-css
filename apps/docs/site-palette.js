@@ -39,35 +39,19 @@ const FAMILIES = [
     ],
   },
   {
-    legend: 'Info',
+    legend: 'Link',
     sliders: [
-      { prop: '--ui-base-info-l', label: 'Lightness', min: 0.15, max: 0.95, step: 0.01 },
-      { prop: '--ui-base-info-c', label: 'Chroma', min: 0, max: 0.37, step: 0.01 },
-      { prop: '--ui-base-info-h', label: 'Hue', min: 0, max: 360, step: 1 },
+      { prop: '--ui-base-link-l', label: 'Lightness', min: 0.15, max: 0.95, step: 0.01 },
+      { prop: '--ui-base-link-c', label: 'Chroma', min: 0, max: 0.37, step: 0.01 },
+      { prop: '--ui-base-link-h', label: 'Hue', min: 0, max: 360, step: 1 },
     ],
   },
   {
-    legend: 'Success',
+    legend: 'Attention',
     sliders: [
-      { prop: '--ui-base-success-l', label: 'Lightness', min: 0.15, max: 0.95, step: 0.01 },
-      { prop: '--ui-base-success-c', label: 'Chroma', min: 0, max: 0.37, step: 0.01 },
-      { prop: '--ui-base-success-h', label: 'Hue', min: 0, max: 360, step: 1 },
-    ],
-  },
-  {
-    legend: 'Warning',
-    sliders: [
-      { prop: '--ui-base-warning-l', label: 'Lightness', min: 0.15, max: 0.95, step: 0.01 },
-      { prop: '--ui-base-warning-c', label: 'Chroma', min: 0, max: 0.37, step: 0.01 },
-      { prop: '--ui-base-warning-h', label: 'Hue', min: 0, max: 360, step: 1 },
-    ],
-  },
-  {
-    legend: 'Danger',
-    sliders: [
-      { prop: '--ui-base-danger-l', label: 'Lightness', min: 0.15, max: 0.95, step: 0.01 },
-      { prop: '--ui-base-danger-c', label: 'Chroma', min: 0, max: 0.37, step: 0.01 },
-      { prop: '--ui-base-danger-h', label: 'Hue', min: 0, max: 360, step: 1 },
+      { prop: '--ui-base-attention-l', label: 'Lightness', min: 0.15, max: 0.95, step: 0.01 },
+      { prop: '--ui-base-attention-c', label: 'Chroma', min: 0, max: 0.37, step: 0.01 },
+      { prop: '--ui-base-attention-h', label: 'Hue', min: 0, max: 360, step: 1 },
     ],
   },
 ];

@@ -164,11 +164,12 @@ pre kbd {
   color: var(--ui-color-text);
 }
 
-/* <mark>: highlighted text on the warning tint — the same soft-surface model
- * as Alert/Badge; the text color pair is validated at the body threshold. */
+/* <mark>: highlighted text on the neutral tint — the gray member of the
+ * soft-surface role (like the neutral Alert/Badge); the text color pair is
+ * validated at the body threshold. */
 mark {
   color: var(--ui-color-text);
-  background: var(--ui-color-warning-tint);
+  background: var(--ui-color-surface-tint);
 }
 
 /* Abbreviation with an expansion: normalize the dotted underline (UA styles
@@ -186,12 +187,14 @@ abbr[title] {
   cursor: help;
 }
 
-/* Links: info color, underlined with a small optical offset. The visited
+/* Links: the utility link color (independent of the brand family — a
+ * re-branded UI keeps blue links unless the host re-themes --ui-color-link),
+ * underlined with a small optical offset. The visited
  * state is intentionally not restyled — it stays identical to unvisited.
  * The focus ring comes from the base focus contract; in forced-colors mode
  * the system repaints links natively. */
 a {
-  color: var(--ui-color-info);
+  color: var(--ui-color-link);
   text-decoration: underline;
   text-underline-offset: 0.15em;
 }
@@ -234,8 +237,8 @@ sub {
   bottom: -0.25em;
 }
 
-/* Text selection: info tint under the author text color (validated pair).
- * Forced colors mode repaints the selection natively. */
+/* Text selection: the utility selection tint under the author text color
+ * (validated pair). Forced colors mode repaints the selection natively. */
 ::selection {
-  background: var(--ui-color-info-tint);
+  background: var(--ui-color-selection);
 }

@@ -26,6 +26,7 @@ const FAMILY_PAIRS = [
   ['on', 'fill', 75], // on-X / X (fill)
   ['fill', 'surface', 75], // X as text on the page
   ['fill', 'tint', 60], // X as alert/badge title on the tint surface (60 minimum)
+  ['fill', 'tint', 15], // X as the alert border on the tint surface (nonText)
 ];
 
 // (The token-name mapping is mirrored inside the page script below —
@@ -115,7 +116,7 @@ const grid = async (browserName, type) => {
       out.neutral = neutral;
 
       // ---- chromatic families: lightness x chroma x hue ----
-      for (const family of ['info', 'success', 'warning', 'danger']) {
+      for (const family of ['attention']) {
         const min = {};
         for (const l of [0.15, 0.3, 0.55, 0.7, 0.75, 0.95]) {
           set(`--ui-base-${family}-l`, l);

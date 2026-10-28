@@ -3,8 +3,23 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <script>try{var t=localStorage.getItem('theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
-    <script>try{var b=JSON.parse(localStorage.getItem('colors-bases')||'null');if(b){var r=document.documentElement,s=r.style;for(var k in b)s.setProperty(k,b[k]);r.setAttribute('data-palette','custom')}}catch(e){}</script>
+    <script>
+      try {
+        var t = localStorage.getItem('theme');
+        if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+      } catch (e) {}
+    </script>
+    <script>
+      try {
+        var b = JSON.parse(localStorage.getItem('colors-bases') || 'null');
+        if (b) {
+          var r = document.documentElement,
+            s = r.style;
+          for (var k in b) s.setProperty(k, b[k]);
+          r.setAttribute('data-palette', 'custom');
+        }
+      } catch (e) {}
+    </script>
     <title>Field — @fewlines/css</title>
     <link rel="stylesheet" href="/core.css" />
     <link rel="stylesheet" href="/docs.css" />
@@ -30,7 +45,8 @@
           <code>&lt;input&gt;</code>, <code>&lt;textarea&gt;</code>, <code>&lt;select&gt;</code>;
           implicit <code>&lt;label&gt;</code> via nesting; native validation (<code>required</code>,
           <code>type="email"</code>, <code>pattern</code>); native states including
-          <code>:user-invalid</code> / <code>:user-valid</code>.
+          <code>:user-invalid</code> (<code>:user-valid</code> matches but is intentionally not
+          styled).
         </p>
       </section>
 
@@ -143,9 +159,10 @@
           </form>
         </div>
         <p>
-          Red/green borders appear only after user interaction (<code>:user-invalid</code> /
-          <code>:user-valid</code>). Never style bare <code>:invalid</code>. Host-rendered error
-          text uses <code>ui-field-error</code> bound via <code>aria-describedby</code>.
+          The red border appears only after user interaction (<code>:user-invalid</code>); the valid
+          state is intentionally not styled — the platform paints nothing there either. Never style
+          bare <code>:invalid</code>. Host-rendered error text uses
+          <code>ui-field-error</code> bound via <code>aria-describedby</code>.
         </p>
       </section>
 

@@ -78,30 +78,30 @@ test('palette widget: slider, persistence, reset', async ({ page }) => {
     }),
   ).toBe('|');
 
-  const infoLightness = page
-    .locator('.palette-drawer fieldset', { hasText: 'Info' })
+  const linkLightness = page
+    .locator('.palette-drawer fieldset', { hasText: 'Link' })
     .locator('input[type="range"]')
     .first();
-  await infoLightness.fill('0.3');
+  await linkLightness.fill('0.3');
 
   // The first drag activates the derivation scope and saves the full map.
   await expect(page.locator('html')).toHaveAttribute('data-palette', 'custom');
   // The first drag seeds the FULL map from the (scoped) CSS defaults —
   // no empty-string entries that would poison the restored palette.
   const stored = await page.evaluate(() => JSON.parse(localStorage.getItem('colors-bases')));
-  expect(stored['--ui-base-info-l']).toBe('0.3');
+  expect(stored['--ui-base-link-l']).toBe('0.3');
   expect(Object.values(stored).every((v) => typeof v === 'string' && v.length > 0)).toBe(true);
   // Vivid branch: light fill L = 0.28 + 0.37 * 0.3 = 0.391.
-  const info = await page.evaluate(() => {
+  const link = await page.evaluate(() => {
     const d = document.createElement('div');
     document.body.append(d);
     document.documentElement.setAttribute('data-theme', 'light');
-    d.style.color = 'var(--ui-color-info)';
+    d.style.color = 'var(--ui-color-link)';
     const value = getComputedStyle(d).color;
     d.remove();
     return value;
   });
-  expect(info).toContain('0.391');
+  expect(link).toContain('0.391');
 
   // Reset removes the scope, the storage and returns tokens to core values.
   await page.getByRole('button', { name: 'Reset' }).click();
@@ -131,12 +131,12 @@ test('derivation: tint and fill keep the family hue', async ({ page }) => {
   await page.evaluate(() => {
     const root = document.documentElement;
     root.setAttribute('data-palette', 'custom');
-    root.style.setProperty('--ui-base-warning-h', '160');
+    root.style.setProperty('--ui-base-attention-h', '160');
   });
 
   for (const token of [
-    '--ui-color-warning-tint',
-    '--ui-color-warning',
+    '--ui-color-attention-tint',
+    '--ui-color-attention',
   ]) {
     const hue = await hueOf(token);
     const drift = Math.abs(((hue - 160 + 540) % 360) - 180);
@@ -154,11 +154,11 @@ test('derivation: colors are a pure function of the bases (no stickiness)', asyn
   await page.evaluate(() => {
     const root = document.documentElement;
     root.setAttribute('data-palette', 'custom');
-    root.style.setProperty('--ui-base-warning-h', '160');
+    root.style.setProperty('--ui-base-attention-h', '160');
   });
   await page.waitForTimeout(50);
   await page.evaluate(() =>
-    document.documentElement.style.setProperty('--ui-base-warning-h', '75'),
+    document.documentElement.style.setProperty('--ui-base-attention-h', '28'),
   );
   await page.waitForTimeout(50);
   expect(await readTint(page), 'tint returns to the default value').toBe(baseline);
@@ -169,12 +169,12 @@ async function p_addInitThemeLight(page) {
   await page.addInitScript(() => localStorage.setItem('theme', 'light'));
 }
 
-/** Activate the scope at default bases, then read the warning tint color. */
+/** Activate the scope at default bases, then read the attention tint color. */
 async function readTintWithDefaults(page) {
   await page.evaluate(() => {
     const root = document.documentElement;
     root.setAttribute('data-palette', 'custom');
-    root.style.setProperty('--ui-base-warning-h', '75');
+    root.style.setProperty('--ui-base-attention-h', '28');
   });
   return readTint(page);
 }
@@ -184,7 +184,7 @@ async function readTint(page) {
     const probe = document.createElement('div');
     probe.style.cssText = 'position:absolute;visibility:hidden;';
     document.body.append(probe);
-    probe.style.color = 'var(--ui-color-warning-tint)';
+    probe.style.color = 'var(--ui-color-attention-tint)';
     const ctx = document.createElement('canvas').getContext('2d');
     ctx.fillStyle = '#000';
     ctx.fillStyle = getComputedStyle(probe).color;

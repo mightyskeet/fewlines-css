@@ -8,33 +8,31 @@
  *
  * Canonical structure:
  *   <span class="ui-badge">Beta</span>
- *   <span class="ui-badge" data-variant="success">Active</span>
+ *   <span class="ui-badge" data-variant="attention">Failed</span>
  *
  * Variants via data-variant, fill model via data-solid. The default
  * (variant omitted) is the brand pastel: brand-tint surface + bare brand
  * text — it follows a re-themed brand. Variant values name every other
- * family:
- *   pastel (feedback, like Alert): neutral | info | success | warning |
- *     danger — tint surface + bare family text. `neutral` is the gray member
- *     of the page gamut (surface-tint + text): the gray look is explicit now
- *     that the brand owns the default;
+ * look plus the explicit brand twin:
+ *   pastel (feedback, like Alert): brand | neutral | attention — tint
+ *     surface + bare family text (brand == default; neutral: the gray
+ *     member of the page gamut, surface-tint + text).
  *   solid (bright fill, light text): bare `data-solid` (no variant) = the
  *     brand family (on-brand/brand); `data-variant="..." data-solid` = the
  *     bare family tone as the fill + on-* text, the button-default model.
  *     `neutral` + solid is the brand-independent inverted gray (text fill,
- *     surface label); brand solid is the high-contrast gray pill in the
- *     default theme and follows the brand once re-themed.
+ *     surface label).
+ * APCA pairs used (validated in tests/apca):
+ *   default/brand:  brand on brand-tint (pastel minimum, Lc 60)
+ *   neutral pastel: text on surface-tint (body threshold, Lc 75)
+ *   attention pastel: attention on attention-tint (pastel minimum, Lc 60)
+ *   solid:          on-{brand,attention} on the bare tone (body threshold);
+ *     surface on text for the neutral solid (inverted page gamut, body
+ *     threshold)
  *
  * Sizes via data-size: sm | lg (default — md, attribute omitted). Geometry
  * scales, typography stays: sm 16px / md 20px / lg 28px (line-height: 1);
  * md is the standard pill.
- *
- * APCA pairs used (validated in tests/apca):
- *   default:        brand on brand-tint (pastel minimum, Lc 60)
- *   neutral pastel: text on surface-tint (body threshold, Lc 75)
- *   solid:          on-{brand,info,success,warning,danger} on the bare tone
- *     (body threshold); surface on text for the neutral solid (inverted
- *     page gamut, body threshold)
  */
 
 .ui-badge {
@@ -72,30 +70,22 @@
 }
 
 /* Tint variants (the feedback model, like Alert). The brand pastel is the
- * default; `neutral` is the explicit gray member of the page gamut. */
+ * default and also an explicit variant (symmetry with neutral/attention);
+ * `neutral` is the gray member of the page gamut; `attention` is the
+ * urgency family. */
+.ui-badge[data-variant='brand'] {
+  --ui-badge-fg: var(--ui-color-brand);
+  --ui-badge-bg: var(--ui-color-brand-tint);
+}
+
 .ui-badge[data-variant='neutral'] {
   --ui-badge-fg: var(--ui-color-text);
   --ui-badge-bg: var(--ui-color-surface-tint);
 }
 
-.ui-badge[data-variant='info'] {
-  --ui-badge-fg: var(--ui-color-info);
-  --ui-badge-bg: var(--ui-color-info-tint);
-}
-
-.ui-badge[data-variant='success'] {
-  --ui-badge-fg: var(--ui-color-success);
-  --ui-badge-bg: var(--ui-color-success-tint);
-}
-
-.ui-badge[data-variant='warning'] {
-  --ui-badge-fg: var(--ui-color-warning);
-  --ui-badge-bg: var(--ui-color-warning-tint);
-}
-
-.ui-badge[data-variant='danger'] {
-  --ui-badge-fg: var(--ui-color-danger);
-  --ui-badge-bg: var(--ui-color-danger-tint);
+.ui-badge[data-variant='attention'] {
+  --ui-badge-fg: var(--ui-color-attention);
+  --ui-badge-bg: var(--ui-color-attention-tint);
 }
 
 /* Solid model (the button-default model): bare `data-solid` = the brand
@@ -113,24 +103,9 @@
   --ui-badge-bg: var(--ui-color-text);
 }
 
-.ui-badge[data-variant='info'][data-solid] {
-  --ui-badge-fg: var(--ui-color-on-info);
-  --ui-badge-bg: var(--ui-color-info);
-}
-
-.ui-badge[data-variant='success'][data-solid] {
-  --ui-badge-fg: var(--ui-color-on-success);
-  --ui-badge-bg: var(--ui-color-success);
-}
-
-.ui-badge[data-variant='warning'][data-solid] {
-  --ui-badge-fg: var(--ui-color-on-warning);
-  --ui-badge-bg: var(--ui-color-warning);
-}
-
-.ui-badge[data-variant='danger'][data-solid] {
-  --ui-badge-fg: var(--ui-color-on-danger);
-  --ui-badge-bg: var(--ui-color-danger);
+.ui-badge[data-variant='attention'][data-solid] {
+  --ui-badge-fg: var(--ui-color-on-attention);
+  --ui-badge-bg: var(--ui-color-attention);
 }
 
 /* Sizes follow the Field pattern: geometry scales, typography stays — the

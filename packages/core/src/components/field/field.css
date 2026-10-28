@@ -17,10 +17,12 @@
  *
  * States come from the platform:
  *   :hover, :focus-visible (base layer), :disabled, :read-only,
- *   :user-invalid / :user-valid.
+ *   :user-invalid.
  *
  * :invalid is gated behind :user-invalid-style intent: styling applies via
  * :user-invalid so fields are not flagged red before the user interacts.
+ * The valid state is intentionally not styled (the platform paints nothing
+ * there either).
  *
  * Box model: UA box-sizing diverges across controls (input/textarea are
  * content-box, select is border-box in Chromium), which makes the same
@@ -54,11 +56,11 @@
   color: var(--ui-color-text-muted);
 }
 
-/* Error text bound via aria-describedby (danger/surface, danger/surface-raised
- * — registered APCA pairs, tests/apca). */
+/* Error text bound via aria-describedby (attention/surface, attention/
+ * surface-raised — registered APCA pairs, tests/apca). */
 .ui-field-error {
   font: 400 var(--ui-font-size-sm) / 1.45 var(--ui-font-sans);
-  color: var(--ui-color-danger);
+  color: var(--ui-color-attention);
 }
 
 .ui-input,
@@ -71,7 +73,7 @@
   border-radius: var(--ui-radius-sm);
   padding-block: var(--ui-space-2xs);
   padding-inline: var(--ui-space-sm);
-  accent-color: var(--ui-color-info);
+  accent-color: var(--ui-color-brand);
 
   /* The border carries state changes (hover, :user-invalid/:user-valid). */
   transition: border-color var(--ui-duration-fast) ease;
@@ -162,20 +164,16 @@
   cursor: not-allowed;
 }
 
-/* Validation states — user-invalid avoids premature red before interaction.
- * Engines without :user-invalid/:user-valid get intentionally no :invalid
- * styling (premature red is worse than none) — the native validation bubble
- * carries the signal. */
+/* Validation state — user-invalid avoids premature red before interaction.
+ * Engines without :user-invalid get intentionally no :invalid styling
+ * (premature red is worse than none) — the native validation bubble carries
+ * the signal. The valid state is intentionally NOT styled: the platform
+ * paints nothing on valid input either, and a permanent green border after
+ * every keystroke is noise, not feedback. */
 .ui-input:user-invalid,
 .ui-textarea:user-invalid,
 .ui-select:user-invalid {
-  border-color: var(--ui-color-danger);
-}
-
-.ui-input:user-valid,
-.ui-textarea:user-valid,
-.ui-select:user-valid {
-  border-color: var(--ui-color-success);
+  border-color: var(--ui-color-attention);
 }
 
 /* Read-only (not disabled): selectable and copyable, not editable — the

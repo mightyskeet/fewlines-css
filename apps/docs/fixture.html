@@ -19,7 +19,7 @@
         </button>
         <button class="ui-button" type="button" id="btn-ghost" data-variant="ghost">Ghost</button>
         <a class="ui-button" href="#" id="btn-link" data-variant="link">Link</a>
-        <button class="ui-button" type="button" id="btn-destructive" data-variant="destructive">
+        <button class="ui-button" type="button" id="btn-attention" data-variant="attention">
           Delete
         </button>
         <button class="ui-button" type="button" id="btn-disabled" disabled>Disabled</button>
@@ -273,15 +273,7 @@
           <p class="ui-alert-title">Heads up</p>
           <p class="ui-alert-body">A new version is available.</p>
         </div>
-        <div class="ui-alert" data-variant="success" id="alert-success">
-          <p class="ui-alert-title">Saved</p>
-          <p class="ui-alert-body">Your changes were stored.</p>
-        </div>
-        <div class="ui-alert" data-variant="warning" id="alert-warning" role="status">
-          <p class="ui-alert-title">Session expiring</p>
-          <p class="ui-alert-body">You will be signed out in 5 minutes.</p>
-        </div>
-        <div class="ui-alert" data-variant="danger" id="alert-danger" role="alert">
+        <div class="ui-alert" data-variant="attention" id="alert-attention" role="alert">
           <p class="ui-alert-title">Payment failed</p>
           <p class="ui-alert-body">Card was declined. Try another card.</p>
         </div>
@@ -290,23 +282,14 @@
       <!-- Badge -->
       <section id="badges">
         <span class="ui-badge" id="badge-default">Beta</span>
+        <span class="ui-badge" data-variant="brand" id="badge-brand">Brand</span>
         <span class="ui-badge" data-variant="neutral" id="badge-neutral">Neutral</span>
-        <span class="ui-badge" data-variant="info" id="badge-info">New</span>
-        <span class="ui-badge" data-variant="success" id="badge-success">Active</span>
-        <span class="ui-badge" data-variant="warning" id="badge-warning">Pending</span>
-        <span class="ui-badge" data-variant="danger" id="badge-danger">Failed</span>
+        <span class="ui-badge" data-variant="attention" id="badge-attention">Failed</span>
         <span class="ui-badge" data-solid id="badge-default-solid">Default</span>
         <span class="ui-badge" data-variant="neutral" data-solid id="badge-neutral-solid"
           >Neutral</span
         >
-        <span class="ui-badge" data-variant="info" data-solid id="badge-info-solid">Info</span>
-        <span class="ui-badge" data-variant="success" data-solid id="badge-success-solid"
-          >Active</span
-        >
-        <span class="ui-badge" data-variant="warning" data-solid id="badge-warning-solid"
-          >Pending</span
-        >
-        <span class="ui-badge" data-variant="danger" data-solid id="badge-danger-solid"
+        <span class="ui-badge" data-variant="attention" data-solid id="badge-attention-solid"
           >Failed</span
         >
         <span class="ui-badge" id="badge-counter" aria-label="3 unread messages">3</span>

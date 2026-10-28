@@ -64,40 +64,22 @@ export const semanticMap = {
     light: { mix: ['brand', 'brand-tint', 8] },
     dark: { mix: ['brand-tint', 'on-brand'] },
   },
-  info: { light: 'info-600', dark: 'info-300' },
-  'on-info': { light: 'neutral-0', dark: 'neutral-950' },
-  'info-hover': {
+  attention: { light: 'attention-600', dark: 'attention-300' },
+  'on-attention': { light: 'neutral-0', dark: 'neutral-950' },
+  'attention-hover': {
     // A step toward the on-* pole in both themes: the light theme walks
     // toward the white pole (the fill lightens, 16%); the dark theme walks
     // toward the dark pole (the fill darkens, 12%) — tracked at the
     // documented 60 minimum, the 300-level fill with dark on-* text has
     // only ~3 Lc of headroom at 75.
-    light: { mix: ['info', 'on-info', 84] },
-    dark: { mix: ['info', 'on-info', 88] },
+    light: { mix: ['attention', 'on-attention', 84] },
+    dark: { mix: ['attention', 'on-attention', 88] },
   },
-  danger: { light: 'danger-600', dark: 'danger-300' },
-  'on-danger': { light: 'neutral-0', dark: 'neutral-950' },
-  'danger-hover': {
-    light: { mix: ['danger', 'on-danger', 84] },
-    dark: { mix: ['danger', 'on-danger', 88] },
-  },
-  success: { light: 'success-600', dark: 'success-300' },
-  'on-success': { light: 'neutral-0', dark: 'neutral-950' },
-  'success-hover': {
-    light: { mix: ['success', 'on-success', 84] },
-    dark: { mix: ['success', 'on-success', 88] },
-  },
-  warning: { light: 'warning-600', dark: 'warning-300' },
-  'on-warning': { light: 'neutral-0', dark: 'neutral-950' },
-  'warning-hover': {
-    light: { mix: ['warning', 'on-warning', 84] },
-    dark: { mix: ['warning', 'on-warning', 88] },
-  },
-  'info-tint': { light: 'info-100', dark: 'info-800' },
-  'success-tint': { light: 'success-100', dark: 'success-800' },
-  'warning-tint': { light: 'warning-100', dark: 'warning-800' },
-  'danger-tint': { light: 'danger-100', dark: 'danger-800' },
-  'focus-ring': { light: 'info-600', dark: 'info-300' },
+  'attention-tint': { light: 'attention-100', dark: 'attention-800' },
+  link: { light: 'link-600', dark: 'link-300' },
+  'selection': { light: 'link-100', dark: 'link-800' },
+  'border-strong': { light: 'neutral-500', dark: 'neutral-400' },
+  'focus-ring': { light: 'neutral-500', dark: 'neutral-400' },
 };
 
 /**
@@ -144,41 +126,17 @@ export const tokenPairs = [
     note: 'secondary button pastel hover (pastel minimum)',
   },
 
-  // Info text and controls
-  { fg: 'info', bg: 'surface', role: 'body' },
-  { fg: 'info', bg: 'surface-raised', role: 'body' },
-  { fg: 'on-info', bg: 'info', role: 'body', note: 'info solid badge' },
+  // Attention family (the urgency tone: errors, destructive actions,
+  // validation failures — formerly danger). Shape mirrors brand.
+  { fg: 'attention', bg: 'surface', role: 'body' },
+  { fg: 'attention', bg: 'surface-raised', role: 'body' },
+  { fg: 'on-attention', bg: 'attention', role: 'body', note: 'attention solid button/badge' },
   {
-    // Hover fill of a solid control: the dark theme darkens the 300-level
-    // fill toward the dark on-* pole — the 300+950 pair has only ~3 Lc of
-    // headroom at 75, so the state pair is tracked at the documented
-    // 60 minimum (light theme passes 75 on its own).
-    fg: 'on-info',
-    bg: 'info-hover',
+    fg: 'on-attention',
+    bg: 'attention-hover',
     role: 'body',
     threshold: 60,
-  },
-
-  // Danger text and controls
-  { fg: 'danger', bg: 'surface', role: 'body' },
-  { fg: 'danger', bg: 'surface-raised', role: 'body' },
-  { fg: 'on-danger', bg: 'danger', role: 'body', note: 'destructive button fill' },
-  {
-    fg: 'on-danger',
-    bg: 'danger-hover',
-    role: 'body',
-    threshold: 60,
-    note: 'destructive button hover (dark darkens — 60 minimum)',
-  },
-
-  // Success
-  { fg: 'success', bg: 'surface', role: 'body' },
-  { fg: 'on-success', bg: 'success', role: 'body', note: 'success solid badge' },
-  {
-    fg: 'on-success',
-    bg: 'success-hover',
-    role: 'body',
-    threshold: 60,
+    note: 'attention button hover (dark darkens — 60 minimum)',
   },
 
   // Feedback tint surfaces (Alert, Badge): title/label uses the bare family
@@ -186,35 +144,27 @@ export const tokenPairs = [
   // variant color (nonText). The bare tone on the raw 100-step tint misses
   // the preferred 75 in the light theme by ~3 Lc (it sat on the removed
   // *-strong) — tracked at the documented 60 minimum.
-  { fg: 'info', bg: 'info-tint', role: 'body', threshold: 60 },
-  { fg: 'text', bg: 'info-tint', role: 'body' },
-  { fg: 'info', bg: 'info-tint', role: 'nonText' },
-  { fg: 'danger', bg: 'danger-tint', role: 'body', threshold: 60 },
-  { fg: 'text', bg: 'danger-tint', role: 'body' },
-  { fg: 'danger', bg: 'danger-tint', role: 'nonText' },
-  { fg: 'success', bg: 'success-tint', role: 'body', threshold: 60 },
-  { fg: 'text', bg: 'success-tint', role: 'body' },
-  { fg: 'success', bg: 'success-tint', role: 'nonText' },
-  { fg: 'warning', bg: 'warning-tint', role: 'body', threshold: 60 },
-  { fg: 'text', bg: 'warning-tint', role: 'body' },
-  { fg: 'warning', bg: 'warning-tint', role: 'nonText' },
+  { fg: 'attention', bg: 'attention-tint', role: 'body', threshold: 60 },
+  { fg: 'text', bg: 'attention-tint', role: 'body' },
+  { fg: 'attention', bg: 'attention-tint', role: 'nonText' },
 
-  // Solid badge fills (the button-default model; Badge): the warning bare
-  // tone doubles as the solid fill — it is calibrated to the 600 step
-  // (white on 500 fails the body threshold), white on it measures Lc 87.7.
-  { fg: 'on-warning', bg: 'warning', role: 'body' },
-  {
-    fg: 'on-warning',
-    bg: 'warning-hover',
-    role: 'body',
-    threshold: 60,
-  },
+  // Neutral Alert (the default): the gray border on the gray tint is a
+  // non-text boundary pair (surface-tint matches the family tints, the
+  // border needs the stronger step to stay visible).
+  { fg: 'border-strong', bg: 'surface-tint', role: 'nonText', note: 'neutral alert border' },
+
+  // Utility roles. Link: hyperlink text on the page and raised surfaces.
+  // Selection: the tint under the author text color (the same soft-surface
+  // pair the neutral Alert uses).
+  { fg: 'link', bg: 'surface', role: 'body' },
+  { fg: 'link', bg: 'surface-raised', role: 'body' },
+  { fg: 'text', bg: 'selection', role: 'body' },
 
   // Neutral solid badge (the brand-independent inverted gray): the page
   // text as the fill, the page surface as the label.
   { fg: 'surface', bg: 'text', role: 'body', note: 'neutral-solid badge' },
 
-  // Focus indicator (non-text contrast)
+  // Focus indicator (non-text contrast): the neutral ring.
   { fg: 'focus-ring', bg: 'surface', role: 'nonText' },
   { fg: 'focus-ring', bg: 'surface-raised', role: 'nonText' },
 
