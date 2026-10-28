@@ -37,7 +37,7 @@
 export const semanticMap = {
   surface: { light: 'neutral-0', dark: 'neutral-900' },
   'surface-raised': { light: 'neutral-50', dark: 'neutral-800' },
-  'surface-tint': { light: 'neutral-100', dark: 'neutral-800' },
+  'surface-tint': { light: 'neutral-200', dark: 'neutral-700' },
   hover: {
     // Light: a small step from the page surface toward text (~94%).
     // Dark: the full raised step — a half-step reads as invisible.
@@ -55,14 +55,16 @@ export const semanticMap = {
     light: { mix: ['brand', 'on-brand', 70] },
     dark: { mix: ['brand', 'on-brand', 86] },
   },
-  'brand-tint': { light: 'neutral-100', dark: 'neutral-800' },
+  'brand-tint': { light: 'neutral-200', dark: 'neutral-700' },
   'brand-tint-hover': {
-    // Pastel hover fill (secondary button): the light theme darkens the
-    // 100-step tint with an 8% step of the family tone; the dark theme
-    // darkens the 800-step tint with the full half-step toward the
-    // on-brand pole (the wide dark steps need it to stay visible).
+    // Pastel hover fill (secondary button): a single 8% step of the family
+    // tone into the tint, in both themes (no light-dark split — the
+    // semantic partners flip themselves). The light theme darkens the
+    // 200-step tint; the dark theme lightens the 700-step tint toward the
+    // near-white family tone ("шаг к тексту" — the text on the tint is
+    // `brand`).
     light: { mix: ['brand', 'brand-tint', 8] },
-    dark: { mix: ['brand-tint', 'on-brand'] },
+    dark: { mix: ['brand', 'brand-tint', 8] },
   },
   attention: { light: 'attention-600', dark: 'attention-300' },
   'on-attention': { light: 'neutral-0', dark: 'neutral-950' },
@@ -75,9 +77,9 @@ export const semanticMap = {
     light: { mix: ['attention', 'on-attention', 84] },
     dark: { mix: ['attention', 'on-attention', 88] },
   },
-  'attention-tint': { light: 'attention-100', dark: 'attention-800' },
+  'attention-tint': { light: 'attention-200', dark: 'attention-700' },
   link: { light: 'link-600', dark: 'link-300' },
-  'selection': { light: 'link-100', dark: 'link-800' },
+  'selection': { light: 'link-100', dark: 'link-700' },
   'border-strong': { light: 'neutral-500', dark: 'neutral-400' },
   'focus-ring': { light: 'neutral-500', dark: 'neutral-400' },
 };

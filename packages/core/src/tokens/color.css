@@ -39,14 +39,14 @@
     var(--ui-palette-neutral-800)
   );
 
-  /* Soft gray fill — the gray member of the tint role (Badge `neutral`, and
-   * any de-emphasised pastel surface). Brand-independent: the gray look
-   * never follows a re-themed brand. Same steps as the family tints
-   * (100/800), so the explicit neutral badge reads as the gray member of
-   * the pastel set. */
+  /* Soft gray fill — the gray member of the tint role (Badge `neutral`,
+   * `<mark>` and any de-emphasised pastel surface). Brand-independent: the
+   * gray look never follows a re-themed brand. Same steps as the family
+   * tints (200/700), so the explicit neutral badge reads as the gray member
+   * of the pastel set. */
   --ui-color-surface-tint: light-dark(
-    var(--ui-palette-neutral-100),
-    var(--ui-palette-neutral-800)
+    var(--ui-palette-neutral-200),
+    var(--ui-palette-neutral-700)
   );
 
   /* Text */
@@ -93,18 +93,20 @@
     color-mix(in oklab, var(--ui-color-brand) 86%, var(--ui-color-on-brand))
   );
   --ui-color-brand-tint: light-dark(
-    var(--ui-palette-neutral-100),
-    var(--ui-palette-neutral-800)
+    var(--ui-palette-neutral-200),
+    var(--ui-palette-neutral-700)
   );
 
-  /* Hover fill of a pastel brand surface (secondary button): a step
-   * toward the text tone — the light theme darkens the 100-step tint with
-   * the family tone, the dark theme darkens the 800-step tint toward the
-   * on-brand pole (the wide dark steps need the full half-step). Derived
-   * from animated semantic tokens — follows the theme transition. */
-  --ui-color-brand-tint-hover: light-dark(
-    color-mix(in oklab, var(--ui-color-brand) 8%, var(--ui-color-brand-tint)),
-    color-mix(in oklab, var(--ui-color-brand-tint), var(--ui-color-on-brand))
+  /* Hover fill of a pastel brand surface (secondary button): a step toward
+   * the text tone (the text on the tint is `brand`). The single formula
+   * needs no light-dark() split — the semantic partners flip themselves:
+   * the light theme darkens the tint (brand is near-black), the dark theme
+   * lightens it (brand is near-white). Derived from animated semantic
+   * tokens — follows the theme transition. */
+  --ui-color-brand-tint-hover: color-mix(
+    in oklab,
+    var(--ui-color-brand) 8%,
+    var(--ui-color-brand-tint)
   );
 
   /* Attention — the urgency family: errors, destructive actions, validation
@@ -116,8 +118,8 @@
     color-mix(in oklab, var(--ui-color-attention) 88%, var(--ui-palette-neutral-950))
   );
   --ui-color-attention-tint: light-dark(
-    var(--ui-palette-attention-100),
-    var(--ui-palette-attention-800)
+    var(--ui-palette-attention-200),
+    var(--ui-palette-attention-700)
   );
 
   /* ---- Utility roles ----
@@ -130,8 +132,10 @@
    * fill; underline carries the affordance. */
   --ui-color-link: light-dark(var(--ui-palette-link-600), var(--ui-palette-link-300));
 
-  /* Selection — ::selection background under the author text color. */
-  --ui-color-selection: light-dark(var(--ui-palette-link-100), var(--ui-palette-link-800));
+  /* Selection — ::selection background under the author text color. The
+   * dark value is the 700 step: the 800 step sits too close to the page
+   * surface (14% vs 21% at low chroma) and reads as invisible. */
+  --ui-color-selection: light-dark(var(--ui-palette-link-100), var(--ui-palette-link-700));
 
   /* Focus */
   --ui-focus-ring: light-dark(var(--ui-palette-neutral-500), var(--ui-palette-neutral-400));
