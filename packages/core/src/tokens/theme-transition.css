@@ -82,6 +82,12 @@
   initial-value: gray;
 }
 
+@property --ui-color-primary-tint-hover {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: gray;
+}
+
 @property --ui-color-primary-hover {
   syntax: '<color>';
   inherits: true;

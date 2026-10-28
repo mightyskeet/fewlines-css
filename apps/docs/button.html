@@ -66,10 +66,12 @@
         </div>
         <p>
           <code>data-variant="secondary|outline|ghost|destructive|link"</code>; default is
-          <code>default</code> (no attribute). The default variant is the primary family,
-          inverted polarity by default: a dark fill in the light theme, near-white in the dark
-          (<code>--ui-color-primary</code>; a brand look is one override away). Filled variants
-          carry no border — the fill is the surface.
+          <code>default</code> (no attribute). The default variant is the primary family, inverted
+          polarity by default: a dark fill in the light theme, near-white in the dark
+          (<code>--ui-color-primary</code>; a brand look is one override away).
+          <code>secondary</code> is the brand pastel (<code>primary-tint</code> +
+          <code>primary</code>) — it follows the brand like the default. Filled variants carry no
+          border — the fill is the surface.
         </p>
       </section>
 
@@ -166,9 +168,9 @@
             Button text is the accessible name; icon-only buttons require <code>aria-label</code>.
           </li>
           <li>
-            APCA pairs: <code>on-primary/primary</code>,
-            <code>on-primary/primary-hover</code>, <code>text/surface-raised</code>,
-            <code>on-danger/danger</code>, <code>text</code> on surfaces (link variant).
+            APCA pairs: <code>on-primary/primary</code>, <code>on-primary/primary-hover</code>,
+            <code>text/surface-raised</code>, <code>on-danger/danger</code>, <code>text</code> on
+            surfaces (link variant).
           </li>
         </ul>
       </section>

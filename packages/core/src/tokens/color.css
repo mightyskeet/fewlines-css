@@ -8,8 +8,11 @@
  * All text/surface pairs are validated by the APCA token matrix (Phase 4).
  *
  * Model (2026-10-26): the gray PAGE GAMUT carries every neutral role of the
- * interface — the "neutral look" of a component is its default (variant
- * omitted) state and consumes only this gamut. On top of it sit five color
+ * interface — the explicit `neutral` look of a component consumes only this
+ * gamut and never follows a re-themed brand. Defaults are the BRAND look:
+ * attribute-omitted states render the primary family (Badge pastel, Button
+ * solid fill), the gray look is addressed by an explicit `neutral` variant.
+ * On top of the gamut sit five color
  * FAMILIES of identical shape (primary + info/danger/success/warning), each
  * with four roles: the bare tone (readable text on the page AND the solid
  * fill, text `on-*`), `-hover` (derived hover fill: a step toward the
@@ -33,11 +36,11 @@
     var(--ui-palette-neutral-800)
   );
 
-  /* Soft gray fill — the gray member of the tint role (Badge default, and
-   * any de-emphasised pastel surface). Stays gray under primary branding:
-   * default component looks must not follow the brand color. Same steps as
-   * the family tints (100/800), so the default badge reads as the neutral
-   * member of the pastel set. */
+  /* Soft gray fill — the gray member of the tint role (Badge `neutral`, and
+   * any de-emphasised pastel surface). Brand-independent: the gray look
+   * never follows a re-themed primary. Same steps as the family tints
+   * (100/800), so the explicit neutral badge reads as the gray member of
+   * the pastel set. */
   --ui-color-surface-tint: light-dark(
     var(--ui-palette-neutral-100),
     var(--ui-palette-neutral-800)
@@ -92,6 +95,16 @@
   --ui-color-primary-tint: light-dark(
     var(--ui-palette-neutral-100),
     var(--ui-palette-neutral-800)
+  );
+
+  /* Hover fill of a pastel primary surface (secondary button): a step
+   * toward the text tone — the light theme darkens the 100-step tint with
+   * the family tone, the dark theme darkens the 800-step tint toward the
+   * on-primary pole (the wide dark steps need the full half-step). Derived
+   * from animated semantic tokens — follows the theme transition. */
+  --ui-color-primary-tint-hover: light-dark(
+    color-mix(in oklab, var(--ui-color-primary) 8%, var(--ui-color-primary-tint)),
+    color-mix(in oklab, var(--ui-color-primary-tint), var(--ui-color-on-primary))
   );
 
   /* Info — the blue tone: links, focus, native accent-color, the info

@@ -8,7 +8,8 @@
  *   default (attribute omitted) — the primary family, inverted polarity by
  *     default (dark fill in the light theme, near-white in the dark); the
  *     brand look is one --ui-color-primary override away;
- *   secondary                   — muted soft fill (page gamut);
+ *   secondary                   — brand pastel fill (primary-tint + primary,
+ *                                 the badge-primary pastel), follows the brand;
  *   outline                     — border, transparent fill;
  *   ghost                       — borderless transparent;
  *   link                        — plain text link styled as a button;
@@ -20,7 +21,8 @@
  *
  * APCA pairs used (validated in tests/apca):
  *   default:     on-primary on primary / primary-hover (hover = press)
- *   secondary:   text on surface-raised / hover
+ *   secondary:   primary on primary-tint / primary-tint-hover (pastel
+ *                minimum 60)
  *   outline:     text on hover (hover fill) / surface (border, nonText)
  *   ghost:       text on hover (hover fill)
  *   link:        text on surface (body)
@@ -137,14 +139,15 @@
   translate: none;
 }
 
-/* Secondary: muted soft fill (no visible border), plain text. */
+/* Secondary: brand pastel fill (the badge-primary pastel), no visible
+ * border. Follows the brand: primary-tint + primary. */
 .ui-button[data-variant='secondary'] {
-  color: var(--ui-color-text);
-  background: var(--ui-color-surface-raised);
+  color: var(--ui-color-primary);
+  background: var(--ui-color-primary-tint);
 }
 
 .ui-button[data-variant='secondary']:active {
-  background: var(--ui-color-hover);
+  background: var(--ui-color-primary-tint-hover);
 }
 
 /* Outline: the border is the surface, the fill is transparent, the text
@@ -162,8 +165,8 @@
 }
 
 /* Ghost: borderless transparent; the hover fill carries the affordance. The
- * single hover fill is the raised step (2026-10-26 merge): bold enough for a
- * control with no resting fill, and identical to the secondary hover. */
+ * single hover fill is the raised step (2026-10-26 merge): bold enough for
+ * a control with no resting fill. */
 .ui-button[data-variant='ghost'] {
   background: transparent;
   color: var(--ui-color-text);
@@ -212,7 +215,7 @@
   }
 
   .ui-button[data-variant='secondary']:hover:not(:disabled, [aria-disabled='true']) {
-    background: var(--ui-color-hover);
+    background: var(--ui-color-primary-tint-hover);
   }
 
   .ui-button[data-variant='outline']:hover:not(:disabled, [aria-disabled='true']) {

@@ -3,7 +3,7 @@ import { expect, test } from '@playwright/test';
 /**
  * Button variant tests (tests/README.md).
  * Computed-style checks: the six-variant matrix (shadcn model), the
- * borderless filled model, and hover must not restyle disabled controls.
+ * brand-forward filled model, and hover must not restyle disabled controls.
  */
 
 test.beforeEach(async ({ page }) => {
@@ -30,10 +30,10 @@ test('default is the primary fill (inverted gray by default)', async ({ page }) 
   expect(styles.borderColor).toBe('rgba(0, 0, 0, 0)');
 });
 
-test('secondary is the muted soft fill with plain text', async ({ page }) => {
+test('secondary is the brand pastel fill', async ({ page }) => {
   const styles = await stylesOf(page, '#btn-secondary');
-  expect(styles.background).toBe(await token(page, '--ui-color-surface-raised'));
-  expect(styles.color).toBe(await token(page, '--ui-color-text'));
+  expect(styles.background).toBe(await token(page, '--ui-color-primary-tint'));
+  expect(styles.color).toBe(await token(page, '--ui-color-primary'));
   expect(styles.borderColor).toBe('rgba(0, 0, 0, 0)');
 });
 

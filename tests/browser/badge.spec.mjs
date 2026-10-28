@@ -11,8 +11,29 @@ test.beforeEach(async ({ page }) => {
   await page.goto('/fixture.html');
 });
 
-test('default variant uses the gray tint with plain text', async ({ page }) => {
+test('default variant is the brand pastel (primary-tint + primary)', async ({ page }) => {
   const styles = await page.locator('#badge-default').evaluate((el) => {
+    const s = getComputedStyle(el);
+    return { background: s.backgroundColor, color: s.color };
+  });
+
+  const tint = await page
+    .evaluate(() =>
+      getComputedStyle(document.documentElement).getPropertyValue('--ui-color-primary-tint'),
+    )
+    .then((v) => v.trim());
+  expect(styles.background).toBe(tint);
+
+  const text = await page
+    .evaluate(() =>
+      getComputedStyle(document.documentElement).getPropertyValue('--ui-color-primary'),
+    )
+    .then((v) => v.trim());
+  expect(styles.color).toBe(text);
+});
+
+test('the explicit neutral variant is the brand-independent gray pastel', async ({ page }) => {
+  const styles = await page.locator('#badge-neutral').evaluate((el) => {
     const s = getComputedStyle(el);
     return { background: s.backgroundColor, color: s.color };
   });
@@ -32,6 +53,11 @@ test('default variant uses the gray tint with plain text', async ({ page }) => {
 
 test('solid variants use the on-* text over the bare family tone', async ({ page }) => {
   const cases = [
+    {
+      id: 'badge-neutral-solid',
+      surface: '--ui-color-text',
+      on: '--ui-color-surface',
+    },
     {
       id: 'badge-primary-solid',
       surface: '--ui-color-primary',
@@ -68,7 +94,7 @@ test('solid variants use the on-* text over the bare family tone', async ({ page
 test('variants resolve to distinct tint surfaces', async ({ page }) => {
   const ids = [
     'badge-default',
-    'badge-primary',
+    'badge-neutral',
     'badge-info',
     'badge-success',
     'badge-warning',
@@ -85,9 +111,9 @@ test('variants resolve to distinct tint surfaces', async ({ page }) => {
     colors.add(styles.color);
   }
   // Label colors collapse to 5 (2026-10-28, *-strong removed): the default
-  // and primary variants share the gray text — primary-pastel IS the
-  // default look under the gray brand. Backgrounds collapse to 5 the same
-  // way: primary-tint defaults to the same gray as surface-tint.
+  // (primary pastel) and neutral variants share the gray text under the
+  // gray brand — the brand pastel IS the default look. Backgrounds collapse
+  // the same way: primary-tint defaults to the same gray as surface-tint.
   expect(backgrounds.size).toBe(5);
   expect(colors.size).toBe(5);
 });

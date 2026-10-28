@@ -56,6 +56,14 @@ export const semanticMap = {
     dark: { mix: ['primary', 'on-primary', 86] },
   },
   'primary-tint': { light: 'neutral-100', dark: 'neutral-800' },
+  'primary-tint-hover': {
+    // Pastel hover fill (secondary button): the light theme darkens the
+    // 100-step tint with an 8% step of the family tone; the dark theme
+    // darkens the 800-step tint with the full half-step toward the
+    // on-primary pole (the wide dark steps need it to stay visible).
+    light: { mix: ['primary', 'primary-tint', 8] },
+    dark: { mix: ['primary-tint', 'on-primary'] },
+  },
   info: { light: 'info-600', dark: 'info-300' },
   'on-info': { light: 'neutral-0', dark: 'neutral-950' },
   'info-hover': {
@@ -102,7 +110,7 @@ export const tokenPairs = [
   // Core text on surfaces
   { fg: 'text', bg: 'surface', role: 'body' },
   { fg: 'text', bg: 'surface-raised', role: 'body' },
-  { fg: 'text', bg: 'surface-tint', role: 'body', note: 'badge default: gray tint' },
+  { fg: 'text', bg: 'surface-tint', role: 'body', note: 'badge neutral: gray tint' },
   { fg: 'text-muted', bg: 'surface', role: 'fluent' },
   { fg: 'text-muted', bg: 'surface-raised', role: 'fluent' },
 
@@ -112,16 +120,29 @@ export const tokenPairs = [
   { fg: 'text', bg: 'surface-raised', role: 'fluent', note: 'inline code, samp, pre' },
 
   // Hover fill (state model, theme notes): table rows, accordion,
-  // secondary/outline/ghost buttons. The dark value is the full raised step.
+  // outline/ghost buttons. The dark value is the full raised step.
   { fg: 'text', bg: 'hover', role: 'body' },
-  { fg: 'text', bg: 'surface-raised', role: 'body', note: 'secondary button fill' },
 
-  // Primary family (filled default button, kbd, switch checked, primary
-  // badge). primary-hover is derived toward the on-primary contrast pole;
-  // press = the hover fill + translate (uniform model).
+  // Primary family (filled default button, kbd, switch checked, the default
+  // badge pastel and the pastel secondary button). primary-hover is derived
+  // toward the on-primary contrast pole; press = the hover fill + translate
+  // (uniform model).
   { fg: 'on-primary', bg: 'primary', role: 'body', note: 'default button, kbd keycap' },
   { fg: 'on-primary', bg: 'primary-hover', role: 'body' },
-  { fg: 'primary', bg: 'primary-tint', role: 'body', note: 'primary badge pastel' },
+  {
+    fg: 'primary',
+    bg: 'primary-tint',
+    role: 'body',
+    threshold: 60,
+    note: 'default badge pastel / secondary button (pastel minimum)',
+  },
+  {
+    fg: 'primary',
+    bg: 'primary-tint-hover',
+    role: 'body',
+    threshold: 60,
+    note: 'secondary button pastel hover (pastel minimum)',
+  },
 
   // Info text and controls
   { fg: 'info', bg: 'surface', role: 'body' },
@@ -188,6 +209,10 @@ export const tokenPairs = [
     role: 'body',
     threshold: 60,
   },
+
+  // Neutral solid badge (the brand-independent inverted gray): the page
+  // text as the fill, the page surface as the label.
+  { fg: 'surface', bg: 'text', role: 'body', note: 'neutral-solid badge' },
 
   // Focus indicator (non-text contrast)
   { fg: 'focus-ring', bg: 'surface', role: 'nonText' },
