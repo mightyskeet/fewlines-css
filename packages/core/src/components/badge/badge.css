@@ -14,9 +14,10 @@
  * look: the gray tint of the page gamut (surface-tint) with plain text —
  * it stays gray under primary branding. Explicit variants mirror the
  * families:
- *   pastel (feedback, like Alert): neutral (explicit gray, = the default) |
- *     primary (brand pastel) | info | success | warning | danger — tint
- *     surface + bare family text;
+ *   pastel (feedback, like Alert): primary (brand pastel) | info | success |
+ *     warning | danger — tint surface + bare family text. Default (attribute
+ *     omitted) is the gray member of the set; there is no explicit neutral —
+ *     omitting the variant IS the gray look;
  *   solid (bright fill, light text): primary-solid | info-solid |
  *     success-solid | warning-solid | danger-solid — the bare family tone
  *     as the fill + on-* text, the button-default model. primary-solid is
@@ -28,7 +29,7 @@
  * md is the standard pill.
  *
  * APCA pairs used (validated in tests/apca, body threshold):
- *   default/neutral: text on surface-tint
+ *   default: text on surface-tint
  *   pastel:  {primary,info,success,warning,danger} on *-tint
  *   solid:   on-{primary,info,success,warning,danger} on the bare tone
  */
@@ -67,13 +68,7 @@
   white-space: nowrap;
 }
 
-/* Tint variants (the feedback model, like Alert). `neutral` restates the
- * default explicitly — the gray look pinned against a re-themed default. */
-.ui-badge[data-variant='neutral'] {
-  --ui-badge-fg: var(--ui-color-text);
-  --ui-badge-bg: var(--ui-color-surface-tint);
-}
-
+/* Tint variants (the feedback model, like Alert). */
 .ui-badge[data-variant='primary'] {
   --ui-badge-fg: var(--ui-color-primary);
   --ui-badge-bg: var(--ui-color-primary-tint);

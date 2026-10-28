@@ -64,8 +64,7 @@
       <section>
         <h2>Variants</h2>
         <div class="example">
-          <span class="ui-badge">Neutral</span>
-          <span class="ui-badge" data-variant="neutral">Neutral (explicit)</span>
+          <span class="ui-badge">Default</span>
           <span class="ui-badge" data-variant="primary">Primary</span>
           <span class="ui-badge" data-variant="info">Info</span>
           <span class="ui-badge" data-variant="success">Success</span>
@@ -73,10 +72,11 @@
           <span class="ui-badge" data-variant="danger">Danger</span>
         </div>
         <p>
-          <code>data-variant="neutral|primary|info|success|warning|danger"</code> — soft tint
+          <code>data-variant="primary|info|success|warning|danger"</code> — soft tint
           surfaces (the feedback model, like Alert). Default (no attribute) is the gray member of
           the set: <code>surface-tint</code> + <code>text</code> from the page gamut, so it stays
-          gray under primary branding; <code>neutral</code> restates it explicitly.
+          gray under primary branding — omitting the variant is the gray look, there is no
+          explicit <code>neutral</code>.
           <code>primary</code> is the brand pastel (<code>primary-tint</code> +
           <code>primary</code>) and follows a re-themed primary. Pastel label pairs are tracked at
           the documented body minimum (Lc 60) since the <code>-strong</code> tones were removed;

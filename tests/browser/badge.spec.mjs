@@ -68,7 +68,6 @@ test('solid variants use the on-* text over the bare family tone', async ({ page
 test('variants resolve to distinct tint surfaces', async ({ page }) => {
   const ids = [
     'badge-default',
-    'badge-neutral',
     'badge-primary',
     'badge-info',
     'badge-success',
@@ -85,21 +84,12 @@ test('variants resolve to distinct tint surfaces', async ({ page }) => {
     backgrounds.add(styles.background);
     colors.add(styles.color);
   }
-  // Label colors collapse to 5 (2026-10-28, *-strong removed): the default,
-  // neutral and primary variants share the gray text — primary-pastel IS the
+  // Label colors collapse to 5 (2026-10-28, *-strong removed): the default
+  // and primary variants share the gray text — primary-pastel IS the
   // default look under the gray brand. Backgrounds collapse to 5 the same
   // way: primary-tint defaults to the same gray as surface-tint.
   expect(backgrounds.size).toBe(5);
   expect(colors.size).toBe(5);
-});
-
-test('the explicit neutral variant matches the default', async ({ page }) => {
-  const read = (id) =>
-    page.locator(`#${id}`).evaluate((el) => {
-      const s = getComputedStyle(el);
-      return `${s.backgroundColor}/${s.color}`;
-    });
-  expect(await read('badge-neutral')).toBe(await read('badge-default'));
 });
 
 test('variant label color uses the bare token of its family', async ({ page }) => {
