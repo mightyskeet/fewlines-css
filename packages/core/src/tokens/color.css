@@ -10,15 +10,15 @@
  * Model (2026-10-26): the gray PAGE GAMUT carries every neutral role of the
  * interface — the explicit `neutral` look of a component consumes only this
  * gamut and never follows a re-themed brand. Defaults are the BRAND look:
- * attribute-omitted states render the primary family (Badge pastel, Button
+ * attribute-omitted states render the brand family (Badge pastel, Button
  * solid fill), the gray look is addressed by an explicit `neutral` variant.
  * On top of the gamut sit five color
- * FAMILIES of identical shape (primary + info/danger/success/warning), each
+ * FAMILIES of identical shape (brand + info/danger/success/warning), each
  * with four roles: the bare tone (readable text on the page AND the solid
  * fill, text `on-*`), `-hover` (derived hover fill: a step toward the
  * `on-*` contrast pole — the fill lightens in the light theme, darkens in
- * the dark one, like `primary-hover`), `on-*` (text on the fill) and
- * `-tint` (soft surface). Re-theming a family (e.g. a brand `primary`)
+ * the dark one, like `brand-hover`), `on-*` (text on the fill) and
+ * `-tint` (soft surface). Re-theming the brand family
  * never touches the page gamut.
  */
 :root {
@@ -38,7 +38,7 @@
 
   /* Soft gray fill — the gray member of the tint role (Badge `neutral`, and
    * any de-emphasised pastel surface). Brand-independent: the gray look
-   * never follows a re-themed primary. Same steps as the family tints
+   * never follows a re-themed brand. Same steps as the family tints
    * (100/800), so the explicit neutral badge reads as the gray member of
    * the pastel set. */
   --ui-color-surface-tint: light-dark(
@@ -79,36 +79,36 @@
    * preferred APCA 75, so the state pair is tracked at the documented 60
    * minimum), `-tint` = soft surface (Alert, Badge). */
 
-  /* Primary — the action color: default buttons, kbd, the checked Switch,
-   * the primary Badge. Defaults to the inverted gray (dark fill in the light
-   * theme, near-white in the dark — the shadcn primary model): the brand
+  /* Brand — the action color: default buttons, kbd, the checked Switch,
+   * the default Badge. Defaults to the inverted gray (dark fill in the light
+   * theme, near-white in the dark — the shadcn inverted-polarity model): the brand
    * look is one override away, and the hover follows automatically because
-   * it is derived toward the `on-primary` contrast pole (30% in the light
+   * it is derived toward the `on-brand` contrast pole (30% in the light
    * theme — a visible jump; the dark theme keeps the 14% step — the
    * near-white fill has no visible room toward white). */
-  --ui-color-primary: light-dark(var(--ui-palette-neutral-900), var(--ui-palette-neutral-50));
-  --ui-color-on-primary: light-dark(var(--ui-palette-neutral-0), var(--ui-palette-neutral-950));
-  --ui-color-primary-hover: light-dark(
-    color-mix(in oklab, var(--ui-color-primary) 70%, var(--ui-color-on-primary)),
-    color-mix(in oklab, var(--ui-color-primary) 86%, var(--ui-color-on-primary))
+  --ui-color-brand: light-dark(var(--ui-palette-neutral-900), var(--ui-palette-neutral-50));
+  --ui-color-on-brand: light-dark(var(--ui-palette-neutral-0), var(--ui-palette-neutral-950));
+  --ui-color-brand-hover: light-dark(
+    color-mix(in oklab, var(--ui-color-brand) 70%, var(--ui-color-on-brand)),
+    color-mix(in oklab, var(--ui-color-brand) 86%, var(--ui-color-on-brand))
   );
-  --ui-color-primary-tint: light-dark(
+  --ui-color-brand-tint: light-dark(
     var(--ui-palette-neutral-100),
     var(--ui-palette-neutral-800)
   );
 
-  /* Hover fill of a pastel primary surface (secondary button): a step
+  /* Hover fill of a pastel brand surface (secondary button): a step
    * toward the text tone — the light theme darkens the 100-step tint with
    * the family tone, the dark theme darkens the 800-step tint toward the
-   * on-primary pole (the wide dark steps need the full half-step). Derived
+   * on-brand pole (the wide dark steps need the full half-step). Derived
    * from animated semantic tokens — follows the theme transition. */
-  --ui-color-primary-tint-hover: light-dark(
-    color-mix(in oklab, var(--ui-color-primary) 8%, var(--ui-color-primary-tint)),
-    color-mix(in oklab, var(--ui-color-primary-tint), var(--ui-color-on-primary))
+  --ui-color-brand-tint-hover: light-dark(
+    color-mix(in oklab, var(--ui-color-brand) 8%, var(--ui-color-brand-tint)),
+    color-mix(in oklab, var(--ui-color-brand-tint), var(--ui-color-on-brand))
   );
 
   /* Info — the blue tone: links, focus, native accent-color, the info
-   * Alert/Badge. The action color is primary; info carries the tone of the
+   * Alert/Badge. The action color is the brand family; info carries the tone of the
    * non-action informational roles. */
   --ui-color-info: light-dark(var(--ui-palette-info-600), var(--ui-palette-info-300));
   --ui-color-on-info: light-dark(var(--ui-palette-neutral-0), var(--ui-palette-neutral-950));

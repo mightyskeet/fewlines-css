@@ -42,7 +42,7 @@
       <section>
         <h2>Native basis</h2>
         <p>
-          <code>&lt;button type="button|submit|reset"&gt;</code> — primary element;
+          <code>&lt;button type="button|submit|reset"&gt;</code> — the brand-colored element;
           <code>&lt;a href&gt;</code> for navigation styled as a button. Native states:
           <code>:hover</code>, <code>:active</code>, <code>:disabled</code>,
           <code>:focus-visible</code>. No JS classes required.
@@ -66,12 +66,12 @@
         </div>
         <p>
           <code>data-variant="secondary|outline|ghost|destructive|link"</code>; default is
-          <code>default</code> (no attribute). The default variant is the primary family, inverted
+          <code>default</code> (no attribute). The default variant is the brand family, inverted
           polarity by default: a dark fill in the light theme, near-white in the dark
-          (<code>--ui-color-primary</code>; a brand look is one override away).
-          <code>secondary</code> is the brand pastel (<code>primary-tint</code> +
-          <code>primary</code>) — it follows the brand like the default. Filled variants carry no
-          border — the fill is the surface.
+          (<code>--ui-color-brand</code>; a brand look is one override away).
+          <code>secondary</code> is the brand pastel (<code>brand-tint</code> + <code>brand</code>)
+          — it follows the brand like the default. Filled variants carry no border — the fill is the
+          surface.
         </p>
       </section>
 
@@ -168,9 +168,10 @@
             Button text is the accessible name; icon-only buttons require <code>aria-label</code>.
           </li>
           <li>
-            APCA pairs: <code>on-primary/primary</code>, <code>on-primary/primary-hover</code>,
-            <code>text/surface-raised</code>, <code>on-danger/danger</code>, <code>text</code> on
-            surfaces (link variant).
+            APCA pairs: <code>on-brand/brand</code>, <code>on-brand/brand-hover</code>,
+            <code>brand/brand-tint</code>, <code>brand/brand-tint-hover</code>,
+            <code>on-danger/danger</code>, <code>text</code> on surfaces (outline, ghost, link
+            variants).
           </li>
         </ul>
       </section>

@@ -23,17 +23,17 @@ const stylesOf = (page, id) =>
     };
   });
 
-test('default is the primary fill (inverted gray by default)', async ({ page }) => {
+test('default is the brand fill (inverted gray by default)', async ({ page }) => {
   const styles = await stylesOf(page, '#btn-primary');
-  expect(styles.background).toBe(await token(page, '--ui-color-primary'));
-  expect(styles.color).toBe(await token(page, '--ui-color-on-primary'));
+  expect(styles.background).toBe(await token(page, '--ui-color-brand'));
+  expect(styles.color).toBe(await token(page, '--ui-color-on-brand'));
   expect(styles.borderColor).toBe('rgba(0, 0, 0, 0)');
 });
 
 test('secondary is the brand pastel fill', async ({ page }) => {
   const styles = await stylesOf(page, '#btn-secondary');
-  expect(styles.background).toBe(await token(page, '--ui-color-primary-tint'));
-  expect(styles.color).toBe(await token(page, '--ui-color-primary'));
+  expect(styles.background).toBe(await token(page, '--ui-color-brand-tint'));
+  expect(styles.color).toBe(await token(page, '--ui-color-brand'));
   expect(styles.borderColor).toBe('rgba(0, 0, 0, 0)');
 });
 
@@ -67,9 +67,9 @@ test('hover moves the default fill against the fill direction', async ({ page })
   const background = (id) =>
     page.locator(id).evaluate((el) => getComputedStyle(el).backgroundColor);
 
-  // Hover lands on primary-hover (derived toward the contrast pole: the
+  // Hover lands on brand-hover (derived toward the contrast pole: the
   // fill lightens, decision 2026-10-24).
-  const hoverFill = await token(page, '--ui-color-primary-hover');
+  const hoverFill = await token(page, '--ui-color-brand-hover');
   await page.hover('#btn-primary');
   await expect.poll(() => background('#btn-primary'), { timeout: 500 }).toBe(hoverFill);
 });
@@ -94,7 +94,7 @@ test('hover does not restyle a disabled button', async ({ page }) => {
 
   // Control: hovering the enabled default button lands on the hover fill
   // (poll: the fast background transition needs a frame or two)
-  const hoverFill = await token(page, '--ui-color-primary-hover');
+  const hoverFill = await token(page, '--ui-color-brand-hover');
   await page.hover('#btn-primary');
   await expect.poll(() => background('#btn-primary'), { timeout: 500 }).toBe(hoverFill);
 

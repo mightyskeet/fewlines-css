@@ -5,11 +5,11 @@
  * :active, :disabled — no JS state classes (architecture notes, CSS как слой presentation и state).
  *
  * Six variants via data-variant (shadcn model):
- *   default (attribute omitted) — the primary family, inverted polarity by
+ *   default (attribute omitted) — the brand family, inverted polarity by
  *     default (dark fill in the light theme, near-white in the dark); the
- *     brand look is one --ui-color-primary override away;
- *   secondary                   — brand pastel fill (primary-tint + primary,
- *                                 the badge-primary pastel), follows the brand;
+ *     brand look is one --ui-color-brand override away;
+ *   secondary                   — brand pastel fill (brand-tint + brand,
+ *                                 the default badge pastel), follows the brand;
  *   outline                     — border, transparent fill;
  *   ghost                       — borderless transparent;
  *   link                        — plain text link styled as a button;
@@ -20,8 +20,8 @@
  * with outline.
  *
  * APCA pairs used (validated in tests/apca):
- *   default:     on-primary on primary / primary-hover (hover = press)
- *   secondary:   primary on primary-tint / primary-tint-hover (pastel
+ *   default:     on-brand on brand / brand-hover (hover = press)
+ *   secondary:   brand on brand-tint / brand-tint-hover (pastel
  *                minimum 60)
  *   outline:     text on hover (hover fill) / surface (border, nonText)
  *   ghost:       text on hover (hover fill)
@@ -57,10 +57,10 @@
     background-color var(--ui-duration-fast) ease,
     border-color var(--ui-duration-fast) ease;
 
-  /* Default variant: the primary family, inverted polarity by default (the
-   * fill IS the text color flipped — the shadcn primary model). */
-  color: var(--ui-color-on-primary);
-  background: var(--ui-color-primary);
+  /* Default variant: the brand family, inverted polarity by default (the
+   * fill IS the text color flipped — the shadcn inverted-polarity model). */
+  color: var(--ui-color-on-brand);
+  background: var(--ui-color-brand);
 }
 
 /* Icons auto-size to 1rem and never intercept the pointer. */
@@ -126,7 +126,7 @@
  * fill unless the variant re-states its hover fill with higher specificity
  * (outline/ghost/secondary). */
 .ui-button:active {
-  background: var(--ui-color-primary-hover);
+  background: var(--ui-color-brand-hover);
   translate: 0 1px;
 }
 
@@ -139,15 +139,15 @@
   translate: none;
 }
 
-/* Secondary: brand pastel fill (the badge-primary pastel), no visible
- * border. Follows the brand: primary-tint + primary. */
+/* Secondary: brand pastel fill (the default badge pastel), no visible
+ * border. Follows the brand: brand-tint + brand. */
 .ui-button[data-variant='secondary'] {
-  color: var(--ui-color-primary);
-  background: var(--ui-color-primary-tint);
+  color: var(--ui-color-brand);
+  background: var(--ui-color-brand-tint);
 }
 
 .ui-button[data-variant='secondary']:active {
-  background: var(--ui-color-primary-tint-hover);
+  background: var(--ui-color-brand-tint-hover);
 }
 
 /* Outline: the border is the surface, the fill is transparent, the text
@@ -207,15 +207,15 @@
 /* States — hover never restyles a disabled control. Hover is pointer-gated
  * (sticky :hover on touch would latch the highlight). Variant selectors
  * win over the generic default rule for their own fills. Default hover and
- * press move toward the on-primary contrast pole (derived primary-hover);
+ * press move toward the on-brand contrast pole (derived brand-hover);
  * link opts out of fills. */
 @media (hover: hover) and (pointer: fine) {
   .ui-button:hover:not(:disabled, [aria-disabled='true'], [data-variant='link']) {
-    background: var(--ui-color-primary-hover);
+    background: var(--ui-color-brand-hover);
   }
 
   .ui-button[data-variant='secondary']:hover:not(:disabled, [aria-disabled='true']) {
-    background: var(--ui-color-primary-tint-hover);
+    background: var(--ui-color-brand-tint-hover);
   }
 
   .ui-button[data-variant='outline']:hover:not(:disabled, [aria-disabled='true']) {

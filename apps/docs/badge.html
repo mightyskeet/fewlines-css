@@ -72,38 +72,37 @@
           <span class="ui-badge" data-variant="danger">Danger</span>
         </div>
         <p>
-          <code>data-variant="neutral|info|success|warning|danger"</code> — soft tint
-          surfaces (the feedback model, like Alert). Default (no attribute) is the brand pastel:
-          <code>primary-tint</code> + <code>primary</code> — it follows a re-themed primary, the
-          same brand-forward default as Button. <code>neutral</code> is the explicit gray member
-          (<code>surface-tint</code> + <code>text</code> from the page gamut): the gray look never
-          follows the brand. Pastel label pairs are tracked at the documented body minimum (Lc 60)
-          since the <code>-strong</code> tones were removed; <code>neutral</code> sits at the
-          strict body threshold (Lc 75). All pairs are validated by the APCA matrix in both themes.
+          <code>data-variant="neutral|info|success|warning|danger"</code> — soft tint surfaces (the
+          feedback model, like Alert). Default (no attribute) is the brand pastel:
+          <code>brand-tint</code> + <code>brand</code> — it follows a re-themed brand, the same
+          brand-forward default as Button. <code>neutral</code> is the explicit gray member (<code
+            >surface-tint</code
+          >
+          + <code>text</code> from the page gamut): the gray look never follows the brand. Pastel
+          label pairs are tracked at the documented body minimum (Lc 60) since the
+          <code>-strong</code> tones were removed; <code>neutral</code> sits at the strict body
+          threshold (Lc 75). All pairs are validated by the APCA matrix in both themes.
         </p>
       </section>
 
       <section>
         <h2>Solid fill</h2>
         <div class="example">
-          <span class="ui-badge" data-variant="neutral-solid">Neutral</span>
-          <span class="ui-badge" data-variant="primary-solid">Primary</span>
-          <span class="ui-badge" data-variant="info-solid">Info</span>
-          <span class="ui-badge" data-variant="success-solid">Success</span>
-          <span class="ui-badge" data-variant="warning-solid">Warning</span>
-          <span class="ui-badge" data-variant="danger-solid">Danger</span>
+          <span class="ui-badge" data-solid>Default</span>
+          <span class="ui-badge" data-variant="neutral" data-solid>Neutral</span>
+          <span class="ui-badge" data-variant="info" data-solid>Info</span>
+          <span class="ui-badge" data-variant="success" data-solid>Success</span>
+          <span class="ui-badge" data-variant="warning" data-solid>Warning</span>
+          <span class="ui-badge" data-variant="danger" data-solid>Danger</span>
         </div>
         <p>
-          <code
-            >data-variant="neutral-solid|primary-solid|info-solid|success-solid|
-            warning-solid|danger-solid"</code
-          >
-          — the bare family tone as the fill with <code>on-*</code> text (the button-default
-          model). <code>primary-solid</code> is the high-contrast gray pill in the default theme
-          and follows the brand once primary is re-themed; <code>neutral-solid</code> is the
-          brand-independent inverted gray (<code>text</code> fill + <code>surface</code> label).
-          The warning tone doubles as its own solid fill: white on the lighter 500 step
-          fails the APCA body threshold, on 600 it passes (Lc 87.8).
+          The same set with the boolean <code>data-solid</code> attribute: the fill flips to the
+          button-default model — the bare family tone as the fill with <code>on-*</code> text. Bare
+          <code>data-solid</code> (no variant) = the default brand family — the high-contrast gray
+          pill in the default theme that follows the brand once re-themed. <code>neutral</code> +
+          solid is the brand-independent inverted gray (<code>text</code> fill +
+          <code>surface</code> label). The warning tone doubles as its own solid fill: white on the
+          lighter 500 step fails the APCA body threshold, on 600 it passes (Lc 87.8).
         </p>
       </section>
 

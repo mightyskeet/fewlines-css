@@ -64,31 +64,31 @@
   initial-value: gray;
 }
 
-@property --ui-color-primary {
+@property --ui-color-brand {
   syntax: '<color>';
   inherits: true;
   initial-value: black;
 }
 
-@property --ui-color-on-primary {
+@property --ui-color-on-brand {
   syntax: '<color>';
   inherits: true;
   initial-value: white;
 }
 
-@property --ui-color-primary-tint {
+@property --ui-color-brand-tint {
   syntax: '<color>';
   inherits: true;
   initial-value: gray;
 }
 
-@property --ui-color-primary-tint-hover {
+@property --ui-color-brand-tint-hover {
   syntax: '<color>';
   inherits: true;
   initial-value: gray;
 }
 
-@property --ui-color-primary-hover {
+@property --ui-color-brand-hover {
   syntax: '<color>';
   inherits: true;
   initial-value: gray;
@@ -211,9 +211,9 @@
     --ui-color-text-muted var(--ui-duration-slow) ease,
     --ui-color-border var(--ui-duration-slow) ease,
     --ui-color-border-strong var(--ui-duration-slow) ease,
-    --ui-color-primary var(--ui-duration-slow) ease,
-    --ui-color-on-primary var(--ui-duration-slow) ease,
-    --ui-color-primary-tint var(--ui-duration-slow) ease,
+    --ui-color-brand var(--ui-duration-slow) ease,
+    --ui-color-on-brand var(--ui-duration-slow) ease,
+    --ui-color-brand-tint var(--ui-duration-slow) ease,
     --ui-color-info var(--ui-duration-slow) ease,
     --ui-color-on-info var(--ui-duration-slow) ease,
     --ui-color-danger var(--ui-duration-slow) ease,

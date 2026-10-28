@@ -10,35 +10,36 @@
  *   <span class="ui-badge">Beta</span>
  *   <span class="ui-badge" data-variant="success">Active</span>
  *
- * Variants via data-variant. The default (attribute omitted) is the brand
- * pastel: primary-tint surface + bare primary text — it follows a re-themed
- * primary. Explicit variants mirror the families:
+ * Variants via data-variant, fill model via data-solid. The default
+ * (variant omitted) is the brand pastel: brand-tint surface + bare brand
+ * text — it follows a re-themed brand. Variant values name every other
+ * family:
  *   pastel (feedback, like Alert): neutral | info | success | warning |
  *     danger — tint surface + bare family text. `neutral` is the gray member
  *     of the page gamut (surface-tint + text): the gray look is explicit now
  *     that the brand owns the default;
- *   solid (bright fill, light text): neutral-solid | primary-solid |
- *     info-solid | success-solid | warning-solid | danger-solid — the bare
- *     family tone as the fill + on-* text, the button-default model.
- *     primary-solid is the high-contrast gray pill in the default theme and
- *     follows the brand once primary is re-themed; neutral-solid is the
- *     brand-independent inverted gray (surface fill, text label).
+ *   solid (bright fill, light text): bare `data-solid` (no variant) = the
+ *     brand family (on-brand/brand); `data-variant="..." data-solid` = the
+ *     bare family tone as the fill + on-* text, the button-default model.
+ *     `neutral` + solid is the brand-independent inverted gray (text fill,
+ *     surface label); brand solid is the high-contrast gray pill in the
+ *     default theme and follows the brand once re-themed.
  *
  * Sizes via data-size: sm | lg (default — md, attribute omitted). Geometry
  * scales, typography stays: sm 16px / md 20px / lg 28px (line-height: 1);
  * md is the standard pill.
  *
  * APCA pairs used (validated in tests/apca):
- *   default:       primary on primary-tint (pastel minimum, Lc 60)
+ *   default:        brand on brand-tint (pastel minimum, Lc 60)
  *   neutral pastel: text on surface-tint (body threshold, Lc 75)
- *   solid:         on-{primary,info,success,warning,danger} on the bare tone
- *     (body threshold); surface on text for neutral-solid (inverted page
- *     gamut, body threshold)
+ *   solid:          on-{brand,info,success,warning,danger} on the bare tone
+ *     (body threshold); surface on text for the neutral solid (inverted
+ *     page gamut, body threshold)
  */
 
 .ui-badge {
-  --ui-badge-fg: var(--ui-color-primary);
-  --ui-badge-bg: var(--ui-color-primary-tint);
+  --ui-badge-fg: var(--ui-color-brand);
+  --ui-badge-bg: var(--ui-color-brand-tint);
 
   display: inline-flex;
   align-items: center;
@@ -97,35 +98,37 @@
   --ui-badge-bg: var(--ui-color-danger-tint);
 }
 
-/* Solid variants (the button-default model): the bare family tone as the
- * fill, light text. `neutral-solid` is the brand-independent inverted gray:
- * the page text as the fill, the surface as the label. */
-.ui-badge[data-variant='neutral-solid'] {
+/* Solid model (the button-default model): bare `data-solid` = the brand
+ * family (on-brand text, brand fill). `data-variant="..." data-solid` = the
+ * bare family tone as the fill, light text. `neutral` + solid is the
+ * brand-independent inverted gray: the page text as the fill, the surface
+ * as the label. Compound selectors out-specificity the pastel blocks. */
+.ui-badge[data-solid] {
+  --ui-badge-fg: var(--ui-color-on-brand);
+  --ui-badge-bg: var(--ui-color-brand);
+}
+
+.ui-badge[data-variant='neutral'][data-solid] {
   --ui-badge-fg: var(--ui-color-surface);
   --ui-badge-bg: var(--ui-color-text);
 }
 
-.ui-badge[data-variant='primary-solid'] {
-  --ui-badge-fg: var(--ui-color-on-primary);
-  --ui-badge-bg: var(--ui-color-primary);
-}
-
-.ui-badge[data-variant='info-solid'] {
+.ui-badge[data-variant='info'][data-solid] {
   --ui-badge-fg: var(--ui-color-on-info);
   --ui-badge-bg: var(--ui-color-info);
 }
 
-.ui-badge[data-variant='success-solid'] {
+.ui-badge[data-variant='success'][data-solid] {
   --ui-badge-fg: var(--ui-color-on-success);
   --ui-badge-bg: var(--ui-color-success);
 }
 
-.ui-badge[data-variant='warning-solid'] {
+.ui-badge[data-variant='warning'][data-solid] {
   --ui-badge-fg: var(--ui-color-on-warning);
   --ui-badge-bg: var(--ui-color-warning);
 }
 
-.ui-badge[data-variant='danger-solid'] {
+.ui-badge[data-variant='danger'][data-solid] {
   --ui-badge-fg: var(--ui-color-on-danger);
   --ui-badge-bg: var(--ui-color-danger);
 }

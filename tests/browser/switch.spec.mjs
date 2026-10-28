@@ -62,7 +62,7 @@ test('disabled switch is not focusable and not editable', async ({ page }) => {
   expect(isFocusable).toBe(false);
 });
 
-test('checked state applies the primary fill token to the track', async ({ page }) => {
+test('checked state applies the brand fill token to the track', async ({ page }) => {
   const off = await page
     .locator('#switch-basic')
     .evaluate((el) => getComputedStyle(el).backgroundColor);
@@ -71,12 +71,12 @@ test('checked state applies the primary fill token to the track', async ({ page 
     .evaluate((el) => getComputedStyle(el).backgroundColor);
   expect(off).not.toBe(on);
 
-  const primaryFill = await page.evaluate(() =>
-    getComputedStyle(document.documentElement).getPropertyValue('--ui-color-primary'),
+  const brandFill = await page.evaluate(() =>
+    getComputedStyle(document.documentElement).getPropertyValue('--ui-color-brand'),
   );
   // Registered tokens resolve to concrete colors on :root (theme-transition
-  // @property); the checked track must consume the primary fill token.
-  expect(on).toBe(primaryFill.trim());
+  // @property); the checked track must consume the brand fill token.
+  expect(on).toBe(brandFill.trim());
 });
 
 test('track colors follow the theme switch (light-dark tokens)', async ({ page }) => {

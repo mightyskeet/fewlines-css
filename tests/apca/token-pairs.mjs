@@ -46,23 +46,23 @@ export const semanticMap = {
   },
   text: { light: 'neutral-900', dark: 'neutral-50' },
   'text-muted': { light: 'neutral-600', dark: 'neutral-300' },
-  primary: { light: 'neutral-900', dark: 'neutral-50' },
-  'on-primary': { light: 'neutral-0', dark: 'neutral-950' },
-  'primary-hover': {
-    // A 30% step toward the on-primary contrast pole (light theme) — the
+  brand: { light: 'neutral-900', dark: 'neutral-50' },
+  'on-brand': { light: 'neutral-0', dark: 'neutral-950' },
+  'brand-hover': {
+    // A 30% step toward the on-brand contrast pole (light theme) — the
     // near-black fill has a huge contrast headroom; the dark theme keeps
     // the old 14% step — the near-white fill has no visible room.
-    light: { mix: ['primary', 'on-primary', 70] },
-    dark: { mix: ['primary', 'on-primary', 86] },
+    light: { mix: ['brand', 'on-brand', 70] },
+    dark: { mix: ['brand', 'on-brand', 86] },
   },
-  'primary-tint': { light: 'neutral-100', dark: 'neutral-800' },
-  'primary-tint-hover': {
+  'brand-tint': { light: 'neutral-100', dark: 'neutral-800' },
+  'brand-tint-hover': {
     // Pastel hover fill (secondary button): the light theme darkens the
     // 100-step tint with an 8% step of the family tone; the dark theme
     // darkens the 800-step tint with the full half-step toward the
-    // on-primary pole (the wide dark steps need it to stay visible).
-    light: { mix: ['primary', 'primary-tint', 8] },
-    dark: { mix: ['primary-tint', 'on-primary'] },
+    // on-brand pole (the wide dark steps need it to stay visible).
+    light: { mix: ['brand', 'brand-tint', 8] },
+    dark: { mix: ['brand-tint', 'on-brand'] },
   },
   info: { light: 'info-600', dark: 'info-300' },
   'on-info': { light: 'neutral-0', dark: 'neutral-950' },
@@ -123,22 +123,22 @@ export const tokenPairs = [
   // outline/ghost buttons. The dark value is the full raised step.
   { fg: 'text', bg: 'hover', role: 'body' },
 
-  // Primary family (filled default button, kbd, switch checked, the default
-  // badge pastel and the pastel secondary button). primary-hover is derived
-  // toward the on-primary contrast pole; press = the hover fill + translate
+  // Brand family (filled default button, kbd, switch checked, the default
+  // badge pastel and the pastel secondary button). brand-hover is derived
+  // toward the on-brand contrast pole; press = the hover fill + translate
   // (uniform model).
-  { fg: 'on-primary', bg: 'primary', role: 'body', note: 'default button, kbd keycap' },
-  { fg: 'on-primary', bg: 'primary-hover', role: 'body' },
+  { fg: 'on-brand', bg: 'brand', role: 'body', note: 'default button, kbd keycap' },
+  { fg: 'on-brand', bg: 'brand-hover', role: 'body' },
   {
-    fg: 'primary',
-    bg: 'primary-tint',
+    fg: 'brand',
+    bg: 'brand-tint',
     role: 'body',
     threshold: 60,
     note: 'default badge pastel / secondary button (pastel minimum)',
   },
   {
-    fg: 'primary',
-    bg: 'primary-tint-hover',
+    fg: 'brand',
+    bg: 'brand-tint-hover',
     role: 'body',
     threshold: 60,
     note: 'secondary button pastel hover (pastel minimum)',

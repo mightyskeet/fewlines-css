@@ -98,15 +98,15 @@
     color-mix(in oklch, var(--pl-surface-dark), var(--pl-text-dark) 55%)
   );
 
-  /* Primary family — the tone is the text color with inverted roles (the
-   * shadcn primary model); hover derives toward the on-primary pole. */
-  --ui-color-primary: light-dark(var(--pl-text-light), var(--pl-text-dark));
-  --ui-color-on-primary: light-dark(oklch(100% 0 0), var(--pl-pole-dark));
-  --ui-color-primary-hover: light-dark(
-    color-mix(in oklab, var(--ui-color-primary) 70%, var(--ui-color-on-primary)),
-    color-mix(in oklab, var(--ui-color-primary) 86%, var(--ui-color-on-primary))
+  /* Brand family — the tone is the text color with inverted roles (the
+   * shadcn inverted model); hover derives toward the on-brand pole. */
+  --ui-color-brand: light-dark(var(--pl-text-light), var(--pl-text-dark));
+  --ui-color-on-brand: light-dark(oklch(100% 0 0), var(--pl-pole-dark));
+  --ui-color-brand-hover: light-dark(
+    color-mix(in oklab, var(--ui-color-brand) 70%, var(--ui-color-on-brand)),
+    color-mix(in oklab, var(--ui-color-brand) 86%, var(--ui-color-on-brand))
   );
-  --ui-color-primary-tint: light-dark(var(--pl-soft-light), var(--pl-raised-dark));
+  --ui-color-brand-tint: light-dark(var(--pl-soft-light), var(--pl-raised-dark));
   --ui-color-surface-tint: light-dark(var(--pl-soft-light), var(--pl-raised-dark));
 
   /* ---- Chromatic families ----

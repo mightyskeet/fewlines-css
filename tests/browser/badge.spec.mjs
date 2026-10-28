@@ -11,7 +11,7 @@ test.beforeEach(async ({ page }) => {
   await page.goto('/fixture.html');
 });
 
-test('default variant is the brand pastel (primary-tint + primary)', async ({ page }) => {
+test('default variant is the brand pastel (brand-tint + brand)', async ({ page }) => {
   const styles = await page.locator('#badge-default').evaluate((el) => {
     const s = getComputedStyle(el);
     return { background: s.backgroundColor, color: s.color };
@@ -19,15 +19,13 @@ test('default variant is the brand pastel (primary-tint + primary)', async ({ pa
 
   const tint = await page
     .evaluate(() =>
-      getComputedStyle(document.documentElement).getPropertyValue('--ui-color-primary-tint'),
+      getComputedStyle(document.documentElement).getPropertyValue('--ui-color-brand-tint'),
     )
     .then((v) => v.trim());
   expect(styles.background).toBe(tint);
 
   const text = await page
-    .evaluate(() =>
-      getComputedStyle(document.documentElement).getPropertyValue('--ui-color-primary'),
-    )
+    .evaluate(() => getComputedStyle(document.documentElement).getPropertyValue('--ui-color-brand'))
     .then((v) => v.trim());
   expect(styles.color).toBe(text);
 });
@@ -51,17 +49,18 @@ test('the explicit neutral variant is the brand-independent gray pastel', async 
   expect(styles.color).toBe(text);
 });
 
-test('solid variants use the on-* text over the bare family tone', async ({ page }) => {
+test('solid model uses the on-* text over the bare family tone', async ({ page }) => {
   const cases = [
+    // Bare data-solid (no variant) = the default brand family.
+    {
+      id: 'badge-default-solid',
+      surface: '--ui-color-brand',
+      on: '--ui-color-on-brand',
+    },
     {
       id: 'badge-neutral-solid',
       surface: '--ui-color-text',
       on: '--ui-color-surface',
-    },
-    {
-      id: 'badge-primary-solid',
-      surface: '--ui-color-primary',
-      on: '--ui-color-on-primary',
     },
     { id: 'badge-info-solid', surface: '--ui-color-info', on: '--ui-color-on-info' },
     {
@@ -79,9 +78,10 @@ test('solid variants use the on-* text over the bare family tone', async ({ page
       return { background: s.backgroundColor, color: s.color };
     });
     const expectedBg = await page
-      .evaluate((name) => getComputedStyle(document.documentElement).getPropertyValue(name), [
-        surface,
-      ])
+      .evaluate(
+        (name) => getComputedStyle(document.documentElement).getPropertyValue(name),
+        [surface],
+      )
       .then((v) => v.trim());
     const expectedFg = await page
       .evaluate((name) => getComputedStyle(document.documentElement).getPropertyValue(name), [on])
@@ -111,9 +111,9 @@ test('variants resolve to distinct tint surfaces', async ({ page }) => {
     colors.add(styles.color);
   }
   // Label colors collapse to 5 (2026-10-28, *-strong removed): the default
-  // (primary pastel) and neutral variants share the gray text under the
+  // (brand pastel) and neutral variants share the gray text under the
   // gray brand — the brand pastel IS the default look. Backgrounds collapse
-  // the same way: primary-tint defaults to the same gray as surface-tint.
+  // the same way: brand-tint defaults to the same gray as surface-tint.
   expect(backgrounds.size).toBe(5);
   expect(colors.size).toBe(5);
 });
