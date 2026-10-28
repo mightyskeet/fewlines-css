@@ -25,8 +25,7 @@ const NEUTRAL_PAIRS = [
 const FAMILY_PAIRS = [
   ['on', 'fill', 75], // on-X / X (fill)
   ['fill', 'surface', 75], // X as text on the page
-  ['strong', 'surface', 75],
-  ['strong', 'tint', 75],
+  ['fill', 'tint', 75], // X as alert/badge title on the tint surface
 ];
 
 // (The token-name mapping is mirrored inside the page script below —
@@ -63,7 +62,7 @@ const grid = async (browserName, type) => {
       const out = {};
       /** Registry token name from a family and a role: 'fill' = X (the bare
        * family token), 'on' = on-X; 'surface' is the global neutral surface;
-       * everything else is the family-suffixed token (strong, tint). */
+       * everything else is the family-suffixed token (tint). */
       const familyToken = (family, role) => {
         if (role === 'fill') return family;
         if (role === 'on') return `on-${family}`;

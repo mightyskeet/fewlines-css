@@ -21,7 +21,7 @@
  * (theme notes).
  *
  * APCA pairs used (validated in tests/apca):
- *   title:  {info,danger,success,warning}-strong on *-tint (body)
+ *   title:  {info,danger,success,warning} on *-tint (body)
  *   body:   text on *-tint (body)
  *   border: {info,danger,success,warning} on *-tint (nonText)
  */
@@ -30,9 +30,9 @@
   --ui-alert-accent: var(--ui-color-info);
   --ui-alert-surface: var(--ui-color-info-tint);
 
-  /* Variant title colors: -strong is the readable variant color on the tint
-   * surface (the base color sits under the body-role APCA threshold). */
-  --ui-alert-title: var(--ui-color-info-strong);
+  /* Variant title colors: the bare family tone is the readable variant
+   * color on the tint surface. */
+  --ui-alert-title: var(--ui-color-info);
 
   color: var(--ui-color-text);
   background: var(--ui-alert-surface);
@@ -44,19 +44,19 @@
 .ui-alert[data-variant='success'] {
   --ui-alert-accent: var(--ui-color-success);
   --ui-alert-surface: var(--ui-color-success-tint);
-  --ui-alert-title: var(--ui-color-success-strong);
+  --ui-alert-title: var(--ui-color-success);
 }
 
 .ui-alert[data-variant='warning'] {
   --ui-alert-accent: var(--ui-color-warning);
   --ui-alert-surface: var(--ui-color-warning-tint);
-  --ui-alert-title: var(--ui-color-warning-strong);
+  --ui-alert-title: var(--ui-color-warning);
 }
 
 .ui-alert[data-variant='danger'] {
   --ui-alert-accent: var(--ui-color-danger);
   --ui-alert-surface: var(--ui-color-danger-tint);
-  --ui-alert-title: var(--ui-color-danger-strong);
+  --ui-alert-title: var(--ui-color-danger);
 }
 
 /* Title carries the variant color (--ui-alert-title); the message text stays

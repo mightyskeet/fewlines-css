@@ -11,10 +11,12 @@
  * interface — the "neutral look" of a component is its default (variant
  * omitted) state and consumes only this gamut. On top of it sit five color
  * FAMILIES of identical shape (primary + info/danger/success/warning), each
- * with five roles: the bare tone (readable text on the page AND the solid
- * fill, text `on-*`), `-strong` (stronger text), `-hover` (derived hover
- * fill), `on-*` (text on the fill) and `-tint` (soft surface). Re-theming a
- * family (e.g. a brand `primary`) never touches the page gamut.
+ * with four roles: the bare tone (readable text on the page AND the solid
+ * fill, text `on-*`), `-hover` (derived hover fill: a step toward the
+ * `on-*` contrast pole — the fill lightens in the light theme, darkens in
+ * the dark one, like `primary-hover`), `on-*` (text on the fill) and
+ * `-tint` (soft surface). Re-theming a family (e.g. a brand `primary`)
+ * never touches the page gamut.
  */
 :root {
   /* ---- Page gamut (grays) ---- */
@@ -66,26 +68,26 @@
   );
 
   /* ---- Families ----
-   * Identical five-role shape: bare tone = text on the page AND the solid
-   * fill (text `on-*`), `-strong` = stronger text, `-hover` = derived hover
-   * fill (color-mix), `-tint` = soft surface (Alert, Badge). */
+   * Identical four-role shape: bare tone = text on the page AND the solid
+   * fill (text `on-*`), `-hover` = derived hover fill (a 16% step toward
+   * white: the light theme walks toward the `on-*` pole — the fill
+   * lightens; the dark theme runs the same step away from the dark pole,
+   * so `on-*` contrast grows), `-tint` = soft surface (Alert, Badge;
+   * light theme mixes the 100 step halfway to white — the bare tone on
+   * the raw 100 step sits under the body APCA threshold, 2026-10-28). */
 
   /* Primary — the action color: default buttons, kbd, the checked Switch,
    * the primary Badge. Defaults to the inverted gray (dark fill in the light
    * theme, near-white in the dark — the shadcn primary model): the brand
    * look is one override away, and the hover follows automatically because
-   * it is derived toward the `on-primary` contrast pole (~two gray steps at
-   * the default calibration). */
+   * it is derived toward the `on-primary` contrast pole (16% in the light
+   * theme; the dark theme keeps the 14% step — the near-white fill has no
+   * visible room toward white). */
   --ui-color-primary: light-dark(var(--ui-palette-neutral-900), var(--ui-palette-neutral-50));
-  --ui-color-primary-strong: light-dark(
-    var(--ui-palette-neutral-950),
-    var(--ui-palette-neutral-0)
-  );
   --ui-color-on-primary: light-dark(var(--ui-palette-neutral-0), var(--ui-palette-neutral-950));
-  --ui-color-primary-hover: color-mix(
-    in oklab,
-    var(--ui-color-primary) 86%,
-    var(--ui-color-on-primary)
+  --ui-color-primary-hover: light-dark(
+    color-mix(in oklab, var(--ui-color-primary) 84%, var(--ui-color-on-primary)),
+    color-mix(in oklab, var(--ui-color-primary) 86%, var(--ui-color-on-primary))
   );
   --ui-color-primary-tint: light-dark(
     var(--ui-palette-neutral-100),
@@ -96,51 +98,53 @@
    * Alert/Badge. The action color is primary; info carries the tone of the
    * non-action informational roles. */
   --ui-color-info: light-dark(var(--ui-palette-info-600), var(--ui-palette-info-300));
-  --ui-color-info-strong: light-dark(var(--ui-palette-info-700), var(--ui-palette-info-200));
   --ui-color-on-info: light-dark(var(--ui-palette-neutral-0), var(--ui-palette-neutral-950));
-  --ui-color-info-hover: color-mix(in oklab, var(--ui-color-info), var(--ui-color-info-strong));
-  --ui-color-info-tint: light-dark(var(--ui-palette-info-100), var(--ui-palette-info-800));
+  --ui-color-info-hover: color-mix(in oklab, var(--ui-color-info) 84%, var(--ui-palette-neutral-0));
+  --ui-color-info-tint: light-dark(
+    color-mix(in oklab, var(--ui-palette-info-100), var(--ui-palette-neutral-0) 50%),
+    var(--ui-palette-info-800)
+  );
 
   /* Danger */
   --ui-color-danger: light-dark(var(--ui-palette-danger-600), var(--ui-palette-danger-300));
-  --ui-color-danger-strong: light-dark(var(--ui-palette-danger-700), var(--ui-palette-danger-200));
   --ui-color-on-danger: light-dark(var(--ui-palette-neutral-0), var(--ui-palette-neutral-950));
   --ui-color-danger-hover: color-mix(
     in oklab,
-    var(--ui-color-danger),
-    var(--ui-color-danger-strong)
+    var(--ui-color-danger) 84%,
+    var(--ui-palette-neutral-0)
   );
-  --ui-color-danger-tint: light-dark(var(--ui-palette-danger-100), var(--ui-palette-danger-800));
+  --ui-color-danger-tint: light-dark(
+    color-mix(in oklab, var(--ui-palette-danger-100), var(--ui-palette-neutral-0) 50%),
+    var(--ui-palette-danger-800)
+  );
 
   /* Success */
   --ui-color-success: light-dark(var(--ui-palette-success-600), var(--ui-palette-success-300));
-  --ui-color-success-strong: light-dark(
-    var(--ui-palette-success-700),
-    var(--ui-palette-success-200)
-  );
   --ui-color-on-success: light-dark(var(--ui-palette-neutral-0), var(--ui-palette-neutral-950));
   --ui-color-success-hover: color-mix(
     in oklab,
-    var(--ui-color-success),
-    var(--ui-color-success-strong)
+    var(--ui-color-success) 84%,
+    var(--ui-palette-neutral-0)
   );
-  --ui-color-success-tint: light-dark(var(--ui-palette-success-100), var(--ui-palette-success-800));
+  --ui-color-success-tint: light-dark(
+    color-mix(in oklab, var(--ui-palette-success-100), var(--ui-palette-neutral-0) 50%),
+    var(--ui-palette-success-800)
+  );
 
   /* Warning — the bare tone doubles as the solid fill: white on warning-500
    * fails the body APCA threshold (Lc 70.5 < 75), on 600 it measures 87.7,
    * so the family ramp has no lighter fill step. */
   --ui-color-warning: light-dark(var(--ui-palette-warning-600), var(--ui-palette-warning-300));
-  --ui-color-warning-strong: light-dark(
-    var(--ui-palette-warning-700),
-    var(--ui-palette-warning-200)
-  );
   --ui-color-on-warning: light-dark(var(--ui-palette-neutral-0), var(--ui-palette-neutral-950));
   --ui-color-warning-hover: color-mix(
     in oklab,
-    var(--ui-color-warning),
-    var(--ui-color-warning-strong)
+    var(--ui-color-warning) 84%,
+    var(--ui-palette-neutral-0)
   );
-  --ui-color-warning-tint: light-dark(var(--ui-palette-warning-100), var(--ui-palette-warning-800));
+  --ui-color-warning-tint: light-dark(
+    color-mix(in oklab, var(--ui-palette-warning-100), var(--ui-palette-neutral-0) 50%),
+    var(--ui-palette-warning-800)
+  );
 
   /* Focus */
   --ui-focus-ring: light-dark(var(--ui-palette-info-600), var(--ui-palette-info-300));

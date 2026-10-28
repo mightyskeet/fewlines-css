@@ -132,7 +132,7 @@ main > section {
 .hljs-string,
 .hljs-regexp,
 .hljs-addition {
-  color: var(--ui-color-success-strong);
+  color: var(--ui-color-success);
 }
 
 .hljs-number,
@@ -140,7 +140,7 @@ main > section {
 .hljs-built_in,
 .hljs-builtin-name,
 .hljs-symbol {
-  color: var(--ui-color-warning-strong);
+  color: var(--ui-color-warning);
 }
 
 .hljs-attr,
@@ -159,12 +159,12 @@ main > section {
 .hljs-title.class_,
 .hljs-title.function_,
 .hljs-section {
-  color: var(--ui-color-info-strong);
+  color: var(--ui-color-info);
   font-weight: 600;
 }
 
 .hljs-deletion {
-  color: var(--ui-color-danger-strong);
+  color: var(--ui-color-danger);
 }
 
 .hljs-emphasis {

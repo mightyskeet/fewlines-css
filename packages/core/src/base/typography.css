@@ -186,18 +186,14 @@ abbr[title] {
   cursor: help;
 }
 
-/* Links: info color, underlined with a small optical offset. Hover deepens
- * to -strong. The visited state is intentionally not restyled — it stays
- * identical to unvisited. The focus ring comes from the base focus contract;
- * in forced-colors mode the system repaints links natively. */
+/* Links: info color, underlined with a small optical offset. The visited
+ * state is intentionally not restyled — it stays identical to unvisited.
+ * The focus ring comes from the base focus contract; in forced-colors mode
+ * the system repaints links natively. */
 a {
   color: var(--ui-color-info);
   text-decoration: underline;
   text-underline-offset: 0.15em;
-}
-
-a:hover {
-  color: var(--ui-color-info-strong);
 }
 
 /* Block quotation: hanging border on the inline-start edge carries the

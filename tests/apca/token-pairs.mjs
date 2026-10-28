@@ -44,47 +44,46 @@ export const semanticMap = {
   text: { light: 'neutral-900', dark: 'neutral-50' },
   'text-muted': { light: 'neutral-600', dark: 'neutral-300' },
   primary: { light: 'neutral-900', dark: 'neutral-50' },
-  'primary-strong': { light: 'neutral-950', dark: 'neutral-0' },
   'on-primary': { light: 'neutral-0', dark: 'neutral-950' },
   'primary-hover': {
-    // Toward the on-primary contrast pole (~two gray steps at the default
-    // calibration) — follows the brand color automatically.
-    light: { mix: ['primary', 'on-primary', 86] },
+    // A 16% step toward the on-primary contrast pole (light theme);
+    // the dark theme keeps the old 14% step — the near-white fill has no
+    // visible room toward white.
+    light: { mix: ['primary', 'on-primary', 84] },
     dark: { mix: ['primary', 'on-primary', 86] },
   },
   'primary-tint': { light: 'neutral-100', dark: 'neutral-800' },
   info: { light: 'info-600', dark: 'info-300' },
-  'info-strong': { light: 'info-700', dark: 'info-200' },
   'on-info': { light: 'neutral-0', dark: 'neutral-950' },
   'info-hover': {
-    light: { mix: ['info', 'info-strong'] },
-    dark: { mix: ['info', 'info-strong'] },
+    // A 16% step toward white in both themes: the light theme walks toward
+    // the on-* pole (the fill lightens), the dark theme runs away from the
+    // dark pole (on-* contrast grows).
+    light: { mix: ['info', 'neutral-0', 84] },
+    dark: { mix: ['info', 'neutral-0', 84] },
   },
   danger: { light: 'danger-600', dark: 'danger-300' },
-  'danger-strong': { light: 'danger-700', dark: 'danger-200' },
   'on-danger': { light: 'neutral-0', dark: 'neutral-950' },
   'danger-hover': {
-    light: { mix: ['danger', 'danger-strong'] },
-    dark: { mix: ['danger', 'danger-strong'] },
+    light: { mix: ['danger', 'neutral-0', 84] },
+    dark: { mix: ['danger', 'neutral-0', 84] },
   },
   success: { light: 'success-600', dark: 'success-300' },
-  'success-strong': { light: 'success-700', dark: 'success-200' },
   'on-success': { light: 'neutral-0', dark: 'neutral-950' },
   'success-hover': {
-    light: { mix: ['success', 'success-strong'] },
-    dark: { mix: ['success', 'success-strong'] },
+    light: { mix: ['success', 'neutral-0', 84] },
+    dark: { mix: ['success', 'neutral-0', 84] },
   },
   warning: { light: 'warning-600', dark: 'warning-300' },
-  'warning-strong': { light: 'warning-700', dark: 'warning-200' },
   'on-warning': { light: 'neutral-0', dark: 'neutral-950' },
   'warning-hover': {
-    light: { mix: ['warning', 'warning-strong'] },
-    dark: { mix: ['warning', 'warning-strong'] },
+    light: { mix: ['warning', 'neutral-0', 84] },
+    dark: { mix: ['warning', 'neutral-0', 84] },
   },
-  'info-tint': { light: 'info-100', dark: 'info-800' },
-  'success-tint': { light: 'success-100', dark: 'success-800' },
-  'warning-tint': { light: 'warning-100', dark: 'warning-800' },
-  'danger-tint': { light: 'danger-100', dark: 'danger-800' },
+  'info-tint': { light: { mix: ['info-100', 'neutral-0', 50] }, dark: 'info-800' },
+  'success-tint': { light: { mix: ['success-100', 'neutral-0', 50] }, dark: 'success-800' },
+  'warning-tint': { light: { mix: ['warning-100', 'neutral-0', 50] }, dark: 'warning-800' },
+  'danger-tint': { light: { mix: ['danger-100', 'neutral-0', 50] }, dark: 'danger-800' },
   'focus-ring': { light: 'info-600', dark: 'info-300' },
 };
 
@@ -117,19 +116,17 @@ export const tokenPairs = [
   // press = the hover fill + translate (uniform model).
   { fg: 'on-primary', bg: 'primary', role: 'body', note: 'default button, kbd keycap' },
   { fg: 'on-primary', bg: 'primary-hover', role: 'body' },
-  { fg: 'primary-strong', bg: 'primary-tint', role: 'body', note: 'primary badge pastel' },
+  { fg: 'primary', bg: 'primary-tint', role: 'body', note: 'primary badge pastel' },
 
   // Info text and controls
   { fg: 'info', bg: 'surface', role: 'body' },
   { fg: 'info', bg: 'surface-raised', role: 'body' },
-  { fg: 'info-strong', bg: 'surface', role: 'body' },
   { fg: 'on-info', bg: 'info', role: 'body', note: 'info solid badge' },
   { fg: 'on-info', bg: 'info-hover', role: 'body' },
 
   // Danger text and controls
   { fg: 'danger', bg: 'surface', role: 'body' },
   { fg: 'danger', bg: 'surface-raised', role: 'body' },
-  { fg: 'danger-strong', bg: 'surface', role: 'body' },
   { fg: 'on-danger', bg: 'danger', role: 'body', note: 'destructive button fill' },
   { fg: 'on-danger', bg: 'danger-hover', role: 'body', note: 'destructive button hover' },
 
@@ -138,19 +135,19 @@ export const tokenPairs = [
   { fg: 'on-success', bg: 'success', role: 'body', note: 'success solid badge' },
   { fg: 'on-success', bg: 'success-hover', role: 'body' },
 
-  // Feedback tint surfaces (Alert, Badge): title/label uses -strong (body),
-  // body text uses text (body), 1px border uses the base variant color
-  // (nonText)
-  { fg: 'info-strong', bg: 'info-tint', role: 'body' },
+  // Feedback tint surfaces (Alert, Badge): title/label uses the bare family
+  // tone (body), body text uses text (body), 1px border uses the base
+  // variant color (nonText)
+  { fg: 'info', bg: 'info-tint', role: 'body' },
   { fg: 'text', bg: 'info-tint', role: 'body' },
   { fg: 'info', bg: 'info-tint', role: 'nonText' },
-  { fg: 'danger-strong', bg: 'danger-tint', role: 'body' },
+  { fg: 'danger', bg: 'danger-tint', role: 'body' },
   { fg: 'text', bg: 'danger-tint', role: 'body' },
   { fg: 'danger', bg: 'danger-tint', role: 'nonText' },
-  { fg: 'success-strong', bg: 'success-tint', role: 'body' },
+  { fg: 'success', bg: 'success-tint', role: 'body' },
   { fg: 'text', bg: 'success-tint', role: 'body' },
   { fg: 'success', bg: 'success-tint', role: 'nonText' },
-  { fg: 'warning-strong', bg: 'warning-tint', role: 'body' },
+  { fg: 'warning', bg: 'warning-tint', role: 'body' },
   { fg: 'text', bg: 'warning-tint', role: 'body' },
   { fg: 'warning', bg: 'warning-tint', role: 'nonText' },
 

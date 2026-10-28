@@ -70,12 +70,6 @@
   initial-value: black;
 }
 
-@property --ui-color-primary-strong {
-  syntax: '<color>';
-  inherits: true;
-  initial-value: black;
-}
-
 @property --ui-color-on-primary {
   syntax: '<color>';
   inherits: true;
@@ -100,12 +94,6 @@
   initial-value: blue;
 }
 
-@property --ui-color-info-strong {
-  syntax: '<color>';
-  inherits: true;
-  initial-value: blue;
-}
-
 @property --ui-color-on-info {
   syntax: '<color>';
   inherits: true;
@@ -119,12 +107,6 @@
 }
 
 @property --ui-color-danger {
-  syntax: '<color>';
-  inherits: true;
-  initial-value: red;
-}
-
-@property --ui-color-danger-strong {
   syntax: '<color>';
   inherits: true;
   initial-value: red;
@@ -148,12 +130,6 @@
   initial-value: green;
 }
 
-@property --ui-color-success-strong {
-  syntax: '<color>';
-  inherits: true;
-  initial-value: green;
-}
-
 @property --ui-color-on-success {
   syntax: '<color>';
   inherits: true;
@@ -167,12 +143,6 @@
 }
 
 @property --ui-color-warning {
-  syntax: '<color>';
-  inherits: true;
-  initial-value: orange;
-}
-
-@property --ui-color-warning-strong {
   syntax: '<color>';
   inherits: true;
   initial-value: orange;
@@ -236,20 +206,15 @@
     --ui-color-border var(--ui-duration-slow) ease,
     --ui-color-border-strong var(--ui-duration-slow) ease,
     --ui-color-primary var(--ui-duration-slow) ease,
-    --ui-color-primary-strong var(--ui-duration-slow) ease,
     --ui-color-on-primary var(--ui-duration-slow) ease,
     --ui-color-primary-tint var(--ui-duration-slow) ease,
     --ui-color-info var(--ui-duration-slow) ease,
-    --ui-color-info-strong var(--ui-duration-slow) ease,
     --ui-color-on-info var(--ui-duration-slow) ease,
     --ui-color-danger var(--ui-duration-slow) ease,
-    --ui-color-danger-strong var(--ui-duration-slow) ease,
     --ui-color-on-danger var(--ui-duration-slow) ease,
     --ui-color-success var(--ui-duration-slow) ease,
-    --ui-color-success-strong var(--ui-duration-slow) ease,
     --ui-color-on-success var(--ui-duration-slow) ease,
     --ui-color-warning var(--ui-duration-slow) ease,
-    --ui-color-warning-strong var(--ui-duration-slow) ease,
     --ui-color-on-warning var(--ui-duration-slow) ease,
     --ui-color-info-tint var(--ui-duration-slow) ease,
     --ui-color-success-tint var(--ui-duration-slow) ease,

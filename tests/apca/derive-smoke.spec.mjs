@@ -109,7 +109,7 @@ test('palette widget: slider, persistence, reset', async ({ page }) => {
   await expect(page.evaluate(() => localStorage.getItem('colors-bases'))).resolves.toBeNull();
 });
 
-test('derivation: strong and tint keep the family hue', async ({ page }) => {
+test('derivation: tint and fill keep the family hue', async ({ page }) => {
   await page.goto('/colors');
   const hueOf = (token) =>
     page.evaluate(
@@ -135,7 +135,6 @@ test('derivation: strong and tint keep the family hue', async ({ page }) => {
   });
 
   for (const token of [
-    '--ui-color-warning-strong',
     '--ui-color-warning-tint',
     '--ui-color-warning',
   ]) {
@@ -150,7 +149,7 @@ test('derivation: colors are a pure function of the bases (no stickiness)', asyn
   await p_addInitThemeLight(page);
   await page.goto('/colors');
 
-  const baseline = await readStrongWithDefaults(page);
+  const baseline = await readTintWithDefaults(page);
   // drag the hue away and back — the shades must land on the same values
   await page.evaluate(() => {
     const root = document.documentElement;
@@ -162,7 +161,7 @@ test('derivation: colors are a pure function of the bases (no stickiness)', asyn
     document.documentElement.style.setProperty('--ui-base-warning-h', '75'),
   );
   await page.waitForTimeout(50);
-  expect(await readStrong(page), 'strong returns to the default value').toBe(baseline);
+  expect(await readTint(page), 'tint returns to the default value').toBe(baseline);
 });
 
 /** Set the sidebar-style saved theme before page load (data-theme present). */
@@ -170,22 +169,22 @@ async function p_addInitThemeLight(page) {
   await page.addInitScript(() => localStorage.setItem('theme', 'light'));
 }
 
-/** Activate the scope at default bases, then read the warning strong color. */
-async function readStrongWithDefaults(page) {
+/** Activate the scope at default bases, then read the warning tint color. */
+async function readTintWithDefaults(page) {
   await page.evaluate(() => {
     const root = document.documentElement;
     root.setAttribute('data-palette', 'custom');
     root.style.setProperty('--ui-base-warning-h', '75');
   });
-  return readStrong(page);
+  return readTint(page);
 }
 
-async function readStrong(page) {
+async function readTint(page) {
   return page.evaluate(() => {
     const probe = document.createElement('div');
     probe.style.cssText = 'position:absolute;visibility:hidden;';
     document.body.append(probe);
-    probe.style.color = 'var(--ui-color-warning-strong)';
+    probe.style.color = 'var(--ui-color-warning-tint)';
     const ctx = document.createElement('canvas').getContext('2d');
     ctx.fillStyle = '#000';
     ctx.fillStyle = getComputedStyle(probe).color;

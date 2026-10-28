@@ -47,7 +47,7 @@ test('variants resolve to distinct tint surfaces', async ({ page }) => {
   expect(borders.size).toBe(4);
 });
 
-test('title color follows the variant via -strong tokens', async ({ page }) => {
+test('title color follows the variant via family tokens', async ({ page }) => {
   const titleColors = new Set();
   for (const id of ['alert-info', 'alert-success', 'alert-warning', 'alert-danger']) {
     const color = await page

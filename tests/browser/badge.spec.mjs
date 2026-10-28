@@ -85,12 +85,12 @@ test('variants resolve to distinct tint surfaces', async ({ page }) => {
     backgrounds.add(styles.background);
     colors.add(styles.color);
   }
-  // 6 distinct label colors: default and the explicit neutral variant are the
-  // same gray by design (the explicit variant only pins it against a
-  // re-themed default). Backgrounds collapse to 5 at the default values:
-  // primary-tint defaults to the same gray as surface-tint.
+  // Label colors collapse to 5 (2026-10-28, *-strong removed): the default,
+  // neutral and primary variants share the gray text — primary-pastel IS the
+  // default look under the gray brand. Backgrounds collapse to 5 the same
+  // way: primary-tint defaults to the same gray as surface-tint.
   expect(backgrounds.size).toBe(5);
-  expect(colors.size).toBe(6);
+  expect(colors.size).toBe(5);
 });
 
 test('the explicit neutral variant matches the default', async ({ page }) => {
@@ -102,14 +102,14 @@ test('the explicit neutral variant matches the default', async ({ page }) => {
   expect(await read('badge-neutral')).toBe(await read('badge-default'));
 });
 
-test('variant label color uses the -strong token of its family', async ({ page }) => {
-  const strong = await page
+test('variant label color uses the bare token of its family', async ({ page }) => {
+  const bare = await page
     .evaluate(() =>
-      getComputedStyle(document.documentElement).getPropertyValue('--ui-color-danger-strong'),
+      getComputedStyle(document.documentElement).getPropertyValue('--ui-color-danger'),
     )
     .then((v) => v.trim());
   const color = await page.locator('#badge-danger').evaluate((el) => getComputedStyle(el).color);
-  expect(color).toBe(strong);
+  expect(color).toBe(bare);
 });
 
 test('tint surfaces follow the theme switch (light-dark tokens)', async ({ page }) => {
