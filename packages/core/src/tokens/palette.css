@@ -58,13 +58,15 @@
   --ui-palette-success-700: oklch(35% 0.13 152deg);
   --ui-palette-success-800: oklch(21% 0.05 151deg);
 
-  /* Warning — amber */
-  --ui-palette-warning-100: oklch(95% 0.045 85deg);
-  --ui-palette-warning-200: oklch(94% 0.06 85deg);
-  --ui-palette-warning-300: oklch(90% 0.1 85deg);
-  --ui-palette-warning-400: oklch(76% 0.1 82deg);
-  --ui-palette-warning-500: oklch(62% 0.1 78deg);
-  --ui-palette-warning-600: oklch(48% 0.1 75deg);
-  --ui-palette-warning-700: oklch(36% 0.075 75deg);
-  --ui-palette-warning-800: oklch(21% 0.045 80deg);
+  /* Warning — orange (hue ~60, chroma raised — the former amber ramp with
+   * C 0.045-0.1 read brown; 2026-10-28). Lightnesses unchanged — the solid
+   * fill calibration (600 step, theme notes) survives the re-chroma. */
+  --ui-palette-warning-100: oklch(95% 0.075 70deg);
+  --ui-palette-warning-200: oklch(94% 0.095 68deg);
+  --ui-palette-warning-300: oklch(90% 0.13 66deg);
+  --ui-palette-warning-400: oklch(76% 0.15 64deg);
+  --ui-palette-warning-500: oklch(62% 0.165 62deg);
+  --ui-palette-warning-600: oklch(48% 0.155 60deg);
+  --ui-palette-warning-700: oklch(36% 0.115 58deg);
+  --ui-palette-warning-800: oklch(21% 0.065 58deg);
 }

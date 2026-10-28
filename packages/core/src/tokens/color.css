@@ -124,7 +124,7 @@
   --ui-color-success-tint: light-dark(var(--ui-palette-success-100), var(--ui-palette-success-800));
 
   /* Warning — the bare tone doubles as the solid fill: white on warning-500
-   * fails the body APCA threshold (Lc 70.5 < 75), on 600 it measures 87.7,
+   * fails the body APCA threshold (Lc 70.4 < 75), on 600 it measures 87.8,
    * so the family ramp has no lighter fill step. */
   --ui-color-warning: light-dark(var(--ui-palette-warning-600), var(--ui-palette-warning-300));
   --ui-color-on-warning: light-dark(var(--ui-palette-neutral-0), var(--ui-palette-neutral-950));
