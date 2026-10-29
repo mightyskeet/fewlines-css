@@ -3,7 +3,7 @@
  * Native basis: <input type="checkbox"> and <input type="radio"> — native
  * toggling/selection, native keyboard (Space/arrows), native form
  * participation, native :checked/:disabled/:user-invalid states. No JS, no
- * state classes.
+ * state classes, no extra markup.
  *
  * Canonical structure:
  *   <label class="ui-choice-field">
@@ -16,25 +16,25 @@
  *   </label>
  *
  * Visual: appearance:none + custom box/dot (the same model as Switch). The
- * mark is ::before on the input — not tracked by caniuse; rendering
- * verified empirically (Chromium, Firefox, WebKit — Switch precedent,
- * compatibility notes, 2026-10-01).
+ * check is an SVG path applied as a mask-image data-URI on the ::before
+ * layer: the shape belongs to the SVG, the color to the on-brand token
+ * (background-color of the masked layer) — no pixel positioning, the mark
+ * scales with the box. The mark fades in on :checked (opacity).
+ *
+ * NOTE: a stroke-by-stroke draw (stroke-dashoffset) is impossible from a
+ * background/mask image — CSS cannot style inside an image; it requires an
+ * inline SVG in the markup, which this component deliberately avoids.
+ *
+ * The :indeterminate dash reuses the same ::before (mask removed, plain
+ * centered bar). The host sets el.indeterminate (no HTML attribute; host
+ * JS, core carries none).
+ *
+ * The radio dot is a ::before circle centered with inset: 0 + margin: auto.
  *
  * Group composition: ui-fieldset + legend is the group (native group
  * semantics and the accessible name); radios share the name attribute;
  * adjacent ui-choice-field members stack automatically. fieldset[disabled]
  * disables the whole group natively.
- *
- * The checkbox :indeterminate state is host-set (el.indeterminate = true —
- * host JS; no HTML attribute exists). The dash is drawn in place of the
- * check.
- *
- * Geometry (box-sizing: border-box): 1.25rem (20px) square, 1px border ->
- * 18px content box. Check mark: two 2px strokes (::before short down-right,
- * ::after long up-right) growing from the joint — transform-origin at the
- * left end, transition on inline-size, staggered delays draw the mark on
- * check and retract it in reverse on uncheck (no SVG, no JS). Radio dot:
- * 0.625rem centered (inset: 0 + margin: auto).
  *
  * APCA pairs used (validated in tests/apca, no new tokens):
  *   checked fill: on-brand/brand (the solid button pair);
@@ -83,62 +83,37 @@
   corner-shape: round;
 }
 
-/* Check mark: two 2px strokes drawn from the joint. Both start collapsed
- * (inline-size: 0) and grow to full length on :checked — with
- * transform-origin at the left end and the stroke angle on each bar, the
- * growing tips travel along the mark: a stroke-by-stroke draw, reversed
- * (long first) on uncheck via the base-state transition-delay. Pure CSS:
- * individual transforms + geometry transition, no SVG, no JS. */
-.ui-checkbox::before,
-.ui-checkbox::after {
+/* Mark layer (::before): the check is the masked SVG path — the shape is
+ * the data-URI, the paint is the on-brand token. Sits inside the border
+ * (inset: 0 = padding box), scales with the box. Fades in on :checked. */
+.ui-checkbox::before {
   content: '';
   position: absolute;
-  block-size: 2px;
+  inset: 0;
   background: var(--ui-color-on-brand);
-  transform-origin: 0 50%;
-  transition: inline-size var(--ui-duration-fast) ease;
-}
-
-/* Short stroke (down-right, +45deg): 4px/8px -> 6px long. Draws first on
- * check (delay 0 in the checked state). */
-.ui-checkbox::before {
-  inset-block-start: 8px;
-  inset-inline-start: 4px;
-  inline-size: 0;
-  rotate: 45deg;
-
-  /* Uncheck: retract second (base state keeps the larger delay). */
-  transition-delay: calc(var(--ui-duration-fast) / 2);
-}
-
-/* Long stroke (up-right, -45deg): 7px/11px -> 10px long. Draws second on
- * check, retracts first on uncheck. */
-.ui-checkbox::after {
-  inset-block-start: 11px;
-  inset-inline-start: 7px;
-  inline-size: 0;
-  rotate: -45deg;
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 18'%3E%3Cpath d='M4.5 9.5 8 13 14 5.5' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  mask-size: 100% 100%;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  opacity: 0;
+  transition: opacity var(--ui-duration-fast) ease;
 }
 
 .ui-checkbox:checked::before {
-  inline-size: 6px;
-  transition-delay: 0s;
+  opacity: 1;
 }
 
-.ui-checkbox:checked::after {
-  inline-size: 10px;
-  transition-delay: calc(var(--ui-duration-fast) / 2);
-}
-
-/* Indeterminate: the dash replaces the check (the long stroke stays
- * collapsed — :indeterminate does not match :checked rules). */
+/* Indeterminate: the dash replaces the check — same layer, mask removed,
+ * a plain centered bar (1:1 px at any box size). */
 .ui-checkbox:indeterminate::before {
-  inset-block-start: 50%;
-  inset-inline-start: 0.25rem;
+  inset-block: auto 50%;
+  inset-inline: 0.25rem auto;
   inline-size: 0.625rem;
-  rotate: none;
+  block-size: 2px;
+  mask-image: none;
+  border-radius: var(--ui-radius-full);
   translate: 0 -50%;
-  transition-delay: 0s;
+  opacity: 1;
 }
 
 /* Radio dot */
@@ -166,8 +141,6 @@
   border-color: transparent;
 }
 
-/* The radio dot fades in (the checkbox mark is drawn by stroke growth —
- * no opacity machinery there). */
 .ui-radio:checked::before {
   opacity: 1;
 }
@@ -209,12 +182,12 @@
   }
 
   .ui-checkbox:checked,
+  .ui-checkbox:indeterminate,
   .ui-radio:checked {
     background: Highlight;
   }
 
   .ui-checkbox:checked::before,
-  .ui-checkbox:checked::after,
   .ui-checkbox:indeterminate::before,
   .ui-radio:checked::before {
     background: HighlightText;
@@ -225,7 +198,6 @@
   .ui-checkbox,
   .ui-radio,
   .ui-checkbox::before,
-  .ui-checkbox::after,
   .ui-radio::before {
     transition: none;
   }

@@ -54,27 +54,24 @@ test('frame and fill use tokens: raised surface unchecked, brand checked', async
   );
 });
 
-test('check mark is stroke geometry, not opacity: collapsed unchecked, grown checked', async ({
+test('check mark is the mask-shaped SVG path: hidden unchecked, painted checked', async ({
   page,
 }) => {
   const read = (id) =>
     page.locator(id).evaluate((el) => {
-      const before = getComputedStyle(el, '::before');
-      const after = getComputedStyle(el, '::after');
+      const s = getComputedStyle(el, '::before');
       return {
-        before: { width: before.width, rotate: before.rotate },
-        after: { width: after.width, rotate: after.rotate },
+        opacity: Number.parseFloat(s.opacity),
+        mask: s.maskImage || s.webkitMaskImage || '',
       };
     });
 
   const unchecked = await read('#choice-checkbox');
-  expect(parseFloat(unchecked.before.width)).toBe(0);
-  expect(parseFloat(unchecked.after.width)).toBe(0);
+  expect(unchecked.mask).toContain('data:image/svg+xml');
+  expect(unchecked.opacity).toBe(0);
 
   const checked = await read('#choice-checkbox-checked');
-  expect(parseFloat(checked.before.width)).toBeGreaterThan(0);
-  expect(parseFloat(checked.after.width)).toBeGreaterThan(0);
-  expect(checked.before.rotate).not.toBe(checked.after.rotate);
+  expect(checked.opacity).toBe(1);
 });
 
 test('indeterminate draws the dash, not the check', async ({ page }) => {
@@ -88,19 +85,17 @@ test('indeterminate draws the dash, not the check', async ({ page }) => {
 
   const styles = await page.locator('#choice-checkbox').evaluate((el) => {
     const before = getComputedStyle(el, '::before');
-    const after = getComputedStyle(el, '::after');
     return {
       background: getComputedStyle(el).backgroundColor,
-      dashWidth: before.width,
-      dashRotate: before.rotate,
-      longStroke: after.width,
+      dashOpacity: Number.parseFloat(before.opacity),
+      mask: before.maskImage || before.webkitMaskImage || '',
     };
   });
   const brand = await probe(page, 'background: var(--ui-color-brand)');
 
-  expect(styles.background).toBe(brand.background);  expect(parseFloat(styles.dashWidth)).toBeGreaterThan(0);
-  expect(styles.dashRotate).toBe('none');
-  expect(parseFloat(styles.longStroke)).toBe(0);
+  expect(styles.background).toBe(brand.background);
+  expect(styles.dashOpacity).toBe(1);
+  expect(styles.mask).toBe('none');
 });
 
 test('radio: one of the group paints brand, the siblings stay neutral', async ({ page }) => {

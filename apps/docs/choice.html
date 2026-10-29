@@ -36,20 +36,20 @@
       <header class="page-header">
         <h1>Choice</h1>
         <p>
-          Checkbox and radio on the native inputs: custom box and dot, stroke-drawn check mark,
-          native states and keyboard. No JS.
+          Checkbox and radio on the native inputs: custom box and dot, an SVG-masked check mark,
+          native states and keyboard. No JS, no extra markup.
         </p>
       </header>
 
       <section>
         <h2>Native basis</h2>
         <p>
-          <code>&lt;input type="checkbox"&gt;</code> and
-          <code>&lt;input type="radio"&gt;</code> — native toggling and selection, native keyboard
-          (Space / arrows), native form participation and states
-          (<code>:checked</code>, <code>:disabled</code>, <code>:user-invalid</code>). The check
-          mark draws itself: two strokes grow from the joint with staggered transitions and retract
-          in reverse on uncheck — pure CSS, no SVG, no JS.
+          <code>&lt;input type="checkbox"&gt;</code> and <code>&lt;input type="radio"&gt;</code> —
+          native toggling and selection, native keyboard (Space / arrows), native form participation
+          and states (<code>:checked</code>, <code>:disabled</code>, <code>:user-invalid</code>).
+          The check mark is an SVG path applied as a <code>mask-image</code> on the control itself:
+          the shape belongs to the SVG, the color to the token. It fades in on check — a stroke-draw
+          needs an inline SVG in the markup, which the component avoids.
         </p>
       </section>
 
@@ -66,7 +66,9 @@
 &lt;/label&gt;</code></pre>
         <p>
           The wrapper is an implicit label — clicking the text toggles the control. The label span
-          is required (the accessible name). Radios of one group share the <code>name</code>.
+          is required (the accessible name). The check mark carries no markup: it is an SVG path
+          applied as a <code>mask-image</code> on the control itself. Radios of one group share the
+          <code>name</code>.
         </p>
       </section>
 
@@ -100,8 +102,8 @@
         </div>
         <p>
           Checked = the brand fill with the on-brand mark (the Switch model). The dash for
-          <code>:indeterminate</code> is host-set through <code>el.indeterminate = true</code> —
-          no HTML attribute exists; it is host JS, core carries none.
+          <code>:indeterminate</code> is host-set through <code>el.indeterminate = true</code> — no
+          HTML attribute exists; it is host JS, core carries none.
         </p>
       </section>
 
@@ -114,8 +116,8 @@
           </label>
         </div>
         <p>
-          The attention border appears only after interaction (<code>:user-invalid</code> — the
-          same intent gate as Field). The native validation bubble carries the signal before that.
+          The attention border appears only after interaction (<code>:user-invalid</code> — the same
+          intent gate as Field). The native validation bubble carries the signal before that.
         </p>
       </section>
 
@@ -147,22 +149,28 @@
         </div>
         <p>
           The group is <code>ui-fieldset</code> + legend: native group semantics, the accessible
-          name and native group disabling (<code>fieldset[disabled]</code>). Members placed
-          adjacent get the gaps automatically. See <a href="/fieldset">Fieldset</a>.
+          name and native group disabling (<code>fieldset[disabled]</code>). Members placed adjacent
+          get the gaps automatically. See <a href="/fieldset">Fieldset</a>.
         </p>
       </section>
 
       <section>
         <h2>Accessibility</h2>
         <ul>
-          <li>Semantics, name and keyboard are native; the radio group under a legend replaces repeated labels.</li>
-          <li>The state is carried by the mark shape (check / dash / dot), not by color alone (WCAG 1.4.1).</li>
+          <li>
+            Semantics, name and keyboard are native; the radio group under a legend replaces
+            repeated labels.
+          </li>
+          <li>
+            The state is carried by the mark shape (check / dash / dot), not by color alone (WCAG
+            1.4.1).
+          </li>
           <li>
             No new APCA pairs: <code>on-brand/brand</code> (the solid fill),
             <code>border</code>/<code>border-strong</code> frames, <code>attention</code> invalid
             border.
           </li>
-          <li>Focus ring comes from the base layer. Reduced motion disables the draw animation.</li>
+          <li>Focus ring comes from the base layer. Reduced motion disables the fade.</li>
           <li>
             Forced colors: <code>Highlight</code> checked fill, <code>HighlightText</code> mark —
             the state survives background stripping.
