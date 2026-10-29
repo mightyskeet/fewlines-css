@@ -54,6 +54,23 @@ test('derivation layer: default bases pass the token matrix', async ({ page, bro
   const deriveFailures = await report('derive defaults', await readTable());
   expect(deriveFailures, 'derive-layer defaults pass both themes').toEqual([]);
 
+  // Phase C: an out-of-gamut seed (l 0.94, c 0.32 is far outside sRGB). The
+  // table must gamut-map like the browser paints — the old canvas parser
+  // clipped the color and reported a false fail (~75 Lc where the mapped
+  // pair measures ~94).
+  await page.evaluate(() => {
+    const root = document.documentElement;
+    root.style.setProperty('--ui-base-brand-l', '0.94');
+    root.style.setProperty('--ui-base-brand-c', '0.32');
+    root.style.setProperty('--ui-base-brand-h', '276');
+  });
+  const onBrand = (await readTable()).find((r) => r.pair === 'on-brand / brand');
+  expect(
+    Number(onBrand.lc.split(' / ')[1]),
+    'out-of-gamut pair is mapped, not clipped',
+  ).toBeGreaterThan(85);
+  expect(onBrand.status[1], 'dark on-brand/brand passes').toBe('P');
+
   expect(errors, 'no page errors').toEqual([]);
 });
 
