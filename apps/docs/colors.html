@@ -68,7 +68,12 @@
     <script src="/site-toc.js" defer blocking="render"></script>
     <script src="/vendor/hljs.min.js" defer></script>
     <script src="/site-code.js" defer></script>
-    <script src="/site-palette.js" type="module"></script>
+    <!-- blocking=render: the palette module mutates :root (probe element,
+      * root.style.transition) right after first paint, which aborts the
+      * cross-document view transition mid-run (InvalidStateError). Run it
+      * before the first frame instead — the snapshot then shows the
+      * settled page, and Reset/Copy CSS are present from the start. -->
+    <script src="/site-palette.js" type="module" blocking="render"></script>
   </head>
   <body>
     <site-sidebar></site-sidebar>
