@@ -39,8 +39,8 @@
     var(--ui-palette-neutral-800)
   );
 
-  /* Soft gray fill — the gray member of the tint role (Badge `neutral`,
-   * `<mark>` and any de-emphasised pastel surface). Brand-independent: the
+  /* Soft gray fill — the gray member of the tint role (Badge `neutral` and
+   * any de-emphasised pastel surface). Brand-independent: the
    * gray look never follows a re-themed brand. Same steps as the family
    * tints (200/700), so the explicit neutral badge reads as the gray member
    * of the pastel set. */

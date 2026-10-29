@@ -171,12 +171,12 @@ pre kbd {
   color: var(--ui-color-text);
 }
 
-/* <mark>: highlighted text on the neutral tint — the gray member of the
- * soft-surface role (like the neutral Alert/Badge); the text color pair is
- * validated at the body threshold. */
+/* <mark>: highlighted text on the attention tint — the same soft surface as
+ * the attention Alert/Badge; the body pair text/attention-tint is already
+ * validated there. */
 mark {
   color: var(--ui-color-text);
-  background: var(--ui-color-surface-tint);
+  background: var(--ui-color-attention-tint);
 }
 
 /* Abbreviation with an expansion: normalize the dotted underline (UA styles
