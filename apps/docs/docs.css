@@ -9,6 +9,31 @@
  * Safari 10.1/13) far above the .browserslistrc matrix; narrow screens get
  * a single-column layout from the mobile-first defaults. */
 
+/* Cross-document view transitions (compatibility notes, 2026-10-29):
+ * same-origin page navigations crossfade instead of flashing white. The
+ * identical sidebar keeps its own snapshot (named transition), so chrome
+ * stays put while the content swaps. Progressive enhancement: Chrome/Edge
+ * 126+, Safari 18.2+; engines without the at-rule ignore it and navigate
+ * instantly (Firefox has Level 1 only — no cross-document transitions).
+ * Reduced motion: transition frames are drawn via ::view-transition-*
+ * pseudo-elements, outside the token motion system — disabled here. */
+@view-transition {
+  navigation: auto;
+}
+
+site-sidebar {
+  view-transition-name: docs-sidebar;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-image-pair(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}
+
 :root {
   /* Smooth in-page anchor scrolling; anchors stop 2rem above the target
    * instead of flush at the viewport edge. */
