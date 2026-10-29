@@ -1,8 +1,8 @@
 // One-off smoke check for the Session-1 derivation layer (plan:
 // docs/plans/2026-10-26-color-derivation.md). Loads /colors.html from the
-// static server (playwright.config.mjs webServer), opens the palette widget's
-// table on default bases and reports pass/fail per pair and theme for each
-// engine. Not part of the regular suite — run manually from tests/:
+// static server (playwright.config.mjs webServer), reads the always-visible
+// live tables on default bases and reports pass/fail per pair and theme for
+// each engine. Not part of the regular suite — run manually from tests/:
 //   node apca/derive-smoke.mjs
 import { test, expect } from '@playwright/test';
 
@@ -18,9 +18,10 @@ test('derivation layer: default bases pass the token matrix', async ({ page, bro
   await page.goto('/colors');
   await expect(page.locator('.palette-table tr')).not.toHaveCount(0);
 
-  // Open the drawer via the FAB and wait for the live table to fill.
+  // The tables are always visible; a scope flip does not schedule a recompute
+  // (only sliders do), so each phase forces a synchronous refresh().
   const readTable = async () => {
-    await page.click('.site-palette-fab');
+    await page.evaluate(() => document.querySelector('site-palette-table').refresh());
     await page.waitForFunction(() => {
       const pills = document.querySelectorAll('.palette-pill');
       return pills.length > 0 && [...pills].every((p) => p.textContent !== '');
@@ -42,12 +43,13 @@ test('derivation layer: default bases pass the token matrix', async ({ page, bro
     return failed;
   };
 
-  // Phase A: core defaults (derivation layer inert — no data-palette).
+  // Phase A: core defaults (the Colors page runs the layer always-on, so the
+  // scope attribute is removed explicitly to expose the core values).
+  await page.evaluate(() => document.documentElement.removeAttribute('data-palette'));
   const coreFailures = await report('core defaults', await readTable());
   expect(coreFailures, 'core defaults pass both themes').toEqual([]);
 
   // Phase B: derivation layer with its own default bases.
-  await page.keyboard.press('Escape');
   await page.evaluate(() => document.documentElement.setAttribute('data-palette', 'custom'));
   const deriveFailures = await report('derive defaults', await readTable());
   expect(deriveFailures, 'derive-layer defaults pass both themes').toEqual([]);
@@ -57,19 +59,19 @@ test('derivation layer: default bases pass the token matrix', async ({ page, bro
 
 test('palette widget: slider, persistence, reset', async ({ page }) => {
   await page.goto('/colors');
-  await page.click('.site-palette-fab');
 
-  // Opening the drawer must not disturb the theme (the measurement used to
-  // restore it with the token transition re-enabled — a visible flash) and
-  // must not scroll to the bottom (autofocus used to sit on the Close
-  // button at the end of the panel).
-  await expect(page.locator('#site-palette-drawer')).toBeVisible();
-  expect(await page.evaluate(() => document.documentElement.hasAttribute('data-theme'))).toBe(
-    false,
-  );
-  expect(await page.evaluate(() => document.getElementById('site-palette-drawer').scrollTop)).toBe(
-    0,
-  );
+  const linkLightness = page
+    .locator('site-palette-family[family="Link"] input[type="range"]')
+    .first();
+  await linkLightness.fill('0.3');
+
+  // The Colors page runs the derivation scope always-on (head script).
+  await expect(page.locator('html')).toHaveAttribute('data-palette', 'custom');
+  // The first drag seeds the FULL map from the layer's CSS defaults —
+  // no empty-string entries that would poison the restored palette.
+  const stored = await page.evaluate(() => JSON.parse(localStorage.getItem('colors-bases')));
+  expect(stored['--ui-base-link-l']).toBe('0.3');
+  expect(Object.values(stored).every((v) => typeof v === 'string' && v.length > 0)).toBe(true);
   // The measurement must not leave inline residue on :root.
   expect(
     await page.evaluate(() => {
@@ -77,20 +79,6 @@ test('palette widget: slider, persistence, reset', async ({ page }) => {
       return [s.colorScheme, s.transition].join('|');
     }),
   ).toBe('|');
-
-  const linkLightness = page
-    .locator('.palette-drawer fieldset', { hasText: 'Link' })
-    .locator('input[type="range"]')
-    .first();
-  await linkLightness.fill('0.3');
-
-  // The first drag activates the derivation scope and saves the full map.
-  await expect(page.locator('html')).toHaveAttribute('data-palette', 'custom');
-  // The first drag seeds the FULL map from the (scoped) CSS defaults —
-  // no empty-string entries that would poison the restored palette.
-  const stored = await page.evaluate(() => JSON.parse(localStorage.getItem('colors-bases')));
-  expect(stored['--ui-base-link-l']).toBe('0.3');
-  expect(Object.values(stored).every((v) => typeof v === 'string' && v.length > 0)).toBe(true);
   // Vivid branch: light fill L = 0.28 + 0.37 * 0.3 = 0.391.
   const link = await page.evaluate(() => {
     const d = document.createElement('div');
@@ -103,10 +91,11 @@ test('palette widget: slider, persistence, reset', async ({ page }) => {
   });
   expect(link).toContain('0.391');
 
-  // Reset removes the scope, the storage and returns tokens to core values.
+  // Reset clears the storage and returns the sliders to the layer's defaults
+  // (the scope attribute stays — the Colors page always runs the layer).
   await page.getByRole('button', { name: 'Reset' }).click();
-  await expect(page.locator('html')).not.toHaveAttribute('data-palette', 'custom');
   await expect(page.evaluate(() => localStorage.getItem('colors-bases'))).resolves.toBeNull();
+  await expect(page.locator('html')).toHaveAttribute('data-palette', 'custom');
 });
 
 test('derivation: tint and fill keep the family hue', async ({ page }) => {
@@ -134,10 +123,7 @@ test('derivation: tint and fill keep the family hue', async ({ page }) => {
     root.style.setProperty('--ui-base-attention-h', '160');
   });
 
-  for (const token of [
-    '--ui-color-attention-tint',
-    '--ui-color-attention',
-  ]) {
+  for (const token of ['--ui-color-attention-tint', '--ui-color-attention']) {
     const hue = await hueOf(token);
     const drift = Math.abs(((hue - 160 + 540) % 360) - 180);
     expect(drift, `${token} keeps the family hue (got ${hue})`).toBeLessThanOrEqual(2);

@@ -25,18 +25,17 @@
  * host is responsible (policy: "overrides beyond calibrated defaults").
  *
  * --ui-color-scrim is intentionally NOT derived (static non-text layer).
- * --ui-color-surface-sunken is a Session-4 token: defined here already, no
- * core consumer until the elevation split lands.
  */
 
 :root[data-palette='custom'] {
   /* ---- Base tokens (the host-facing surface; the palette widget and the
-   * head applier write these) ---- */
+   * head applier write these). One OKLCH seed per family. ---- */
+  --ui-base-n-l: 100%;
   --ui-base-n-c: 0.008;
   --ui-base-n-h: 260;
-  --ui-base-n-page: 100%;
-  --ui-base-n-raised: 97%;
-  --ui-base-n-sunken: 94%;
+  --ui-base-brand-l: 0.14;
+  --ui-base-brand-c: 0.008;
+  --ui-base-brand-h: 260;
   --ui-base-attention-l: 0.48;
   --ui-base-attention-c: 0.19;
   --ui-base-attention-h: 28;
@@ -52,15 +51,15 @@
    * file follows core.css) wins. */
   transition: none;
 
-  /* ---- Neutral halves (theme-split plain colors) ---- */
-  --pl-surface-light: oklch(var(--ui-base-n-page) var(--ui-base-n-c) var(--ui-base-n-h));
+  /* ---- Neutral halves (theme-split plain colors). The seed is the page
+   * surface; raised surfaces step toward the text pole, the text anchors
+   * its own lightness and takes the seed's chroma/hue. ---- */
+  --pl-surface-light: oklch(var(--ui-base-n-l) var(--ui-base-n-c) var(--ui-base-n-h));
   --pl-surface-dark: oklch(14% var(--ui-base-n-c) var(--ui-base-n-h));
-  --pl-raised-light: oklch(var(--ui-base-n-raised) var(--ui-base-n-c) var(--ui-base-n-h));
-  --pl-raised-dark: oklch(20% var(--ui-base-n-c) var(--ui-base-n-h));
-  --pl-sunken-light: oklch(var(--ui-base-n-sunken) var(--ui-base-n-c) var(--ui-base-n-h));
-  --pl-sunken-dark: oklch(10% var(--ui-base-n-c) var(--ui-base-n-h));
   --pl-text-light: oklch(14% var(--ui-base-n-c) var(--ui-base-n-h));
   --pl-text-dark: oklch(97% var(--ui-base-n-c) var(--ui-base-n-h));
+  --pl-raised-light: color-mix(in oklch, var(--pl-surface-light), var(--pl-text-light) 3.5%);
+  --pl-raised-dark: color-mix(in oklch, var(--pl-surface-dark), var(--pl-text-dark) 7%);
   /* One soft fill above the page: hover and the gray tint (light theme) */
   --pl-soft-light: color-mix(in oklch, var(--pl-surface-light), var(--pl-text-light) 8%);
   /* The dark contrast pole (core: neutral-950) */
@@ -68,7 +67,6 @@
 
   --ui-color-surface: light-dark(var(--pl-surface-light), var(--pl-surface-dark));
   --ui-color-surface-raised: light-dark(var(--pl-raised-light), var(--pl-raised-dark));
-  --ui-color-surface-sunken: light-dark(var(--pl-sunken-light), var(--pl-sunken-dark));
 
   /* Hover fills — core formulas (oklab mixes against the surface steps) */
   --ui-color-hover: light-dark(
@@ -92,15 +90,47 @@
     color-mix(in oklch, var(--pl-surface-dark), var(--pl-text-dark) 55%)
   );
 
-  /* Brand family — the tone is the text color with inverted roles (the
-   * shadcn inverted model); hover derives toward the on-brand pole. */
-  --ui-color-brand: light-dark(var(--pl-text-light), var(--pl-text-dark));
-  --ui-color-on-brand: light-dark(oklch(100% 0 0), var(--pl-pole-dark));
+  /* Brand family — own seed. The default (the neutral text color, the
+   * shadcn inverted model) keeps the calibrated gray look: the light-theme
+   * fill IS the seed, the dark theme mirrors its lightness (1.11 - l gives
+   * 97% at the 0.14 default). A pastel seed (l > 0.7) keeps its lightness
+   * in the dark theme and flips the contrast pole. Hover derives toward
+   * the on-brand pole, the tint follows the family formulas. */
+  --pl-brand-sel: round(nearest, 0.5 * (sign(var(--ui-base-brand-l) - 0.7) + 1), 1);
+  --pl-brand-notsel: calc(1 - var(--pl-brand-sel));
+  --pl-brand-fill-dark: oklch(
+    calc(
+        (1.11 - var(--ui-base-brand-l)) * var(--pl-brand-notsel) + var(--ui-base-brand-l) *
+          var(--pl-brand-sel)
+      )
+      var(--ui-base-brand-c) var(--ui-base-brand-h)
+  );
+
+  --ui-color-brand: light-dark(
+    oklch(var(--ui-base-brand-l) var(--ui-base-brand-c) var(--ui-base-brand-h)),
+    var(--pl-brand-fill-dark)
+  );
+  --ui-color-on-brand: light-dark(
+    color-mix(in oklch, oklch(100% 0 0), oklch(9% 0 0) calc(var(--pl-brand-sel) * 100%)),
+    var(--pl-pole-dark)
+  );
   --ui-color-brand-hover: light-dark(
     color-mix(in oklab, var(--ui-color-brand) 70%, var(--ui-color-on-brand)),
     color-mix(in oklab, var(--ui-color-brand) 86%, var(--ui-color-on-brand))
   );
-  --ui-color-brand-tint: light-dark(var(--pl-soft-light), var(--pl-raised-dark));
+  --ui-color-brand-tint: light-dark(
+    oklch(
+      from oklch(var(--ui-base-brand-l) var(--ui-base-brand-c) var(--ui-base-brand-h))
+        calc(0.88 + 0.12 * l) calc(0.12 * c) h
+    ),
+    oklch(from var(--pl-brand-fill-dark) calc(0.123 + 0.12 * l) calc(0.12 * c) h)
+  );
+  /* Mirror of core: an 8% step of the tint toward the brand tone. */
+  --ui-color-brand-tint-hover: color-mix(
+    in oklab,
+    var(--ui-color-brand) 8%,
+    var(--ui-color-brand-tint)
+  );
   --ui-color-surface-tint: light-dark(var(--pl-soft-light), var(--pl-raised-dark));
 
   /* ---- Chromatic families ----
@@ -108,9 +138,7 @@
    * at base L <= 0.70, pastel above), per-theme fill halves, and the derived
    * semantic tokens. Formulas recalibrate the experiment's constants so the
    * defaults land on the current core steps (600/500 in the light theme,
-   * 300 in the dark). The three-former-family demo is reduced to attention;
-   * the utility roles (link, selection) keep core defaults here — hosts
-   * override them directly. */
+   * 300 in the dark). */
 
   /* attention */
   --pl-attention-source: oklch(

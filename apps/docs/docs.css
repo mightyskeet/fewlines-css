@@ -284,45 +284,16 @@ main > section {
   }
 }
 
-/* ---- Palette widget (site-palette.js) — floating FAB + our Drawer
+/* ---- Palette widget (site-palette.js) — inline on the Colors page,
  * dogfooding the token system it customizes. ---- */
 
-.site-palette-fab {
-  position: fixed;
-  inset-block-end: var(--ui-space-lg);
-  inset-inline-end: var(--ui-space-lg);
-  inline-size: 2.75rem;
-  block-size: 2.75rem;
-  border: 1px solid var(--ui-color-border);
-  border-radius: var(--ui-radius-full);
-
-  /* corner-shape: round overrides the tokens-layer squircle: at a clamped
-   * full radius squircle flattens the circle into a rounded box. */
-  corner-shape: round;
-  background: var(--ui-color-brand);
-  color: var(--ui-color-on-brand);
-  cursor: pointer;
-  box-shadow: var(--ui-elevation-2);
-  /* Above page content; the Drawer opens in the top layer regardless. */
-  z-index: 5;
-}
-
-.site-palette-fab:hover {
-  box-shadow: var(--ui-elevation-3);
-}
-
-.palette-drawer fieldset {
+.palette-fieldset {
   display: grid;
   gap: var(--ui-space-2xs);
   margin: 0 0 var(--ui-space-md);
   padding: var(--ui-space-sm);
   border: 1px solid var(--ui-color-border);
   border-radius: var(--ui-radius-md);
-}
-
-.palette-drawer legend {
-  font-weight: var(--ui-font-weight-medium);
-  padding-inline: var(--ui-space-2xs);
 }
 
 .palette-slider {
@@ -345,7 +316,6 @@ main > section {
 .palette-actions {
   display: flex;
   gap: var(--ui-space-sm);
-  margin-block-end: var(--ui-space-xl);
 }
 
 .palette-table {

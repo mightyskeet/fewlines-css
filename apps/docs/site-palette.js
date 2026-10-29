@@ -1,18 +1,21 @@
-// Floating palette widget for the docs site (plan:
-// docs/plans/2026-10-26-color-derivation.md, session 1).
+// Inline palette widget for the Colors page (plan:
+// docs/plans/2026-10-26-color-derivation.md).
 //
-// A fixed FAB opens our own Drawer (dogfooding: the widget is assembled from
-// the components it recolors). Inside: base-token sliders per color family,
-// Reset, Copy CSS (a host-ready snippet of the base tokens) and a live
-// WCAG + APCA pass/fail table over the token-pair registry — copied to
-// apps/docs/token-pairs.mjs by tests/prepare.mjs, the same mechanism as
-// core.css. No manual duplication of the registry.
+// The page hosts one section per base family; the widget's pieces are
+// embedded there as autonomous custom elements: <site-palette-family>
+// (seed sliders for one family), <site-palette-table> (a live WCAG + APCA
+// pass/fail table over that family's token pairs) and <site-palette-actions>
+// (Reset, Copy CSS — a host-ready snippet of the base tokens). The token-pair
+// registry is copied to apps/docs/token-pairs.mjs by tests/prepare.mjs, the
+// same mechanism as core.css — no manual duplication.
 //
-// Persisting: slider state goes to localStorage['colors-bases'] as a map of
+// Persistence: slider state goes to localStorage['colors-bases'] as a map of
 // base-token -> value strings; restoring it before first paint is a tiny
 // inline <head> script on every page (fixture.html deliberately has none —
-// browser tests rely on the default token values). Applying the bases also
-// sets data-palette="custom", which activates apps/docs/colors-derive.css.
+// browser tests rely on the default token values). The Colors page activates
+// the derivation scope (data-palette="custom") unconditionally in its head
+// script, so this widget never toggles the attribute: sliders only write the
+// base tokens they cover, and Reset returns them to the layer's defaults.
 //
 // This is host/tooling JS — the core package stays CSS-only
 // (overview notes, «Не является целью»).
@@ -29,17 +32,23 @@ const KEY = 'colors-bases';
  * page lightnesses are percentages — the strings go into the CSS as-is. */
 const FAMILIES = [
   {
-    legend: 'Neutral',
+    name: 'Neutral',
     sliders: [
-      { prop: '--ui-base-n-page', label: 'Page', min: 88, max: 100, step: 1, unit: '%' },
-      { prop: '--ui-base-n-raised', label: 'Raised', min: 88, max: 100, step: 1, unit: '%' },
-      { prop: '--ui-base-n-sunken', label: 'Sunken', min: 80, max: 100, step: 1, unit: '%' },
+      { prop: '--ui-base-n-l', label: 'Page', min: 88, max: 100, step: 1, unit: '%' },
       { prop: '--ui-base-n-c', label: 'Chroma', min: 0, max: 0.12, step: 0.001 },
       { prop: '--ui-base-n-h', label: 'Hue', min: 0, max: 360, step: 1 },
     ],
   },
   {
-    legend: 'Link',
+    name: 'Brand',
+    sliders: [
+      { prop: '--ui-base-brand-l', label: 'Lightness', min: 0.05, max: 0.95, step: 0.01 },
+      { prop: '--ui-base-brand-c', label: 'Chroma', min: 0, max: 0.37, step: 0.01 },
+      { prop: '--ui-base-brand-h', label: 'Hue', min: 0, max: 360, step: 1 },
+    ],
+  },
+  {
+    name: 'Link',
     sliders: [
       { prop: '--ui-base-link-l', label: 'Lightness', min: 0.15, max: 0.95, step: 0.01 },
       { prop: '--ui-base-link-c', label: 'Chroma', min: 0, max: 0.37, step: 0.01 },
@@ -47,7 +56,7 @@ const FAMILIES = [
     ],
   },
   {
-    legend: 'Attention',
+    name: 'Attention',
     sliders: [
       { prop: '--ui-base-attention-l', label: 'Lightness', min: 0.15, max: 0.95, step: 0.01 },
       { prop: '--ui-base-attention-c', label: 'Chroma', min: 0, max: 0.37, step: 0.01 },
@@ -58,29 +67,57 @@ const FAMILIES = [
 
 const PROPS = FAMILIES.flatMap((family) => family.sliders.map((slider) => slider.prop));
 
-// state: { [base token]: value string } — empty means "core defaults".
+/** Semantic tokens owned by each family — determines which live table a
+ * token pair belongs to. Neutral owns the shared surfaces/text, so it is the
+ * fallback owner (a pair like attention/surface belongs to Attention but
+ * still recomputes whenever any table updates). */
+const FAMILY_TOKENS = {
+  Neutral: [
+    'text',
+    'text-muted',
+    'surface',
+    'surface-raised',
+    'surface-tint',
+    'hover',
+    'border',
+    'border-strong',
+    'focus-ring',
+  ],
+  Brand: ['brand', 'on-brand', 'brand-hover', 'brand-tint', 'brand-tint-hover'],
+  Link: ['link', 'selection'],
+  Attention: ['attention', 'on-attention', 'attention-hover', 'attention-tint'],
+};
+
+/** Pairs without a derived token stay out of the tables (scrim is static and
+ * the disabled role is exempt from conformance — plan, "Ограничения"). */
+const tablePairs = tokenPairs.filter((pair) => pair.role !== 'disabled');
+
+const tokenFamily = new Map();
+for (const [family, tokens] of Object.entries(FAMILY_TOKENS))
+  for (const token of tokens) tokenFamily.set(token, family);
+
+/** family -> pairs: the first non-Neutral owner across [fg, bg] wins. */
+const pairsByFamily = Object.fromEntries(FAMILIES.map((family) => [family.name, []]));
+for (const pair of tablePairs) {
+  const [fgFamily, bgFamily] = [tokenFamily.get(pair.fg), tokenFamily.get(pair.bg)];
+  pairsByFamily[fgFamily !== 'Neutral' ? fgFamily : (bgFamily ?? 'Neutral')].push(pair);
+}
+
+// state: { [base token]: value string } — empty means "the layer's defaults".
 let state = {};
-const inputs = new Map(); // prop -> { input, output }
+const inputs = new Map(); // prop -> { input, output, slider }
 
 function valueOf(slider, raw) {
   return `${raw}${slider.unit ?? ''}`;
 }
 
-/** Base-token values as resolved right now (CSS defaults, or the restored
- * inline bases) — used to seed the full map on the first drag and after Reset.
- * The scope must be active while reading: without data-palette the CSS
- * defaults are not applied and every value would come back as an empty
- * string, poisoning the saved snapshot. The temporary attribute flip is
- * synchronous, so it never paints. */
+/** Base-token values as resolved right now. The Colors page activates the
+ * derivation scope in its head script, so the CSS defaults are always live
+ * and the values read back complete. */
 function readComputed() {
-  const root = document.documentElement;
-  const saved = root.getAttribute('data-palette');
-  root.setAttribute('data-palette', 'custom');
-  const styles = getComputedStyle(root);
+  const styles = getComputedStyle(document.documentElement);
   const values = {};
   for (const prop of PROPS) values[prop] = styles.getPropertyValue(prop).trim();
-  if (saved) root.setAttribute('data-palette', saved);
-  else root.removeAttribute('data-palette');
   return values;
 }
 
@@ -98,18 +135,16 @@ function save() {
   else localStorage.setItem(KEY, JSON.stringify(state));
 }
 
-/** Push the state onto :root and toggle the derivation scope. */
+/** Push the state onto :root (the head script owns the scope attribute). */
 function apply() {
   const root = document.documentElement;
   for (const prop of PROPS) {
     if (state[prop]) root.style.setProperty(prop, state[prop]);
     else root.style.removeProperty(prop);
   }
-  if (Object.keys(state).length > 0) root.setAttribute('data-palette', 'custom');
-  else root.removeAttribute('data-palette');
 }
 
-/* ---- Live contrast table (WCAG 2.1 + APCA via the vendored apca-w3) ---- */
+/* ---- Live contrast tables (WCAG 2.1 + APCA via the vendored apca-w3) ---- */
 
 const canvas = document.createElement('canvas');
 const ctx = canvas.getContext('2d', { willReadFrequently: true });
@@ -138,12 +173,9 @@ function cssVar(name) {
   return name === 'focus-ring' ? '--ui-focus-ring' : `--ui-color-${name}`;
 }
 
-// Pairs without a derived token stay out of the table (scrim is static and
-// the disabled role is exempt from conformance — plan, "Ограничения").
-const tablePairs = tokenPairs.filter((pair) => pair.role !== 'disabled');
 const tableTokens = [...new Set(tablePairs.flatMap((pair) => [pair.fg, pair.bg]))];
 
-/** Resolve every table token in both themes, then fill the table.
+/** Resolve every table token in both themes, then fill every live table.
  *
  * The themes are switched by an INLINE color-scheme flip on :root, NOT by
  * the data-theme attribute: touching the attribute toggles the
@@ -154,7 +186,7 @@ const tableTokens = [...new Set(tablePairs.flatMap((pair) => [pair.fg, pair.bg])
  * suppressed for the measurement (values do change), and the restore happens
  * before it is re-enabled, so nothing animates and no frame can show an
  * intermediate theme. */
-function updateTable(rows) {
+function updateAllTables() {
   const root = document.documentElement;
   root.style.transition = 'none';
   const colors = {};
@@ -176,6 +208,10 @@ function updateTable(rows) {
   root.style.transition = '';
   root.style.transition = '';
 
+  for (const rows of registry) updateTable(rows, colors);
+}
+
+function updateTable(rows, colors) {
   for (const { pair, cells, pills } of rows) {
     const threshold = pair.threshold ?? roleThresholds[pair.role];
     const values = ['light', 'dark'].map((theme) => {
@@ -195,118 +231,28 @@ function updateTable(rows) {
   }
 }
 
-/* ---- Widget UI ---- */
+/** Debounced recompute — slider drags fire rapidly. */
+let tableTimer = 0;
+function scheduleUpdate() {
+  clearTimeout(tableTimer);
+  tableTimer = setTimeout(updateAllTables, 150);
+}
 
-class SitePalette extends HTMLElement {
-  /** Slider input hook, wired up in connectedCallback (private field must be
-   * initialized so early events are a no-op). */
-  #onInput = () => {};
-  /** Timer id of the debounced table recompute (slider drags fire rapidly). */
-  #tableTimer = 0;
+/** All live tables on the page; filled by <site-palette-table>. */
+const registry = [];
 
+/* ---- Widget pieces ---- */
+
+class SitePaletteFamily extends HTMLElement {
   connectedCallback() {
     // Idempotent: connectedCallback re-runs whenever the element is moved.
     if (this.dataset.chrome) return;
     this.dataset.chrome = 'true';
 
-    document.body.append(probe);
-    const drawer = this.#buildDrawer();
-    this.append(this.#buildFab(drawer), drawer);
-
-    load();
-    apply();
-    this.#syncInputs();
-
-    // Recompute the table when the drawer opens (values may have changed
-    // elsewhere) and, debounced, after slider drags while it is open.
-    let opened = false;
-    this.#onInput = () => {
-      if (!opened) return;
-      clearTimeout(this.#tableTimer);
-      this.#tableTimer = setTimeout(() => updateTable(this.rows), 150);
-    };
-    drawer.addEventListener('toggle', () => {
-      if (!drawer.matches(':popover-open')) return;
-      opened = true;
-      updateTable(this.rows);
-    });
-  }
-
-  #buildFab(drawer) {
-    const fab = document.createElement('button');
-    fab.type = 'button';
-    fab.className = 'site-palette-fab';
-    fab.popoverTargetElement = drawer;
-    fab.setAttribute('aria-label', 'Palette settings');
-    fab.textContent = '◐';
-    return fab;
-  }
-
-  #buildDrawer() {
-    const drawer = document.createElement('aside');
-    drawer.className = 'ui-drawer palette-drawer';
-    drawer.id = 'site-palette-drawer';
-    drawer.setAttribute('popover', '');
-    drawer.dataset.variant = 'drawer-end';
-
-    const title = document.createElement('h2');
-    title.textContent = 'Palette';
-    drawer.append(title);
-
-    for (const family of FAMILIES) drawer.append(this.#buildFamily(family));
-
-    const actions = document.createElement('div');
-    actions.className = 'palette-actions';
-    const reset = document.createElement('button');
-    reset.type = 'button';
-    reset.className = 'ui-button';
-    reset.textContent = 'Reset';
-    reset.addEventListener('click', () => {
-      state = {};
-      save();
-      apply();
-      this.#syncInputs();
-      updateTable(this.rows);
-    });
-    const copy = document.createElement('button');
-    copy.type = 'button';
-    copy.className = 'ui-button';
-    copy.textContent = 'Copy CSS';
-    copy.addEventListener('click', async () => {
-      await navigator.clipboard.writeText(this.#exportCss());
-      copy.textContent = 'Copied';
-      setTimeout(() => {
-        copy.textContent = 'Copy CSS';
-      }, 1200);
-    });
-    actions.append(reset, copy);
-    drawer.append(actions);
-
-    const contrastTitle = document.createElement('h2');
-    contrastTitle.textContent = 'Contrast (live)';
-    drawer.append(contrastTitle);
-    drawer.append(this.#buildTable());
-
-    const close = document.createElement('button');
-    close.type = 'button';
-    close.className = 'ui-button';
-    close.popoverTargetElement = drawer;
-    close.popoverTargetAction = 'hide';
-    close.textContent = 'Close';
-    drawer.append(close);
-
-    // Focus lands on the first control (top of the panel) — autofocus on the
-    // bottom Close button would scroll the opened drawer to the end.
-    drawer.querySelector('input, button')?.setAttribute('autofocus', '');
-
-    return drawer;
-  }
-
-  #buildFamily(family) {
+    const family = FAMILIES.find((f) => f.name === this.getAttribute('family'));
+    if (!family) return;
     const fieldset = document.createElement('fieldset');
-    const legend = document.createElement('legend');
-    legend.textContent = family.legend;
-    fieldset.append(legend);
+    fieldset.className = 'palette-fieldset';
     for (const slider of family.sliders) {
       const row = document.createElement('label');
       row.className = 'palette-slider';
@@ -318,25 +264,31 @@ class SitePalette extends HTMLElement {
       input.min = slider.min;
       input.max = slider.max;
       input.step = slider.step;
-      input.setAttribute('aria-label', `${family.legend} ${slider.label}`);
+      input.setAttribute('aria-label', `${family.name} ${slider.label}`);
       input.addEventListener('input', () => {
         // The first drag seeds the full map so the saved snapshot stays
-        // complete (the rest are the CSS defaults read at that moment).
+        // complete (the rest are the layer's defaults read at that moment).
         if (Object.keys(state).length === 0) state = readComputed();
         state[slider.prop] = valueOf(slider, input.value);
         save();
         apply();
         output.textContent = state[slider.prop];
-        this.#onInput();
+        scheduleUpdate();
       });
       row.append(name, output, input);
       fieldset.append(row);
       inputs.set(slider.prop, { input, output, slider });
     }
-    return fieldset;
+    this.append(fieldset);
   }
+}
 
-  #buildTable() {
+class SitePaletteTable extends HTMLElement {
+  connectedCallback() {
+    if (this.dataset.chrome) return;
+    this.dataset.chrome = 'true';
+
+    const pairs = pairsByFamily[this.getAttribute('family')] ?? [];
     const table = document.createElement('table');
     table.className = 'palette-table';
     const head = document.createElement('thead');
@@ -350,7 +302,7 @@ class SitePalette extends HTMLElement {
     head.append(headRow);
     const body = document.createElement('tbody');
     this.rows = [];
-    for (const pair of tablePairs) {
+    for (const pair of pairs) {
       const row = document.createElement('tr');
       const name = document.createElement('td');
       const code = document.createElement('code');
@@ -371,35 +323,85 @@ class SitePalette extends HTMLElement {
       this.rows.push({ pair, cells: { w, lc }, pills });
     }
     table.append(head, body);
-    return table;
+    this.append(table);
+    registry.push(this.rows);
   }
 
-  /** Reflect the effective values (state, falling back to computed) into the
-   * sliders and outputs. */
-  #syncInputs() {
-    const computed = readComputed();
-    for (const [prop, { input, output, slider }] of inputs) {
-      const value = state[prop] ?? computed[prop];
-      if (value) {
-        input.value = slider.unit ? value.replace('%', '') : value;
-        output.textContent = value;
-      }
-    }
-  }
-
-  #exportCss() {
-    const computed = readComputed();
-    const lines = PROPS.map((prop) => `  ${prop}: ${state[prop] ?? computed[prop]};`);
-    return [
-      '/* Base tokens for the color derivation layer',
-      ' * (docs/plans/2026-10-26-color-derivation.md).',
-      ' * Activate with data-palette="custom" on :root.',
-      ' */',
-      ':root {',
-      ...lines,
-      '}',
-    ].join('\n');
+  /** Synchronous recompute (tests flip the scope attribute directly). */
+  refresh() {
+    updateAllTables();
   }
 }
 
-customElements.define('site-palette', SitePalette);
+class SitePaletteActions extends HTMLElement {
+  connectedCallback() {
+    if (this.dataset.chrome) return;
+    this.dataset.chrome = 'true';
+
+    const actions = document.createElement('div');
+    actions.className = 'palette-actions';
+    const reset = document.createElement('button');
+    reset.type = 'button';
+    reset.className = 'ui-button';
+    reset.textContent = 'Reset';
+    reset.addEventListener('click', () => {
+      state = {};
+      save();
+      apply();
+      syncInputs();
+      updateAllTables();
+    });
+    const copy = document.createElement('button');
+    copy.type = 'button';
+    copy.className = 'ui-button';
+    copy.textContent = 'Copy CSS';
+    copy.addEventListener('click', async () => {
+      await navigator.clipboard.writeText(exportCss());
+      copy.textContent = 'Copied';
+      setTimeout(() => {
+        copy.textContent = 'Copy CSS';
+      }, 1200);
+    });
+    actions.append(reset, copy);
+    this.append(actions);
+  }
+}
+
+/** Reflect the effective values (state, falling back to computed) into the
+ * sliders and outputs. */
+function syncInputs() {
+  const computed = readComputed();
+  for (const [prop, { input, output, slider }] of inputs) {
+    const value = state[prop] ?? computed[prop];
+    if (value) {
+      input.value = slider.unit ? value.replace('%', '') : value;
+      output.textContent = value;
+    }
+  }
+}
+
+function exportCss() {
+  const computed = readComputed();
+  const lines = PROPS.map((prop) => `  ${prop}: ${state[prop] ?? computed[prop]};`);
+  return [
+    '/* Base tokens for the color derivation layer',
+    ' * (docs/plans/2026-10-26-color-derivation.md).',
+    ' * Activate with data-palette="custom" on :root.',
+    ' */',
+    ':root {',
+    ...lines,
+    '}',
+  ].join('\n');
+}
+
+customElements.define('site-palette-family', SitePaletteFamily);
+customElements.define('site-palette-table', SitePaletteTable);
+customElements.define('site-palette-actions', SitePaletteActions);
+
+// Module scripts are deferred: the DOM (and every embedded element) is fully
+// parsed, the custom elements above upgraded synchronously — the registry is
+// complete and the restored state (head script) is already applied.
+document.body.append(probe);
+load();
+syncInputs();
+updateAllTables();
