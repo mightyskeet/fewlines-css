@@ -42,14 +42,48 @@ const FAMILIES = [
     name: 'Neutral',
     themes: {
       light: [
-        { prop: '--ui-base-n-light-l', label: 'Page', min: 88, max: 100, step: 1, unit: '%' },
+        { prop: '--ui-base-n-light-l', label: 'Page', min: 50, max: 100, step: 1, unit: '%' },
         { prop: '--ui-base-n-light-c', label: 'Chroma', min: 0, max: 0.12, step: 0.001 },
         { prop: '--ui-base-n-light-h', label: 'Hue', min: 0, max: 360, step: 1 },
+        {
+          prop: '--ui-base-n-muted-light',
+          label: 'Muted text',
+          min: 0,
+          max: 100,
+          step: 1,
+          unit: '%',
+        },
+        { prop: '--ui-base-n-border-light', label: 'Border', min: 0, max: 100, step: 1, unit: '%' },
+        {
+          prop: '--ui-base-n-boundary-light',
+          label: 'Strong border',
+          min: 0,
+          max: 100,
+          step: 1,
+          unit: '%',
+        },
       ],
       dark: [
-        { prop: '--ui-base-n-dark-l', label: 'Page', min: 8, max: 40, step: 1, unit: '%' },
+        { prop: '--ui-base-n-dark-l', label: 'Page', min: 5, max: 50, step: 1, unit: '%' },
         { prop: '--ui-base-n-dark-c', label: 'Chroma', min: 0, max: 0.12, step: 0.001 },
         { prop: '--ui-base-n-dark-h', label: 'Hue', min: 0, max: 360, step: 1 },
+        {
+          prop: '--ui-base-n-muted-dark',
+          label: 'Muted text',
+          min: 0,
+          max: 100,
+          step: 1,
+          unit: '%',
+        },
+        { prop: '--ui-base-n-border-dark', label: 'Border', min: 0, max: 100, step: 1, unit: '%' },
+        {
+          prop: '--ui-base-n-boundary-dark',
+          label: 'Strong border',
+          min: 0,
+          max: 100,
+          step: 1,
+          unit: '%',
+        },
       ],
     },
   },
@@ -57,7 +91,7 @@ const FAMILIES = [
     name: 'Brand',
     themes: {
       light: [
-        { prop: '--ui-base-brand-light-l', label: 'Lightness', min: 0.05, max: 1, step: 0.01 },
+        { prop: '--ui-base-brand-light-l', label: 'Lightness', min: 0, max: 1, step: 0.01 },
         { prop: '--ui-base-brand-light-c', label: 'Chroma', min: 0, max: 0.37, step: 0.01 },
         { prop: '--ui-base-brand-light-h', label: 'Hue', min: 0, max: 360, step: 1 },
         {
@@ -70,7 +104,7 @@ const FAMILIES = [
         },
       ],
       dark: [
-        { prop: '--ui-base-brand-dark-l', label: 'Lightness', min: 0.05, max: 1, step: 0.01 },
+        { prop: '--ui-base-brand-dark-l', label: 'Lightness', min: 0, max: 1, step: 0.01 },
         { prop: '--ui-base-brand-dark-c', label: 'Chroma', min: 0, max: 0.37, step: 0.01 },
         { prop: '--ui-base-brand-dark-h', label: 'Hue', min: 0, max: 360, step: 1 },
         {
@@ -88,12 +122,12 @@ const FAMILIES = [
     name: 'Link',
     themes: {
       light: [
-        { prop: '--ui-base-link-light-l', label: 'Lightness', min: 0.15, max: 0.95, step: 0.01 },
+        { prop: '--ui-base-link-light-l', label: 'Lightness', min: 0, max: 1, step: 0.01 },
         { prop: '--ui-base-link-light-c', label: 'Chroma', min: 0, max: 0.37, step: 0.01 },
         { prop: '--ui-base-link-light-h', label: 'Hue', min: 0, max: 360, step: 1 },
       ],
       dark: [
-        { prop: '--ui-base-link-dark-l', label: 'Lightness', min: 0.15, max: 0.95, step: 0.01 },
+        { prop: '--ui-base-link-dark-l', label: 'Lightness', min: 0, max: 1, step: 0.01 },
         { prop: '--ui-base-link-dark-c', label: 'Chroma', min: 0, max: 0.37, step: 0.01 },
         { prop: '--ui-base-link-dark-h', label: 'Hue', min: 0, max: 360, step: 1 },
       ],

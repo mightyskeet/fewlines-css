@@ -92,6 +92,14 @@
           The sliders edit the theme you are looking at — use the theme toggle to switch.
         </p>
         <p>
+          Besides the seeds, the formulas expose a few <em>named steps</em> — how far hover fills
+          walk toward the contrast pole, how far muted text fades toward the surface, how strongly
+          borders bite. Steps are scalar parameters of the derivation, not colors: change a seed's
+          hue and every shade follows it. Absolute per-token color overrides stay a host-level
+          concern (<code>--ui-color-*</code> set directly) — they are what breaks that seed linkage,
+          so the widget does not offer them.
+        </p>
+        <p>
           Fills use a polarity branch: a seed lightness up to 0.70 produces a vivid fill with a
           white contrast pole, a lighter seed produces a saturated pastel with a near-black pole —
           the branch jumps the APCA dead zone. The branch runs per theme on that theme's seed.
@@ -120,7 +128,9 @@
         <p>
           The seed is the page surface, per theme. Text anchors its own lightness and takes the
           seed's chroma and hue; raised surfaces step toward the text pole; borders, hover fills and
-          the focus ring derive from the same two poles.
+          the focus ring derive from the same two poles. The <em>Muted text</em>,
+          <em>Border</em> and <em>Strong border</em> steps tune those mixes — the strong boundary
+          step also drives the focus ring.
         </p>
         <site-palette-family family="Neutral"></site-palette-family>
 

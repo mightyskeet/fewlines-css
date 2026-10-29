@@ -37,13 +37,21 @@
   /* ---- Base tokens (the host-facing surface; the palette widget and the
    * head applier write these). ---- */
 
-  /* neutral */
+  /* neutral (steps are color-mix shares: muted = how far text fades toward
+   * the surface, border/boundary = how far the boundary walks toward the
+   * text pole; the boundary step also drives the focus ring) */
   --ui-base-n-light-l: 100%;
   --ui-base-n-light-c: 0.008;
   --ui-base-n-light-h: 260;
   --ui-base-n-dark-l: 14%;
   --ui-base-n-dark-c: 0.008;
   --ui-base-n-dark-h: 260;
+  --ui-base-n-muted-light: 28%;
+  --ui-base-n-muted-dark: 23%;
+  --ui-base-n-border-light: 15%;
+  --ui-base-n-border-dark: 17%;
+  --ui-base-n-boundary-light: 60%;
+  --ui-base-n-boundary-dark: 55%;
 
   /* brand (the default dark seed is the mirrored lightness of the old
    * single-seed model) */
@@ -107,20 +115,33 @@
     color-mix(in oklab, var(--pl-raised-dark), var(--pl-border-dark))
   );
 
-  /* Text */
+  /* Text (text anchors its lightness; muted fades it toward the surface) */
   --ui-color-text: light-dark(var(--pl-text-light), var(--pl-text-dark));
   --ui-color-text-muted: light-dark(
-    color-mix(in oklch, var(--pl-text-light), var(--pl-surface-light) 28%),
-    color-mix(in oklch, var(--pl-text-dark), var(--pl-surface-dark) 23%)
+    color-mix(in oklch, var(--pl-text-light), var(--pl-surface-light) var(--ui-base-n-muted-light)),
+    color-mix(in oklch, var(--pl-text-dark), var(--pl-surface-dark) var(--ui-base-n-muted-dark))
   );
 
-  /* Border — mixes of surface toward text (≈ core steps 200/700 and 500/400) */
-  --pl-border-light: color-mix(in oklch, var(--pl-surface-light), var(--pl-text-light) 15%);
-  --pl-border-dark: color-mix(in oklch, var(--pl-surface-dark), var(--pl-text-dark) 17%);
+  /* Border — mixes of surface toward text (≈ core steps 200/700 and 500/400);
+   * the boundary step also drives the focus ring (core: the same step) */
+  --pl-border-light: color-mix(
+    in oklch,
+    var(--pl-surface-light),
+    var(--pl-text-light) var(--ui-base-n-border-light)
+  );
+  --pl-border-dark: color-mix(
+    in oklch,
+    var(--pl-surface-dark),
+    var(--pl-text-dark) var(--ui-base-n-border-dark)
+  );
   --ui-color-border: light-dark(var(--pl-border-light), var(--pl-border-dark));
   --ui-color-border-strong: light-dark(
-    color-mix(in oklch, var(--pl-surface-light), var(--pl-text-light) 60%),
-    color-mix(in oklch, var(--pl-surface-dark), var(--pl-text-dark) 55%)
+    color-mix(
+      in oklch,
+      var(--pl-surface-light),
+      var(--pl-text-light) var(--ui-base-n-boundary-light)
+    ),
+    color-mix(in oklch, var(--pl-surface-dark), var(--pl-text-dark) var(--ui-base-n-boundary-dark))
   );
 
   /* Brand family — each theme's fill IS that theme's seed. The polarity
@@ -290,7 +311,11 @@
     oklch(from var(--pl-link-fill-dark) calc(0.123 + 0.12 * l) calc(0.12 * c) h)
   );
   --ui-focus-ring: light-dark(
-    color-mix(in oklch, var(--pl-surface-light), var(--pl-text-light) 60%),
-    color-mix(in oklch, var(--pl-surface-dark), var(--pl-text-dark) 55%)
+    color-mix(
+      in oklch,
+      var(--pl-surface-light),
+      var(--pl-text-light) var(--ui-base-n-boundary-light)
+    ),
+    color-mix(in oklch, var(--pl-surface-dark), var(--pl-text-dark) var(--ui-base-n-boundary-dark))
   );
 }
