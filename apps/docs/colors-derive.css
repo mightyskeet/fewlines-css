@@ -20,10 +20,11 @@
  * average the branches exactly at the threshold). The contrast pole (white
  * vs near-black on-*) follows the branch.
  *
- * Derived fills walk toward the contrast pole by a per-theme hover step
- * token (--ui-base-*-hover-light/dark) — the calibrated percentages are the
- * defaults, hosts can walk them back for a calmer (and higher-contrast)
- * hover.
+ * One CONTRAST multiplier per family and theme (--ui-base-*-contrast) scales
+ * every derived step away from its contrast pole: hover walks, muted-text
+ * fades, borders, and the tint's deviation from the page. 1 = the calibrated
+ * defaults, 0 = everything collapses into the pole, above 1 amplifies
+ * (color-mix clamps at 100%; the tint scales linearly in both directions).
  *
  * Defaults approximate the current core palette (packages/core/src/tokens/
  * palette.css) so the calibrated look carries over; the live pass/fail table
@@ -37,21 +38,17 @@
   /* ---- Base tokens (the host-facing surface; the palette widget and the
    * head applier write these). ---- */
 
-  /* neutral (steps are color-mix shares: muted = how far text fades toward
-   * the surface, border/boundary = how far the boundary walks toward the
-   * text pole; the boundary step also drives the focus ring) */
+  /* neutral — every derived step is the calibrated share of the walk away
+   * from the page pole (muted text, borders, the focus ring), scaled by the
+   * per-theme contrast multiplier */
   --ui-base-n-light-l: 100%;
   --ui-base-n-light-c: 0.008;
   --ui-base-n-light-h: 260;
   --ui-base-n-dark-l: 14%;
   --ui-base-n-dark-c: 0.008;
   --ui-base-n-dark-h: 260;
-  --ui-base-n-muted-light: 28%;
-  --ui-base-n-muted-dark: 23%;
-  --ui-base-n-border-light: 15%;
-  --ui-base-n-border-dark: 17%;
-  --ui-base-n-boundary-light: 60%;
-  --ui-base-n-boundary-dark: 55%;
+  --ui-base-n-light-contrast: 1;
+  --ui-base-n-dark-contrast: 1;
 
   /* brand (the default dark seed is the mirrored lightness of the old
    * single-seed model) */
@@ -61,8 +58,8 @@
   --ui-base-brand-dark-l: 0.97;
   --ui-base-brand-dark-c: 0.008;
   --ui-base-brand-dark-h: 260;
-  --ui-base-brand-hover-light: 70%;
-  --ui-base-brand-hover-dark: 86%;
+  --ui-base-brand-light-contrast: 1;
+  --ui-base-brand-dark-contrast: 1;
 
   /* attention */
   --ui-base-attention-light-l: 0.48;
@@ -71,8 +68,8 @@
   --ui-base-attention-dark-l: 0.48;
   --ui-base-attention-dark-c: 0.19;
   --ui-base-attention-dark-h: 28;
-  --ui-base-attention-hover-light: 84%;
-  --ui-base-attention-hover-dark: 88%;
+  --ui-base-attention-light-contrast: 1;
+  --ui-base-attention-dark-contrast: 1;
 
   /* link */
   --ui-base-link-light-l: 0.48;
@@ -81,6 +78,8 @@
   --ui-base-link-dark-l: 0.48;
   --ui-base-link-dark-c: 0.18;
   --ui-base-link-dark-h: 258;
+  --ui-base-link-light-contrast: 1;
+  --ui-base-link-dark-contrast: 1;
 
   /* No token transitions while the palette session is active: dragging
    * sliders retargets dozens of registered-token transitions and the
@@ -99,10 +98,22 @@
   --pl-surface-dark: oklch(var(--ui-base-n-dark-l) var(--ui-base-n-dark-c) var(--ui-base-n-dark-h));
   --pl-text-light: oklch(14% var(--ui-base-n-light-c) var(--ui-base-n-light-h));
   --pl-text-dark: oklch(97% var(--ui-base-n-dark-c) var(--ui-base-n-dark-h));
-  --pl-raised-light: color-mix(in oklch, var(--pl-surface-light), var(--pl-text-light) 3.5%);
-  --pl-raised-dark: color-mix(in oklch, var(--pl-surface-dark), var(--pl-text-dark) 7%);
+  --pl-raised-light: color-mix(
+    in oklch,
+    var(--pl-surface-light),
+    var(--pl-text-light) calc(var(--ui-base-n-light-contrast) * 3.5%)
+  );
+  --pl-raised-dark: color-mix(
+    in oklch,
+    var(--pl-surface-dark),
+    var(--pl-text-dark) calc(var(--ui-base-n-dark-contrast) * 7%)
+  );
   /* One soft fill above the page: hover and the gray tint (light theme) */
-  --pl-soft-light: color-mix(in oklch, var(--pl-surface-light), var(--pl-text-light) 8%);
+  --pl-soft-light: color-mix(
+    in oklch,
+    var(--pl-surface-light),
+    var(--pl-text-light) calc(var(--ui-base-n-light-contrast) * 8%)
+  );
   /* The dark contrast pole (core: neutral-950) */
   --pl-pole-dark: oklch(9% var(--ui-base-n-dark-c) var(--ui-base-n-dark-h));
 
@@ -115,11 +126,20 @@
     color-mix(in oklab, var(--pl-raised-dark), var(--pl-border-dark))
   );
 
-  /* Text (text anchors its lightness; muted fades it toward the surface) */
+  /* Text (text anchors its lightness; muted fades it toward the surface —
+   * the surface share shrinks as the contrast multiplier grows) */
   --ui-color-text: light-dark(var(--pl-text-light), var(--pl-text-dark));
   --ui-color-text-muted: light-dark(
-    color-mix(in oklch, var(--pl-text-light), var(--pl-surface-light) var(--ui-base-n-muted-light)),
-    color-mix(in oklch, var(--pl-text-dark), var(--pl-surface-dark) var(--ui-base-n-muted-dark))
+    color-mix(
+      in oklch,
+      var(--pl-text-light),
+      var(--pl-surface-light) calc(100% - var(--ui-base-n-light-contrast) * 72%)
+    ),
+    color-mix(
+      in oklch,
+      var(--pl-text-dark),
+      var(--pl-surface-dark) calc(100% - var(--ui-base-n-dark-contrast) * 77%)
+    )
   );
 
   /* Border — mixes of surface toward text (≈ core steps 200/700 and 500/400);
@@ -127,28 +147,33 @@
   --pl-border-light: color-mix(
     in oklch,
     var(--pl-surface-light),
-    var(--pl-text-light) var(--ui-base-n-border-light)
+    var(--pl-text-light) calc(var(--ui-base-n-light-contrast) * 15%)
   );
   --pl-border-dark: color-mix(
     in oklch,
     var(--pl-surface-dark),
-    var(--pl-text-dark) var(--ui-base-n-border-dark)
+    var(--pl-text-dark) calc(var(--ui-base-n-dark-contrast) * 17%)
   );
   --ui-color-border: light-dark(var(--pl-border-light), var(--pl-border-dark));
   --ui-color-border-strong: light-dark(
     color-mix(
       in oklch,
       var(--pl-surface-light),
-      var(--pl-text-light) var(--ui-base-n-boundary-light)
+      var(--pl-text-light) calc(var(--ui-base-n-light-contrast) * 60%)
     ),
-    color-mix(in oklch, var(--pl-surface-dark), var(--pl-text-dark) var(--ui-base-n-boundary-dark))
+    color-mix(
+      in oklch,
+      var(--pl-surface-dark),
+      var(--pl-text-dark) calc(var(--ui-base-n-dark-contrast) * 55%)
+    )
   );
 
   /* Brand family — each theme's fill IS that theme's seed. The polarity
    * branch picks the contrast pole per theme: white for a vivid seed,
-   * near-black for a pastel one. Hover walks toward the theme pole; the
-   * hover step token sets how far (the calibrated percentages are the
-   * defaults). The tint follows the family formulas. */
+   * near-black for a pastel one. Hover walks toward the theme pole by the
+   * calibrated step, scaled by the contrast multiplier. The tint deviates
+   * from the page pole by its calibrated share, also scaled: toward white in
+   * the light theme, away from near-black in the dark one. */
   --pl-brand-fill-light: oklch(
     var(--ui-base-brand-light-l) var(--ui-base-brand-light-c) var(--ui-base-brand-light-h)
   );
@@ -173,18 +198,25 @@
   --ui-color-brand-hover: light-dark(
     color-mix(
       in oklab,
-      var(--pl-brand-fill-light) var(--ui-base-brand-hover-light),
+      var(--pl-brand-fill-light) calc(100% - var(--ui-base-brand-light-contrast) * 30%),
       var(--pl-brand-pole-light)
     ),
     color-mix(
       in oklab,
-      var(--pl-brand-fill-dark) var(--ui-base-brand-hover-dark),
+      var(--pl-brand-fill-dark) calc(100% - var(--ui-base-brand-dark-contrast) * 14%),
       var(--pl-brand-pole-dark)
     )
   );
   --ui-color-brand-tint: light-dark(
-    oklch(from var(--pl-brand-fill-light) calc(0.88 + 0.12 * l) calc(0.12 * c) h),
-    oklch(from var(--pl-brand-fill-dark) calc(0.123 + 0.12 * l) calc(0.12 * c) h)
+    oklch(
+      from var(--pl-brand-fill-light) calc(1 - var(--ui-base-brand-light-contrast) * 0.12 * (1 - l))
+        calc(var(--ui-base-brand-light-contrast) * 0.12 * c) h
+    ),
+    oklch(
+      from var(--pl-brand-fill-dark)
+        calc(0.09 + var(--ui-base-brand-dark-contrast) * (0.033 + 0.12 * l))
+        calc(var(--ui-base-brand-dark-contrast) * 0.12 * c) h
+    )
   );
   /* Mirror of core: an 8% step of the tint toward the brand tone. */
   --ui-color-brand-tint-hover: color-mix(
@@ -254,19 +286,27 @@
   --ui-color-attention-hover: light-dark(
     color-mix(
       in oklab,
-      var(--pl-attention-fill-light) var(--ui-base-attention-hover-light),
+      var(--pl-attention-fill-light) calc(100% - var(--ui-base-attention-light-contrast) * 16%),
       oklch(100% 0 0)
     ),
     color-mix(
       in oklab,
-      var(--pl-attention-fill-dark) var(--ui-base-attention-hover-dark),
+      var(--pl-attention-fill-dark) calc(100% - var(--ui-base-attention-dark-contrast) * 12%),
       var(--pl-pole-dark)
     )
   );
   --ui-color-on-attention: light-dark(var(--pl-attention-pole-light), var(--pl-pole-dark));
   --ui-color-attention-tint: light-dark(
-    oklch(from var(--pl-attention-fill-light) calc(0.88 + 0.12 * l) calc(0.12 * c) h),
-    oklch(from var(--pl-attention-fill-dark) calc(0.123 + 0.12 * l) calc(0.12 * c) h)
+    oklch(
+      from var(--pl-attention-fill-light)
+        calc(1 - var(--ui-base-attention-light-contrast) * 0.12 * (1 - l))
+        calc(var(--ui-base-attention-light-contrast) * 0.12 * c) h
+    ),
+    oklch(
+      from var(--pl-attention-fill-dark)
+        calc(0.09 + var(--ui-base-attention-dark-contrast) * (0.033 + 0.12 * l))
+        calc(var(--ui-base-attention-dark-contrast) * 0.12 * c) h
+    )
   );
 
   /* Utilities — link/selection derive from the link seed with the same
@@ -307,15 +347,26 @@
 
   --ui-color-link: light-dark(var(--pl-link-fill-light), var(--pl-link-fill-dark));
   --ui-color-selection: light-dark(
-    oklch(from var(--pl-link-fill-light) calc(0.88 + 0.12 * l) calc(0.12 * c) h),
-    oklch(from var(--pl-link-fill-dark) calc(0.123 + 0.12 * l) calc(0.12 * c) h)
+    oklch(
+      from var(--pl-link-fill-light) calc(1 - var(--ui-base-link-light-contrast) * 0.12 * (1 - l))
+        calc(var(--ui-base-link-light-contrast) * 0.12 * c) h
+    ),
+    oklch(
+      from var(--pl-link-fill-dark)
+        calc(0.09 + var(--ui-base-link-dark-contrast) * (0.033 + 0.12 * l))
+        calc(var(--ui-base-link-dark-contrast) * 0.12 * c) h
+    )
   );
   --ui-focus-ring: light-dark(
     color-mix(
       in oklch,
       var(--pl-surface-light),
-      var(--pl-text-light) var(--ui-base-n-boundary-light)
+      var(--pl-text-light) calc(var(--ui-base-n-light-contrast) * 60%)
     ),
-    color-mix(in oklch, var(--pl-surface-dark), var(--pl-text-dark) var(--ui-base-n-boundary-dark))
+    color-mix(
+      in oklch,
+      var(--pl-surface-dark),
+      var(--pl-text-dark) calc(var(--ui-base-n-dark-contrast) * 55%)
+    )
   );
 }
