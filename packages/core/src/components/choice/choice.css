@@ -1,0 +1,232 @@
+/* Choice component: checkbox and radio.
+ *
+ * Native basis: <input type="checkbox"> and <input type="radio"> — native
+ * toggling/selection, native keyboard (Space/arrows), native form
+ * participation, native :checked/:disabled/:user-invalid states. No JS, no
+ * state classes.
+ *
+ * Canonical structure:
+ *   <label class="ui-choice-field">
+ *     <input class="ui-checkbox" type="checkbox" />
+ *     <span class="ui-choice-label">Label</span>
+ *   </label>
+ *   <label class="ui-choice-field">
+ *     <input class="ui-radio" type="radio" name="speed" />
+ *     <span class="ui-choice-label">Standard</span>
+ *   </label>
+ *
+ * Visual: appearance:none + custom box/dot (the same model as Switch). The
+ * mark is ::before on the input — not tracked by caniuse; rendering
+ * verified empirically (Chromium, Firefox, WebKit — Switch precedent,
+ * compatibility notes, 2026-10-01).
+ *
+ * Group composition: ui-fieldset + legend is the group (native group
+ * semantics and the accessible name); radios share the name attribute;
+ * adjacent ui-choice-field members stack automatically. fieldset[disabled]
+ * disables the whole group natively.
+ *
+ * The checkbox :indeterminate state is host-set (el.indeterminate = true —
+ * host JS; no HTML attribute exists). The dash is drawn in place of the
+ * check.
+ *
+ * Geometry (box-sizing: border-box): 1.25rem (20px) square, 1px border ->
+ * 18px content box. Check mark: two 2px strokes (::before short down-right,
+ * ::after long up-right) growing from the joint — transform-origin at the
+ * left end, transition on inline-size, staggered delays draw the mark on
+ * check and retract it in reverse on uncheck (no SVG, no JS). Radio dot:
+ * 0.625rem centered (inset: 0 + margin: auto).
+ *
+ * APCA pairs used (validated in tests/apca, no new tokens):
+ *   checked fill: on-brand/brand (the solid button pair);
+ *   frame: border/border-strong on surface-raised (nonText);
+ *   required: attention border (nonText).
+ */
+
+.ui-choice-field {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-sm);
+  cursor: pointer;
+}
+
+/* Stack: adjacent members (in a group or standalone) get the same air —
+ * host just puts them next to each other (Switch/Field model). */
+.ui-choice-field + .ui-choice-field {
+  margin-block-start: var(--ui-space-sm);
+}
+
+.ui-checkbox,
+.ui-radio {
+  appearance: none;
+  box-sizing: border-box;
+  flex: none;
+  margin: 0;
+  inline-size: 1.25rem;
+  block-size: 1.25rem;
+  border: 1px solid var(--ui-color-border);
+  background: var(--ui-color-surface-raised);
+  position: relative;
+  transition:
+    background-color var(--ui-duration-fast) ease,
+    border-color var(--ui-duration-fast) ease;
+}
+
+.ui-checkbox {
+  border-radius: var(--ui-radius-sm);
+}
+
+.ui-radio {
+  border-radius: var(--ui-radius-full);
+
+  /* corner-shape: round overrides the tokens-layer squircle (Switch
+   * precedent): at a clamped full radius squircle flattens the stadium. */
+  corner-shape: round;
+}
+
+/* Check mark: two 2px strokes drawn from the joint. Both start collapsed
+ * (inline-size: 0) and grow to full length on :checked — with
+ * transform-origin at the left end and the stroke angle on each bar, the
+ * growing tips travel along the mark: a stroke-by-stroke draw, reversed
+ * (long first) on uncheck via the base-state transition-delay. Pure CSS:
+ * individual transforms + geometry transition, no SVG, no JS. */
+.ui-checkbox::before,
+.ui-checkbox::after {
+  content: '';
+  position: absolute;
+  block-size: 2px;
+  background: var(--ui-color-on-brand);
+  transform-origin: 0 50%;
+  transition: inline-size var(--ui-duration-fast) ease;
+}
+
+/* Short stroke (down-right, +45deg): 4px/8px -> 6px long. Draws first on
+ * check (delay 0 in the checked state). */
+.ui-checkbox::before {
+  inset-block-start: 8px;
+  inset-inline-start: 4px;
+  inline-size: 0;
+  rotate: 45deg;
+
+  /* Uncheck: retract second (base state keeps the larger delay). */
+  transition-delay: calc(var(--ui-duration-fast) / 2);
+}
+
+/* Long stroke (up-right, -45deg): 7px/11px -> 10px long. Draws second on
+ * check, retracts first on uncheck. */
+.ui-checkbox::after {
+  inset-block-start: 11px;
+  inset-inline-start: 7px;
+  inline-size: 0;
+  rotate: -45deg;
+}
+
+.ui-checkbox:checked::before {
+  inline-size: 6px;
+  transition-delay: 0s;
+}
+
+.ui-checkbox:checked::after {
+  inline-size: 10px;
+  transition-delay: calc(var(--ui-duration-fast) / 2);
+}
+
+/* Indeterminate: the dash replaces the check (the long stroke stays
+ * collapsed — :indeterminate does not match :checked rules). */
+.ui-checkbox:indeterminate::before {
+  inset-block-start: 50%;
+  inset-inline-start: 0.25rem;
+  inline-size: 0.625rem;
+  rotate: none;
+  translate: 0 -50%;
+  transition-delay: 0s;
+}
+
+/* Radio dot */
+.ui-radio::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  inline-size: 0.625rem;
+  block-size: 0.625rem;
+  border-radius: var(--ui-radius-full);
+  corner-shape: round;
+  background: var(--ui-color-on-brand);
+  opacity: 0;
+  transition: opacity var(--ui-duration-fast) ease;
+}
+
+/* Checked = the brand family (the Switch/Button checked model): the mark
+ * and the dot are on-brand. :indeterminate follows the native Chromium
+ * convention — the same brand fill under the dash. */
+.ui-checkbox:checked,
+.ui-checkbox:indeterminate,
+.ui-radio:checked {
+  background: var(--ui-color-brand);
+  border-color: transparent;
+}
+
+/* The radio dot fades in (the checkbox mark is drawn by stroke growth —
+ * no opacity machinery there). */
+.ui-radio:checked::before {
+  opacity: 1;
+}
+
+/* Required choices: attention border only after user interaction, same
+ * intent gate as ui-input (Field contract). */
+.ui-checkbox:user-invalid,
+.ui-radio:user-invalid {
+  border-color: var(--ui-color-attention);
+}
+
+.ui-checkbox:disabled,
+.ui-radio:disabled,
+.ui-choice-field:has(:disabled) {
+  cursor: not-allowed;
+}
+
+.ui-checkbox:disabled,
+.ui-radio:disabled {
+  opacity: 0.5;
+}
+
+/* Hover never overrides the checked or invalid border, and never restyles
+ * a disabled control; pointer-gated like Switch/Button (sticky :hover on
+ * touch would latch the highlight). */
+@media (hover: hover) and (pointer: fine) {
+  .ui-checkbox:hover:not(:disabled, :checked, :user-invalid),
+  .ui-radio:hover:not(:disabled, :checked, :user-invalid) {
+    border-color: var(--ui-color-border-strong);
+  }
+}
+
+/* Forced colors: system colors take over; Highlight marks the checked fill
+ * and HighlightText paints the mark/dot so they survive on it. */
+@media (forced-colors: active) {
+  .ui-checkbox,
+  .ui-radio {
+    forced-color-adjust: auto;
+  }
+
+  .ui-checkbox:checked,
+  .ui-radio:checked {
+    background: Highlight;
+  }
+
+  .ui-checkbox:checked::before,
+  .ui-checkbox:checked::after,
+  .ui-checkbox:indeterminate::before,
+  .ui-radio:checked::before {
+    background: HighlightText;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-checkbox,
+  .ui-radio,
+  .ui-checkbox::before,
+  .ui-checkbox::after,
+  .ui-radio::before {
+    transition: none;
+  }
+}

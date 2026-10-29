@@ -25,6 +25,7 @@ const PAGES = [
   { href: '/colors', label: 'Colors' },
   { href: '/typography', label: 'Typography' },
   { href: '/button', label: 'Button' },
+  { href: '/choice', label: 'Choice' },
   { href: '/field', label: 'Field' },
   { href: '/fieldset', label: 'Fieldset' },
   { href: '/dialog', label: 'Dialog' },

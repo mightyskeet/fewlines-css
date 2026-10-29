@@ -1,0 +1,67 @@
+<!doctype html>
+<!-- Choice examples: checkbox, radio, groups. -->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Choice examples</title>
+    <link rel="stylesheet" href="../../../../dist/index.css" />
+  </head>
+  <body>
+    <h1>Choice</h1>
+
+    <h2>Checkbox</h2>
+    <label class="ui-choice-field">
+      <input class="ui-checkbox" type="checkbox" />
+      <span class="ui-choice-label">Email notifications</span>
+    </label>
+    <label class="ui-choice-field">
+      <input class="ui-checkbox" type="checkbox" checked />
+      <span class="ui-choice-label">Push notifications</span>
+    </label>
+
+    <h2>Radio group (fieldset + legend)</h2>
+    <fieldset class="ui-fieldset">
+      <legend class="ui-fieldset-legend">Delivery speed</legend>
+      <label class="ui-choice-field">
+        <input class="ui-radio" type="radio" name="speed" value="standard" checked />
+        <span class="ui-choice-label">Standard</span>
+      </label>
+      <label class="ui-choice-field">
+        <input class="ui-radio" type="radio" name="speed" value="express" />
+        <span class="ui-choice-label">Express</span>
+      </label>
+      <label class="ui-choice-field">
+        <input class="ui-radio" type="radio" name="speed" value="pickup" />
+        <span class="ui-choice-label">Pickup</span>
+      </label>
+    </fieldset>
+
+    <h2>Checkbox group</h2>
+    <fieldset class="ui-fieldset">
+      <legend class="ui-fieldset-legend">Toppings</legend>
+      <label class="ui-choice-field">
+        <input class="ui-checkbox" type="checkbox" name="toppings" value="cheese" checked />
+        <span class="ui-choice-label">Cheese</span>
+      </label>
+      <label class="ui-choice-field">
+        <input class="ui-checkbox" type="checkbox" name="toppings" value="olives" />
+        <span class="ui-choice-label">Olives</span>
+      </label>
+    </fieldset>
+
+    <h2>Disabled group (native propagation)</h2>
+    <fieldset class="ui-fieldset" disabled>
+      <legend class="ui-fieldset-legend">Beta options</legend>
+      <label class="ui-choice-field">
+        <input class="ui-checkbox" type="checkbox" />
+        <span class="ui-choice-label">Enable beta features</span>
+      </label>
+    </fieldset>
+
+    <h2>Required (user-invalid after interaction)</h2>
+    <label class="ui-choice-field">
+      <input class="ui-checkbox" type="checkbox" required />
+      <span class="ui-choice-label">I accept the terms</span>
+    </label>
+  </body>
+</html>

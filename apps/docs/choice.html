@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script>
+      try {
+        var t = localStorage.getItem('theme');
+        if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+      } catch (e) {}
+    </script>
+    <script>
+      try {
+        var b = JSON.parse(localStorage.getItem('colors-bases') || 'null');
+        if (b) {
+          var r = document.documentElement,
+            s = r.style;
+          for (var k in b) s.setProperty(k, b[k]);
+          r.setAttribute('data-palette', 'custom');
+        }
+      } catch (e) {}
+    </script>
+    <title>Choice — @fewlines/css</title>
+    <link rel="stylesheet" href="/core.css" />
+    <link rel="stylesheet" href="/docs.css" />
+    <link rel="stylesheet" href="/colors-derive.css" />
+    <script src="/site-sidebar.js" defer blocking="render"></script>
+    <script src="/site-toc.js" defer blocking="render"></script>
+    <script src="/vendor/hljs.min.js" defer></script>
+    <script src="/site-code.js" defer></script>
+  </head>
+  <body>
+    <site-sidebar></site-sidebar>
+
+    <main>
+      <header class="page-header">
+        <h1>Choice</h1>
+        <p>
+          Checkbox and radio on the native inputs: custom box and dot, stroke-drawn check mark,
+          native states and keyboard. No JS.
+        </p>
+      </header>
+
+      <section>
+        <h2>Native basis</h2>
+        <p>
+          <code>&lt;input type="checkbox"&gt;</code> and
+          <code>&lt;input type="radio"&gt;</code> — native toggling and selection, native keyboard
+          (Space / arrows), native form participation and states
+          (<code>:checked</code>, <code>:disabled</code>, <code>:user-invalid</code>). The check
+          mark draws itself: two strokes grow from the joint with staggered transitions and retract
+          in reverse on uncheck — pure CSS, no SVG, no JS.
+        </p>
+      </section>
+
+      <section>
+        <h2>Canonical markup</h2>
+        <pre><code>&lt;label class="ui-choice-field"&gt;
+  &lt;input class="ui-checkbox" type="checkbox" /&gt;
+  &lt;span class="ui-choice-label"&gt;Email notifications&lt;/span&gt;
+&lt;/label&gt;
+
+&lt;label class="ui-choice-field"&gt;
+  &lt;input class="ui-radio" type="radio" name="speed" value="standard" /&gt;
+  &lt;span class="ui-choice-label"&gt;Standard&lt;/span&gt;
+&lt;/label&gt;</code></pre>
+        <p>
+          The wrapper is an implicit label — clicking the text toggles the control. The label span
+          is required (the accessible name). Radios of one group share the <code>name</code>.
+        </p>
+      </section>
+
+      <section>
+        <h2>States</h2>
+        <div class="example">
+          <label class="ui-choice-field">
+            <input class="ui-checkbox" type="checkbox" />
+            <span class="ui-choice-label">Unchecked</span>
+          </label>
+          <label class="ui-choice-field">
+            <input class="ui-checkbox" type="checkbox" checked />
+            <span class="ui-choice-label">Checked</span>
+          </label>
+          <label class="ui-choice-field">
+            <input class="ui-checkbox" type="checkbox" id="choice-demo-indeterminate" />
+            <span class="ui-choice-label">Indeterminate (host sets el.indeterminate)</span>
+          </label>
+          <label class="ui-choice-field">
+            <input class="ui-radio" type="radio" name="demo-speed" checked />
+            <span class="ui-choice-label">Standard</span>
+          </label>
+          <label class="ui-choice-field">
+            <input class="ui-radio" type="radio" name="demo-speed" />
+            <span class="ui-choice-label">Express</span>
+          </label>
+          <label class="ui-choice-field">
+            <input class="ui-checkbox" type="checkbox" disabled />
+            <span class="ui-choice-label">Disabled</span>
+          </label>
+        </div>
+        <p>
+          Checked = the brand fill with the on-brand mark (the Switch model). The dash for
+          <code>:indeterminate</code> is host-set through <code>el.indeterminate = true</code> —
+          no HTML attribute exists; it is host JS, core carries none.
+        </p>
+      </section>
+
+      <section>
+        <h2>Required</h2>
+        <div class="example">
+          <label class="ui-choice-field">
+            <input class="ui-checkbox" type="checkbox" required />
+            <span class="ui-choice-label">I accept the terms</span>
+          </label>
+        </div>
+        <p>
+          The attention border appears only after interaction (<code>:user-invalid</code> — the
+          same intent gate as Field). The native validation bubble carries the signal before that.
+        </p>
+      </section>
+
+      <section>
+        <h2>Groups</h2>
+        <div class="example">
+          <fieldset class="ui-fieldset">
+            <legend class="ui-fieldset-legend">Delivery speed</legend>
+            <label class="ui-choice-field">
+              <input class="ui-radio" type="radio" name="group-speed" checked />
+              <span class="ui-choice-label">Standard</span>
+            </label>
+            <label class="ui-choice-field">
+              <input class="ui-radio" type="radio" name="group-speed" />
+              <span class="ui-choice-label">Express</span>
+            </label>
+            <label class="ui-choice-field">
+              <input class="ui-radio" type="radio" name="group-speed" />
+              <span class="ui-choice-label">Pickup</span>
+            </label>
+          </fieldset>
+          <fieldset class="ui-fieldset" disabled>
+            <legend class="ui-fieldset-legend">Beta options</legend>
+            <label class="ui-choice-field">
+              <input class="ui-checkbox" type="checkbox" />
+              <span class="ui-choice-label">Enable beta features</span>
+            </label>
+          </fieldset>
+        </div>
+        <p>
+          The group is <code>ui-fieldset</code> + legend: native group semantics, the accessible
+          name and native group disabling (<code>fieldset[disabled]</code>). Members placed
+          adjacent get the gaps automatically. See <a href="/fieldset">Fieldset</a>.
+        </p>
+      </section>
+
+      <section>
+        <h2>Accessibility</h2>
+        <ul>
+          <li>Semantics, name and keyboard are native; the radio group under a legend replaces repeated labels.</li>
+          <li>The state is carried by the mark shape (check / dash / dot), not by color alone (WCAG 1.4.1).</li>
+          <li>
+            No new APCA pairs: <code>on-brand/brand</code> (the solid fill),
+            <code>border</code>/<code>border-strong</code> frames, <code>attention</code> invalid
+            border.
+          </li>
+          <li>Focus ring comes from the base layer. Reduced motion disables the draw animation.</li>
+          <li>
+            Forced colors: <code>Highlight</code> checked fill, <code>HighlightText</code> mark —
+            the state survives background stripping.
+          </li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Do not</h2>
+        <ul>
+          <li>
+            No <code>&lt;div&gt;</code>/<code>&lt;span&gt;</code> instead of
+            <code>&lt;input&gt;</code> — native semantics and keyboard are the contract.
+          </li>
+          <li>No removing the label span — the accessible name is required.</li>
+          <li>
+            No state classes (<code>.is-checked</code>) and no styling
+            <code>:invalid</code> without <code>:user-</code>.
+          </li>
+          <li>No setting <code>indeterminate</code> from HTML — host sets the property via JS.</li>
+          <li>No JS emulation of group disabling — <code>fieldset[disabled]</code> is native.</li>
+        </ul>
+      </section>
+    </main>
+    <footer>
+      <p>Full contract: <code>packages/core/src/components/choice/choice.md</code></p>
+    </footer>
+    <site-toc></site-toc>
+    <!-- Host JS (docs site): :indeterminate has no HTML attribute. -->
+    <script>
+      document.getElementById('choice-demo-indeterminate').indeterminate = true;
+    </script>
+  </body>
+</html>
