@@ -1,0 +1,83 @@
+/* Progress component.
+ *
+ * Native basis: <progress> — the platform's progress indicator. The value
+ * model (value/max attributes), the progressbar role and the determinate/
+ * indeterminate distinction (:indeterminate — no value attribute) are all
+ * native; there is nothing to build and no JS.
+ *
+ * Canonical structure:
+ *   <progress class="ui-progress" max="100" value="70" aria-label="Uploading"></progress>
+ *
+ * The accessible name is the host's duty (a <label> or aria-label) — the
+ * same contract as Table's <caption>.
+ *
+ * Engine paint model: with appearance:none WebKit/Chromium paint the track
+ * on ::-webkit-progress-bar OVER the element background, and the fill on
+ * ::-webkit-progress-value; Firefox paints the fill on ::-moz-progress-bar
+ * and keeps the element background as the track. One canonical look, two
+ * engine pseudo targets — both fed from the same local custom properties,
+ * so there is one source of truth (compatibility notes, 2026-10-29).
+ *
+ * Indeterminate: the value attribute absent matches :indeterminate and the
+ * engine runs its own native motion, painted with the themed fill color.
+ * No component-side keyframes — the platform animates, we only theme.
+ *
+ * Forced colors: appearance is restored to auto — the system progress bar
+ * takes over entirely (the same trick the Field select uses for its chevron).
+ */
+
+.ui-progress {
+  /* Local knobs — the host customization points (same model as Divider). */
+  --ui-progress-fill: var(--ui-color-brand);
+  --ui-progress-track: var(--ui-color-surface-tint);
+
+  appearance: none;
+  box-sizing: border-box;
+  display: block;
+  inline-size: 100%; /* UA widths diverge across engines — fill the container */
+
+  /* Track: the de-emphasised soft surface (the neutral Alert model) with
+   * its stronger boundary — both pairs are registered APCA nonText entries
+   * (tests/apca). */
+  block-size: var(--ui-space-xs);
+  border: 1px solid var(--ui-color-border-strong);
+  border-radius: var(--ui-radius-full);
+  background: var(--ui-progress-track);
+
+  /* corner-shape: round overrides the tokens-layer squircle: at a clamped
+   * full radius squircle flattens the stadium sides into a rounded box. */
+  corner-shape: round;
+}
+
+/* Chromium/WebKit: the engine-drawn track pseudo sits on top of the element —
+ * paint the same track token there. */
+.ui-progress::-webkit-progress-bar {
+  background: var(--ui-progress-track);
+  border-radius: inherit;
+}
+
+/* The fill: the state indicator. Rounded to keep the pill as the fill
+ * approaches the ends. */
+.ui-progress::-webkit-progress-value,
+.ui-progress::-moz-progress-bar {
+  background: var(--ui-progress-fill);
+  border-radius: var(--ui-radius-full);
+}
+
+/* Sizes — density: the bar thickness over the space scale; md (default,
+ * attribute omitted) is --ui-space-xs. */
+.ui-progress[data-size='sm'] {
+  block-size: var(--ui-space-2xs);
+}
+
+.ui-progress[data-size='lg'] {
+  block-size: var(--ui-space-sm);
+}
+
+/* Forced colors: system colors take over — the native progress bar repaints
+ * itself with system colors (guaranteed non-text contrast). */
+@media (forced-colors: active) {
+  .ui-progress {
+    appearance: auto;
+  }
+}

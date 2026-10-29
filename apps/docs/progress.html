@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script>
+      try {
+        var t = localStorage.getItem('theme');
+        if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+      } catch (e) {}
+    </script>
+    <script>
+      try {
+        var b = JSON.parse(localStorage.getItem('colors-bases') || 'null');
+        if (b) {
+          var r = document.documentElement,
+            s = r.style;
+          for (var k in b) s.setProperty(k, b[k]);
+          r.setAttribute('data-palette', 'custom');
+        }
+      } catch (e) {}
+    </script>
+    <title>Progress — @fewlines/css</title>
+    <link rel="stylesheet" href="/core.css" />
+    <link rel="stylesheet" href="/docs.css" />
+    <link rel="stylesheet" href="/colors-derive.css" />
+    <script src="/site-sidebar.js" defer blocking="render"></script>
+    <script src="/site-toc.js" defer blocking="render"></script>
+    <script src="/vendor/hljs.min.js" defer></script>
+    <script src="/site-code.js" defer></script>
+  </head>
+  <body>
+    <site-sidebar></site-sidebar>
+
+    <main>
+      <header class="page-header">
+        <h1>Progress</h1>
+        <p>
+          Operation progress indicator on the native <code>&lt;progress&gt;</code>: value model,
+          progressbar role and the indeterminate state come with the element. Not interactive —
+          no states, no JS.
+        </p>
+      </header>
+
+      <section>
+        <h2>Semantic basis</h2>
+        <p>
+          The component is the native progress indicator: the <code>value</code>/<code>max</code>
+          model, the <code>progressbar</code> role and the determinate/indeterminate distinction
+          belong to the element. A missing <code>value</code> attribute is the indeterminate state
+          (<code>:indeterminate</code>) — the engine runs its own native motion, painted with the
+          themed fill. The component only themes the paint: no keyframes, no state machine.
+        </p>
+      </section>
+
+      <section>
+        <h2>Canonical markup</h2>
+        <pre><code>&lt;progress class="ui-progress" max="100" value="70" aria-label="Uploading"&gt;&lt;/progress&gt;</code></pre>
+        <p>
+          The accessible name is mandatory — a <code>&lt;label&gt;</code> or
+          <code>aria-label</code> (the same host contract as the table <code>&lt;caption&gt;</code>).
+          The engine announces the percentage itself, so a textual «70%» next to the bar is not
+          required.
+        </p>
+      </section>
+
+      <section>
+        <h2>Indeterminate</h2>
+        <div class="example">
+          <progress class="ui-progress" aria-label="Loading"></progress>
+        </div>
+        <p>
+          No <code>value</code> attribute — the native indeterminate state. The motion is
+          engine-native; the component supplies only the themed colors.
+        </p>
+      </section>
+
+      <section>
+        <h2>Sizes</h2>
+        <div class="example">
+          <progress class="ui-progress" data-size="sm" max="100" value="40" aria-label="Small"></progress>
+          <progress class="ui-progress" max="100" value="40" aria-label="Default"></progress>
+          <progress class="ui-progress" data-size="lg" max="100" value="40" aria-label="Large"></progress>
+        </div>
+        <p>
+          <code>data-size="sm|lg"</code>; default is md (no attribute). Density only: the bar
+          thickness scales over the space scale (4 / 8 / 12 px), shape and tokens stay fixed.
+        </p>
+      </section>
+
+      <section>
+        <h2>Customization</h2>
+        <p>
+          The fill follows the brand family by default (the checked Switch model); the track is
+          the de-emphasised soft surface with its stronger boundary (the neutral Alert model).
+          Hosts re-theme through the local tokens — no variants, no classes:
+        </p>
+        <pre><code>.upload-warning {
+  --ui-progress-fill: var(--ui-color-attention);
+}</code></pre>
+      </section>
+
+      <section>
+        <h2>Accessibility</h2>
+        <ul>
+          <li>The <code>progressbar</code> role is native; the accessible name is mandatory.</li>
+          <li>
+            The fill/track pair is registered in the APCA matrix as a non-text pair
+            (<code>brand/surface-tint</code>); the track boundary reuses the neutral Alert pair.
+          </li>
+          <li>Reduced motion: the component adds no animation of its own.</li>
+          <li>
+            Forced colors restore the native <code>appearance</code> — the system progress bar
+            takes over with guaranteed system contrast.
+          </li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Do not</h2>
+        <ul>
+          <li>
+            No <code>&lt;div&gt;</code> bar instead of <code>&lt;progress&gt;</code> — the role,
+            the value model and <code>:indeterminate</code> come with the element.
+          </li>
+          <li>No unnamed progress bars — the accessible name is part of the contract.</li>
+          <li>
+            No component keyframes for the fill — the engine animates the indeterminate state,
+            determinate value jumps stay honest.
+          </li>
+        </ul>
+      </section>
+    </main>
+    <site-toc></site-toc>
+
+    <footer>
+      <p>Full contract: <code>packages/core/src/components/progress/progress.md</code></p>
+    </footer>
+  </body>
+</html>

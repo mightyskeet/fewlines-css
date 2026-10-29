@@ -14,6 +14,7 @@
 @import './alert/alert.css';
 @import './badge/badge.css';
 @import './divider/divider.css';
+@import './progress/progress.css';
 @import './switch/switch.css';
 @import './choice/choice.css';
 @import './tooltip/tooltip.css';

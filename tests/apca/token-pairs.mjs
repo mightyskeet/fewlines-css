@@ -159,6 +159,11 @@ export const tokenPairs = [
   // border needs the stronger step to stay visible).
   { fg: 'border-strong', bg: 'surface-tint', role: 'nonText', note: 'neutral alert border' },
 
+  // Progress: the fill is the state indicator (WCAG 1.4.11 non-text) —
+  // the brand fill on the tint track; the track boundary reuses the
+  // neutral-alert border pair above.
+  { fg: 'brand', bg: 'surface-tint', role: 'nonText', note: 'progress fill on track' },
+
   // Utility roles. Link: hyperlink text on the page and raised surfaces.
   // Selection: the tint under the author text color (the same soft-surface
   // pair the neutral Alert uses).
