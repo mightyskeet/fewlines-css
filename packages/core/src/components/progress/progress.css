@@ -36,14 +36,11 @@
   display: block;
   inline-size: 100%; /* UA widths diverge across engines — fill the container */
 
-  /* Track: the de-emphasised soft surface with the calm control hairline —
-   * the same `border` role every control carries. `border` is the same
-   * palette step as `surface-tint` (200/700), so the line reads as a soft
-   * outline of the pill on the page, not as an inner seam. The state
-   * indicator contract (WCAG 1.4.11) is carried by the fill/track pair,
-   * registered nonText (tests/apca). */
+  /* Track: the de-emphasised soft surface, borderless — the Badge-neutral
+   * / zebra model. A hairline fails at thin sizes (two 1px lines a few px
+   * apart at sm); the state indicator contract (WCAG 1.4.11) is carried by
+   * the fill/track pair, registered nonText (tests/apca). */
   block-size: var(--ui-space-xs);
-  border: 1px solid var(--ui-color-border);
   border-radius: var(--ui-radius-full);
   background: var(--ui-progress-track);
 

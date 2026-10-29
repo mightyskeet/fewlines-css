@@ -22,9 +22,7 @@ test.beforeEach(async ({ page }) => {
 const token = async (page, name) =>
   page.evaluate((n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim(), name);
 
-test('default determinate bar: tint track with the border hairline, brand fill', async ({
-  page,
-}) => {
+test('default determinate bar: borderless tint track, brand fill', async ({ page }) => {
   const el = await page.locator('#progress-default').evaluate((el) => {
     const s = getComputedStyle(el);
     return {
@@ -33,7 +31,7 @@ test('default determinate bar: tint track with the border hairline, brand fill',
       inlineSize: s.inlineSize,
       blockSize: s.blockSize,
       background: s.backgroundColor,
-      borderColor: s.borderTopColor,
+      borderStyle: s.borderTopStyle,
       fillVar: s.getPropertyValue('--ui-progress-fill').trim(),
     };
   });
@@ -47,7 +45,7 @@ test('default determinate bar: tint track with the border hairline, brand fill',
   expect(el.inlineSize).toBe(`${sectionWidth}px`); // fills the container, no UA width divergence
   expect(el.blockSize).toBe('8px');
   expect(el.background).toBe(await token(page, '--ui-color-surface-tint'));
-  expect(el.borderColor).toBe(await token(page, '--ui-color-border'));
+  expect(el.borderStyle).toBe('none'); // borderless soft track (Badge-neutral model)
   expect(el.fillVar).toBe(await token(page, '--ui-color-brand'));
 });
 

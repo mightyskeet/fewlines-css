@@ -160,9 +160,8 @@ export const tokenPairs = [
   { fg: 'border-strong', bg: 'surface-tint', role: 'nonText', note: 'neutral alert border' },
 
   // Progress: the fill is the state indicator (WCAG 1.4.11 non-text) —
-  // the brand fill on the tint track. The track outline is the calm
-  // `border` hairline (the same step as the tint, no seam) — the control
-  // boundary role, same manual-audit precedent as the Switch track.
+  // the brand fill on the tint track; the track is a borderless soft
+  // surface (the Badge-neutral model), no boundary pair needed.
   { fg: 'brand', bg: 'surface-tint', role: 'nonText', note: 'progress fill on track' },
 
   // Utility roles. Link: hyperlink text on the page and raised surfaces.
