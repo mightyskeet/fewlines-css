@@ -21,21 +21,26 @@
 
 /** Single source of truth for docs navigation. */
 const PAGES = [
-  { href: 'index.html', label: 'Overview' },
-  { href: 'colors.html', label: 'Colors' },
-  { href: 'typography.html', label: 'Typography' },
-  { href: 'button.html', label: 'Button' },
-  { href: 'field.html', label: 'Field' },
-  { href: 'dialog.html', label: 'Dialog' },
-  { href: 'popover.html', label: 'Popover' },
-  { href: 'drawer.html', label: 'Drawer' },
-  { href: 'accordion.html', label: 'Accordion' },
-  { href: 'alert.html', label: 'Alert' },
-  { href: 'badge.html', label: 'Badge' },
-  { href: 'switch.html', label: 'Switch' },
-  { href: 'tooltip.html', label: 'Tooltip' },
-  { href: 'table.html', label: 'Table' },
+  { href: '/', label: 'Overview' },
+  { href: '/colors', label: 'Colors' },
+  { href: '/typography', label: 'Typography' },
+  { href: '/button', label: 'Button' },
+  { href: '/field', label: 'Field' },
+  { href: '/dialog', label: 'Dialog' },
+  { href: '/popover', label: 'Popover' },
+  { href: '/drawer', label: 'Drawer' },
+  { href: '/accordion', label: 'Accordion' },
+  { href: '/alert', label: 'Alert' },
+  { href: '/badge', label: 'Badge' },
+  { href: '/switch', label: 'Switch' },
+  { href: '/tooltip', label: 'Tooltip' },
+  { href: '/table', label: 'Table' },
 ];
+
+/* The current-page check is extensionless: links use the clean URLs the
+ * static server serves directly (no redirect on click), and visits may
+ * still land on either form. */
+const pageName = (href) => href.replace(/^\//, '') || 'index';
 
 class SiteSidebar extends HTMLElement {
   connectedCallback() {
@@ -49,14 +54,15 @@ class SiteSidebar extends HTMLElement {
   #brand() {
     const link = document.createElement('a');
     link.className = 'site-brand';
-    link.href = './index.html';
+    link.href = '/';
     link.textContent = '@fewlines/css';
     return link;
   }
 
   #nav() {
-    // The static server serves clean URLs (/alert.html -> /alert), so both
-    // sides are normalized to the extensionless page name.
+    // Links use the clean URLs the static server serves directly — no
+    // redirect between the click and the page, which cross-document view
+    // transitions require (compatibility notes, 2026-10-29).
     const current =
       location.pathname
         .replace(/\.html$/, '')
@@ -69,9 +75,9 @@ class SiteSidebar extends HTMLElement {
     for (const { href, label } of PAGES) {
       const item = document.createElement('li');
       const link = document.createElement('a');
-      link.href = `./${href}`;
+      link.href = href;
       link.textContent = label;
-      if (href.replace(/\.html$/, '') === current) link.setAttribute('aria-current', 'page');
+      if (pageName(href) === current) link.setAttribute('aria-current', 'page');
       item.append(link);
       list.append(item);
     }
