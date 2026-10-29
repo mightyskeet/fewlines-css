@@ -36,24 +36,38 @@
   display: block;
   inline-size: 100%; /* UA widths diverge across engines — fill the container */
 
-  /* Track: the de-emphasised soft surface (the neutral Alert model) with
-   * its stronger boundary — both pairs are registered APCA nonText entries
-   * (tests/apca). */
+  /* Track: the de-emphasised soft surface with the calm control hairline —
+   * the same `border` role every control carries. `border` is the same
+   * palette step as `surface-tint` (200/700), so the line reads as a soft
+   * outline of the pill on the page, not as an inner seam. The state
+   * indicator contract (WCAG 1.4.11) is carried by the fill/track pair,
+   * registered nonText (tests/apca). */
   block-size: var(--ui-space-xs);
-  border: 1px solid var(--ui-color-border-strong);
+  border: 1px solid var(--ui-color-border);
   border-radius: var(--ui-radius-full);
   background: var(--ui-progress-track);
+
+  /* The engine pseudo chain paints over the border box — clip it to the
+   * rounded box so the track corners never poke outside the pill. */
+  overflow: hidden;
 
   /* corner-shape: round overrides the tokens-layer squircle: at a clamped
    * full radius squircle flattens the stadium sides into a rounded box. */
   corner-shape: round;
 }
 
-/* Chromium/WebKit: the engine-drawn track pseudo sits on top of the element —
- * paint the same track token there. */
+/* Chromium/WebKit: the engine draws an inner-element wrapper and a track
+ * pseudo on top of the element, both spanning the full box — without the
+ * pill radius their square corners poke outside the pill. Radius follows
+ * the element; the track token is painted on the bar (the element
+ * background is the Firefox track). */
+.ui-progress::-webkit-progress-inner-element,
+.ui-progress::-webkit-progress-bar {
+  border-radius: inherit;
+}
+
 .ui-progress::-webkit-progress-bar {
   background: var(--ui-progress-track);
-  border-radius: inherit;
 }
 
 /* The fill: the state indicator. Rounded to keep the pill as the fill
@@ -72,6 +86,11 @@
 
 .ui-progress[data-size='lg'] {
   block-size: var(--ui-space-sm);
+}
+
+/* Stack: adjacent bars get the same automatic air as switch/choice fields. */
+.ui-progress + .ui-progress {
+  margin-block-start: var(--ui-space-sm);
 }
 
 /* Forced colors: system colors take over — the native progress bar repaints

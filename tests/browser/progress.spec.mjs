@@ -22,7 +22,9 @@ test.beforeEach(async ({ page }) => {
 const token = async (page, name) =>
   page.evaluate((n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim(), name);
 
-test('default determinate bar: tint track with strong border, brand fill', async ({ page }) => {
+test('default determinate bar: tint track with the border hairline, brand fill', async ({
+  page,
+}) => {
   const el = await page.locator('#progress-default').evaluate((el) => {
     const s = getComputedStyle(el);
     return {
@@ -45,7 +47,7 @@ test('default determinate bar: tint track with strong border, brand fill', async
   expect(el.inlineSize).toBe(`${sectionWidth}px`); // fills the container, no UA width divergence
   expect(el.blockSize).toBe('8px');
   expect(el.background).toBe(await token(page, '--ui-color-surface-tint'));
-  expect(el.borderColor).toBe(await token(page, '--ui-color-border-strong'));
+  expect(el.borderColor).toBe(await token(page, '--ui-color-border'));
   expect(el.fillVar).toBe(await token(page, '--ui-color-brand'));
 });
 
