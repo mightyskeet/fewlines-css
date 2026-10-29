@@ -73,37 +73,59 @@
       </section>
 
       <section>
-        <h2>States</h2>
+        <h2>Checkbox group</h2>
         <div class="example">
-          <label class="ui-choice-field">
-            <input class="ui-checkbox" type="checkbox" />
-            <span class="ui-choice-label">Unchecked</span>
-          </label>
-          <label class="ui-choice-field">
-            <input class="ui-checkbox" type="checkbox" checked />
-            <span class="ui-choice-label">Checked</span>
-          </label>
-          <label class="ui-choice-field">
-            <input class="ui-checkbox" type="checkbox" id="choice-demo-indeterminate" />
-            <span class="ui-choice-label">Indeterminate (host sets el.indeterminate)</span>
-          </label>
-          <label class="ui-choice-field">
-            <input class="ui-radio" type="radio" name="demo-speed" checked />
-            <span class="ui-choice-label">Standard</span>
-          </label>
-          <label class="ui-choice-field">
-            <input class="ui-radio" type="radio" name="demo-speed" />
-            <span class="ui-choice-label">Express</span>
-          </label>
-          <label class="ui-choice-field">
-            <input class="ui-checkbox" type="checkbox" disabled />
-            <span class="ui-choice-label">Disabled</span>
-          </label>
+          <fieldset class="ui-fieldset">
+            <legend class="ui-fieldset-legend">Notifications</legend>
+            <label class="ui-choice-field">
+              <input class="ui-checkbox" type="checkbox" id="choice-demo-select-all" />
+              <span class="ui-choice-label">Select all</span>
+            </label>
+            <label class="ui-choice-field">
+              <input class="ui-checkbox" type="checkbox" checked />
+              <span class="ui-choice-label">Label</span>
+            </label>
+            <label class="ui-choice-field">
+              <input class="ui-checkbox" type="checkbox" />
+              <span class="ui-choice-label">Label</span>
+            </label>
+            <label class="ui-choice-field">
+              <input class="ui-checkbox" type="checkbox" disabled />
+              <span class="ui-choice-label">Label</span>
+            </label>
+          </fieldset>
         </div>
         <p>
-          Checked = the brand fill with the on-brand mark (the Switch model). The dash for
-          <code>:indeterminate</code> is host-set through <code>el.indeterminate = true</code> — no
-          HTML attribute exists; it is host JS, core carries none.
+          «Select all» is in the <code>:indeterminate</code> state — some members are checked, some
+          are not. The dash is host-set through <code>el.indeterminate = true</code> (no HTML
+          attribute exists; it is host JS, core carries none). Checked = the brand fill with the
+          on-brand mark (the Switch model); a disabled member dims itself.
+        </p>
+      </section>
+
+      <section>
+        <h2>Radio</h2>
+        <div class="example">
+          <fieldset class="ui-fieldset">
+            <legend class="ui-fieldset-legend">Delivery speed</legend>
+            <label class="ui-choice-field">
+              <input class="ui-radio" type="radio" name="demo-speed" checked />
+              <span class="ui-choice-label">Standard</span>
+            </label>
+            <label class="ui-choice-field">
+              <input class="ui-radio" type="radio" name="demo-speed" />
+              <span class="ui-choice-label">Express</span>
+            </label>
+            <label class="ui-choice-field">
+              <input class="ui-radio" type="radio" name="demo-speed" />
+              <span class="ui-choice-label">Pickup</span>
+            </label>
+          </fieldset>
+        </div>
+        <p>
+          Radios of one group share the <code>name</code> — the browser enforces single selection
+          natively. The fieldset gives the group its accessible name; one checked member is enough
+          to see the state.
         </p>
       </section>
 
@@ -122,23 +144,8 @@
       </section>
 
       <section>
-        <h2>Groups</h2>
+        <h2>Disabled group</h2>
         <div class="example">
-          <fieldset class="ui-fieldset">
-            <legend class="ui-fieldset-legend">Delivery speed</legend>
-            <label class="ui-choice-field">
-              <input class="ui-radio" type="radio" name="group-speed" checked />
-              <span class="ui-choice-label">Standard</span>
-            </label>
-            <label class="ui-choice-field">
-              <input class="ui-radio" type="radio" name="group-speed" />
-              <span class="ui-choice-label">Express</span>
-            </label>
-            <label class="ui-choice-field">
-              <input class="ui-radio" type="radio" name="group-speed" />
-              <span class="ui-choice-label">Pickup</span>
-            </label>
-          </fieldset>
           <fieldset class="ui-fieldset" disabled>
             <legend class="ui-fieldset-legend">Beta options</legend>
             <label class="ui-choice-field">
@@ -149,8 +156,9 @@
         </div>
         <p>
           The group is <code>ui-fieldset</code> + legend: native group semantics, the accessible
-          name and native group disabling (<code>fieldset[disabled]</code>). Members placed adjacent
-          get the gaps automatically. See <a href="/fieldset">Fieldset</a>.
+          name and native group disabling (<code>fieldset[disabled]</code> — no per-control
+          attributes). Members placed adjacent get the gaps automatically. See
+          <a href="/fieldset">Fieldset</a>.
         </p>
       </section>
 
@@ -201,7 +209,7 @@
     <site-toc></site-toc>
     <!-- Host JS (docs site): :indeterminate has no HTML attribute. -->
     <script>
-      document.getElementById('choice-demo-indeterminate').indeterminate = true;
+      document.getElementById('choice-demo-select-all').indeterminate = true;
     </script>
   </body>
 </html>

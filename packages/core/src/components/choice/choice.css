@@ -104,15 +104,16 @@
 }
 
 /* Indeterminate: the dash replaces the check — same layer, mask removed,
- * a plain centered bar (1:1 px at any box size). */
+ * a plain bar centered with the auto-margin trick (exact at any box size,
+ * no percentage + translate math). 10px in the 18px inner box is centered
+ * horizontally too. */
 .ui-checkbox:indeterminate::before {
-  inset-block: auto 50%;
-  inset-inline: 0.25rem auto;
+  inset: 0;
   inline-size: 0.625rem;
   block-size: 2px;
+  margin: auto;
   mask-image: none;
   border-radius: var(--ui-radius-full);
-  translate: 0 -50%;
   opacity: 1;
 }
 
