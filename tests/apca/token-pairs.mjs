@@ -150,6 +150,10 @@ export const tokenPairs = [
   { fg: 'text', bg: 'attention-tint', role: 'body' },
   { fg: 'attention', bg: 'attention-tint', role: 'nonText' },
 
+  // Base typography spellcheck: the wavy error underline is a text
+  // decoration (an indicator, not a text fill) — nonText role.
+  { fg: 'attention', bg: 'surface', role: 'nonText', note: 'spellcheck wavy underline' },
+
   // Neutral Alert (the default): the gray border on the gray tint is a
   // non-text boundary pair (surface-tint matches the family tints, the
   // border needs the stronger step to stay visible).
@@ -187,9 +191,10 @@ export const tokenPairs = [
   // Caption position (the xs step ~11-12px): below the fluent
   // size range, so the strict `small` threshold applies. Only full-contrast
   // text pairs ship — text-muted fails Lc 90 in the dark theme (Lc ~63),
-  // same policy as blockquote (theme notes).
-  { fg: 'text', bg: 'surface', role: 'small', note: 'caption' },
-  { fg: 'text', bg: 'surface-raised', role: 'small', note: 'caption' },
+  // same policy as blockquote (theme notes). figcaption renders at this
+  // step (base/typography.css).
+  { fg: 'text', bg: 'surface', role: 'small', note: 'caption, figcaption' },
+  { fg: 'text', bg: 'surface-raised', role: 'small', note: 'caption, figcaption' },
 ];
 
 /** Minimum APCA Lc per role (accessibility notes). */

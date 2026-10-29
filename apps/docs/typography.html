@@ -45,11 +45,11 @@
         <h2>Semantic basis</h2>
         <p>
           These are native elements (<code>code</code>, <kbd>kbd</kbd>, <samp>samp</samp>,
-          <code>pre</code>, <code>mark</code>, <code>abbr</code>, <code>a</code>,
-          <code>blockquote</code>, <code>hr</code>, <code>sub</code>/<code>sup</code>) styled by
-          bare element selectors in the <code>base</code> cascade layer — below
-          <code>components</code>, so component classes always win. Host applications style nothing
-          for plain text content.
+          <code>var</code>, <code>pre</code>, <code>mark</code>, <code>abbr</code>, <code>a</code>,
+          <code>blockquote</code> (<code>cite</code>), <code>figcaption</code>, <code>hr</code>,
+          <code>sub</code>/<code>sup</code> and the spellcheck pseudo-elements) styled by bare
+          element selectors in the <code>base</code> cascade layer — below <code>components</code>,
+          so component classes always win. Host applications style nothing for plain text content.
         </p>
       </section>
 
@@ -58,7 +58,7 @@
         <div class="example">
           <p>
             Run <code>pnpm build</code>, then press <kbd>Ctrl</kbd>+<kbd>C</kbd>. The console prints
-            <samp>Done in 1.2s</samp>.
+            <samp>Done in 1.2s</samp>, and the cache key is <var>userId</var>.
           </p>
         </div>
         <p>
@@ -117,6 +117,7 @@
         <div class="example">
           <blockquote>
             <p>A hanging border carries the quotation affordance; text keeps full body contrast.</p>
+            <cite>— the base layer authors</cite>
           </blockquote>
           <hr />
           <p>Content after a thematic break.</p>
@@ -124,7 +125,9 @@
         <p>
           <code>blockquote</code> deliberately avoids <code>text-muted</code>: that token pair is
           calibrated for the fluent role and fails the strict body APCA threshold in the dark theme
-          (tests/apca). <code>hr</code> is a single border-token line.
+          (tests/apca). The <code>cite</code> attribution is set upright at the <code>sm</code> step
+          — at that size the muted pair is the fluent role. <code>hr</code> is a single border-token
+          line.
         </p>
       </section>
 
@@ -148,6 +151,37 @@
         <p>
           <code>::selection</code> paints the utility selection tint under the author text color — a
           validated pair; forced-colors modes repaint the selection natively.
+        </p>
+      </section>
+
+      <section>
+        <h2>Figure caption</h2>
+        <div class="example">
+          <figure>
+            <p>A schematic rendering stands in for the image slot.</p>
+            <figcaption>Fig. 1 — the caption step at full contrast, both themes.</figcaption>
+          </figure>
+        </div>
+        <p>
+          <code>figcaption</code> renders at the <code>xs</code> caption step in the full
+          <code>--ui-color-text</code> — <code>text-muted</code> fails the strict
+          <code>small</code> APCA threshold (Lc 90) in the dark theme (tests/apca), the same policy
+          as the blockquote body.
+        </p>
+      </section>
+
+      <section>
+        <h2>Spellcheck</h2>
+        <div class="example">
+          <textarea rows="3" spellcheck="true">I has believe this sentence contain several
+speling and grammer mistakes.</textarea>
+        </div>
+        <p>
+          <code>::spelling-error</code> and <code>::grammar-error</code> repaint the engine's error
+          markers with a wavy <code>--ui-color-attention</code> underline — the urgency tone of
+          validation errors. Progressive enhancement (compatibility notes): Chrome 121+ and Safari
+          17.4+ take the custom look; without support the rule is ignored and the native squiggle
+          stays. The demo needs a browser dictionary for English.
         </p>
       </section>
 

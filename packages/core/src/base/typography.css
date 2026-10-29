@@ -132,6 +132,13 @@ kbd {
   border: 0;
 }
 
+/* <var>: the mono family for identifiers without the well — variables occur
+ * mid-sentence, where a pill is noise. The UA italic stays: it is the
+ * distinguishing signal against plain inline code. */
+var {
+  font-family: var(--ui-font-mono);
+}
+
 /* Code block: the border and radius carry the delineation — the fill stays
  * transparent so code blocks read as page text on the page surface, not as
  * embedded panels (decision 2026-10-24). Nested inline code elements reset so
@@ -211,6 +218,22 @@ blockquote {
   border-inline-start: 2px solid var(--ui-color-border-strong);
 }
 
+/* Blockquote attribution: <cite> carries the source; the UA italic reads as
+ * emphasis inside a quotation, so it is set upright at the sm step —
+ * text-muted at that size is the fluent role (registered in tests/apca). */
+blockquote cite {
+  font-style: normal;
+  font-size: var(--ui-font-size-sm);
+  color: var(--ui-color-text-muted);
+}
+
+/* Figure caption: the xs caption step at full contrast — text-muted fails
+ * the small APCA threshold (Lc 90) in the dark theme (tests/apca, same
+ * policy as the blockquote body). */
+figcaption {
+  font-size: var(--ui-font-size-xs);
+}
+
 /* Thematic break: a single border-token line; the UA side margins stay. */
 hr {
   margin-block: var(--ui-space-md);
@@ -235,6 +258,17 @@ sup {
 
 sub {
   bottom: -0.25em;
+}
+
+/* Spellcheck indicators: the engine's error markers repaint with the
+ * urgency tone — the same family as validation errors. The pseudo-elements
+ * match flagged words only where the engine supports them; without support
+ * the rule is ignored and the native squiggle stays (compatibility notes,
+ * 2026-10-29: Chrome/Edge 121+, Safari 17.4+, Firefox — none). */
+::spelling-error,
+::grammar-error {
+  text-decoration: underline wavy;
+  text-decoration-color: var(--ui-color-attention);
 }
 
 /* Text selection: the utility selection tint under the author text color
