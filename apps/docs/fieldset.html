@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script>
+      try {
+        var t = localStorage.getItem('theme');
+        if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+      } catch (e) {}
+    </script>
+    <script>
+      try {
+        var b = JSON.parse(localStorage.getItem('colors-bases') || 'null');
+        if (b) {
+          var r = document.documentElement,
+            s = r.style;
+          for (var k in b) s.setProperty(k, b[k]);
+          r.setAttribute('data-palette', 'custom');
+        }
+      } catch (e) {}
+    </script>
+    <title>Fieldset — @fewlines/css</title>
+    <link rel="stylesheet" href="/core.css" />
+    <link rel="stylesheet" href="/docs.css" />
+    <link rel="stylesheet" href="/colors-derive.css" />
+    <script src="/site-sidebar.js" defer blocking="render"></script>
+    <script src="/site-toc.js" defer blocking="render"></script>
+    <script src="/vendor/hljs.min.js" defer></script>
+    <script src="/site-code.js" defer></script>
+  </head>
+  <body>
+    <site-sidebar></site-sidebar>
+
+    <main>
+      <header class="page-header">
+        <h1>Fieldset</h1>
+        <p>
+          Grouping of related form controls: frame with the legend cut, the group's accessible
+          name and native group-level disabling. No JS.
+        </p>
+      </header>
+
+      <section>
+        <h2>Native basis</h2>
+        <p>
+          <code>&lt;fieldset&gt;</code>/<code>&lt;legend&gt;</code> — the group semantics and the
+          accessible name are native; <code>fieldset[disabled]</code> natively disables every
+          descendant control. The layout is the UA flow: spacing between members comes from the
+          stack rules (<code>.ui-field + *</code>, <code>.ui-switch-field + .ui-switch-field</code>).
+        </p>
+      </section>
+
+      <section>
+        <h2>Canonical markup</h2>
+        <pre><code>&lt;fieldset class="ui-fieldset"&gt;
+  &lt;legend class="ui-fieldset-legend"&gt;Shipping address&lt;/legend&gt;
+  &lt;label class="ui-field"&gt;
+    &lt;span class="ui-field-label"&gt;Street&lt;/span&gt;
+    &lt;input class="ui-input" type="text" placeholder="Main st. 1" /&gt;
+  &lt;/label&gt;
+&lt;/fieldset&gt;</code></pre>
+        <p>
+          The legend is required — it is the group's accessible name and the native border split.
+        </p>
+      </section>
+
+      <section>
+        <h2>Group of fields</h2>
+        <div class="example">
+          <fieldset class="ui-fieldset">
+            <legend class="ui-fieldset-legend">Shipping address</legend>
+            <label class="ui-field">
+              <span class="ui-field-label">Street</span>
+              <input class="ui-input" type="text" placeholder="Main st. 1" />
+            </label>
+            <label class="ui-field">
+              <span class="ui-field-label">City</span>
+              <input class="ui-input" type="text" placeholder="Springfield" />
+            </label>
+            <label class="ui-field">
+              <span class="ui-field-label">Country</span>
+              <select class="ui-select">
+                <option>United States</option>
+                <option>Germany</option>
+              </select>
+            </label>
+          </fieldset>
+        </div>
+        <p>
+          Members are placed adjacent — the gaps come from the stack rules, no margins to set.
+        </p>
+      </section>
+
+      <section>
+        <h2>Disabled group</h2>
+        <div class="example">
+          <fieldset class="ui-fieldset" disabled>
+            <legend class="ui-fieldset-legend">Beta options</legend>
+            <label class="ui-field">
+              <span class="ui-field-label">Access key</span>
+              <input class="ui-input" type="text" value="sk-…" />
+            </label>
+          </fieldset>
+        </div>
+        <p>
+          <code>disabled</code> on the fieldset is the native group switch: every descendant
+          control is disabled, the legend mutes. No per-control attributes needed.
+        </p>
+      </section>
+
+      <section>
+        <h2>Stacked groups</h2>
+        <div class="example">
+          <fieldset class="ui-fieldset">
+            <legend class="ui-fieldset-legend">Billing</legend>
+            <label class="ui-field">
+              <span class="ui-field-label">Card number</span>
+              <input class="ui-input" type="text" placeholder="4242 4242 4242 4242" />
+            </label>
+          </fieldset>
+          <fieldset class="ui-fieldset">
+            <legend class="ui-fieldset-legend">Shipping</legend>
+            <label class="ui-field">
+              <span class="ui-field-label">Address</span>
+              <input class="ui-input" type="text" placeholder="Main st. 1" />
+            </label>
+          </fieldset>
+        </div>
+        <p>Adjacent fieldsets get the gap automatically (the same model as alerts).</p>
+      </section>
+
+      <section>
+        <h2>Accessibility</h2>
+        <ul>
+          <li>
+            The <code>group</code> role and its name are native (legend); for radio groups the
+            legend replaces repeated labels.
+          </li>
+          <li>
+            Disabled state: the native propagation is the behavior; the muted legend is only the
+            visual signal, controls dim themselves.
+          </li>
+          <li>No new APCA pairs: <code>text/surface</code> and <code>text-muted/surface</code>.</li>
+          <li>Forced colors repaint the border with the system color automatically.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Do not</h2>
+        <ul>
+          <li>
+            No <code>&lt;div&gt;</code> instead of <code>&lt;fieldset&gt;</code> — the native group
+            is the contract.
+          </li>
+          <li>No removing the legend — the accessible name is required.</li>
+          <li>
+            No grid/flex on the fieldset — the legend border split belongs to the engine's
+            special layout.
+          </li>
+          <li>
+            No JS emulation of group disabling — <code>fieldset[disabled]</code> is native.
+          </li>
+          <li>
+            Not a decorative frame for content without controls — for sections there are headings,
+            for breaks there is Divider.
+          </li>
+        </ul>
+      </section>
+    </main>
+    <footer>
+      <p>Full contract: <code>packages/core/src/components/fieldset/fieldset.md</code></p>
+    </footer>
+    <site-toc></site-toc>
+  </body>
+</html>

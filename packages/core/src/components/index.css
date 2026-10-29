@@ -6,6 +6,7 @@
  */
 @import './button/button.css';
 @import './field/field.css';
+@import './fieldset/fieldset.css';
 @import './dialog/dialog.css';
 @import './popover/popover.css';
 @import './drawer/drawer.css';

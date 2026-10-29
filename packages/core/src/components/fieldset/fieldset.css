@@ -1,0 +1,75 @@
+/* Fieldset / Group component.
+ *
+ * Native basis: <fieldset>/<legend> — native grouping semantics (role
+ * group, accessible name from the legend) and native group-level disabled
+ * propagation: fieldset[disabled] disables every descendant control
+ * (controls inside the first legend are exempt, per HTML). No JS.
+ *
+ * Canonical structure:
+ *   <fieldset class="ui-fieldset">
+ *     <legend class="ui-fieldset-legend">Shipping address</legend>
+ *     …ui-field / ui-switch-field members…
+ *   </fieldset>
+ *
+ * Layout: the component keeps the UA flow model — spacing between members
+ * comes from the existing stack rules (.ui-field + *, .ui-switch-field +
+ * .ui-switch-field), the same "adjacent members" model as Alert. No
+ * grid/flex on <fieldset>: the legend border split is the engine's special
+ * fieldset layout, plain flow is the only model that renders identically
+ * across engines (compatibility notes, 2026-10-29).
+ *
+ * UA traps handled here:
+ *   - UA min-inline-size: min-content makes a fieldset overflow its parent
+ *     whenever a descendant establishes a wider intrinsic width — reset to 0;
+ *   - UA margin-inline: 2px — zeroed, page flow owns spacing;
+ *   - UA legend chrome (border cut hugging the text, inherited weight) —
+ *     explicit padding and font.
+ *
+ * APCA pairs used (validated in tests/apca, no new tokens):
+ *   legend: text/surface (body); disabled legend: text-muted/surface
+ *   (fluent) — the same pair as ui-field-description.
+ */
+
+.ui-fieldset {
+  min-inline-size: 0;
+  margin: 0;
+  border: 1px solid var(--ui-color-border);
+  border-radius: var(--ui-radius-md);
+
+  /* The legend lives in the border area; block-start padding is the gap
+   * between the legend line and the first member (sm — the same step the
+   * stack rules use between members). */
+  padding: var(--ui-space-sm) var(--ui-space-md) var(--ui-space-md);
+}
+
+.ui-fieldset-legend {
+  /* Chrome text on the field-label level: the sm step, 500 (canonical
+   * mapping, theme notes) — the legend is the group's label, not a
+   * section heading. */
+  font: 500 var(--ui-font-size-sm) / 1.45 var(--ui-font-sans);
+  color: var(--ui-color-text);
+
+  /* Air inside the border cut — the legend text must not touch the border
+   * line on either side. */
+  padding-inline: var(--ui-space-2xs);
+}
+
+/* Native group disabled propagation is the behavior; the muted legend is
+ * the group-level visual signal. Nested controls dim themselves through
+ * their own disabled styles (Field, Switch). */
+.ui-fieldset:disabled .ui-fieldset-legend {
+  color: var(--ui-color-text-muted);
+}
+
+/* Stacked groups (host just puts them adjacent, like alerts). */
+.ui-fieldset + .ui-fieldset {
+  margin-block-start: var(--ui-space-sm);
+}
+
+/* Forced colors: the border becomes a system color, structure survives
+ * (like alert/field). */
+@media (forced-colors: active) {
+  .ui-fieldset {
+    forced-color-adjust: auto;
+  }
+}
