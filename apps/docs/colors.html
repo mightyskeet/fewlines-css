@@ -85,16 +85,16 @@
       <section>
         <h2>Model: bases + formulas</h2>
         <p>
-          A palette is four base colors — one OKLCH seed each (lightness, chroma, hue):
-          <strong>Neutral</strong>, <strong>Brand</strong>, <strong>Link</strong> and
-          <strong>Attention</strong>. Formulas derive every semantic token from them: surfaces,
-          text, borders, fills, <code>on-*</code> contrast poles, hover states and tints.
+          A palette is one OKLCH seed per family per theme — <strong>Neutral</strong>,
+          <strong>Brand</strong>, <strong>Link</strong> and <strong>Attention</strong> — and light
+          and dark are tuned independently. Formulas derive every semantic token from the seeds:
+          surfaces, text, borders, fills, <code>on-*</code> contrast poles, hover states and tints.
+          The sliders edit the theme you are looking at — use the theme toggle to switch.
         </p>
         <p>
-          Fills use a polarity branch: a base lightness up to 0.70 produces a vivid fill with a
-          white contrast pole, a lighter base produces a saturated pastel with a near-black pole —
-          the branch jumps the APCA dead zone. The light theme fill maps to the darker step, the
-          dark theme fill to the lighter one, mirroring the current palette.
+          Fills use a polarity branch: a seed lightness up to 0.70 produces a vivid fill with a
+          white contrast pole, a lighter seed produces a saturated pastel with a near-black pole —
+          the branch jumps the APCA dead zone. The branch runs per theme on that theme's seed.
         </p>
         <p>
           Components consume only these names (<code>theme notes</code>); the swatches in the
@@ -104,7 +104,9 @@
         <p>
           Defaults are calibrated and APCA-validated in CI. Beyond the calibrated defaults the
           formulas make no guarantees — contrast is the host's responsibility, which is why every
-          family section below carries a live pass/fail table for self-checking.
+          family section below carries a live pass/fail table for the current theme. The
+          <em>Hover step</em> slider sets how far a hover fill walks toward the contrast pole: a
+          smaller step is calmer and keeps more contrast headroom.
         </p>
         <p>
           Plan and decision log:
@@ -116,9 +118,9 @@
       <section>
         <h2>Neutral</h2>
         <p>
-          The seed is the page surface. Text anchors its own lightness and takes the seed's chroma
-          and hue; raised surfaces step toward the text pole; borders, hover fills and the focus
-          ring derive from the same two poles.
+          The seed is the page surface, per theme. Text anchors its own lightness and takes the
+          seed's chroma and hue; raised surfaces step toward the text pole; borders, hover fills and
+          the focus ring derive from the same two poles.
         </p>
         <site-palette-family family="Neutral"></site-palette-family>
 
@@ -182,9 +184,10 @@
       <section>
         <h2>Brand</h2>
         <p>
-          The action family — default buttons, kbd, the checked Switch. The seed defaults to the
-          inverted gray (the light-theme fill IS the seed, the dark theme mirrors its lightness);
-          raise the chroma for a brand look — hover and the tint follow automatically.
+          The action family — default buttons, kbd, the checked Switch. Each theme's fill IS that
+          theme's seed (the default is the inverted gray); the polarity branch picks the contrast
+          pole per theme — white for a vivid seed, near-black for a pastel one. Raise the chroma for
+          a brand look — hover and the tint follow automatically.
         </p>
         <site-palette-family family="Brand"></site-palette-family>
 

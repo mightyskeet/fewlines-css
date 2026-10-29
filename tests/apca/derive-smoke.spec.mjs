@@ -37,39 +37,42 @@ test('derivation layer: default bases pass the token matrix', async ({ page, bro
     );
   };
   const report = async (label, rows) => {
-    const failed = rows.filter((r) => r.status !== 'PP');
+    const failed = rows.filter((r) => r.status !== 'P');
     console.log(`[${browserName}] ${label}: pairs ${rows.length}, failing ${failed.length}`);
     for (const r of failed) console.log(`  ${r.pair.padEnd(34)} ${r.status}  Lc ${r.lc}`);
     return failed;
   };
 
   // Phase A: core defaults (the Colors page runs the layer always-on, so the
-  // scope attribute is removed explicitly to expose the core values).
+  // scope attribute is removed explicitly to expose the core values). The
+  // table reports the CURRENT theme; the runner emulates light.
   await page.evaluate(() => document.documentElement.removeAttribute('data-palette'));
-  const coreFailures = await report('core defaults', await readTable());
-  expect(coreFailures, 'core defaults pass both themes').toEqual([]);
+  const coreFailures = await report('core defaults / light', await readTable());
+  expect(coreFailures, 'core defaults pass in light').toEqual([]);
 
-  // Phase B: derivation layer with its own default bases.
+  // Phase B: derivation layer with its own default bases, light theme.
   await page.evaluate(() => document.documentElement.setAttribute('data-palette', 'custom'));
-  const deriveFailures = await report('derive defaults', await readTable());
-  expect(deriveFailures, 'derive-layer defaults pass both themes').toEqual([]);
+  const deriveFailures = await report('derive defaults / light', await readTable());
+  expect(deriveFailures, 'derive-layer defaults pass in light').toEqual([]);
 
-  // Phase C: an out-of-gamut seed (l 0.94, c 0.32 is far outside sRGB). The
-  // table must gamut-map like the browser paints — the old canvas parser
-  // clipped the color and reported a false fail (~75 Lc where the mapped
-  // pair measures ~94).
+  // Phase B2: same in the dark theme — the table follows the page theme.
+  await page.evaluate(() => document.documentElement.setAttribute('data-theme', 'dark'));
+  const darkFailures = await report('derive defaults / dark', await readTable());
+  expect(darkFailures, 'derive-layer defaults pass in dark').toEqual([]);
+
+  // Phase C: an out-of-gamut dark brand seed (l 0.94, c 0.32 is far outside
+  // sRGB). The table must gamut-map like the browser paints — the old canvas
+  // parser clipped the color and reported a false fail (~75 Lc where the
+  // mapped pair measures ~94).
   await page.evaluate(() => {
     const root = document.documentElement;
-    root.style.setProperty('--ui-base-brand-l', '0.94');
-    root.style.setProperty('--ui-base-brand-c', '0.32');
-    root.style.setProperty('--ui-base-brand-h', '276');
+    root.style.setProperty('--ui-base-brand-dark-l', '0.94');
+    root.style.setProperty('--ui-base-brand-dark-c', '0.32');
+    root.style.setProperty('--ui-base-brand-dark-h', '276');
   });
   const onBrand = (await readTable()).find((r) => r.pair === 'on-brand / brand');
-  expect(
-    Number(onBrand.lc.split(' / ')[1]),
-    'out-of-gamut pair is mapped, not clipped',
-  ).toBeGreaterThan(85);
-  expect(onBrand.status[1], 'dark on-brand/brand passes').toBe('P');
+  expect(Number(onBrand.lc), 'out-of-gamut pair is mapped, not clipped').toBeGreaterThan(85);
+  expect(onBrand.status, 'dark on-brand/brand passes').toBe('P');
 
   expect(errors, 'no page errors').toEqual([]);
 });
@@ -87,7 +90,7 @@ test('palette widget: slider, persistence, reset', async ({ page }) => {
   // The first drag seeds the FULL map from the layer's CSS defaults —
   // no empty-string entries that would poison the restored palette.
   const stored = await page.evaluate(() => JSON.parse(localStorage.getItem('colors-bases')));
-  expect(stored['--ui-base-link-l']).toBe('0.3');
+  expect(stored['--ui-base-link-light-l']).toBe('0.3');
   expect(Object.values(stored).every((v) => typeof v === 'string' && v.length > 0)).toBe(true);
   // The measurement must not leave inline residue on :root.
   expect(
@@ -137,7 +140,7 @@ test('derivation: tint and fill keep the family hue', async ({ page }) => {
   await page.evaluate(() => {
     const root = document.documentElement;
     root.setAttribute('data-palette', 'custom');
-    root.style.setProperty('--ui-base-attention-h', '160');
+    root.style.setProperty('--ui-base-attention-light-h', '160');
   });
 
   for (const token of ['--ui-color-attention-tint', '--ui-color-attention']) {
@@ -157,11 +160,11 @@ test('derivation: colors are a pure function of the bases (no stickiness)', asyn
   await page.evaluate(() => {
     const root = document.documentElement;
     root.setAttribute('data-palette', 'custom');
-    root.style.setProperty('--ui-base-attention-h', '160');
+    root.style.setProperty('--ui-base-attention-light-h', '160');
   });
   await page.waitForTimeout(50);
   await page.evaluate(() =>
-    document.documentElement.style.setProperty('--ui-base-attention-h', '28'),
+    document.documentElement.style.setProperty('--ui-base-attention-light-h', '28'),
   );
   await page.waitForTimeout(50);
   expect(await readTint(page), 'tint returns to the default value').toBe(baseline);
@@ -177,7 +180,7 @@ async function readTintWithDefaults(page) {
   await page.evaluate(() => {
     const root = document.documentElement;
     root.setAttribute('data-palette', 'custom');
-    root.style.setProperty('--ui-base-attention-h', '28');
+    root.style.setProperty('--ui-base-attention-light-h', '28');
   });
   return readTint(page);
 }

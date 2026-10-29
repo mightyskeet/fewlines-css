@@ -9,6 +9,12 @@
 // registry is copied to apps/docs/token-pairs.mjs by tests/prepare.mjs, the
 // same mechanism as core.css — no manual duplication.
 //
+// Themes are tuned independently: every family has a light and a dark seed.
+// The sliders and the table follow the page theme (data-theme attribute,
+// falling back to prefers-color-scheme) — you tune what you see; the page's
+// theme toggle switches the edited theme. The table reports the current
+// theme only.
+//
 // Persistence: slider state goes to localStorage['colors-bases'] as a map of
 // base-token -> value strings; restoring it before first paint is a tiny
 // inline <head> script on every page (fixture.html deliberately has none —
@@ -28,44 +34,124 @@ import { APCAcontrast, sRGBtoY } from './vendor/apca-w3.mjs';
 
 const KEY = 'colors-bases';
 
-/** Slider layout per family. Lightness/color values are plain oklch numbers,
- * page lightnesses are percentages — the strings go into the CSS as-is. */
+/** Slider layout per family, per theme. Lightness/color values are plain
+ * oklch numbers, page lightnesses and hover steps are percentages — the
+ * strings go into the CSS as-is. */
 const FAMILIES = [
   {
     name: 'Neutral',
-    sliders: [
-      { prop: '--ui-base-n-l', label: 'Page', min: 88, max: 100, step: 1, unit: '%' },
-      { prop: '--ui-base-n-c', label: 'Chroma', min: 0, max: 0.12, step: 0.001 },
-      { prop: '--ui-base-n-h', label: 'Hue', min: 0, max: 360, step: 1 },
-    ],
+    themes: {
+      light: [
+        { prop: '--ui-base-n-light-l', label: 'Page', min: 88, max: 100, step: 1, unit: '%' },
+        { prop: '--ui-base-n-light-c', label: 'Chroma', min: 0, max: 0.12, step: 0.001 },
+        { prop: '--ui-base-n-light-h', label: 'Hue', min: 0, max: 360, step: 1 },
+      ],
+      dark: [
+        { prop: '--ui-base-n-dark-l', label: 'Page', min: 8, max: 40, step: 1, unit: '%' },
+        { prop: '--ui-base-n-dark-c', label: 'Chroma', min: 0, max: 0.12, step: 0.001 },
+        { prop: '--ui-base-n-dark-h', label: 'Hue', min: 0, max: 360, step: 1 },
+      ],
+    },
   },
   {
     name: 'Brand',
-    sliders: [
-      { prop: '--ui-base-brand-l', label: 'Lightness', min: 0.05, max: 0.95, step: 0.01 },
-      { prop: '--ui-base-brand-c', label: 'Chroma', min: 0, max: 0.37, step: 0.01 },
-      { prop: '--ui-base-brand-h', label: 'Hue', min: 0, max: 360, step: 1 },
-    ],
+    themes: {
+      light: [
+        { prop: '--ui-base-brand-light-l', label: 'Lightness', min: 0.05, max: 1, step: 0.01 },
+        { prop: '--ui-base-brand-light-c', label: 'Chroma', min: 0, max: 0.37, step: 0.01 },
+        { prop: '--ui-base-brand-light-h', label: 'Hue', min: 0, max: 360, step: 1 },
+        {
+          prop: '--ui-base-brand-hover-light',
+          label: 'Hover step',
+          min: 0,
+          max: 100,
+          step: 1,
+          unit: '%',
+        },
+      ],
+      dark: [
+        { prop: '--ui-base-brand-dark-l', label: 'Lightness', min: 0.05, max: 1, step: 0.01 },
+        { prop: '--ui-base-brand-dark-c', label: 'Chroma', min: 0, max: 0.37, step: 0.01 },
+        { prop: '--ui-base-brand-dark-h', label: 'Hue', min: 0, max: 360, step: 1 },
+        {
+          prop: '--ui-base-brand-hover-dark',
+          label: 'Hover step',
+          min: 0,
+          max: 100,
+          step: 1,
+          unit: '%',
+        },
+      ],
+    },
   },
   {
     name: 'Link',
-    sliders: [
-      { prop: '--ui-base-link-l', label: 'Lightness', min: 0.15, max: 0.95, step: 0.01 },
-      { prop: '--ui-base-link-c', label: 'Chroma', min: 0, max: 0.37, step: 0.01 },
-      { prop: '--ui-base-link-h', label: 'Hue', min: 0, max: 360, step: 1 },
-    ],
+    themes: {
+      light: [
+        { prop: '--ui-base-link-light-l', label: 'Lightness', min: 0.15, max: 0.95, step: 0.01 },
+        { prop: '--ui-base-link-light-c', label: 'Chroma', min: 0, max: 0.37, step: 0.01 },
+        { prop: '--ui-base-link-light-h', label: 'Hue', min: 0, max: 360, step: 1 },
+      ],
+      dark: [
+        { prop: '--ui-base-link-dark-l', label: 'Lightness', min: 0.15, max: 0.95, step: 0.01 },
+        { prop: '--ui-base-link-dark-c', label: 'Chroma', min: 0, max: 0.37, step: 0.01 },
+        { prop: '--ui-base-link-dark-h', label: 'Hue', min: 0, max: 360, step: 1 },
+      ],
+    },
   },
   {
     name: 'Attention',
-    sliders: [
-      { prop: '--ui-base-attention-l', label: 'Lightness', min: 0.15, max: 0.95, step: 0.01 },
-      { prop: '--ui-base-attention-c', label: 'Chroma', min: 0, max: 0.37, step: 0.01 },
-      { prop: '--ui-base-attention-h', label: 'Hue', min: 0, max: 360, step: 1 },
-    ],
+    themes: {
+      light: [
+        {
+          prop: '--ui-base-attention-light-l',
+          label: 'Lightness',
+          min: 0.15,
+          max: 0.95,
+          step: 0.01,
+        },
+        { prop: '--ui-base-attention-light-c', label: 'Chroma', min: 0, max: 0.37, step: 0.01 },
+        { prop: '--ui-base-attention-light-h', label: 'Hue', min: 0, max: 360, step: 1 },
+        {
+          prop: '--ui-base-attention-hover-light',
+          label: 'Hover step',
+          min: 0,
+          max: 100,
+          step: 1,
+          unit: '%',
+        },
+      ],
+      dark: [
+        {
+          prop: '--ui-base-attention-dark-l',
+          label: 'Lightness',
+          min: 0.15,
+          max: 0.95,
+          step: 0.01,
+        },
+        { prop: '--ui-base-attention-dark-c', label: 'Chroma', min: 0, max: 0.37, step: 0.01 },
+        { prop: '--ui-base-attention-dark-h', label: 'Hue', min: 0, max: 360, step: 1 },
+        {
+          prop: '--ui-base-attention-hover-dark',
+          label: 'Hover step',
+          min: 0,
+          max: 100,
+          step: 1,
+          unit: '%',
+        },
+      ],
+    },
   },
 ];
 
-const PROPS = FAMILIES.flatMap((family) => family.sliders.map((slider) => slider.prop));
+const PROPS = FAMILIES.flatMap((family) =>
+  Object.values(family.themes).flatMap((sliders) => sliders.map((slider) => slider.prop)),
+);
+
+/** The theme being viewed — and therefore edited and reported. */
+const currentTheme = () =>
+  document.documentElement.getAttribute('data-theme') ??
+  (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
 
 /** Semantic tokens owned by each family — determines which live table a
  * token pair belongs to. Neutral owns the shared surfaces/text, so it is the
@@ -113,7 +199,7 @@ function valueOf(slider, raw) {
 
 /** Base-token values as resolved right now. The Colors page activates the
  * derivation scope in its head script, so the CSS defaults are always live
- * and the values read back complete. */
+ * and the values read back complete (both themes' tokens exist). */
 function readComputed() {
   const styles = getComputedStyle(document.documentElement);
   const values = {};
@@ -260,59 +346,42 @@ function cssVar(name) {
 
 const tableTokens = [...new Set(tablePairs.flatMap((pair) => [pair.fg, pair.bg]))];
 
-/** Resolve every table token in both themes, then fill every live table.
- *
- * The themes are switched by an INLINE color-scheme flip on :root, NOT by
- * the data-theme attribute: touching the attribute toggles the
- * `:root[data-theme]` transition rule from theme-transition.css on and off
- * around every measurement — churn the page visibly reacts to. Flipping
- * color-scheme directly re-resolves the (registered) tokens the same way
- * while leaving the theme machinery alone. The token transition is still
- * suppressed for the measurement (values do change), and the restore happens
- * before it is re-enabled, so nothing animates and no frame can show an
- * intermediate theme. */
+/** All live tables on the page; filled by <site-palette-table>. */
+const registry = new Set();
+
+/** Resolve every table token in the CURRENT theme, then fill every live
+ * table. No color-scheme flipping is needed — the page itself is already in
+ * the theme being reported. The token transition is still suppressed around
+ * the measurement: right after a theme flip the registered tokens would
+ * otherwise be read mid-transition. */
 function updateAllTables() {
   const root = document.documentElement;
   root.style.transition = 'none';
   const colors = {};
-  for (const theme of ['light', 'dark']) {
-    root.style.colorScheme = theme;
-    for (const name of tableTokens) {
-      probe.style.color = `var(${cssVar(name)})`;
-      colors[`${theme} ${name}`] = toSrgb(getComputedStyle(probe).color);
-    }
+  for (const name of tableTokens) {
+    probe.style.color = `var(${cssVar(name)})`;
+    colors[name] = toSrgb(getComputedStyle(probe).color);
   }
-  root.style.colorScheme = '';
-  // Land the restore in its own forced recalc BEFORE re-enabling the
-  // transition: both property writes would otherwise land in one style
-  // recalc, where the values change dark->light with the transition list
-  // already active — a transition starts from the dark values and the page
-  // visibly flashes (light theme only: with a dark saved theme the restore
-  // changes no values).
+  // Land the restore in its own forced recalc so no transition can start
+  // from the settled values.
   getComputedStyle(root).getPropertyValue('--ui-color-text');
-  root.style.transition = '';
   root.style.transition = '';
 
   for (const rows of registry) updateTable(rows, colors);
 }
 
 function updateTable(rows, colors) {
-  for (const { pair, cells, pills } of rows) {
+  for (const { pair, cells, pill } of rows) {
     const threshold = pair.threshold ?? roleThresholds[pair.role];
-    const values = ['light', 'dark'].map((theme) => {
-      const fg = colors[`${theme} ${pair.fg}`];
-      const bg = colors[`${theme} ${pair.bg}`];
-      if (!fg || !bg) return null;
-      return { w: wcag(fg, bg), lc: Math.abs(APCAcontrast(sRGBtoY(fg), sRGBtoY(bg))) };
-    });
-    cells.w.textContent = values.map((v) => (v ? v.w.toFixed(2) : '—')).join(' / ');
-    cells.lc.textContent = values.map((v) => (v ? v.lc.toFixed(1) : '—')).join(' / ');
-    for (const [index, pill] of pills.entries()) {
-      const value = values[index];
-      const status = value ? (value.lc >= threshold ? 'pass' : 'fail') : 'broken';
-      pill.textContent = value ? status : 'n/a';
-      pill.dataset.status = status;
-    }
+    const fg = colors[pair.fg];
+    const bg = colors[pair.bg];
+    const value =
+      fg && bg ? { w: wcag(fg, bg), lc: Math.abs(APCAcontrast(sRGBtoY(fg), sRGBtoY(bg))) } : null;
+    cells.w.textContent = value ? value.w.toFixed(2) : '—';
+    cells.lc.textContent = value ? value.lc.toFixed(1) : '—';
+    const status = value ? (value.lc >= threshold ? 'pass' : 'fail') : 'broken';
+    pill.textContent = value ? status : 'n/a';
+    pill.dataset.status = status;
   }
 }
 
@@ -323,10 +392,37 @@ function scheduleUpdate() {
   tableTimer = setTimeout(updateAllTables, 150);
 }
 
-/** All live tables on the page; filled by <site-palette-table>. */
-const registry = [];
+/** Re-render callbacks (sliders, tables) run on a theme flip. */
+const rerender = new Set();
 
 /* ---- Widget pieces ---- */
+
+function buildSlider(familyName, slider) {
+  const row = document.createElement('label');
+  row.className = 'palette-slider';
+  const name = document.createElement('span');
+  name.textContent = slider.label;
+  const output = document.createElement('output');
+  const input = document.createElement('input');
+  input.type = 'range';
+  input.min = slider.min;
+  input.max = slider.max;
+  input.step = slider.step;
+  input.setAttribute('aria-label', `${familyName} ${slider.label}`);
+  input.addEventListener('input', () => {
+    // The first drag seeds the full map so the saved snapshot stays
+    // complete (the rest are the layer's defaults read at that moment).
+    if (Object.keys(state).length === 0) state = readComputed();
+    state[slider.prop] = valueOf(slider, input.value);
+    save();
+    apply();
+    output.textContent = state[slider.prop];
+    scheduleUpdate();
+  });
+  row.append(name, output, input);
+  inputs.set(slider.prop, { input, output, slider });
+  return row;
+}
 
 class SitePaletteFamily extends HTMLElement {
   connectedCallback() {
@@ -338,33 +434,15 @@ class SitePaletteFamily extends HTMLElement {
     if (!family) return;
     const fieldset = document.createElement('fieldset');
     fieldset.className = 'palette-fieldset';
-    for (const slider of family.sliders) {
-      const row = document.createElement('label');
-      row.className = 'palette-slider';
-      const name = document.createElement('span');
-      name.textContent = slider.label;
-      const output = document.createElement('output');
-      const input = document.createElement('input');
-      input.type = 'range';
-      input.min = slider.min;
-      input.max = slider.max;
-      input.step = slider.step;
-      input.setAttribute('aria-label', `${family.name} ${slider.label}`);
-      input.addEventListener('input', () => {
-        // The first drag seeds the full map so the saved snapshot stays
-        // complete (the rest are the layer's defaults read at that moment).
-        if (Object.keys(state).length === 0) state = readComputed();
-        state[slider.prop] = valueOf(slider, input.value);
-        save();
-        apply();
-        output.textContent = state[slider.prop];
-        scheduleUpdate();
-      });
-      row.append(name, output, input);
-      fieldset.append(row);
-      inputs.set(slider.prop, { input, output, slider });
-    }
     this.append(fieldset);
+    // The sliders edit the theme being viewed; a theme flip rebuilds them.
+    const build = () => {
+      fieldset.replaceChildren(
+        ...family.themes[currentTheme()].map((s) => buildSlider(family.name, s)),
+      );
+    };
+    build();
+    rerender.add(build);
   }
 }
 
@@ -374,42 +452,45 @@ class SitePaletteTable extends HTMLElement {
     this.dataset.chrome = 'true';
 
     const pairs = pairsByFamily[this.getAttribute('family')] ?? [];
-    const table = document.createElement('table');
-    table.className = 'palette-table';
-    const head = document.createElement('thead');
-    const headRow = document.createElement('tr');
-    for (const label of ['Pair', 'Role', 'WCAG L/D', 'Lc L/D', 'Status']) {
-      const th = document.createElement('th');
-      th.scope = 'col';
-      th.textContent = label;
-      headRow.append(th);
-    }
-    head.append(headRow);
-    const body = document.createElement('tbody');
-    this.rows = [];
-    for (const pair of pairs) {
-      const row = document.createElement('tr');
-      const name = document.createElement('td');
-      const code = document.createElement('code');
-      code.textContent = `${pair.fg} / ${pair.bg}`;
-      name.append(code);
-      const role = document.createElement('td');
-      role.textContent = `${pair.role} ${roleThresholds[pair.role]}`;
-      const w = document.createElement('td');
-      const lc = document.createElement('td');
-      const status = document.createElement('td');
-      const pills = [document.createElement('span'), document.createElement('span')];
-      for (const pill of pills) {
+    const build = () => {
+      if (this.rows) registry.delete(this.rows);
+      const table = document.createElement('table');
+      table.className = 'palette-table';
+      const head = document.createElement('thead');
+      const headRow = document.createElement('tr');
+      for (const label of ['Pair', 'Role', 'WCAG', 'Lc', 'Status']) {
+        const th = document.createElement('th');
+        th.scope = 'col';
+        th.textContent = label;
+        headRow.append(th);
+      }
+      head.append(headRow);
+      const body = document.createElement('tbody');
+      this.rows = [];
+      for (const pair of pairs) {
+        const row = document.createElement('tr');
+        const name = document.createElement('td');
+        const code = document.createElement('code');
+        code.textContent = `${pair.fg} / ${pair.bg}`;
+        name.append(code);
+        const role = document.createElement('td');
+        role.textContent = `${pair.role} ${roleThresholds[pair.role]}`;
+        const w = document.createElement('td');
+        const lc = document.createElement('td');
+        const status = document.createElement('td');
+        const pill = document.createElement('span');
         pill.className = 'palette-pill';
         status.append(pill);
+        row.append(name, role, w, lc, status);
+        body.append(row);
+        this.rows.push({ pair, cells: { w, lc }, pill });
       }
-      row.append(name, role, w, lc, status);
-      body.append(row);
-      this.rows.push({ pair, cells: { w, lc }, pills });
-    }
-    table.append(head, body);
-    this.append(table);
-    registry.push(this.rows);
+      table.append(head, body);
+      this.replaceChildren(table);
+      registry.add(this.rows);
+    };
+    build();
+    rerender.add(build);
   }
 
   /** Synchronous recompute (tests flip the scope attribute directly). */
@@ -490,3 +571,17 @@ document.body.append(probe);
 load();
 syncInputs();
 updateAllTables();
+
+/** A theme flip (page toggle or an OS-level change with no saved theme)
+ * rebuilds the sliders and tables for the theme now being viewed. */
+const onThemeFlip = () => {
+  inputs.clear();
+  for (const build of rerender) build();
+  syncInputs();
+  scheduleUpdate();
+};
+new MutationObserver(onThemeFlip).observe(document.documentElement, {
+  attributes: true,
+  attributeFilter: ['data-theme'],
+});
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change', onThemeFlip);

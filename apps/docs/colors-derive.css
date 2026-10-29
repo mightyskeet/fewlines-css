@@ -1,7 +1,7 @@
 /* Derivation layer (demo) — plan: docs/plans/2026-10-26-color-derivation.md.
  *
- * Session 1 proving ground for the formula system: every semantic color token
- * is derived from base L/C/H numbers instead of palette steps. Semantic token
+ * Proving ground for the formula system: every semantic color token is
+ * derived from base L/C/H seeds instead of palette steps. Semantic token
  * NAMES are identical to core, so components and the purity gate are
  * untouched — only the values change.
  *
@@ -10,18 +10,24 @@
  * selector out-specifies core's plain :root block; without the attribute the
  * layer is inert and core defaults rule.
  *
- * Mechanics follow .experiments/adaptive-colors.html: per-theme halves are
- * computed as plain colors, then combined into light-dark() semantic tokens
- * (the same mechanism as core's --ui-color-hover). The fill polarity branch —
- * vivid fill for base L up to 0.70, saturated pastel above — jumps the APCA
- * dead zone; round() keeps the branch selection strictly binary (sign() alone
- * would average the branches exactly at the threshold). The contrast pole
- * (white vs near-black on-*) follows the branch in the light theme; the dark
- * theme fill is always light enough for the dark pole.
+ * One OKLCH seed per family PER THEME — light and dark are tuned
+ * independently (real themes are designed, not derived from each other).
+ * Each theme's halves are computed as plain colors from that theme's seed,
+ * then combined into light-dark() semantic tokens (the same mechanism as
+ * core's --ui-color-hover). The fill polarity branch — vivid fill for a
+ * seed L up to 0.70, saturated pastel above — jumps the APCA dead zone;
+ * round() keeps the branch selection strictly binary (sign() alone would
+ * average the branches exactly at the threshold). The contrast pole (white
+ * vs near-black on-*) follows the branch.
+ *
+ * Derived fills walk toward the contrast pole by a per-theme hover step
+ * token (--ui-base-*-hover-light/dark) — the calibrated percentages are the
+ * defaults, hosts can walk them back for a calmer (and higher-contrast)
+ * hover.
  *
  * Defaults approximate the current core palette (packages/core/src/tokens/
  * palette.css) so the calibrated look carries over; the live pass/fail table
- * in the palette widget validates them. Outside the calibrated defaults the
+ * on the Colors page validates them. Outside the calibrated defaults the
  * host is responsible (policy: "overrides beyond calibrated defaults").
  *
  * --ui-color-scrim is intentionally NOT derived (static non-text layer).
@@ -29,19 +35,44 @@
 
 :root[data-palette='custom'] {
   /* ---- Base tokens (the host-facing surface; the palette widget and the
-   * head applier write these). One OKLCH seed per family. ---- */
-  --ui-base-n-l: 100%;
-  --ui-base-n-c: 0.008;
-  --ui-base-n-h: 260;
-  --ui-base-brand-l: 0.14;
-  --ui-base-brand-c: 0.008;
-  --ui-base-brand-h: 260;
-  --ui-base-attention-l: 0.48;
-  --ui-base-attention-c: 0.19;
-  --ui-base-attention-h: 28;
-  --ui-base-link-l: 0.48;
-  --ui-base-link-c: 0.18;
-  --ui-base-link-h: 258;
+   * head applier write these). ---- */
+
+  /* neutral */
+  --ui-base-n-light-l: 100%;
+  --ui-base-n-light-c: 0.008;
+  --ui-base-n-light-h: 260;
+  --ui-base-n-dark-l: 14%;
+  --ui-base-n-dark-c: 0.008;
+  --ui-base-n-dark-h: 260;
+
+  /* brand (the default dark seed is the mirrored lightness of the old
+   * single-seed model) */
+  --ui-base-brand-light-l: 0.14;
+  --ui-base-brand-light-c: 0.008;
+  --ui-base-brand-light-h: 260;
+  --ui-base-brand-dark-l: 0.97;
+  --ui-base-brand-dark-c: 0.008;
+  --ui-base-brand-dark-h: 260;
+  --ui-base-brand-hover-light: 70%;
+  --ui-base-brand-hover-dark: 86%;
+
+  /* attention */
+  --ui-base-attention-light-l: 0.48;
+  --ui-base-attention-light-c: 0.19;
+  --ui-base-attention-light-h: 28;
+  --ui-base-attention-dark-l: 0.48;
+  --ui-base-attention-dark-c: 0.19;
+  --ui-base-attention-dark-h: 28;
+  --ui-base-attention-hover-light: 84%;
+  --ui-base-attention-hover-dark: 88%;
+
+  /* link */
+  --ui-base-link-light-l: 0.48;
+  --ui-base-link-light-c: 0.18;
+  --ui-base-link-light-h: 258;
+  --ui-base-link-dark-l: 0.48;
+  --ui-base-link-dark-c: 0.18;
+  --ui-base-link-dark-h: 258;
 
   /* No token transitions while the palette session is active: dragging
    * sliders retargets dozens of registered-token transitions and the
@@ -51,19 +82,21 @@
    * file follows core.css) wins. */
   transition: none;
 
-  /* ---- Neutral halves (theme-split plain colors). The seed is the page
-   * surface; raised surfaces step toward the text pole, the text anchors
-   * its own lightness and takes the seed's chroma/hue. ---- */
-  --pl-surface-light: oklch(var(--ui-base-n-l) var(--ui-base-n-c) var(--ui-base-n-h));
-  --pl-surface-dark: oklch(14% var(--ui-base-n-c) var(--ui-base-n-h));
-  --pl-text-light: oklch(14% var(--ui-base-n-c) var(--ui-base-n-h));
-  --pl-text-dark: oklch(97% var(--ui-base-n-c) var(--ui-base-n-h));
+  /* ---- Neutral halves. Each theme derives from its own seed: the text
+   * anchors its lightness and takes the seed's chroma/hue, raised surfaces
+   * step toward the text pole. ---- */
+  --pl-surface-light: oklch(
+    var(--ui-base-n-light-l) var(--ui-base-n-light-c) var(--ui-base-n-light-h)
+  );
+  --pl-surface-dark: oklch(var(--ui-base-n-dark-l) var(--ui-base-n-dark-c) var(--ui-base-n-dark-h));
+  --pl-text-light: oklch(14% var(--ui-base-n-light-c) var(--ui-base-n-light-h));
+  --pl-text-dark: oklch(97% var(--ui-base-n-dark-c) var(--ui-base-n-dark-h));
   --pl-raised-light: color-mix(in oklch, var(--pl-surface-light), var(--pl-text-light) 3.5%);
   --pl-raised-dark: color-mix(in oklch, var(--pl-surface-dark), var(--pl-text-dark) 7%);
   /* One soft fill above the page: hover and the gray tint (light theme) */
   --pl-soft-light: color-mix(in oklch, var(--pl-surface-light), var(--pl-text-light) 8%);
   /* The dark contrast pole (core: neutral-950) */
-  --pl-pole-dark: oklch(9% var(--ui-base-n-c) var(--ui-base-n-h));
+  --pl-pole-dark: oklch(9% var(--ui-base-n-dark-c) var(--ui-base-n-dark-h));
 
   --ui-color-surface: light-dark(var(--pl-surface-light), var(--pl-surface-dark));
   --ui-color-surface-raised: light-dark(var(--pl-raised-light), var(--pl-raised-dark));
@@ -90,39 +123,46 @@
     color-mix(in oklch, var(--pl-surface-dark), var(--pl-text-dark) 55%)
   );
 
-  /* Brand family — own seed. The default (the neutral text color, the
-   * shadcn inverted model) keeps the calibrated gray look: the light-theme
-   * fill IS the seed, the dark theme mirrors its lightness (1.11 - l gives
-   * 97% at the 0.14 default). A pastel seed (l > 0.7) keeps its lightness
-   * in the dark theme and flips the contrast pole. Hover derives toward
-   * the on-brand pole, the tint follows the family formulas. */
-  --pl-brand-sel: round(nearest, 0.5 * (sign(var(--ui-base-brand-l) - 0.7) + 1), 1);
-  --pl-brand-notsel: calc(1 - var(--pl-brand-sel));
+  /* Brand family — each theme's fill IS that theme's seed. The polarity
+   * branch picks the contrast pole per theme: white for a vivid seed,
+   * near-black for a pastel one. Hover walks toward the theme pole; the
+   * hover step token sets how far (the calibrated percentages are the
+   * defaults). The tint follows the family formulas. */
+  --pl-brand-fill-light: oklch(
+    var(--ui-base-brand-light-l) var(--ui-base-brand-light-c) var(--ui-base-brand-light-h)
+  );
   --pl-brand-fill-dark: oklch(
-    calc(
-        (1.11 - var(--ui-base-brand-l)) * var(--pl-brand-notsel) + var(--ui-base-brand-l) *
-          var(--pl-brand-sel)
-      )
-      var(--ui-base-brand-c) var(--ui-base-brand-h)
+    var(--ui-base-brand-dark-l) var(--ui-base-brand-dark-c) var(--ui-base-brand-dark-h)
+  );
+  --pl-brand-light-sel: round(nearest, 0.5 * (sign(var(--ui-base-brand-light-l) - 0.7) + 1), 1);
+  --pl-brand-dark-sel: round(nearest, 0.5 * (sign(var(--ui-base-brand-dark-l) - 0.7) + 1), 1);
+  --pl-brand-pole-light: color-mix(
+    in oklch,
+    oklch(100% 0 0),
+    oklch(9% 0 0) calc(var(--pl-brand-light-sel) * 100%)
+  );
+  --pl-brand-pole-dark: color-mix(
+    in oklch,
+    oklch(100% 0 0),
+    var(--pl-pole-dark) calc(var(--pl-brand-dark-sel) * 100%)
   );
 
-  --ui-color-brand: light-dark(
-    oklch(var(--ui-base-brand-l) var(--ui-base-brand-c) var(--ui-base-brand-h)),
-    var(--pl-brand-fill-dark)
-  );
-  --ui-color-on-brand: light-dark(
-    color-mix(in oklch, oklch(100% 0 0), oklch(9% 0 0) calc(var(--pl-brand-sel) * 100%)),
-    var(--pl-pole-dark)
-  );
+  --ui-color-brand: light-dark(var(--pl-brand-fill-light), var(--pl-brand-fill-dark));
+  --ui-color-on-brand: light-dark(var(--pl-brand-pole-light), var(--pl-brand-pole-dark));
   --ui-color-brand-hover: light-dark(
-    color-mix(in oklab, var(--ui-color-brand) 70%, var(--ui-color-on-brand)),
-    color-mix(in oklab, var(--ui-color-brand) 86%, var(--ui-color-on-brand))
+    color-mix(
+      in oklab,
+      var(--pl-brand-fill-light) var(--ui-base-brand-hover-light),
+      var(--pl-brand-pole-light)
+    ),
+    color-mix(
+      in oklab,
+      var(--pl-brand-fill-dark) var(--ui-base-brand-hover-dark),
+      var(--pl-brand-pole-dark)
+    )
   );
   --ui-color-brand-tint: light-dark(
-    oklch(
-      from oklch(var(--ui-base-brand-l) var(--ui-base-brand-c) var(--ui-base-brand-h))
-        calc(0.88 + 0.12 * l) calc(0.12 * c) h
-    ),
+    oklch(from var(--pl-brand-fill-light) calc(0.88 + 0.12 * l) calc(0.12 * c) h),
     oklch(from var(--pl-brand-fill-dark) calc(0.123 + 0.12 * l) calc(0.12 * c) h)
   );
   /* Mirror of core: an 8% step of the tint toward the brand tone. */
@@ -134,51 +174,73 @@
   --ui-color-surface-tint: light-dark(var(--pl-soft-light), var(--pl-raised-dark));
 
   /* ---- Chromatic families ----
-   * Per family: source (the base L/C/H), a binary branch selector (vivid fill
-   * at base L <= 0.70, pastel above), per-theme fill halves, and the derived
-   * semantic tokens. Formulas recalibrate the experiment's constants so the
-   * defaults land on the current core steps (600/500 in the light theme,
-   * 300 in the dark). */
+   * Per family and theme: source (that theme's seed), a binary branch
+   * selector (vivid fill at seed L <= 0.70, pastel above), the theme's fill
+   * half, and the derived semantic tokens. Formulas recalibrate the
+   * experiment's constants so the defaults land on the current core steps
+   * (600/500 in the light theme, 300 in the dark). The dark mapping lifts
+   * any seed into the light band, so the dark pole needs no branch. */
 
   /* attention */
-  --pl-attention-source: oklch(
-    var(--ui-base-attention-l) var(--ui-base-attention-c) var(--ui-base-attention-h)
+  --pl-attention-source-light: oklch(
+    var(--ui-base-attention-light-l) var(--ui-base-attention-light-c)
+      var(--ui-base-attention-light-h)
   );
-  --pl-attention-sel: round(nearest, 0.5 * (sign(var(--ui-base-attention-l) - 0.7) + 1), 1);
-  --pl-attention-notsel: calc(1 - var(--pl-attention-sel));
+  --pl-attention-source-dark: oklch(
+    var(--ui-base-attention-dark-l) var(--ui-base-attention-dark-c) var(--ui-base-attention-dark-h)
+  );
+  --pl-attention-light-sel: round(
+    nearest,
+    0.5 * (sign(var(--ui-base-attention-light-l) - 0.7) + 1),
+    1
+  );
+  --pl-attention-dark-sel: round(
+    nearest,
+    0.5 * (sign(var(--ui-base-attention-dark-l) - 0.7) + 1),
+    1
+  );
   --pl-attention-fill-light: oklch(
-    from var(--pl-attention-source)
+    from var(--pl-attention-source-light)
       calc(
-        (0.28 + 0.37 * l) * var(--pl-attention-notsel) + (0.8 + 0.38 * (l - 0.7)) *
-          var(--pl-attention-sel)
+        (0.28 + 0.37 * l) * (1 - var(--pl-attention-light-sel)) + (0.8 + 0.38 * (l - 0.7)) *
+          var(--pl-attention-light-sel)
       )
       calc(
-        min(c, 0.32) * var(--pl-attention-notsel) + min(0.55 * c, 0.13) * var(--pl-attention-sel)
+        min(c, 0.32) * (1 - var(--pl-attention-light-sel)) + min(0.55 * c, 0.13) *
+          var(--pl-attention-light-sel)
       )
       h
   );
   --pl-attention-fill-dark: oklch(
-    from var(--pl-attention-source)
+    from var(--pl-attention-source-dark)
       calc(
-        (0.78 + 0.25 * l) * var(--pl-attention-notsel) + (0.8 + 0.38 * (l - 0.7)) *
-          var(--pl-attention-sel)
+        (0.78 + 0.25 * l) * (1 - var(--pl-attention-dark-sel)) + (0.8 + 0.38 * (l - 0.7)) *
+          var(--pl-attention-dark-sel)
       )
       calc(
-        min(0.6 * c, 0.15) * var(--pl-attention-notsel) + min(0.55 * c, 0.13) *
-          var(--pl-attention-sel)
+        min(0.6 * c, 0.15) * (1 - var(--pl-attention-dark-sel)) + min(0.55 * c, 0.13) *
+          var(--pl-attention-dark-sel)
       )
       h
   );
   --pl-attention-pole-light: color-mix(
     in oklch,
     oklch(100% 0 0),
-    oklch(9% 0 0) calc(var(--pl-attention-sel) * 100%)
+    oklch(9% 0 0) calc(var(--pl-attention-light-sel) * 100%)
   );
 
   --ui-color-attention: light-dark(var(--pl-attention-fill-light), var(--pl-attention-fill-dark));
   --ui-color-attention-hover: light-dark(
-    color-mix(in oklab, var(--ui-color-attention) 84%, oklch(100% 0 0)),
-    color-mix(in oklab, var(--ui-color-attention) 88%, var(--pl-pole-dark))
+    color-mix(
+      in oklab,
+      var(--pl-attention-fill-light) var(--ui-base-attention-hover-light),
+      oklch(100% 0 0)
+    ),
+    color-mix(
+      in oklab,
+      var(--pl-attention-fill-dark) var(--ui-base-attention-hover-dark),
+      var(--pl-pole-dark)
+    )
   );
   --ui-color-on-attention: light-dark(var(--pl-attention-pole-light), var(--pl-pole-dark));
   --ui-color-attention-tint: light-dark(
@@ -186,25 +248,40 @@
     oklch(from var(--pl-attention-fill-dark) calc(0.123 + 0.12 * l) calc(0.12 * c) h)
   );
 
-  /* Utilities — link/selection derive from the link base with the same
+  /* Utilities — link/selection derive from the link seed with the same
    * family formulas (core: a dedicated blue ramp; here one base for both).
    * Focus ring is the neutral boundary step (core: neutral-500/400). */
-  --pl-link-source: oklch(var(--ui-base-link-l) var(--ui-base-link-c) var(--ui-base-link-h));
-  --pl-link-sel: round(nearest, 0.5 * (sign(var(--ui-base-link-l) - 0.7) + 1), 1);
-  --pl-link-notsel: calc(1 - var(--pl-link-sel));
+  --pl-link-source-light: oklch(
+    var(--ui-base-link-light-l) var(--ui-base-link-light-c) var(--ui-base-link-light-h)
+  );
+  --pl-link-source-dark: oklch(
+    var(--ui-base-link-dark-l) var(--ui-base-link-dark-c) var(--ui-base-link-dark-h)
+  );
+  --pl-link-light-sel: round(nearest, 0.5 * (sign(var(--ui-base-link-light-l) - 0.7) + 1), 1);
+  --pl-link-dark-sel: round(nearest, 0.5 * (sign(var(--ui-base-link-dark-l) - 0.7) + 1), 1);
   --pl-link-fill-light: oklch(
-    from var(--pl-link-source)
+    from var(--pl-link-source-light)
       calc(
-        (0.28 + 0.37 * l) * var(--pl-link-notsel) + (0.8 + 0.38 * (l - 0.7)) * var(--pl-link-sel)
+        (0.28 + 0.37 * l) * (1 - var(--pl-link-light-sel)) + (0.8 + 0.38 * (l - 0.7)) *
+          var(--pl-link-light-sel)
       )
-      calc(min(c, 0.32) * var(--pl-link-notsel) + min(0.55 * c, 0.13) * var(--pl-link-sel)) h
+      calc(
+        min(c, 0.32) * (1 - var(--pl-link-light-sel)) + min(0.55 * c, 0.13) *
+          var(--pl-link-light-sel)
+      )
+      h
   );
   --pl-link-fill-dark: oklch(
-    from var(--pl-link-source)
+    from var(--pl-link-source-dark)
       calc(
-        (0.78 + 0.25 * l) * var(--pl-link-notsel) + (0.8 + 0.38 * (l - 0.7)) * var(--pl-link-sel)
+        (0.78 + 0.25 * l) * (1 - var(--pl-link-dark-sel)) + (0.8 + 0.38 * (l - 0.7)) *
+          var(--pl-link-dark-sel)
       )
-      calc(min(0.6 * c, 0.15) * var(--pl-link-notsel) + min(0.55 * c, 0.13) * var(--pl-link-sel)) h
+      calc(
+        min(0.6 * c, 0.15) * (1 - var(--pl-link-dark-sel)) + min(0.55 * c, 0.13) *
+          var(--pl-link-dark-sel)
+      )
+      h
   );
 
   --ui-color-link: light-dark(var(--pl-link-fill-light), var(--pl-link-fill-dark));
