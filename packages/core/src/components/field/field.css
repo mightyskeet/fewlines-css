@@ -174,6 +174,7 @@
 .ui-textarea:user-invalid,
 .ui-select:user-invalid {
   border-color: var(--ui-color-attention);
+  background: var(--ui-color-attention-tint);
 }
 
 /* Read-only (not disabled): selectable and copyable, not editable — the
