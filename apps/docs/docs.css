@@ -10,19 +10,17 @@
  * a single-column layout from the mobile-first defaults. */
 
 /* Cross-document view transitions (compatibility notes, 2026-10-29):
- * same-origin page navigations crossfade instead of flashing white. The
- * identical sidebar keeps its own snapshot (named transition), so chrome
- * stays put while the content swaps. Progressive enhancement: Chrome/Edge
- * 126+, Safari 18.2+; engines without the at-rule ignore it and navigate
- * instantly (Firefox has Level 1 only — no cross-document transitions).
+ * same-origin page navigations crossfade instead of flashing white.
+ * Progressive enhancement: Chrome/Edge 126+, Safari 18.2+; engines without
+ * the at-rule ignore it and navigate instantly (Firefox has Level 1 only —
+ * no cross-document transitions). No named elements: the JS-rendered
+ * sidebar can be absent at the new page's first paint (the deferred
+ * site-sidebar.js runs after it), and a named element missing on one side
+ * renders its transition layer blank — the "sidebar disappears" flash.
  * Reduced motion: transition frames are drawn via ::view-transition-*
  * pseudo-elements, outside the token motion system — disabled here. */
 @view-transition {
   navigation: auto;
-}
-
-site-sidebar {
-  view-transition-name: docs-sidebar;
 }
 
 @media (prefers-reduced-motion: reduce) {
