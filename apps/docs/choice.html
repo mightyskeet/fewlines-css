@@ -207,9 +207,32 @@
       <p>Full contract: <code>packages/core/src/components/choice/choice.md</code></p>
     </footer>
     <site-toc></site-toc>
-    <!-- Host JS (docs site): :indeterminate has no HTML attribute. -->
+    <!-- Host JS (docs site): :indeterminate has no HTML attribute, and the
+         select-all wiring is host logic — core carries no JS. -->
     <script>
-      document.getElementById('choice-demo-select-all').indeterminate = true;
+      (() => {
+        const all = document.getElementById('choice-demo-select-all');
+        if (!all) return;
+        const box = all.closest('fieldset');
+        const members = () =>
+          [...box.querySelectorAll('.ui-checkbox')].filter((c) => c !== all && !c.disabled);
+        const sync = () => {
+          const m = members();
+          const on = m.filter((c) => c.checked).length;
+          all.checked = on === m.length;
+          all.indeterminate = on > 0 && on < m.length;
+        };
+        all.addEventListener('change', () => {
+          members().forEach((c) => {
+            c.checked = all.checked;
+          });
+          all.indeterminate = false;
+        });
+        box.addEventListener('change', (e) => {
+          if (e.target !== all) sync();
+        });
+        sync();
+      })();
     </script>
   </body>
 </html>
