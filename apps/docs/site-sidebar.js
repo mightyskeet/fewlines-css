@@ -32,6 +32,7 @@ const PAGES = [
   { href: '/accordion', label: 'Accordion' },
   { href: '/alert', label: 'Alert' },
   { href: '/badge', label: 'Badge' },
+  { href: '/divider', label: 'Divider' },
   { href: '/switch', label: 'Switch' },
   { href: '/tooltip', label: 'Tooltip' },
   { href: '/table', label: 'Table' },

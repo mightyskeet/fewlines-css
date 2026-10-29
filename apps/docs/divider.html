@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script>
+      try {
+        var t = localStorage.getItem('theme');
+        if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+      } catch (e) {}
+    </script>
+    <script>
+      try {
+        var b = JSON.parse(localStorage.getItem('colors-bases') || 'null');
+        if (b) {
+          var r = document.documentElement,
+            s = r.style;
+          for (var k in b) s.setProperty(k, b[k]);
+          r.setAttribute('data-palette', 'custom');
+        }
+      } catch (e) {}
+    </script>
+    <title>Divider — @fewlines/css</title>
+    <link rel="stylesheet" href="/core.css" />
+    <link rel="stylesheet" href="/docs.css" />
+    <link rel="stylesheet" href="/colors-derive.css" />
+    <script src="/site-sidebar.js" defer blocking="render"></script>
+    <script src="/site-toc.js" defer blocking="render"></script>
+    <script src="/vendor/hljs.min.js" defer></script>
+    <script src="/site-code.js" defer></script>
+  </head>
+  <body>
+    <site-sidebar></site-sidebar>
+
+    <main>
+      <header class="page-header">
+        <h1>Divider</h1>
+        <p>
+          Thematic break between content sections: line look and margin density on the native
+          <code>&lt;hr&gt;</code>. Static element — no states, no JS.
+        </p>
+      </header>
+
+      <section>
+        <h2>Semantic basis</h2>
+        <p>
+          The component is the native thematic break: semantics and the separator role come with the
+          element. It is opt-in styling over the base layer — a naked
+          <code>&lt;hr&gt;</code> is already drawn as one border-token line; the class adds the
+          variant vocabulary without a second implementation.
+        </p>
+      </section>
+
+      <section>
+        <h2>Canonical markup</h2>
+        <pre><code>&lt;hr class="ui-divider" /&gt;</code></pre>
+        <p>
+          The break carries no content — for transitions with text there are headings. Margins
+          belong to the component (<code>data-size</code>); hosts override them with semantic
+          tokens, not classes.
+        </p>
+      </section>
+
+      <section>
+        <h2>Variants</h2>
+        <div class="example">
+          <hr class="ui-divider" />
+          <hr class="ui-divider" data-variant="dashed" />
+          <hr class="ui-divider" data-variant="strong" />
+          <hr class="ui-divider" data-variant="inset" />
+        </div>
+        <p>
+          <code>data-variant="dashed|strong|inset"</code>; default (no attribute) is the solid
+          border-token line. <code>dashed</code> changes only the line style;
+          <code>strong</code> takes the <code>border-strong</code> role — prominence through the
+          color, not a thicker line (a thick hr reads as a rule in data tables, not a break);
+          <code>inset</code> indents the line from the logical inline start (mirrored in RTL), the
+          line yields to the leading content column. One variant per element.
+        </p>
+      </section>
+
+      <section>
+        <h2>Sizes</h2>
+        <div class="example">
+          <hr class="ui-divider" data-size="sm" />
+          <hr class="ui-divider" data-size="lg" />
+        </div>
+        <p>
+          <code>data-size="sm|lg"</code>; default is md (no attribute). Density only: the block
+          margins scale over the space scale, the line stays 1px.
+        </p>
+      </section>
+
+      <section>
+        <h2>Accessibility</h2>
+        <ul>
+          <li>
+            The separator role is native; the break is decorative by construction — the transition
+            meaning is carried by the surrounding content (headings), never by the line color.
+          </li>
+          <li>No new APCA pairs: the line reuses the validated border roles.</li>
+          <li>Forced colors repaint the border with the system color automatically.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Do not</h2>
+        <ul>
+          <li>
+            No <code>&lt;div&gt;</code>/<code>&lt;span&gt;</code> instead of
+            <code>&lt;hr&gt;</code> — the native thematic break is the contract.
+          </li>
+          <li>No text or interactive content inside the break.</li>
+          <li>
+            No variant classes — variants are expressed only via
+            <code>data-variant</code>, density only via <code>data-size</code>.
+          </li>
+        </ul>
+      </section>
+    </main>
+    <site-toc></site-toc>
+
+    <footer>
+      <p>Full contract: <code>packages/core/src/components/divider/divider.md</code></p>
+    </footer>
+  </body>
+</html>

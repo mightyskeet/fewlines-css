@@ -234,7 +234,9 @@ figcaption {
   font-size: var(--ui-font-size-xs);
 }
 
-/* Thematic break: a single border-token line; the UA side margins stay. */
+/* Thematic break: a single border-token line; the UA side margins stay.
+ * Richer line looks (dashed/strong/inset) and density — the Divider
+ * component (components/divider). */
 hr {
   margin-block: var(--ui-space-md);
   border: 0;
