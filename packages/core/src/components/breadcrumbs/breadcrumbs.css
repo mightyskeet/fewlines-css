@@ -104,6 +104,15 @@
   color: var(--ui-breadcrumbs-separator-color);
 }
 
+/* Current crumb: the truncation cap (long page names cannot push the
+ * trail wide). The attribute may sit on the <li> or on the crumb's link. */
+.ui-breadcrumbs ol > li:is([aria-current='page'], :has(> [aria-current='page'])) {
+  max-inline-size: var(--ui-breadcrumbs-max);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 /* The collapsed <li> is a flex row: the pretty-printed markup leaves
  * whitespace text nodes around the button (the newline-indent after
  * <li>), and inline flow collapses them into a rendered space BEFORE the
@@ -116,15 +125,6 @@
 .ui-breadcrumbs ol > li:has(> button[popovertarget]) {
   display: flex;
   align-items: baseline;
-}
-
-/* Current crumb: the truncation cap (long page names cannot push the
- * trail wide). The attribute may sit on the <li> or on the crumb's link. */
-.ui-breadcrumbs ol > li:is([aria-current='page'], :has(> [aria-current='page'])) {
-  max-inline-size: var(--ui-breadcrumbs-max);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 /* The collapsed-levels toggle: a small muted affordance, not a button
