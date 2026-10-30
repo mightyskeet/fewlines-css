@@ -116,3 +116,128 @@ test('forced colors restore the native progress bar', async ({ page }) => {
     .evaluate((el) => getComputedStyle(el).appearance);
   expect(appearance).toBe('auto');
 });
+
+test('shimmer: gradient band + animation on the fill rule (CSSOM wiring)', async ({ page, browserName }) => {
+  // The same engine-paint trap as the fill: Chromium cannot reach the
+  // pseudo's computed styles — the wiring is asserted via CSSOM.
+  const needle = browserName === 'firefox' ? '-moz-progress-bar' : '-webkit-progress-value';
+  const rule = await page.evaluate((needle) => {
+    const walk = (rules) => {
+      for (const rule of rules) {
+        if (rule.cssRules) {
+          const hit = walk(rule.cssRules);
+          if (hit) return hit;
+        }
+        if (rule.selectorText?.includes('data-shimmer') && rule.selectorText?.includes(needle))
+          return {
+            selector: rule.selectorText,
+            backgroundImage: rule.style.getPropertyValue('background-image'),
+            animation: rule.style.getPropertyValue('animation'),
+          };
+      }
+      return null;
+    };
+    for (const sheet of document.styleSheets) {
+      const hit = walk(sheet.cssRules);
+      if (hit) return hit;
+    }
+    return null;
+  }, needle);
+
+  expect(rule.selector).toContain(':not(:indeterminate)'); // no shimmer on engine motion
+  expect(rule.backgroundImage).toContain('linear-gradient');
+  expect(rule.backgroundImage).toContain('color-mix');
+  expect(rule.animation).toContain('ui-progress-shimmer');
+  expect(rule.animation).toContain('var(--ui-progress-shimmer-duration)');
+});
+
+test('shimmer keyframes sweep background-position without a dead pause', async ({ page }) => {
+  const frames = await page.evaluate(() => {
+    const walk = (rules) => {
+      for (const rule of rules) {
+        if (rule.name === 'ui-progress-shimmer')
+          return {
+            from: rule.findRule('from').style.backgroundPosition,
+            to: rule.findRule('to').style.backgroundPosition,
+          };
+        if (rule.cssRules) {
+          const hit = walk(rule.cssRules);
+          if (hit) return hit;
+        }
+      }
+      return null;
+    };
+    for (const sheet of document.styleSheets) {
+      const hit = walk(sheet.cssRules);
+      if (hit) return hit;
+    }
+    return null;
+  });
+
+  // Chromium serializes the 0 y-offset as 0px, Firefox as 0% — the sweep is
+  // the x percentage, that is what the contract pins.
+  expect(frames.from.startsWith('-100%')).toBe(true);
+  expect(frames.to.startsWith('200%')).toBe(true);
+});
+
+test('shimmer opt-in gates: attribute + determinate', async ({ page }) => {
+  const gates = await page.evaluate(() => ({
+    on: document
+      .getElementById('progress-shimmer')
+      .matches('.ui-progress[data-shimmer]:not(:indeterminate)'),
+    indeterminate: document
+      .getElementById('progress-shimmer-indeterminate')
+      .matches('.ui-progress[data-shimmer]:not(:indeterminate)'),
+    plain: document
+      .getElementById('progress-default')
+      .matches('.ui-progress[data-shimmer]:not(:indeterminate)'),
+  }));
+
+  expect(gates.on).toBe(true);
+  expect(gates.indeterminate).toBe(false);
+  expect(gates.plain).toBe(false);
+});
+
+test('reduced motion silences the shimmer on the fill rule', async ({ page, browserName }) => {
+  const needle = browserName === 'firefox' ? '-moz-progress-bar' : '-webkit-progress-value';
+  const silenced = await page.evaluate((needle) => {
+    // Only descend into the reduced-motion media block — the plain shimmer
+    // rule has the same selector and must not satisfy this assertion.
+    const findIn = (rules) => {
+      for (const rule of rules) {
+        if (rule.selectorText?.includes('data-shimmer') && rule.selectorText.includes(needle))
+          return {
+            animationName: rule.style.getPropertyValue('animation-name'),
+            backgroundImage: rule.style.getPropertyValue('background-image'),
+          };
+        if (rule.cssRules) {
+          const hit = findIn(rule.cssRules);
+          if (hit) return hit;
+        }
+      }
+      return null;
+    };
+    const walk = (rules) => {
+      for (const rule of rules) {
+        if (rule.conditionText?.includes('prefers-reduced-motion: reduce')) {
+          const hit = findIn(rule.cssRules);
+          if (hit) return hit;
+        } else if (rule.cssRules) {
+          const inner = walk(rule.cssRules);
+          if (inner) return inner;
+        }
+      }
+      return null;
+    };
+    for (const sheet of document.styleSheets) {
+      const hit = walk(sheet.cssRules);
+      if (hit) return hit;
+    }
+    return null;
+  }, needle);
+
+  // Firefox serializes the `animation: none` shorthand expanded — the
+  // longhand animation-name is stable across engines.
+  expect(silenced.animationName).toBe('none');
+  expect(silenced.backgroundImage).toBe('none');
+});

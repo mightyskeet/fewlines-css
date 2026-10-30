@@ -76,6 +76,19 @@
       </section>
 
       <section>
+        <h2>Shimmer</h2>
+        <div class="example">
+          <progress class="ui-progress" data-shimmer max="100" value="60" aria-label="Uploading with shimmer"></progress>
+        </div>
+        <p>
+          Opt-in <code>data-shimmer</code>: a highlight band sweeps across the fill of a determinate
+          bar — a long-running operation feels alive. Determinate only: on
+          <code>:indeterminate</code> the engine already animates the bar, and two motions would
+          conflict. Reduced motion silences the band — the fill still carries the state.
+        </p>
+      </section>
+
+      <section>
         <h2>Sizes</h2>
         <div class="example">
           <progress class="ui-progress" data-size="sm" max="100" value="40" aria-label="Small"></progress>
@@ -109,7 +122,8 @@
             The fill/track pair is registered in the APCA matrix as a non-text pair
             (<code>brand/surface-tint</code>); the track boundary reuses the neutral Alert pair.
           </li>
-          <li>Reduced motion: the component adds no animation of its own.</li>
+          <li>Reduced motion: the shimmer (<code>data-shimmer</code>) is silenced; the
+            indeterminate motion is engine-native.</li>
           <li>
             Forced colors restore the native <code>appearance</code> — the system progress bar
             takes over with guaranteed system contrast.
@@ -126,8 +140,8 @@
           </li>
           <li>No unnamed progress bars — the accessible name is part of the contract.</li>
           <li>
-            No component keyframes for the fill — the engine animates the indeterminate state,
-            determinate value jumps stay honest.
+            No component keyframes for the indeterminate state — the engine animates it; the only
+            component animation is the opt-in determinate shimmer.
           </li>
         </ul>
       </section>
