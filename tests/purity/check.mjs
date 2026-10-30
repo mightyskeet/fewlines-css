@@ -117,20 +117,21 @@ try {
   /* dist missing already reported */
 }
 
-// 7. Palette encapsulation: only src/tokens may define or reference
-// --ui-palette-*; components and base consume semantic --ui-* tokens only
-// (theme notes).
+// 7. Raw-token encapsulation: only src/tokens may define or reference
+// --ui-base-* (host-facing derivation seeds) and --ui-pl-* (derivation
+// intermediates); components and base consume semantic --ui-color-* tokens
+// only (theme notes).
 try {
-  let paletteRefs = 0;
+  let rawRefs = 0;
   for (const layerDir of ['base', 'components']) {
     walk(join(coreRoot, 'src', layerDir), (file) => {
-      if (file.endsWith('.css') && readFileSync(file, 'utf8').includes('--ui-palette-')) {
-        paletteRefs += 1;
-        fail(`raw palette token reference: ${file}`);
+      if (file.endsWith('.css') && /--ui-(base|pl)-/.test(readFileSync(file, 'utf8'))) {
+        rawRefs += 1;
+        fail(`raw token reference: ${file}`);
       }
     });
   }
-  if (paletteRefs === 0) pass('components/base consume only semantic tokens');
+  if (rawRefs === 0) pass('components/base consume only semantic tokens');
 } catch {
   /* core src missing — reported by other checks */
 }

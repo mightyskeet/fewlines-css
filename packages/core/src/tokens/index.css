@@ -1,10 +1,9 @@
 /* Tokens layer: semantic design tokens.
  *
- * Import order matters: palette first (raw inputs), then semantic tokens that
- * reference it, then theme override and transition contracts.
+ * Import order matters: derive first (seeds + formulas), then theme override
+ * and transition contracts.
  */
-@import './palette.css';
-@import './color.css';
+@import './derive.css';
 @import './theme.css';
 @import './theme-transition.css';
 @import './space.css';

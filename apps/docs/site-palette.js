@@ -19,9 +19,9 @@
 // base-token -> value strings; restoring it before first paint is a tiny
 // inline <head> script on every page (fixture.html deliberately has none —
 // browser tests rely on the default token values). The Colors page activates
-// the derivation scope (data-palette="custom") unconditionally in its head
+// the session scope (data-palette="custom") unconditionally in its head
 // script, so this widget never toggles the attribute: sliders only write the
-// base tokens they cover, and Reset returns them to the layer's defaults.
+// base tokens they cover, and Reset returns them to core's defaults.
 //
 // This is host/tooling JS — the core package stays CSS-only
 // (overview notes, «Не является целью»).
@@ -186,9 +186,10 @@ function valueOf(slider, raw) {
   return `${raw}${slider.unit ?? ''}`;
 }
 
-/** Base-token values as resolved right now. The Colors page activates the
- * derivation scope in its head script, so the CSS defaults are always live
- * and the values read back complete (both themes' tokens exist). */
+/** Base-token values as resolved right now (the derivation lives in core:
+ * packages/core/src/tokens/derive.css). The Colors page activates the
+ * session scope in its head script, so the defaults are always live and the
+ * values read back complete (both themes' tokens exist). */
 function readComputed() {
   const styles = getComputedStyle(document.documentElement);
   const values = {};
@@ -539,9 +540,8 @@ function exportCss() {
   const computed = readComputed();
   const lines = PROPS.map((prop) => `  ${prop}: ${state[prop] ?? computed[prop]};`);
   return [
-    '/* Base tokens for the color derivation layer',
-    ' * (docs/plans/2026-10-26-color-derivation.md).',
-    ' * Activate with data-palette="custom" on :root.',
+    '/* Base tokens for the color derivation (@fewlines/css, tokens/derive.css).',
+    ' * Override these on :root — the whole palette re-derives.',
     ' */',
     ':root {',
     ...lines,

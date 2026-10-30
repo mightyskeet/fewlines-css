@@ -1,9 +1,8 @@
-// One-off smoke check for the Session-1 derivation layer (plan:
-// docs/plans/2026-10-26-color-derivation.md). Loads /colors.html from the
-// static server (playwright.config.mjs webServer), reads the always-visible
-// live tables on default bases and reports pass/fail per pair and theme for
-// each engine. Not part of the regular suite — run manually from tests/:
-//   node apca/derive-smoke.mjs
+// Smoke check for the core derivation (packages/core/src/tokens/derive.css;
+// plan: docs/plans/2026-10-26-color-derivation.md). Loads /colors.html from
+// the static server (playwright.config.mjs webServer), reads the
+// always-visible live tables on default bases and reports pass/fail per
+// pair and theme for each engine. Manual run: node apca/derive-smoke.mjs
 import { test, expect } from '@playwright/test';
 
 const PAIRS = process.env.SMOKE_PAIRS_ONLY === '1';
@@ -43,22 +42,22 @@ test('derivation layer: default bases pass the token matrix', async ({ page, bro
     return failed;
   };
 
-  // Phase A: core defaults (the Colors page runs the layer always-on, so the
-  // scope attribute is removed explicitly to expose the core values). The
-  // table reports the CURRENT theme; the runner emulates light.
+  // Phase A: core defaults (the derivation now lives in core; the scope
+  // attribute is removed explicitly so the run measures the pristine tree).
+  // The table reports the CURRENT theme; the runner emulates light.
   await page.evaluate(() => document.documentElement.removeAttribute('data-palette'));
   const coreFailures = await report('core defaults / light', await readTable());
   expect(coreFailures, 'core defaults pass in light').toEqual([]);
 
-  // Phase B: derivation layer with its own default bases, light theme.
+  // Phase B: the same derived defaults with the session scope active.
   await page.evaluate(() => document.documentElement.setAttribute('data-palette', 'custom'));
   const deriveFailures = await report('derive defaults / light', await readTable());
-  expect(deriveFailures, 'derive-layer defaults pass in light').toEqual([]);
+  expect(deriveFailures, 'derive defaults pass in light').toEqual([]);
 
   // Phase B2: same in the dark theme — the table follows the page theme.
   await page.evaluate(() => document.documentElement.setAttribute('data-theme', 'dark'));
   const darkFailures = await report('derive defaults / dark', await readTable());
-  expect(darkFailures, 'derive-layer defaults pass in dark').toEqual([]);
+  expect(darkFailures, 'derive defaults pass in dark').toEqual([]);
 
   // Phase C: an out-of-gamut dark brand seed (l 0.94, c 0.32 is far outside
   // sRGB). The table must gamut-map like the browser paints — the old canvas

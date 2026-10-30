@@ -16,10 +16,10 @@
  * exception (checked per theme, same gate).
  *
  * Values are resolved per theme: light and dark variants are checked
- * separately. Palette colors are parsed from packages/core/src/tokens/palette.css
- * by the check script; semanticMap below mirrors packages/core/src/tokens/color.css
- * light-dark() arguments (kept as a reviewed registry — it is a decision
- * document, not a duplicate of parsed values).
+ * separately. Token values are the DERIVED defaults — the checker
+ * re-implements the core formula system (tests/apca/derive-values.mjs, a JS
+ * mirror of packages/core/src/tokens/derive.css); this registry only decides
+ * which pairs are checked and at which role threshold.
  */
 
 /**
@@ -27,66 +27,9 @@
  */
 
 /**
- * Semantic token -> palette reference, per theme.
- * Mirrors packages/core/src/tokens/color.css light-dark() arguments.
- *
- * Derived tokens (hover fills) may declare a `mix`: an oklab color-mix of
- * two members — mix: [a, b, weight?] where weight (0..100, default 50) is
- * the share of the FIRST member; mirrors the color-mix() in color.css.
- */
-export const semanticMap = {
-  surface: { light: 'neutral-0', dark: 'neutral-900' },
-  'surface-raised': { light: 'neutral-50', dark: 'neutral-800' },
-  'surface-tint': { light: 'neutral-200', dark: 'neutral-700' },
-  hover: {
-    // Light: a small step from the page surface toward text (~94%).
-    // Dark: the full raised step — a half-step reads as invisible.
-    light: { mix: ['text', 'surface', 8] },
-    dark: { mix: ['surface-raised', 'neutral-700'] },
-  },
-  text: { light: 'neutral-900', dark: 'neutral-50' },
-  'text-muted': { light: 'neutral-600', dark: 'neutral-300' },
-  brand: { light: 'neutral-900', dark: 'neutral-50' },
-  'on-brand': { light: 'neutral-0', dark: 'neutral-950' },
-  'brand-hover': {
-    // A 30% step toward the on-brand contrast pole (light theme) — the
-    // near-black fill has a huge contrast headroom; the dark theme keeps
-    // the old 14% step — the near-white fill has no visible room.
-    light: { mix: ['brand', 'on-brand', 70] },
-    dark: { mix: ['brand', 'on-brand', 86] },
-  },
-  'brand-tint': { light: 'neutral-200', dark: 'neutral-700' },
-  'brand-tint-hover': {
-    // Pastel hover fill (secondary button): a single 8% step of the family
-    // tone into the tint, in both themes (no light-dark split — the
-    // semantic partners flip themselves). The light theme darkens the
-    // 200-step tint; the dark theme lightens the 700-step tint toward the
-    // near-white family tone ("шаг к тексту" — the text on the tint is
-    // `brand`).
-    light: { mix: ['brand', 'brand-tint', 8] },
-    dark: { mix: ['brand', 'brand-tint', 8] },
-  },
-  attention: { light: 'attention-600', dark: 'attention-300' },
-  'on-attention': { light: 'neutral-0', dark: 'neutral-950' },
-  'attention-hover': {
-    // A step toward the on-* pole in both themes: the light theme walks
-    // toward the white pole (the fill lightens, 16%); the dark theme walks
-    // toward the dark pole (the fill darkens, 12%) — tracked at the
-    // documented 60 minimum, the 300-level fill with dark on-* text has
-    // only ~3 Lc of headroom at 75.
-    light: { mix: ['attention', 'on-attention', 84] },
-    dark: { mix: ['attention', 'on-attention', 88] },
-  },
-  'attention-tint': { light: 'attention-200', dark: 'attention-700' },
-  link: { light: 'link-600', dark: 'link-300' },
-  'selection': { light: 'link-100', dark: 'link-700' },
-  'border-strong': { light: 'neutral-500', dark: 'neutral-400' },
-  'focus-ring': { light: 'neutral-500', dark: 'neutral-400' },
-};
-
-/**
  * Allowed foreground/background pairs.
- * fg/bg are semantic token names resolved through semanticMap.
+ * fg/bg are semantic token names, resolved through the derivation
+ * (tests/apca/derive-values.mjs).
  *
  * @type {Array<{fg: string, bg: string, role: TextRole, threshold?: number, note?: string}>}
  */

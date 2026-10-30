@@ -84,12 +84,7 @@ test('solid model uses the on-* text over the bare family tone', async ({ page }
 });
 
 test('variants resolve to distinct tint surfaces', async ({ page }) => {
-  const ids = [
-    'badge-default',
-    'badge-brand',
-    'badge-neutral',
-    'badge-attention',
-  ];
+  const ids = ['badge-default', 'badge-brand', 'badge-neutral', 'badge-attention'];
   const backgrounds = new Set();
   const colors = new Set();
   for (const id of ids) {
@@ -100,11 +95,14 @@ test('variants resolve to distinct tint surfaces', async ({ page }) => {
     backgrounds.add(styles.background);
     colors.add(styles.color);
   }
-  // brand == default (the explicit twin shares the values), and in the
-  // default calibration the brand pastel IS the gray look (brand-tint ==
-  // surface-tint, brand == text): the surfaces and colors collapse to 2
-  // (the gray pair and attention).
-  expect(backgrounds.size).toBe(2);
+  // brand == default (the explicit twin shares the values), and the
+  // formula system makes the pastel grays *distinct* steps: the neutral
+  // surface tint (the soft mix) and the brand pastel (the tint deviation
+  // from the page pole) are no longer one static step (the old palette had
+  // both at neutral-200). The formula system's calibration is the source
+  // of truth: 3 distinct backgrounds (gray pair, brand pastel, attention),
+  // 2 colors (text, attention).
+  expect(backgrounds.size).toBe(3);
   expect(colors.size).toBe(2);
 });
 
@@ -114,9 +112,7 @@ test('variant label color uses the bare token of its family', async ({ page }) =
       getComputedStyle(document.documentElement).getPropertyValue('--ui-color-attention'),
     )
     .then((v) => v.trim());
-  const color = await page
-    .locator('#badge-attention')
-    .evaluate((el) => getComputedStyle(el).color);
+  const color = await page.locator('#badge-attention').evaluate((el) => getComputedStyle(el).color);
   expect(color).toBe(bare);
 });
 
