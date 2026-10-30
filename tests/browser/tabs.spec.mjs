@@ -44,7 +44,7 @@ test('default state: first panel open, others hidden, first tab styled active', 
 
 test('clicking a tab switches the panel and the URL fragment', async ({ page }) => {
   await page.click('#tabs-two');
-  expect(await page.evaluate(() => location.hash)).toBe('#tabs-two');
+  expect(await page.evaluate(() => location.hash)).toBe('#tabs-panel-two');
   expect(await panelStates(page, 'tabs-default')).toEqual(['none', 'block', 'none']);
 
   const links = await page.evaluate(() =>
@@ -55,14 +55,14 @@ test('clicking a tab switches the panel and the URL fragment', async ({ page }) 
 });
 
 test('deep link opens the targeted tab without interaction', async ({ page }) => {
-  await page.goto('/fixture.html#tabs-three');
+  await page.goto('/fixture.html#tabs-panel-three');
   expect(await panelStates(page, 'tabs-default')).toEqual(['none', 'none', 'block']);
 });
 
 test('groups are independent: a fragment in one group leaves others on the default', async ({
   page,
 }) => {
-  await page.goto('/fixture.html#tabs-v-two');
+  await page.goto('/fixture.html#tabs-v-panel-two');
   expect(await panelStates(page, 'tabs-vertical')).toEqual(['none', 'block', 'none']);
   expect(await panelStates(page, 'tabs-default')).toEqual(['block', 'none', 'none']);
 });
@@ -71,7 +71,7 @@ test('back returns to the previous tab', async ({ page }) => {
   await page.click('#tabs-two');
   await page.click('#tabs-three');
   await page.goBack();
-  expect(await page.evaluate(() => location.hash)).toBe('#tabs-two');
+  expect(await page.evaluate(() => location.hash)).toBe('#tabs-panel-two');
   expect(await panelStates(page, 'tabs-default')).toEqual(['none', 'block', 'none']);
 });
 
@@ -120,16 +120,17 @@ test('vertical: the indicator is the inline-start border of the active link', as
   expect(borders[0].borderLeftColor).toBe('rgba(0, 0, 0, 0)');
 });
 
-test('keyboard: Enter on the link activates the tab, focus stays on it', async ({ page }) => {
+test('keyboard: Enter activates the tab; the next Tab enters the panel content', async ({
+  page,
+}) => {
   await page.locator('#tabs-one').focus();
   await page.keyboard.press('Enter');
-  expect(await page.evaluate(() => location.hash)).toBe('#tabs-one');
+  expect(await page.evaluate(() => location.hash)).toBe('#tabs-panel-one');
   expect(await panelStates(page, 'tabs-default')).toEqual(['block', 'none', 'none']);
-  await expect(page.locator('#tabs-one')).toBeFocused();
 
-  // The fragment target is the sequential focus navigation starting point:
-  // the next Tab enters the open panel's content (DOM-adjacent), not the
-  // next tab link.
+  // Fragment navigation moves the sequential focus navigation starting
+  // point to the panel (the target) — native anchor-link behavior: the
+  // next Tab enters the open panel's content, not the next tab link.
   await page.keyboard.press('Tab');
   await expect(page.locator('#tabs-panel-link')).toBeFocused();
 });
@@ -167,4 +168,34 @@ test('normal motion: the tab link transitions color', async ({ page }) => {
     () => getComputedStyle(document.querySelector('#tabs-one')).transitionDuration,
   );
   expect(t).toBe('0.12s, 0.12s');
+});
+
+test('the click lands with the bar in view (horizontal)', async ({ page }) => {
+  await page.evaluate(() =>
+    document.getElementById('tabs-default').scrollIntoView({ block: 'center' }),
+  );
+  await page.click('#tabs-two');
+  const barBottom = await page.evaluate(
+    () => document.getElementById('tabs-one').getBoundingClientRect().bottom,
+  );
+  // The panel's scroll margin keeps the bar above the landing panel top.
+  expect(barBottom).toBeGreaterThan(0);
+});
+
+test('the click lands with the whole rail in view (vertical)', async ({ page }) => {
+  await page.evaluate(() =>
+    document.getElementById('tabs-vertical').scrollIntoView({ block: 'center' }),
+  );
+  await page.click('#tabs-v-three');
+  const landing = await page.evaluate(() => {
+    const first = document.getElementById('tabs-v-one').getBoundingClientRect();
+    const rail = document.getElementById('tabs-vertical').getBoundingClientRect();
+    return { firstLinkTop: first.top, containerTop: rail.top };
+  });
+  // The panel top equals the container top, so every tab lands on the same
+  // position: the rail's first item stays below the viewport top (the
+  // scroll margin) instead of the clicked link's own offset.
+  expect(landing.containerTop).toBeCloseTo(landing.firstLinkTop, 0);
+  expect(landing.firstLinkTop).toBeGreaterThan(0);
+  expect(landing.firstLinkTop).toBeLessThan(80);
 });

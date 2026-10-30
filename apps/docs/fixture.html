@@ -610,38 +610,38 @@
       <!-- Tabs -->
       <section id="tabs">
         <div class="ui-tabs" id="tabs-default">
-          <a class="ui-tab" id="tabs-one" href="#tabs-one">Overview</a>
-          <section class="ui-tabs-panel" aria-labelledby="tabs-one">
-            <p id="tabs-panel-one">
-              The link is its own fragment target.
+          <a class="ui-tab" id="tabs-one" href="#tabs-panel-one">Overview</a>
+          <section class="ui-tabs-panel" id="tabs-panel-one" aria-labelledby="tabs-one">
+            <p id="tabs-panel-one-body">
+              The panel is the fragment target.
               <a href="#typography" id="tabs-panel-link">A panel link</a>.
             </p>
           </section>
-          <a class="ui-tab" id="tabs-two" href="#tabs-two">Specs</a>
-          <section class="ui-tabs-panel" aria-labelledby="tabs-two">
-            <p id="tabs-panel-two">The panel opens by adjacency.</p>
+          <a class="ui-tab" id="tabs-two" href="#tabs-panel-two">Specs</a>
+          <section class="ui-tabs-panel" id="tabs-panel-two" aria-labelledby="tabs-two">
+            <p id="tabs-panel-two-body">The panel opens as the :target.</p>
           </section>
-          <a class="ui-tab" id="tabs-three" href="#tabs-three">API</a>
-          <section class="ui-tabs-panel" aria-labelledby="tabs-three">
-            <p id="tabs-panel-three">No tab fragment — the first tab is open.</p>
+          <a class="ui-tab" id="tabs-three" href="#tabs-panel-three">API</a>
+          <section class="ui-tabs-panel" id="tabs-panel-three" aria-labelledby="tabs-three">
+            <p id="tabs-panel-three-body">No panel fragment — the first tab is open.</p>
           </section>
         </div>
         <div class="ui-tabs" data-vertical id="tabs-vertical" style="margin-block-start: 2rem">
-          <a class="ui-tab" id="tabs-v-one" href="#tabs-v-one">First</a>
-          <section class="ui-tabs-panel" aria-labelledby="tabs-v-one">
-            <p id="tabs-v-panel-one">Vertical rail, panel in the content column.</p>
+          <a class="ui-tab" id="tabs-v-one" href="#tabs-v-panel-one">First</a>
+          <section class="ui-tabs-panel" id="tabs-v-panel-one" aria-labelledby="tabs-v-one">
+            <p id="tabs-v-panel-one-body">Vertical rail, panel in the content column.</p>
           </section>
-          <a class="ui-tab" id="tabs-v-two" href="#tabs-v-two">Second</a>
-          <section class="ui-tabs-panel" aria-labelledby="tabs-v-two">
-            <p id="tabs-v-panel-two">
+          <a class="ui-tab" id="tabs-v-two" href="#tabs-v-panel-two">Second</a>
+          <section class="ui-tabs-panel" id="tabs-v-panel-two" aria-labelledby="tabs-v-two">
+            <p id="tabs-v-panel-two-body">
               Second panel with taller content to prove the rail keeps its link heights.
             </p>
             <p>More content follows to make this panel taller.</p>
             <p>And a third line.</p>
           </section>
-          <a class="ui-tab" id="tabs-v-three" href="#tabs-v-three">Third</a>
-          <section class="ui-tabs-panel" aria-labelledby="tabs-v-three">
-            <p id="tabs-v-panel-three">Third vertical panel.</p>
+          <a class="ui-tab" id="tabs-v-three" href="#tabs-v-panel-three">Third</a>
+          <section class="ui-tabs-panel" id="tabs-v-panel-three" aria-labelledby="tabs-v-three">
+            <p id="tabs-v-panel-three-body">Third vertical panel.</p>
           </section>
         </div>
       </section>

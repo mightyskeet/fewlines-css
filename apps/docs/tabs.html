@@ -36,9 +36,10 @@
       <header class="page-header">
         <h1>Tabs</h1>
         <p>
-          Switching panels on the native <code>&lt;a&gt;</code>: each tab is a link to itself, so
-          the active state is the native <code>:target</code> and the URL fragment, the Back button
-          and deep links come with the element. No JS, no state classes, no ARIA role substitution.
+          Switching panels on the native <code>&lt;a&gt;</code>: each tab is a link to its panel, so
+          activation is the native <code>:target</code> on the panel and the URL fragment, the Back
+          button and deep links come with the element. No JS, no state classes, no ARIA role
+          substitution.
         </p>
       </header>
 
@@ -56,23 +57,25 @@
       <section>
         <h2>Canonical markup</h2>
         <pre><code>&lt;div class="ui-tabs"&gt;
-  &lt;a class="ui-tab" id="release-overview" href="#release-overview"&gt;Overview&lt;/a&gt;
-  &lt;section class="ui-tabs-panel" aria-labelledby="release-overview"&gt;
+  &lt;a class="ui-tab" id="release-overview" href="#release-overview-panel"&gt;Overview&lt;/a&gt;
+  &lt;section class="ui-tabs-panel" id="release-overview-panel"
+           aria-labelledby="release-overview"&gt;
     &lt;h3&gt;Overview&lt;/h3&gt;
     &lt;p&gt;…&lt;/p&gt;
   &lt;/section&gt;
-  &lt;a class="ui-tab" id="release-specs" href="#release-specs"&gt;Specs&lt;/a&gt;
-  &lt;section class="ui-tabs-panel" aria-labelledby="release-specs"&gt;
+  &lt;a class="ui-tab" id="release-specs" href="#release-specs-panel"&gt;Specs&lt;/a&gt;
+  &lt;section class="ui-tabs-panel" id="release-specs-panel"
+           aria-labelledby="release-specs"&gt;
     &lt;h3&gt;Specs&lt;/h3&gt;
     &lt;p&gt;…&lt;/p&gt;
   &lt;/section&gt;
 &lt;/div&gt;</code></pre>
         <p>
-          The link's <code>id</code> equals its <code>href</code> — the link is its own fragment
-          target, so activating a tab makes it <code>:target</code>. The panel is the link's next
-          sibling: the adjacency is the pairing mechanism (<code>:target + panel</code>), no per-tab
-          CSS. With no tab fragment in the URL the group's first tab is open — the default state via
-          <code>:has()</code>.
+          The link's <code>href</code> is its panel's <code>id</code> — activating a tab navigates
+          the page to the panel, which becomes <code>:target</code>. The panel is the link's next
+          sibling: the adjacency is the pairing mechanism, no per-tab CSS. The active link is the
+          one preceding the targeted panel; with no panel fragment in the URL the group's first tab
+          is open — the default state via <code>:has()</code>.
         </p>
       </section>
 
@@ -80,24 +83,24 @@
         <h2>Layout</h2>
         <div class="example">
           <div class="ui-tabs">
-            <a class="ui-tab" id="demo-overview" href="#demo-overview">Overview</a>
-            <section class="ui-tabs-panel" aria-labelledby="demo-overview">
+            <a class="ui-tab" id="demo-overview" href="#demo-overview-panel">Overview</a>
+            <section class="ui-tabs-panel" id="demo-overview-panel" aria-labelledby="demo-overview">
               <h3>Overview</h3>
               <p>
                 Exactly one panel is open per group. The URL, the history and the deep links are the
                 browser's own.
               </p>
             </section>
-            <a class="ui-tab" id="demo-specs" href="#demo-specs">Specs</a>
-            <section class="ui-tabs-panel" aria-labelledby="demo-specs">
+            <a class="ui-tab" id="demo-specs" href="#demo-specs-panel">Specs</a>
+            <section class="ui-tabs-panel" id="demo-specs-panel" aria-labelledby="demo-specs">
               <h3>Specs</h3>
               <p>
                 Hidden panels are <code>display: none</code> — out of the layout, the focus order
                 and the accessibility tree.
               </p>
             </section>
-            <a class="ui-tab" id="demo-api" href="#demo-api">API</a>
-            <section class="ui-tabs-panel" aria-labelledby="demo-api">
+            <a class="ui-tab" id="demo-api" href="#demo-api-panel">API</a>
+            <section class="ui-tabs-panel" id="demo-api-panel" aria-labelledby="demo-api">
               <h3>API</h3>
               <p>
                 After activation the focus stays on the link; the next <kbd>Tab</kbd> enters the
@@ -114,22 +117,30 @@
         </p>
         <div class="example">
           <div class="ui-tabs" data-vertical>
-            <a class="ui-tab" id="demo-v-install" href="#demo-v-install">Install</a>
-            <section class="ui-tabs-panel" aria-labelledby="demo-v-install">
+            <a class="ui-tab" id="demo-v-install" href="#demo-v-install-panel">Install</a>
+            <section
+              class="ui-tabs-panel"
+              id="demo-v-install-panel"
+              aria-labelledby="demo-v-install"
+            >
               <h3>Install</h3>
               <p>
                 The rail keeps its link heights no matter how tall the open panel is — the panel
                 spans the content column without inflating the rail's rows.
               </p>
             </section>
-            <a class="ui-tab" id="demo-v-usage" href="#demo-v-usage">Usage</a>
-            <section class="ui-tabs-panel" aria-labelledby="demo-v-usage">
+            <a class="ui-tab" id="demo-v-usage" href="#demo-v-usage-panel">Usage</a>
+            <section class="ui-tabs-panel" id="demo-v-usage-panel" aria-labelledby="demo-v-usage">
               <h3>Usage</h3>
               <p>The indicator moves to the inline-start edge of the active link.</p>
               <p>The layout mirrors itself in RTL: the rail follows the reading direction.</p>
             </section>
-            <a class="ui-tab" id="demo-v-theming" href="#demo-v-theming">Theming</a>
-            <section class="ui-tabs-panel" aria-labelledby="demo-v-theming">
+            <a class="ui-tab" id="demo-v-theming" href="#demo-v-theming-panel">Theming</a>
+            <section
+              class="ui-tabs-panel"
+              id="demo-v-theming-panel"
+              aria-labelledby="demo-v-theming"
+            >
               <h3>Theming</h3>
               <p>All colors come from the semantic tokens through the local tokens below.</p>
             </section>
@@ -144,6 +155,7 @@
   --ui-tabs-rail: 16rem;
   --ui-tabs-gap: var(--ui-space-sm);
   --ui-tabs-gap-block: var(--ui-space-lg);
+  --ui-tabs-scroll-margin: 4rem;
 }</code></pre>
       </section>
 
@@ -153,6 +165,16 @@
           <li>
             The links announce as links; activation with <kbd>Enter</kbd>; hidden panels are out of
             the accessibility tree and the focus order.
+          </li>
+          <li>
+            Fragment navigation moves the sequential focus navigation starting point to the panel —
+            native anchor-link behavior: the next <kbd>Tab</kbd> enters the open panel's content,
+            and a deep link lands with the panel as the starting point.
+          </li>
+          <li>
+            Fragment navigation aligns the panel top with the viewport top; the panel's
+            <code>scroll-margin</code> keeps the tab bar in view after a click, and in the vertical
+            variant every click lands on the container top with the whole rail in view.
           </li>
           <li>
             Each panel carries <code>aria-labelledby</code> pointing at its tab link — the panel's
