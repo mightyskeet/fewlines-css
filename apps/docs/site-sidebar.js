@@ -19,32 +19,34 @@
 // Custom elements — autonomous — are baseline high (Can I Use: Chrome 54,
 // FF 63, Safari 10.1), above the docs matrix floor.
 
-/** Single source of truth for docs navigation. */
+/** Single source of truth for docs navigation. Pages must stay ordered by
+ * group: #nav() starts a new (heading + list) section whenever `group`
+ * changes. Overview has no group and renders without a heading. */
 const PAGES = [
   { href: '/', label: 'Overview' },
-  { href: '/colors', label: 'Colors' },
-  { href: '/typography', label: 'Typography' },
-  { href: '/button', label: 'Button' },
-  { href: '/choice', label: 'Choice' },
-  { href: '/field', label: 'Field' },
-  { href: '/fieldset', label: 'Fieldset' },
-  { href: '/dialog', label: 'Dialog' },
-  { href: '/popover', label: 'Popover' },
-  { href: '/menu', label: 'Menu' },
-  { href: '/drawer', label: 'Drawer' },
-  { href: '/accordion', label: 'Accordion' },
-  { href: '/alert', label: 'Alert' },
-  { href: '/badge', label: 'Badge' },
-  { href: '/divider', label: 'Divider' },
-  { href: '/skeleton', label: 'Skeleton' },
-  { href: '/progress', label: 'Progress' },
-  { href: '/timeline', label: 'Timeline' },
-  { href: '/stepper', label: 'Stepper' },
-  { href: '/breadcrumbs', label: 'Breadcrumbs' },
-  { href: '/tabs', label: 'Tabs' },
-  { href: '/switch', label: 'Switch' },
-  { href: '/tooltip', label: 'Tooltip' },
-  { href: '/table', label: 'Table' },
+  { href: '/colors', label: 'Colors', group: 'Foundation' },
+  { href: '/typography', label: 'Typography', group: 'Foundation' },
+  { href: '/divider', label: 'Divider', group: 'Foundation' },
+  { href: '/button', label: 'Button', group: 'Forms' },
+  { href: '/choice', label: 'Choice', group: 'Forms' },
+  { href: '/field', label: 'Field', group: 'Forms' },
+  { href: '/fieldset', label: 'Fieldset', group: 'Forms' },
+  { href: '/switch', label: 'Switch', group: 'Forms' },
+  { href: '/dialog', label: 'Dialog', group: 'Overlays' },
+  { href: '/popover', label: 'Popover', group: 'Overlays' },
+  { href: '/menu', label: 'Menu', group: 'Overlays' },
+  { href: '/drawer', label: 'Drawer', group: 'Overlays' },
+  { href: '/tooltip', label: 'Tooltip', group: 'Overlays' },
+  { href: '/alert', label: 'Alert', group: 'Indicators' },
+  { href: '/badge', label: 'Badge', group: 'Indicators' },
+  { href: '/skeleton', label: 'Skeleton', group: 'Indicators' },
+  { href: '/progress', label: 'Progress', group: 'Indicators' },
+  { href: '/timeline', label: 'Timeline', group: 'Indicators' },
+  { href: '/stepper', label: 'Stepper', group: 'Indicators' },
+  { href: '/breadcrumbs', label: 'Breadcrumbs', group: 'Navigation' },
+  { href: '/tabs', label: 'Tabs', group: 'Navigation' },
+  { href: '/accordion', label: 'Accordion', group: 'Navigation' },
+  { href: '/table', label: 'Table', group: 'Data' },
 ];
 
 /* The current-page check is extensionless: links use the clean URLs the
@@ -81,8 +83,22 @@ class SiteSidebar extends HTMLElement {
     const nav = document.createElement('nav');
     nav.className = 'site-nav';
     nav.setAttribute('aria-label', 'Documentation');
-    const list = document.createElement('ul');
-    for (const { href, label } of PAGES) {
+    // Start values that never match a real (possibly undefined) group,
+    // so the first page always opens a list.
+    let list = null;
+    let group = null;
+    for (const { href, label, group: section } of PAGES) {
+      if (section !== group) {
+        group = section;
+        if (group) {
+          const heading = document.createElement('h2');
+          heading.className = 'site-nav-group';
+          heading.textContent = group;
+          nav.append(heading);
+        }
+        list = document.createElement('ul');
+        nav.append(list);
+      }
       const item = document.createElement('li');
       const link = document.createElement('a');
       link.href = href;
@@ -91,7 +107,6 @@ class SiteSidebar extends HTMLElement {
       item.append(link);
       list.append(item);
     }
-    nav.append(list);
     return nav;
   }
 

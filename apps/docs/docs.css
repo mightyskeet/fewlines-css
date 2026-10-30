@@ -87,6 +87,17 @@ site-sidebar {
   font-weight: 600;
 }
 
+/* Group headings (overline style): one per .site-nav section, rendered by
+ * site-sidebar.js. Gap between groups comes from the heading's block-start
+ * margin, so the first group adds no leading space. */
+.site-nav h2 {
+  margin-block: var(--ui-space-md) var(--ui-space-2xs);
+  font: 600 var(--ui-font-size-xs) / 1.4 var(--ui-font-sans);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ui-color-text-muted);
+}
+
 body {
   max-inline-size: 60rem;
   margin-block: 0;
