@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script>
+      try {
+        var t = localStorage.getItem('theme');
+        if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+      } catch (e) {}
+    </script>
+    <script>
+      try {
+        var b = JSON.parse(localStorage.getItem('colors-bases') || 'null');
+        if (b) {
+          var r = document.documentElement,
+            s = r.style;
+          for (var k in b) s.setProperty(k, b[k]);
+          r.setAttribute('data-palette', 'custom');
+        }
+      } catch (e) {}
+    </script>
+    <title>Tabs — @fewlines/css</title>
+    <link rel="stylesheet" href="/core.css" />
+    <link rel="stylesheet" href="/docs.css" />
+    <link rel="stylesheet" href="/colors-derive.css" />
+    <script src="/site-sidebar.js" defer blocking="render"></script>
+    <script src="/site-toc.js" defer blocking="render"></script>
+    <script src="/vendor/hljs.min.js" defer></script>
+    <script src="/site-code.js" defer></script>
+  </head>
+  <body>
+    <site-sidebar></site-sidebar>
+
+    <main>
+      <header class="page-header">
+        <h1>Tabs</h1>
+        <p>
+          Switching panels on the native <code>&lt;a&gt;</code>: each tab is a link to itself, so
+          the active state is the native <code>:target</code> and the URL fragment, the Back button
+          and deep links come with the element. No JS, no state classes, no ARIA role substitution.
+        </p>
+      </header>
+
+      <section>
+        <h2>Semantic basis</h2>
+        <p>
+          Tabs are in-page navigation: links that reveal a section. The component does not fake the
+          ARIA tab pattern — <code>role="tab"</code> with <code>aria-selected</code> would promise
+          arrow-key navigation that pure CSS cannot deliver. The links stay links; assistive
+          technology reads a set of links and a visible section. Hosts that need the ARIA state can
+          add it in their own JS layer.
+        </p>
+      </section>
+
+      <section>
+        <h2>Canonical markup</h2>
+        <pre><code>&lt;div class="ui-tabs"&gt;
+  &lt;a class="ui-tab" id="release-overview" href="#release-overview"&gt;Overview&lt;/a&gt;
+  &lt;section class="ui-tabs-panel" aria-labelledby="release-overview"&gt;
+    &lt;h3&gt;Overview&lt;/h3&gt;
+    &lt;p&gt;…&lt;/p&gt;
+  &lt;/section&gt;
+  &lt;a class="ui-tab" id="release-specs" href="#release-specs"&gt;Specs&lt;/a&gt;
+  &lt;section class="ui-tabs-panel" aria-labelledby="release-specs"&gt;
+    &lt;h3&gt;Specs&lt;/h3&gt;
+    &lt;p&gt;…&lt;/p&gt;
+  &lt;/section&gt;
+&lt;/div&gt;</code></pre>
+        <p>
+          The link's <code>id</code> equals its <code>href</code> — the link is its own fragment
+          target, so activating a tab makes it <code>:target</code>. The panel is the link's next
+          sibling: the adjacency is the pairing mechanism (<code>:target + panel</code>), no per-tab
+          CSS. With no tab fragment in the URL the group's first tab is open — the default state via
+          <code>:has()</code>.
+        </p>
+      </section>
+
+      <section>
+        <h2>Layout</h2>
+        <div class="example">
+          <div class="ui-tabs">
+            <a class="ui-tab" id="demo-overview" href="#demo-overview">Overview</a>
+            <section class="ui-tabs-panel" aria-labelledby="demo-overview">
+              <h3>Overview</h3>
+              <p>
+                Exactly one panel is open per group. The URL, the history and the deep links are the
+                browser's own.
+              </p>
+            </section>
+            <a class="ui-tab" id="demo-specs" href="#demo-specs">Specs</a>
+            <section class="ui-tabs-panel" aria-labelledby="demo-specs">
+              <h3>Specs</h3>
+              <p>
+                Hidden panels are <code>display: none</code> — out of the layout, the focus order
+                and the accessibility tree.
+              </p>
+            </section>
+            <a class="ui-tab" id="demo-api" href="#demo-api">API</a>
+            <section class="ui-tabs-panel" aria-labelledby="demo-api">
+              <h3>API</h3>
+              <p>
+                After activation the focus stays on the link; the next <kbd>Tab</kbd> enters the
+                open panel's content.
+              </p>
+            </section>
+          </div>
+        </div>
+        <p>
+          Horizontal (default): the links form the bar and wrap when it overflows; the open panel
+          takes the next line. Vertical: <code>data-vertical</code> turns the container into a grid
+          — the links fill the rail column, the open panel sits in the content column, top-aligned
+          with the rail:
+        </p>
+        <div class="example">
+          <div class="ui-tabs" data-vertical>
+            <a class="ui-tab" id="demo-v-install" href="#demo-v-install">Install</a>
+            <section class="ui-tabs-panel" aria-labelledby="demo-v-install">
+              <h3>Install</h3>
+              <p>
+                The rail keeps its link heights no matter how tall the open panel is — the panel
+                spans the content column without inflating the rail's rows.
+              </p>
+            </section>
+            <a class="ui-tab" id="demo-v-usage" href="#demo-v-usage">Usage</a>
+            <section class="ui-tabs-panel" aria-labelledby="demo-v-usage">
+              <h3>Usage</h3>
+              <p>The indicator moves to the inline-start edge of the active link.</p>
+              <p>The layout mirrors itself in RTL: the rail follows the reading direction.</p>
+            </section>
+            <a class="ui-tab" id="demo-v-theming" href="#demo-v-theming">Theming</a>
+            <section class="ui-tabs-panel" aria-labelledby="demo-v-theming">
+              <h3>Theming</h3>
+              <p>All colors come from the semantic tokens through the local tokens below.</p>
+            </section>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Customization</h2>
+        <pre><code>.settings-tabs {
+  --ui-tabs-accent: var(--ui-color-brand);
+  --ui-tabs-rail: 16rem;
+  --ui-tabs-gap: var(--ui-space-sm);
+  --ui-tabs-gap-block: var(--ui-space-lg);
+}</code></pre>
+      </section>
+
+      <section>
+        <h2>Accessibility</h2>
+        <ul>
+          <li>
+            The links announce as links; activation with <kbd>Enter</kbd>; hidden panels are out of
+            the accessibility tree and the focus order.
+          </li>
+          <li>
+            Each panel carries <code>aria-labelledby</code> pointing at its tab link — the panel's
+            accessible name is the tab label, without JS.
+          </li>
+          <li>
+            Which tab is active is not announced natively (the ARIA state needs JS); hosts may add
+            <code>aria-current</code> in their own layer.
+          </li>
+          <li>
+            The APCA pairs are existing registrations: <code>text-muted</code>/<code>text</code> on
+            <code>surface</code> and the <code>border-strong</code> indicator (non-text).
+          </li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Do not</h2>
+        <ul>
+          <li>
+            No <code>role="tab"</code>/<code>aria-selected</code> without JS — the roles promise a
+            keyboard model (arrow keys, roving tabindex) that the links do not implement.
+          </li>
+          <li>
+            No wrappers between a link and its panel — the adjacency is the switching mechanism.
+          </li>
+          <li>
+            No <code>scroll-target-group</code> on the bar — the scrollspy highlight would disagree
+            with the open panel.
+          </li>
+          <li>
+            Tab state follows the URL: a fragment that points elsewhere on the page returns every
+            group to its first tab. That is the documented behavior, not a bug.
+          </li>
+        </ul>
+      </section>
+    </main>
+    <site-toc></site-toc>
+
+    <footer>
+      <p>Full contract: <code>packages/core/src/components/tabs/tabs.md</code></p>
+    </footer>
+  </body>
+</html>

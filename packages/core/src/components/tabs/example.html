@@ -1,0 +1,52 @@
+<!doctype html>
+<!-- Tabs examples. -->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Tabs examples</title>
+    <link rel="stylesheet" href="../../../../dist/index.css" />
+    <style>
+      body {
+        padding: 1rem;
+        max-width: 40rem;
+      }
+      section + section {
+        margin-block-start: 2rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="ui-tabs">
+      <a class="ui-tab" id="ex-overview" href="#ex-overview">Overview</a>
+      <section class="ui-tabs-panel" aria-labelledby="ex-overview">
+        <h3>Overview</h3>
+        <p>The link is its own fragment target: the active state is the native :target.</p>
+      </section>
+      <a class="ui-tab" id="ex-specs" href="#ex-specs">Specs</a>
+      <section class="ui-tabs-panel" aria-labelledby="ex-specs">
+        <h3>Specs</h3>
+        <p>The panel opens by adjacency: :target + panel.</p>
+      </section>
+      <a class="ui-tab" id="ex-api" href="#ex-api">API</a>
+      <section class="ui-tabs-panel" aria-labelledby="ex-api">
+        <h3>API</h3>
+        <p>No tab fragment in the URL — the first tab is open by default.</p>
+      </section>
+    </div>
+
+    <section>
+      <div class="ui-tabs" data-vertical>
+        <a class="ui-tab" id="ex-v-one" href="#ex-v-one">One</a>
+        <section class="ui-tabs-panel" aria-labelledby="ex-v-one">
+          <h3>One</h3>
+          <p>Rail on the start edge, panel in the content column.</p>
+        </section>
+        <a class="ui-tab" id="ex-v-two" href="#ex-v-two">Two</a>
+        <section class="ui-tabs-panel" aria-labelledby="ex-v-two">
+          <h3>Two</h3>
+          <p>The rail keeps its link heights no matter which panel is open.</p>
+        </section>
+      </div>
+    </section>
+  </body>
+</html>

@@ -1,0 +1,174 @@
+/* Tabs component.
+ *
+ * Native basis: <a> + fragment navigation — the platform's own way to switch
+ * content with an address. Each tab is a link whose href is its own id
+ * (<a id="t1" href="#t1">): activating it makes the LINK the URL fragment
+ * target, so the active state is the native :target selector — no JS, no
+ * state classes, and the URL/history/deep-linking come with the element.
+ *
+ * Canonical structure (link and its panel are adjacent siblings; the panel
+ * follows its link):
+ *   <div class="ui-tabs">
+ *     <a class="ui-tab" id="tab-one" href="#tab-one">One</a>
+ *     <section class="ui-tabs-panel" aria-labelledby="tab-one">…</section>
+ *     <a class="ui-tab" id="tab-two" href="#tab-two">Two</a>
+ *     <section class="ui-tabs-panel" aria-labelledby="tab-two">…</section>
+ *   </div>
+ *
+ * The adjacency is the state mechanism: the panel is revealed by
+ * `:target + panel`, so the link→panel pairing lives in the DOM, not in
+ * per-tab CSS. The active link is :target itself (plus the first tab when
+ * the URL has no tab fragment — the group's default state, via :has()).
+ *
+ * Layout (both orientations from this one markup):
+ *   horizontal (default) — flex wrap: the links form the bar, the visible
+ *     panel takes the next line (order + flex-basis);
+ *   vertical (data-vertical) — grid: the links fill the rail column, the
+ *     visible panel spans a fixed large row range in the content column so
+ *     the rail rows keep their link heights regardless of which panel is
+ *     open (track-size distribution spreads the span across all rows).
+ *
+ * Tab state follows the URL fragment: a hash pointing anywhere else (an
+ * off-tab anchor, another group's tab) leaves every group on its default
+ * (first) tab. Fragment navigation also aligns the target's top with the
+ * viewport top — the target is the tab link itself, so the landing view
+ * keeps the bar and the open panel in sight.
+ *
+ * Colors via local tokens (host-overridable):
+ *   inactive link --ui-color-text-muted (fluent pair, registered),
+ *   active link   --ui-color-text (body pair, registered),
+ *   indicator     --ui-color-border-strong (nonText pair, registered),
+ *   hover fill    --ui-color-hover (pointer-gated, Button/Accordion policy).
+ *
+ * Forced colors: the links are system-painted text; the indicator is a
+ * border, which the system repaints natively.
+ */
+
+.ui-tabs {
+  --ui-tabs-gap: var(--ui-space-xs); /* between tab links */
+  --ui-tabs-gap-block: var(--ui-space-md); /* bar → panel */
+  --ui-tabs-rail: 14rem; /* vertical: rail column width */
+  --ui-tabs-rail-gap: var(--ui-space-lg); /* vertical: rail ↔ panel */
+  --ui-tabs-accent: var(--ui-color-border-strong); /* active indicator */
+
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ui-tabs-gap-block) var(--ui-tabs-gap);
+}
+
+.ui-tab {
+  padding: var(--ui-space-2xs) var(--ui-space-xs);
+  color: var(--ui-color-text-muted);
+  text-decoration: none;
+  border-block-end: 2px solid transparent;
+  transition:
+    color var(--ui-duration-fast) ease,
+    border-color var(--ui-duration-fast) ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .ui-tab:hover {
+    color: var(--ui-color-text);
+  }
+}
+
+/* The active tab is the URL fragment target; with no tab fragment the
+ * group's first tab is active (the default state). The default-first
+ * selectors are :where()-wrapped to keep the specificity at or below the
+ * vertical block below — it must follow these rules (it switches the
+ * indicator side) without a specificity descent. */
+.ui-tab:target,
+.ui-tabs:not(:has(> .ui-tab:target)) > :where(.ui-tab:first-child) {
+  color: var(--ui-color-text);
+  border-block-end-color: var(--ui-tabs-accent);
+}
+
+/* Exactly one panel is open: the one after the targeted link, or the first
+ * link's panel when no link is targeted. Hidden panels are display: none —
+ * out of the layout, the focus order and the accessibility tree. */
+.ui-tabs-panel {
+  display: none;
+  order: 1;
+  flex-basis: 100%;
+}
+
+.ui-tab:target + .ui-tabs-panel,
+.ui-tabs:not(:has(> .ui-tab:target)) > :where(.ui-tab:first-child + .ui-tabs-panel) {
+  display: block;
+}
+
+/* The panel's outermost margin is zeroed so the bar → panel rhythm belongs
+ * to the component (the timeline entry precedent); inner spacing stays
+ * host content. */
+.ui-tabs-panel > :first-child {
+  margin-block-start: 0;
+}
+
+/* Vertical: the rail is the first grid column, the panel the second. The
+ * panel spans a fixed large row range so its height never inflates the
+ * rail's rows: the span distribution adds ~panel-height/999 to each spanned
+ * row, the links' own min-content keeps every rail row at its link height.
+ * shortcut: covers up to ~997 tabs, and the exact span distribution is
+ * browser-verified (chromium/firefox/webkit) — re-probe on engine updates. */
+.ui-tabs[data-vertical] {
+  display: grid;
+  grid-template-columns: var(--ui-tabs-rail) minmax(0, 1fr);
+  grid-auto-rows: min-content;
+  gap: 0 var(--ui-tabs-rail-gap);
+}
+
+.ui-tabs[data-vertical] > .ui-tab {
+  grid-column: 1;
+  border-block-end: none;
+  border-inline-start: 2px solid transparent;
+}
+
+.ui-tabs[data-vertical] > .ui-tab:target,
+.ui-tabs[data-vertical]:not(:has(> .ui-tab:target)) > .ui-tab:first-child {
+  border-inline-start-color: var(--ui-tabs-accent);
+}
+
+.ui-tabs[data-vertical] > .ui-tabs-panel {
+  grid-column: 2;
+  grid-row: 1 / 999;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-tab {
+    transition: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .ui-tabs {
+    forced-color-adjust: auto;
+  }
+
+  /* The transparent inactive indicator is remapped to currentcolor in
+   * forced colors — every link would read as active. The canvas/canvastext
+   * pair keeps the indicator invisible until active: forced colors paints
+   * every surface canvas, so canvas borders are invisible on any host
+   * surface. Both sides are colored on every link; only the side with a
+   * border width (block-end horizontal, inline-start vertical) paints. */
+  .ui-tab {
+    border-block-end-color: canvas;
+    border-inline-start-color: canvas;
+  }
+
+  .ui-tab:target,
+  .ui-tabs:not(:has(> .ui-tab:target)) > :where(.ui-tab:first-child) {
+    border-block-end-color: canvastext;
+    border-inline-start-color: canvastext;
+  }
+
+  .ui-tabs[data-vertical] > .ui-tab {
+    border-block-end-color: canvas;
+    border-inline-start-color: canvas;
+  }
+
+  .ui-tabs[data-vertical] > .ui-tab:target,
+  .ui-tabs[data-vertical]:not(:has(> .ui-tab:target)) > .ui-tab:first-child {
+    border-block-end-color: canvastext;
+    border-inline-start-color: canvastext;
+  }
+}

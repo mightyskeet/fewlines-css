@@ -37,6 +37,7 @@ const PAGES = [
   { href: '/divider', label: 'Divider' },
   { href: '/progress', label: 'Progress' },
   { href: '/timeline', label: 'Timeline' },
+  { href: '/tabs', label: 'Tabs' },
   { href: '/switch', label: 'Switch' },
   { href: '/tooltip', label: 'Tooltip' },
   { href: '/table', label: 'Table' },
