@@ -24,8 +24,8 @@
  * radius) instead of being sliced by background-tile edges — a diagonal
  * gradient inside a background tile shows vertical seams where it crosses
  * the tile edge (probe + user report, 2026-10-30, compatibility notes).
- * The band scales with the box (40%) — a fixed-length band reads as a thin
- * sliver on long elements — and fades to transparent at its own ends, so
+ * The band scales with the box (40%, floored at 2.5rem, capped at 75% —
+ * see the ::after rule) and fades to transparent at its own ends, so
  * the keyframes' off-screen overshoot is invisible for any shape. The band
  * color mixes the surface towards the page text — a visible-but-calm step
  * in both themes (the surface/tint pair itself is decorative here).
@@ -60,14 +60,19 @@
 
 /* The band: an overlay, not a background — geometry (skew) gives the lean,
  * the box clips it. The soft gradient ends make the sweep's overshoot
- * invisible; the width is a fixed fraction of the box (the slide keyframes'
- * endpoints are tuned to 40% — see shimmer.css). */
+ * invisible. Width: 40% of the box, but not narrower than 2.5rem (on small
+ * shapes a bare fraction reads as a faint glint — an avatar gets a real
+ * stripe) and not wider than 75% (the band must stay a traveling stripe,
+ * not a pulse of the whole surface). The slide keyframes' endpoints
+ * (-110% → 260% of the band width) are seamless for every width ≥ 40% of
+ * the box, which both clamps preserve — see shimmer.css. */
 .ui-skeleton::after {
   content: '';
   position: absolute;
   inset-block: 0;
   inset-inline-start: 0;
-  inline-size: 40%;
+  inline-size: max(40%, 2.5rem);
+  max-inline-size: 75%;
   background-image: linear-gradient(90deg, transparent, var(--ui-shimmer-color), transparent);
   animation: ui-shimmer-slide var(--ui-shimmer-duration) linear infinite;
 }

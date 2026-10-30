@@ -11,10 +11,14 @@
  *   the component's overflow (with its radius) instead of being sliced by
  *   background-tile edges — a diagonal gradient painted inside a narrow
  *   background tile shows vertical seams where the stripe crosses the tile
- *   edge (probe + user report, 2026-10-30). The band is 40% of the box and
- *   fades to transparent at its own ends, so the off-screen overshoot in
- *   the keyframes (-110% → 260% of the band width) is invisible and the
- *   loop is seamless for any element shape. translate is compositor-friendly.
+ *   edge (probe + user report, 2026-10-30). The band is 40% of the box
+ *   (floored at 2.5rem, capped at 75% — small shapes otherwise read the
+ *   soft band as a faint glint) and fades to transparent at its own ends,
+ *   so the off-screen overshoot in the keyframes (-110% → 260% of the band
+ *   width) is invisible and the loop is seamless for any element shape:
+ *   both clamps keep the band at ≥ 40% of the box, which is what the
+ *   endpoints require (the box is crossed fully within 250% of the band
+ *   width). translate is compositor-friendly.
  * - ui-shimmer-sweep (background-position) — for engine pseudo-element
  *   paint targets (Progress's ::-webkit-progress-value / ::-moz-progress-bar),
  *   where no overlay pseudo can be added. The tile is 200% of the box with

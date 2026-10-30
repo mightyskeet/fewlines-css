@@ -136,7 +136,15 @@ test('geometry and shape are host-driven (avatar circle)', async ({ page }) => {
   const el = await page.locator('#skeleton-avatar').evaluate((el) => {
     const s = getComputedStyle(el);
     const box = el.getBoundingClientRect();
-    return { inlineSize: s.inlineSize, blockSize: s.blockSize, radius: s.borderRadius, box };
+    return {
+      inlineSize: s.inlineSize,
+      blockSize: s.blockSize,
+      radius: s.borderRadius,
+      box,
+      // The band floor (2.5rem) widens the stripe on small shapes; the 75%
+      // cap keeps it a traveling stripe, not a full-surface pulse.
+      bandWidth: getComputedStyle(el, '::after').width,
+    };
   });
 
   expect(el.inlineSize).toBe('40px'); // 2.5rem resolved
@@ -145,6 +153,7 @@ test('geometry and shape are host-driven (avatar circle)', async ({ page }) => {
   // corner-shape override) and yields a square bounding circle.
   expect(el.radius).toBe('9999px');
   expect(el.box.width).toBe(el.box.height);
+  expect(parseFloat(el.bandWidth)).toBeCloseTo(30, 1); // 75% of the 40px box
 });
 
 test('skeleton exposes no interactive semantics', async ({ page }) => {
