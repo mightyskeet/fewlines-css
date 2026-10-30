@@ -37,8 +37,8 @@
         <h1>Timeline</h1>
         <p>
           Chronology of events on the native <code>&lt;ol&gt;</code>: the list semantics, the
-          sequence and the order direction come with the element. The component adds the rail,
-          the marker and the density. Not interactive — no states, no JS.
+          sequence and the order direction come with the element. The component adds the rail, the
+          marker and the density. Not interactive — no states, no JS.
         </p>
       </header>
 
@@ -47,9 +47,9 @@
         <p>
           The component is the native ordered list: the <code>list</code>/<code>listitem</code>
           roles come with the elements; the order direction is host-owned (<code>reversed</code>
-          for newest-first, no JS). The component is the rail-and-marker vocabulary, opt-in over
-          the base layer. A stepper (a step-by-step progress with done/current/upcoming states) is
-          a different semantic and a different component.
+          for newest-first, no JS). The component is the rail-and-marker vocabulary, opt-in over the
+          base layer. A stepper (a step-by-step progress with done/current/upcoming states) is a
+          different semantic and a different component.
         </p>
       </section>
 
@@ -89,8 +89,8 @@
           </ol>
         </div>
         <p>
-          The rail is a 2px border on a zero-width pseudo — it survives forced colors (a
-          background strip would not). The marker is a 12px ring on the
+          The rail is a 2px border on a zero-width pseudo — it survives forced colors (a background
+          strip would not). The marker is a 16px ring on the
           <code>border-strong</code> token; its opaque surface fill masks the rail passing behind
           it. All positioning is logical — the layout mirrors itself in RTL.
         </p>
@@ -99,8 +99,8 @@
       <section>
         <h2>Customization</h2>
         <p>
-          The rail is the border token, the ring is the border-strong token — both decorative
-          (the list semantics carry the structure). Hosts re-theme through the local tokens — no
+          The rail is the border token, the ring is the border-strong token — both decorative (the
+          list semantics carry the structure). Hosts re-theme through the local tokens — no
           variants, no classes:
         </p>
         <pre><code>.release-timeline {
@@ -118,8 +118,8 @@
           </li>
           <li>
             The marker ring pair (<code>border-strong</code> on <code>surface</code>) is registered
-            in the APCA matrix as a non-text pair; the rail reuses the divider policy
-            (decorative line, no pair).
+            in the APCA matrix as a non-text pair; the rail reuses the divider policy (decorative
+            line, no pair).
           </li>
           <li>
             Forced colors repaint the rail and the ring with the system colors — both are borders.
@@ -138,7 +138,10 @@
             No stepper semantics here — a stepper (done/current/upcoming with
             <code>aria-current="step"</code>) is a different component.
           </li>
-          <li>No horizontal variant in markup; the entry margins — density only via <code>data-size</code>.</li>
+          <li>
+            No horizontal variant in markup; the entry margins — density only via
+            <code>data-size</code>.
+          </li>
           <li>No variant classes — hosts re-theme through the local tokens.</li>
         </ul>
       </section>

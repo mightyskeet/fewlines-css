@@ -23,7 +23,7 @@
  *           inter-entry spacing is padding-block, not margin), so the rail
  *           is continuous; the first entry's rail starts at the marker's
  *           top, the last one ends at the last marker's bottom.
- *   marker  li::before — a 12px ring (border-radius: full) centered on the
+ *   marker  li::before — a 16px ring (border-radius: full) centered on the
  *           rail; the opaque surface fill masks the rail passing behind it.
  *   content starts after the marker gutter (--ui-space-xl indent).
  *
@@ -55,7 +55,7 @@
  */
 
 .ui-timeline {
-  --ui-timeline-marker-size: var(--ui-space-sm);
+  --ui-timeline-marker-size: var(--ui-space-md);
   --ui-timeline-indent: var(--ui-space-xl);
   --ui-timeline-line-width: 2px;
   --ui-timeline-marker-offset: calc((1lh - var(--ui-timeline-marker-size)) / 2);

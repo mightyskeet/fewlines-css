@@ -75,7 +75,7 @@
  */
 
 .ui-stepper {
-  --ui-stepper-marker-size: var(--ui-space-sm);
+  --ui-stepper-marker-size: var(--ui-space-md);
   --ui-stepper-indent: var(--ui-space-xl);
   --ui-stepper-line-width: 2px;
   --ui-stepper-marker-offset: calc((1lh - var(--ui-stepper-marker-size)) / 2);

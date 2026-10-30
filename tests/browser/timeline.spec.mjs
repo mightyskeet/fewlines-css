@@ -83,7 +83,7 @@ test('the entry box owns the outermost margins of its content', async ({ page })
 
 test('the marker is a ring on the border-strong token, centered on the rail', async ({ page }) => {
   const lh = await entryLineHeight(page);
-  const offset = (lh - 12) / 2;
+  const offset = (lh - 16) / 2;
   const marker = await page
     .locator('#timeline-default li')
     .first()
@@ -105,10 +105,10 @@ test('the marker is a ring on the border-strong token, centered on the rail', as
   expect(marker.borderStyle).toBe('solid');
   expect(marker.borderWidth).toBe('2px');
   expect(marker.borderColor).toBe(await token(page, '--ui-color-border-strong'));
-  expect(marker.inlineSize).toBe('12px');
-  expect(marker.blockSize).toBe('12px');
+  expect(marker.inlineSize).toBe('16px');
+  expect(marker.blockSize).toBe('16px');
   expect(marker.radius).toBe('9999px');
-  expect(marker.insetInlineStart).toBe('10px');
+  expect(marker.insetInlineStart).toBe('8px');
   // The first-line offset is (1lh - size) / 2 — the marker is centered on
   // the content's first line.
   expect(marker.insetBlockStart).toBe(`${offset}px`);
@@ -118,7 +118,7 @@ test('the marker is a ring on the border-strong token, centered on the rail', as
 
 test('the following entry marker shifts by the block gap', async ({ page }) => {
   const lh = await entryLineHeight(page);
-  const offset = (lh - 12) / 2;
+  const offset = (lh - 16) / 2;
   const marker = await page
     .locator('#timeline-default li')
     .nth(1)
@@ -131,7 +131,7 @@ test('the following entry marker shifts by the block gap', async ({ page }) => {
 
 test('the rail is a border on the border token, spanning each entry', async ({ page }) => {
   const lh = await entryLineHeight(page);
-  const offset = (lh - 12) / 2;
+  const offset = (lh - 16) / 2;
   const first = await page
     .locator('#timeline-default li')
     .first()
@@ -164,7 +164,7 @@ test('the rail is a border on the border token, spanning each entry', async ({ p
 
 test('the last entry rail ends at the last ring bottom', async ({ page }) => {
   const lh = await entryLineHeight(page);
-  const offset = (lh - 12) / 2;
+  const offset = (lh - 16) / 2;
   const rail = await page
     .locator('#timeline-default li')
     .nth(2)
@@ -175,7 +175,7 @@ test('the last entry rail ends at the last ring bottom', async ({ page }) => {
   // The last rule sets inset-block-end: auto; Chromium reports the used
   // value for it, so the observable contract is the trimmed block-size:
   // the block gap + the first-line offset + the ring itself.
-  expect(rail.blockSize).toBe(`${24 + offset + 12}px`);
+  expect(rail.blockSize).toBe(`${24 + offset + 16}px`);
 });
 
 test('a single entry has no outgoing rail', async ({ page }) => {
