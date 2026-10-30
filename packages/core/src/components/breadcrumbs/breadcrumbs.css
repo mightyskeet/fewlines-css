@@ -1,0 +1,128 @@
+/* Breadcrumbs component.
+ *
+ * Native basis: <nav aria-label="Breadcrumb"> with <ol>/<li> and links —
+ * the WAI-ARIA breadcrumbs pattern: the landmark, the list semantics and
+ * the current-page state come with the elements (`aria-current="page"` on
+ * the last crumb). Zero JS.
+ *
+ * Canonical structure:
+ *   <nav class="ui-breadcrumbs" aria-label="Breadcrumb">
+ *     <ol role="list">
+ *       <li><a href="/">Home</a></li>
+ *       <li><a href="/library">Library</a></li>
+ *       <li aria-current="page">Data</li>
+ *     </ol>
+ *   </nav>
+ *
+ * role="list" — insurance for the list-style: none quirk (the Timeline
+ * precedent). `aria-current="page"` may sit on the <li> (a plain-text
+ * crumb) or on the crumb's link — the CSS honors both through :has(> …)
+ * (the Stepper precedent).
+ *
+ * Separators are drawn by the component (`li + li::before`) — the host
+ * never adds separator markup. `content: '/' / ''` gives the slash an
+ * empty alternative text, so assistive tech skips the punctuation
+ * (compatibility notes, 2026-10-30 — direct use).
+ *
+ * Collapsed levels: the host collapses the middle crumbs into one <li>
+ * holding a button[popovertarget] — a declarative trigger, zero JS; the
+ * hidden levels are listed in a Menu popover (the canonical shell):
+ *
+ *   <li>
+ *     <button class="ui-popover-trigger" type="button"
+ *             popovertarget="bc-more" aria-label="Hidden levels">…</button>
+ *   </li>
+ *   <menu class="ui-popover ui-menu" id="bc-more" popover>
+ *     <li><a class="ui-menu-item" href="/projects">Projects</a></li>
+ *   </menu>
+ *
+ * The button must carry an aria-label — the visible glyph "…" is not a
+ * name. `ui-popover-trigger` opts the trigger into the Popover anchor
+ * contract (below the trigger, flipped above on overflow); scoping
+ * several trigger/popover pairs on one page stays the host's
+ * responsibility (the Popover contract).
+ *
+ * Current-item truncation: the current crumb is capped at
+ * --ui-breadcrumbs-max (default 40ch) and clips with a text-overflow
+ * ellipsis — a long page name cannot push the trail wide. The cap sits on
+ * the <li> (a block container): text-overflow does not apply to flex
+ * containers. overflow: hidden also zeroes the flex item's automatic
+ * minimum size, so a narrow container shrinks the crumb further (the cap
+ * is a maximum, not a fixed width).
+ *
+ * Layout: the ol is a wrapping flex row; the horizontal rhythm belongs to
+ * the separator margins (a wrapped row may start with a stray separator —
+ * accepted, a trail is short by construction), the row-gap covers the
+ * wrapped lines.
+ *
+ * Colors via local tokens (host-overridable):
+ *   separator + toggle  --ui-color-text-muted (the registered fluent pair
+ *                       on surface); crumbs keep the base palette — links
+ *                       stay --ui-color-link, the current crumb is
+ *                       full-contrast text. No new pairs.
+ *
+ * APCA pairs used (validated in tests/apca):
+ *   text-muted/surface (separator, toggle) — fluent role.
+ *
+ * Forced colors: generated content, links and the button repaint from the
+ * system palette natively.
+ */
+
+.ui-breadcrumbs {
+  --ui-breadcrumbs-gap: var(--ui-space-2xs);
+  --ui-breadcrumbs-max: 40ch;
+  --ui-breadcrumbs-separator-color: var(--ui-color-text-muted);
+  --ui-breadcrumbs-toggle-color: var(--ui-color-text-muted);
+}
+
+.ui-breadcrumbs ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--ui-breadcrumbs-gap) 0;
+}
+
+/* Separator: drawn once per following crumb, with an empty alternative
+ * text (invisible to assistive tech). */
+.ui-breadcrumbs li + li::before {
+  content: '/' / '';
+  margin-inline: var(--ui-breadcrumbs-gap);
+  color: var(--ui-breadcrumbs-separator-color);
+}
+
+/* Current crumb: the truncation cap (long page names cannot push the
+ * trail wide). The attribute may sit on the <li> or on the crumb's link. */
+.ui-breadcrumbs li:is([aria-current='page'], :has(> [aria-current='page'])) {
+  max-inline-size: var(--ui-breadcrumbs-max);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* The collapsed-levels toggle: a small muted affordance, not a button
+ * variant — the trail owns the styling. */
+.ui-breadcrumbs button {
+  font: inherit;
+  color: var(--ui-breadcrumbs-toggle-color);
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+}
+
+/* Links: the base link color stays (the interactive affordance); the
+ * underline is dropped at rest (the trail structure identifies the link)
+ * and returns on hover (pointer-gated, the sticky-hover guard). */
+.ui-breadcrumbs a {
+  text-decoration: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .ui-breadcrumbs a:hover {
+    text-decoration: underline;
+  }
+}

@@ -769,6 +769,48 @@
         </ol>
       </section>
 
+      <!-- Breadcrumbs -->
+      <section id="breadcrumbs">
+        <nav class="ui-breadcrumbs" aria-label="Breadcrumb" id="breadcrumbs-default">
+          <ol role="list">
+            <li><a href="#breadcrumbs">Home</a></li>
+            <li><a href="#breadcrumbs">Library</a></li>
+            <li aria-current="page" id="breadcrumbs-current">Data</li>
+          </ol>
+        </nav>
+        <nav class="ui-breadcrumbs" aria-label="Breadcrumb" id="breadcrumbs-collapsed">
+          <ol role="list">
+            <li><a href="#breadcrumbs">Home</a></li>
+            <li>
+              <button
+                class="ui-popover-trigger"
+                type="button"
+                id="breadcrumbs-toggle"
+                popovertarget="breadcrumbs-menu"
+                aria-label="Hidden levels"
+              >
+                …
+              </button>
+            </li>
+            <li><a href="#breadcrumbs">Data</a></li>
+            <li aria-current="page" id="breadcrumbs-current-long">
+              very-long-name-of-the-current-page
+            </li>
+          </ol>
+          <menu class="ui-popover ui-menu" id="breadcrumbs-menu" popover>
+            <li><a class="ui-menu-item" href="#breadcrumbs">Projects</a></li>
+            <li><a class="ui-menu-item" href="#breadcrumbs">Archive</a></li>
+          </menu>
+        </nav>
+        <nav class="ui-breadcrumbs" aria-label="Breadcrumb" id="breadcrumbs-selflink">
+          <ol role="list">
+            <li>
+              <a href="#breadcrumbs" aria-current="page" id="breadcrumbs-selflink-current">Data</a>
+            </li>
+          </ol>
+        </nav>
+      </section>
+
       <!-- Base typography -->
       <section id="typography">
         <p id="typography-inline">

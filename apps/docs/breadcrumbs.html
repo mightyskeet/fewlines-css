@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script>
+      try {
+        var t = localStorage.getItem('theme');
+        if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+      } catch (e) {}
+    </script>
+    <script>
+      try {
+        var b = JSON.parse(localStorage.getItem('colors-bases') || 'null');
+        if (b) {
+          var r = document.documentElement,
+            s = r.style;
+          for (var k in b) s.setProperty(k, b[k]);
+          r.setAttribute('data-palette', 'custom');
+        }
+      } catch (e) {}
+    </script>
+    <title>Breadcrumbs — @fewlines/css</title>
+    <link rel="stylesheet" href="/core.css" />
+    <link rel="stylesheet" href="/docs.css" />
+    <link rel="stylesheet" href="/colors-derive.css" />
+    <script src="/site-sidebar.js" defer blocking="render"></script>
+    <script src="/site-toc.js" defer blocking="render"></script>
+    <script src="/vendor/hljs.min.js" defer></script>
+    <script src="/site-code.js" defer></script>
+  </head>
+  <body>
+    <site-sidebar></site-sidebar>
+
+    <main>
+      <header class="page-header">
+        <h1>Breadcrumbs</h1>
+        <p>
+          The trail from the root to the current page on the native
+          <code>&lt;nav&gt;</code> + <code>&lt;ol&gt;</code>: the landmark and the list semantics
+          come with the elements, the current page is the native <code>aria-current="page"</code>
+          state. Separators are drawn by the component. No JS.
+        </p>
+      </header>
+
+      <section>
+        <h2>Semantic basis</h2>
+        <p>
+          The component is the WAI-ARIA breadcrumbs pattern: a named navigation landmark, an ordered
+          list of crumbs, links for the ancestors and <code>aria-current="page"</code> for the
+          current page (announced by screen readers). The attribute may sit on the
+          <code>&lt;li&gt;</code> (a plain-text crumb) or on the crumb's link — the CSS honors both.
+          A stepper carries the progress of a process (<a href="/stepper">Stepper</a>), a breadcrumb
+          carries the position in a hierarchy.
+        </p>
+      </section>
+
+      <section>
+        <h2>Canonical markup</h2>
+        <pre><code>&lt;nav class="ui-breadcrumbs" aria-label="Breadcrumb"&gt;
+  &lt;ol role="list"&gt;
+    &lt;li&gt;&lt;a href="/"&gt;Home&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href="/library"&gt;Library&lt;/a&gt;&lt;/li&gt;
+    &lt;li aria-current="page"&gt;Data&lt;/li&gt;
+  &lt;/ol&gt;
+&lt;/nav&gt;</code></pre>
+        <p>
+          <code>role="list"</code> is insurance for the <code>list-style: none</code> quirk (the
+          timeline precedent). <code>aria-label</code> on the <code>&lt;nav&gt;</code> is required —
+          the landmark's accessible name. Separators are drawn by the component (<code
+            >li + li::before</code
+          >); the markup never contains them, and the slash carries an empty alternative text (<code
+            >content: '/' / ''</code
+          >), so assistive tech skips the punctuation.
+        </p>
+      </section>
+
+      <section>
+        <h2>States</h2>
+        <div class="example">
+          <nav class="ui-breadcrumbs" aria-label="Breadcrumb">
+            <ol role="list">
+              <li><a href="#states">Home</a></li>
+              <li><a href="#states">Library</a></li>
+              <li aria-current="page">Data</li>
+            </ol>
+          </nav>
+        </div>
+        <p>
+          Links keep the base link color; the underline is dropped at rest (the trail structure
+          identifies the link) and returns on hover. The current crumb is full-contrast text — the
+          native <code>aria-current</code> carries the semantics, not a color.
+        </p>
+      </section>
+
+      <section>
+        <h2>Collapsed levels</h2>
+        <div class="example">
+          <nav class="ui-breadcrumbs" aria-label="Breadcrumb">
+            <ol role="list">
+              <li><a href="#collapsed">Home</a></li>
+              <li>
+                <button
+                  class="ui-popover-trigger"
+                  type="button"
+                  popovertarget="bc-more"
+                  aria-label="Hidden levels"
+                >
+                  …
+                </button>
+              </li>
+              <li><a href="#collapsed">Data</a></li>
+              <li aria-current="page">Exports</li>
+            </ol>
+            <menu class="ui-popover ui-menu" id="bc-more" popover>
+              <li><a class="ui-menu-item" href="#collapsed">Projects</a></li>
+              <li><a class="ui-menu-item" href="#collapsed">Archive</a></li>
+            </menu>
+          </nav>
+        </div>
+        <p>
+          The host collapses the middle crumbs into one <code>&lt;li&gt;</code> with a
+          <code>button[popovertarget]</code> — a declarative trigger, zero JS; the hidden levels are
+          listed in a <a href="/menu">menu</a> popover (the canonical shell: light dismiss, Escape,
+          anchor positioning below the trigger). The button must carry an <code>aria-label</code> —
+          the visible glyph «…» is not a name. Collapsed is not an attribute variant: it is a
+          documented composition with the Menu component.
+        </p>
+      </section>
+
+      <section>
+        <h2>Current-item truncation</h2>
+        <div class="example">
+          <nav class="ui-breadcrumbs" aria-label="Breadcrumb">
+            <ol role="list">
+              <li><a href="#truncation">Home</a></li>
+              <li><a href="#truncation">Library</a></li>
+              <li aria-current="page">very-long-name-of-the-current-page</li>
+            </ol>
+          </nav>
+        </div>
+        <p>
+          The current crumb is capped at <code>--ui-breadcrumbs-max</code> (default
+          <code>40ch</code>) and clips with a text-overflow ellipsis — a long page name cannot push
+          the trail wide. The cap is a maximum, not a fixed width: in a narrow container the crumb
+          shrinks further (the automatic flex minimum is zeroed by the clipping).
+        </p>
+      </section>
+
+      <section>
+        <h2>Customization</h2>
+        <p>
+          The separator and the toggle are <code>text-muted</code> (the registered fluent pair); the
+          crumbs keep the base palette. Hosts re-theme through the local tokens — no variants, no
+          classes:
+        </p>
+        <pre><code>.page-trail {
+  --ui-breadcrumbs-max: 24ch;
+  --ui-breadcrumbs-separator-color: var(--ui-color-border-strong);
+  --ui-breadcrumbs-gap: var(--ui-space-xs);
+}</code></pre>
+      </section>
+
+      <section>
+        <h2>Accessibility</h2>
+        <ul>
+          <li>
+            The navigation landmark, the list roles and the current-page state are native;
+            <code>aria-label</code> on the <code>&lt;nav&gt;</code> is required.
+          </li>
+          <li>
+            The separator is generated content with an empty alternative text — it never enters the
+            chain's accessible name.
+          </li>
+          <li>
+            Collapsed levels stay full-fledged links inside the menu popover; the trigger must carry
+            an <code>aria-label</code>.
+          </li>
+          <li>
+            The <code>text-muted</code> pairs (separator, toggle) are registered in the APCA matrix
+            as fluent pairs; links and the current crumb reuse existing pairs.
+          </li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Do not</h2>
+        <ul>
+          <li>
+            No separator markup (<code>&lt;li&gt;</code> arrows, glyph characters) — the component
+            draws them; duplicates break the rhythm.
+          </li>
+          <li>
+            No <code>&lt;div&gt;</code> chains instead of <code>&lt;nav&gt;</code> +
+            <code>&lt;ol&gt;</code> — the landmark and the list semantics are the contract.
+          </li>
+          <li>
+            No <code>aria-label</code>-less nav or toggle; no state classes (<code
+              >.is-current</code
+            >
+            and friends) — <code>aria-current="page"</code> only.
+          </li>
+          <li>
+            No <code>display: none</code> on the middle levels without a menu popover — the levels
+            would be lost for navigation.
+          </li>
+        </ul>
+      </section>
+    </main>
+    <site-toc></site-toc>
+
+    <footer>
+      <p>Full contract: <code>packages/core/src/components/breadcrumbs/breadcrumbs.md</code></p>
+    </footer>
+  </body>
+</html>
