@@ -89,6 +89,49 @@
       </section>
 
       <section>
+        <h2>Circle</h2>
+        <div class="example">
+          <progress
+            class="ui-progress"
+            data-shape="circle"
+            data-size="sm"
+            max="100"
+            value="40"
+            style="--ui-progress-value: 40"
+            aria-label="Small ring"
+          ></progress>
+          <progress
+            class="ui-progress"
+            data-shape="circle"
+            max="100"
+            value="70"
+            style="--ui-progress-value: 70"
+            aria-label="Ring"
+          ></progress>
+          <progress
+            class="ui-progress"
+            data-shape="circle"
+            data-size="lg"
+            max="100"
+            value="90"
+            style="--ui-progress-value: 90"
+            aria-label="Large ring"
+          ></progress>
+          <progress class="ui-progress" data-shape="circle" aria-label="Loading ring"></progress>
+        </div>
+        <p>
+          <code>data-shape="circle"</code> — the same native <code>&lt;progress&gt;</code>, no SVG:
+          the role, the <code>value</code>/<code>max</code> model and
+          <code>:indeterminate</code> stay native. The arc is a conic gradient cut into a ring by a
+          mask. The attribute drives the accessibility tree; the paint reads
+          <code>--ui-progress-value</code> (0–100), set by the host next to the attributes —
+          attr() is not cross-engine and runtime JS is out of contract. Without the property the
+          ring degrades to a full track. A missing <code>value</code> gives the spinning arc.
+          Reduced motion: the arc settles instantly and the spin stands still.
+        </p>
+      </section>
+
+      <section>
         <h2>Sizes</h2>
         <div class="example">
           <progress class="ui-progress" data-size="sm" max="100" value="40" aria-label="Small"></progress>

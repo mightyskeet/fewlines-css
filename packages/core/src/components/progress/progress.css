@@ -29,10 +29,41 @@
  * paint model as the fill itself), animated via background-position (CSS
  * animations, compatibility notes 2026-10-30). Reduced motion silences it
  * without losing the contract — the state is still carried by the fill.
+ * Not part of the circle contract: the band would sweep the whole disc, not
+ * the ring arc.
  *
- * Forced colors: appearance is restored to auto — the system progress bar
- * takes over entirely (the same trick the Field select uses for its chevron).
+ * Circle (data-shape="circle"): the ring is painted on the same native
+ * <progress> — no SVG, so the progressbar role, the value/max model and
+ * :indeterminate stay native. The paint is a two-target model like the bar:
+ * Firefox shows the element background (conic gradient), Chromium paints
+ * ::-webkit-progress-bar over it — both get the same gradient from one
+ * local custom property; the fill pseudo-elements go transparent so the
+ * engine fill never paints over the ring. The ring is cut by a radial
+ * mask (background-clip: border-area is rejected — no Firefox,
+ * compatibility notes 2026-10-30).
+ *
+ * The value that drives the arc is the custom property --ui-progress-value
+ * (0-100), set by the HOST next to the value/max attributes: the attribute
+ * drives the accessibility tree, the property drives the paint. attr() is
+ * rejected (Safari only TP, compatibility notes 2026-10-30) and a
+ * MutationObserver is impossible (zero runtime JS) — the dual source of
+ * truth is a documented host duty (like Table's aria-label).
+ *
+ * Indeterminate circle: a rotating arc. The rotation animates the element
+ * itself (transform on a pseudo would rotate with the engine chain and
+ * diverge in Chromium); the arc is a conic redefinition of the same local
+ * gradient token, so the element and the Chromium bar pick it up together.
+ *
+ * Forced colors: appearance is restored to auto and the mask is dropped —
+ * the system progress bar takes over entirely (the same trick the Field
+ * select uses for its chevron).
  */
+
+@property --ui-progress-value {
+  syntax: '<number>';
+  inherits: false;
+  initial-value: 0;
+}
 
 .ui-progress {
   /* Local knobs — the host customization points (same model as Divider). */
@@ -136,6 +167,101 @@
   .ui-progress[data-shimmer]:not(:indeterminate)::-moz-progress-bar {
     animation: none;
     background-image: none;
+  }
+}
+
+/* Circle: square element, ring cut by mask, conic arc for the value.
+ * Diameter over fixed steps (2/2.5/3rem, agreed 2026-10-30) — the space
+ * scale has no steps in this range and the ring needs room for the 4px
+ * thickness. Direction is explicit: from 12 o'clock clockwise (RTL note:
+ * the conic direction is fixed regardless of direction — progress
+ * direction is not critical for understanding the state). */
+.ui-progress[data-shape='circle'] {
+  /* Same gradient token feeds the element (Firefox) and the Chromium bar —
+   * one source of truth; the indeterminate state redefines it to an arc. */
+  --ui-progress-conic: conic-gradient(
+    from 0deg,
+    var(--ui-progress-fill) calc(var(--ui-progress-value) * 1%),
+    var(--ui-progress-track) 0
+  );
+  --ui-progress-ring-thickness: var(--ui-space-2xs);
+
+  inline-size: 2.5rem;
+  block-size: 2.5rem;
+  border-radius: 50%;
+  background: var(--ui-progress-conic);
+
+  /* Registered <number> (see @property above) — the arc eases to a new
+   * value instead of jumping; graceful degradation elsewhere. */
+  transition: --ui-progress-value 400ms ease;
+
+  /* Ring, not disc: cut the center out with a mask (border-area rejected —
+   * no Firefox). The 0.5px overlap avoids a blending seam at the step. */
+  mask-image: radial-gradient(
+    farthest-side,
+    transparent calc(100% - var(--ui-progress-ring-thickness)),
+    black calc(100% - var(--ui-progress-ring-thickness) + 0.5px)
+  );
+}
+
+/* Chromium paints the bar pseudo over the element — feed it the same
+ * gradient; the fill pseudo must stay out of the way. */
+.ui-progress[data-shape='circle']::-webkit-progress-bar {
+  background: var(--ui-progress-conic);
+}
+
+.ui-progress[data-shape='circle']::-webkit-progress-value,
+.ui-progress[data-shape='circle']::-moz-progress-bar {
+  background: transparent;
+}
+
+.ui-progress[data-shape='circle'][data-size='sm'] {
+  inline-size: 2rem;
+  block-size: 2rem;
+}
+
+.ui-progress[data-shape='circle'][data-size='lg'] {
+  inline-size: 3rem;
+  block-size: 3rem;
+}
+
+/* Indeterminate: a quarter arc spinning around the center. The rotation is
+ * on the element itself — pseudos are part of the element's render and
+ * would rotate with it (a transform on a pseudo would double the speed in
+ * Chromium — divergence). Redefining the shared gradient token switches
+ * element and Chromium bar to the arc together. */
+.ui-progress[data-shape='circle']:indeterminate {
+  --ui-progress-conic: conic-gradient(
+    from 0deg,
+    var(--ui-progress-fill) 90deg,
+    var(--ui-progress-track) 0
+  );
+  animation: ui-progress-spin 1s linear infinite;
+}
+
+@keyframes ui-progress-spin {
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+/* Reduced motion: the value settles instantly and the arc stands still —
+ * fill/track still carry the state. */
+@media (prefers-reduced-motion: reduce) {
+  .ui-progress[data-shape='circle'] {
+    transition: none;
+  }
+
+  .ui-progress[data-shape='circle']:indeterminate {
+    animation: none;
+  }
+}
+
+/* Forced colors: the mask would clip the system progress bar — drop it
+ * (appearance: auto comes from the base forced-colors rule). */
+@media (forced-colors: active) {
+  .ui-progress[data-shape='circle'] {
+    mask-image: none;
   }
 }
 
