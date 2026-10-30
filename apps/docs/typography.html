@@ -173,16 +173,17 @@
       <section>
         <h2>Spellcheck</h2>
         <div class="example">
-          <textarea rows="3" spellcheck="true">
-I has believe this sentence contain several
-speling and grammer mistakes.</textarea>
+          <div spellcheck="true" contenteditable="true">
+            I has believe this sentence contain several speling and grammer mistakes.
+          </div>
         </div>
         <p>
           <code>::spelling-error</code> and <code>::grammar-error</code> repaint the engine's error
           markers with a wavy <code>--ui-color-attention</code> underline — the urgency tone of
-          validation errors. Progressive enhancement (compatibility notes): Chrome 121+ and Safari
-          17.4+ take the custom look; without support the rule is ignored and the native squiggle
-          stays. The demo needs a browser dictionary for English.
+          validation errors. The pseudo-elements apply to any editable content, so the demo is a
+          bare <code>contenteditable</code> region. Progressive enhancement (compatibility notes):
+          Chrome 121+ and Safari 17.4+ take the custom look; without support the rule is ignored and
+          the native squiggle stays. The demo needs a browser dictionary for English.
         </p>
       </section>
 
