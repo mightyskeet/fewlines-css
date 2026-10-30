@@ -1,0 +1,76 @@
+/* Skeleton component.
+ *
+ * Native basis: the platform has no placeholder element. Skeleton is a
+ * static decorative block (the Badge model — no role, no states, no JS):
+ * it stands in for content that has not loaded yet and carries no
+ * information of its own, so contrast requirements (WCAG 1.4.11) do not
+ * apply — the paint is exempt and no APCA pairs are registered.
+ *
+ * Canonical structure:
+ *   <span class="ui-skeleton" style="inline-size: 12rem"></span>
+ *
+ * Geometry is the host's: the skeleton borrows the geometry of the content
+ * it stands in for (line length, avatar circle, card block). The defaults
+ * fit the most common case — a text line: a full-width block one line tall
+ * (block-size: 1em follows the surrounding font-size, so the layout does
+ * not shift when the real content lands). Any other shape is host geometry;
+ * the roundness is a local token (a full radius makes an avatar circle).
+ *
+ * Motion: the shimmer is always on — a skeleton without motion is just a
+ * gray block (the Progress indeterminate sweep set the precedent for
+ * component-owned decorative motion). The mechanic is the Progress
+ * shimmer's: a highlight band (background-image gradient) swept via
+ * background-position (CSS animations, compatibility notes 2026-10-30).
+ * The band mixes the surface towards the page text — a visible-but-calm
+ * step in both themes (the surface/tint pair itself is decorative here).
+ * Reduced motion parks the sweep — a calm static surface remains.
+ *
+ * Forced colors: the system strips the background paint; the empty box
+ * keeps reserving the layout space (decorative paint, nothing to preserve).
+ */
+
+.ui-skeleton {
+  /* Local knobs — the host customization points (same model as Progress). */
+  --ui-skeleton-surface: var(--ui-color-surface-tint);
+  --ui-skeleton-highlight: color-mix(
+    in oklch,
+    var(--ui-color-text) 12%,
+    var(--ui-skeleton-surface)
+  );
+  --ui-skeleton-duration: 1.5s;
+  --ui-skeleton-radius: var(--ui-radius-md);
+
+  display: block;
+  box-sizing: border-box;
+  inline-size: 100%; /* a text line spans the measure; host narrows as needed */
+  block-size: 1em; /* one text line at the surrounding font-size */
+  border-radius: var(--ui-skeleton-radius);
+  background-color: var(--ui-skeleton-surface);
+  background-image: linear-gradient(
+    90deg,
+    transparent 30%,
+    var(--ui-skeleton-highlight) 50%,
+    transparent 70%
+  );
+  background-repeat: no-repeat;
+  background-size: 50% 100%;
+  animation: ui-skeleton-sweep var(--ui-skeleton-duration) linear infinite;
+}
+
+@keyframes ui-skeleton-sweep {
+  from {
+    background-position: -100% 0;
+  }
+
+  to {
+    background-position: 200% 0;
+  }
+}
+
+/* Reduced motion: the sweep is decoration — park it on the calm surface. */
+@media (prefers-reduced-motion: reduce) {
+  .ui-skeleton {
+    animation: none;
+    background-image: none;
+  }
+}

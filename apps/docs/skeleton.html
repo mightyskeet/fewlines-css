@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script>
+      try {
+        var t = localStorage.getItem('theme');
+        if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+      } catch (e) {}
+    </script>
+    <script>
+      try {
+        var b = JSON.parse(localStorage.getItem('colors-bases') || 'null');
+        if (b) {
+          var r = document.documentElement,
+            s = r.style;
+          for (var k in b) s.setProperty(k, b[k]);
+          r.setAttribute('data-palette', 'custom');
+        }
+      } catch (e) {}
+    </script>
+    <title>Skeleton — @fewlines/css</title>
+    <link rel="stylesheet" href="/core.css" />
+    <link rel="stylesheet" href="/docs.css" />
+    <link rel="stylesheet" href="/colors-derive.css" />
+    <script src="/site-sidebar.js" defer blocking="render"></script>
+    <script src="/site-toc.js" defer blocking="render"></script>
+    <script src="/vendor/hljs.min.js" defer></script>
+    <script src="/site-code.js" defer></script>
+  </head>
+  <body>
+    <site-sidebar></site-sidebar>
+
+    <main>
+      <header class="page-header">
+        <h1>Skeleton</h1>
+        <p>
+          Placeholder for content that has not loaded yet: text lines, an avatar, a card block.
+          Static decorative element — no states, no JS.
+        </p>
+      </header>
+
+      <section>
+        <h2>Semantic basis</h2>
+        <p>
+          The platform has no placeholder element, so the component is an empty static
+          <code>&lt;span&gt;</code> (the Badge model): no role, no focus, no states. A skeleton
+          carries no information of its own — the “this area is loading” signal belongs to the host,
+          which marks the loading region with <code>aria-busy="true"</code> and removes it when the
+          real content lands.
+        </p>
+      </section>
+
+      <section>
+        <h2>Canonical markup</h2>
+        <pre><code>&lt;span class="ui-skeleton" style="inline-size: 12rem"&gt;&lt;/span&gt;</code></pre>
+        <p>
+          Geometry is the host's: the placeholder borrows the geometry of the content it stands in
+          for. The defaults fit the most common case — a text line: full-width block, one line tall
+          (<code>block-size: 1em</code> follows the surrounding font-size, so the layout does not
+          shift when the real text lands).
+        </p>
+      </section>
+
+      <section>
+        <h2>Text lines</h2>
+        <div class="example" aria-busy="true" style="display: grid; gap: var(--ui-space-sm)">
+          <span class="ui-skeleton" style="inline-size: 80%"></span>
+          <span class="ui-skeleton"></span>
+          <span class="ui-skeleton" style="inline-size: 60%"></span>
+        </div>
+        <p>
+          A stack of lines stands in for a paragraph. The line heights and the gaps between the
+          blocks are host layout — the component paints only the surface and the sweep.
+        </p>
+      </section>
+
+      <section>
+        <h2>Avatar + lines</h2>
+        <div
+          class="example"
+          aria-busy="true"
+          style="display: flex; gap: var(--ui-space-md); align-items: flex-start"
+        >
+          <span
+            class="ui-skeleton"
+            style="
+              inline-size: 2.5rem;
+              block-size: 2.5rem;
+              --ui-skeleton-radius: var(--ui-radius-full);
+            "
+          ></span>
+          <div style="flex: 1; display: grid; gap: var(--ui-space-sm)">
+            <span class="ui-skeleton" style="inline-size: 30%"></span>
+            <span class="ui-skeleton"></span>
+          </div>
+        </div>
+        <p>
+          Any shape is host geometry plus the radius token — a full radius makes the avatar circle.
+          No <code>data-shape</code> attribute: the shape is expressed by geometry, not variants.
+        </p>
+      </section>
+
+      <section>
+        <h2>Card block</h2>
+        <div class="example">
+          <span
+            class="ui-skeleton"
+            style="inline-size: 16rem; block-size: 8rem; --ui-skeleton-radius: var(--ui-radius-lg)"
+          ></span>
+        </div>
+        <p>
+          Large blocks stand in for cards or media. The shimmer is always on — a skeleton without
+          motion is just a gray block; reduced motion parks it on the calm surface.
+        </p>
+      </section>
+
+      <section>
+        <h2>Customization</h2>
+        <div class="example">
+          <span
+            class="ui-skeleton"
+            style="--ui-skeleton-duration: 3s; --ui-skeleton-radius: var(--ui-radius-full)"
+          ></span>
+        </div>
+        <p>
+          Local tokens: <code>--ui-skeleton-surface</code> (default <code>surface-tint</code>),
+          <code>--ui-skeleton-highlight</code> (the sweep band, a calm mix towards the page text),
+          <code>--ui-skeleton-duration</code> (default <code>1.5s</code>),
+          <code>--ui-skeleton-radius</code> (default <code>--ui-radius-md</code>). Hosts override
+          with semantic tokens, not classes; <code>data-variant</code> does not exist — the
+          placeholder is decorative and needs no color semantics.
+        </p>
+      </section>
+
+      <section>
+        <h2>Accessibility</h2>
+        <ul>
+          <li>
+            An empty element carries no text, so it never enters the accessibility tree: no role,
+            not focusable, no states.
+          </li>
+          <li>
+            The loading signal is the host's <code>aria-busy="true"</code> on the region — removed
+            together with the placeholders when content arrives.
+          </li>
+          <li>
+            Decorative paint: WCAG 1.4.11 does not apply — the placeholder conveys no information,
+            no APCA pairs are registered.
+          </li>
+          <li>Reduced motion silences the sweep — the placeholder stays a calm static surface.</li>
+          <li>Forced colors strip the paint; the empty box keeps reserving the layout space.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Do not</h2>
+        <ul>
+          <li>
+            No content imitation (gray text, icons) inside the placeholder — it would enter the
+            accessibility tree; the skeleton is decoration.
+          </li>
+          <li>
+            No geometry animation (size pulse) — the only motion is the highlight sweep across the
+            surface.
+          </li>
+          <li>
+            No roles (<code>status</code>, <code>progressbar</code>) on the placeholder — the
+            loading signal is <code>aria-busy</code> on the host region.
+          </li>
+        </ul>
+      </section>
+    </main>
+    <site-toc></site-toc>
+
+    <footer>
+      <p>Full contract: <code>packages/core/src/components/skeleton/skeleton.md</code></p>
+    </footer>
+  </body>
+</html>

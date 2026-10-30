@@ -36,6 +36,7 @@ const PAGES = [
   { href: '/alert', label: 'Alert' },
   { href: '/badge', label: 'Badge' },
   { href: '/divider', label: 'Divider' },
+  { href: '/skeleton', label: 'Skeleton' },
   { href: '/progress', label: 'Progress' },
   { href: '/timeline', label: 'Timeline' },
   { href: '/tabs', label: 'Tabs' },
