@@ -9,6 +9,7 @@
 @import './fieldset/fieldset.css';
 @import './dialog/dialog.css';
 @import './popover/popover.css';
+@import './menu/menu.css';
 @import './drawer/drawer.css';
 @import './accordion/accordion.css';
 @import './alert/alert.css';

@@ -175,6 +175,66 @@
         </div>
       </section>
 
+      <!-- Menu -->
+      <section id="menus">
+        <!-- Pair scoping: with a shared anchor name every popover would
+             anchor to the last trigger in DOM order (compatibility notes). -->
+        <div style="anchor-scope: all">
+          <button
+            class="ui-button ui-popover-trigger"
+            type="button"
+            popovertarget="testMenu"
+            id="menu-trigger"
+          >
+            Actions
+          </button>
+          <menu class="ui-popover ui-menu" id="testMenu" popover>
+            <li>
+              <button
+                class="ui-menu-item"
+                type="button"
+                id="menu-item-rename"
+                autofocus
+                command="hide-popover"
+                commandfor="testMenu"
+              >
+                Rename
+              </button>
+            </li>
+            <li>
+              <button
+                class="ui-menu-item"
+                type="button"
+                id="menu-item-disabled"
+                disabled
+                command="hide-popover"
+                commandfor="testMenu"
+              >
+                Archive
+              </button>
+            </li>
+            <li><hr class="ui-divider" /></li>
+            <li>
+              <button
+                class="ui-menu-item"
+                type="button"
+                id="menu-item-delete"
+                data-variant="attention"
+                command="hide-popover"
+                commandfor="testMenu"
+              >
+                Delete
+              </button>
+            </li>
+            <li>
+              <a class="ui-menu-item" href="#menus" id="menu-item-link" aria-disabled="true">
+                Draft (disabled link)
+              </a>
+            </li>
+          </menu>
+        </div>
+      </section>
+
       <!-- Drawer -->
       <section id="drawers">
         <button class="ui-button" type="button" popovertarget="testDrawer" id="drawer-trigger">

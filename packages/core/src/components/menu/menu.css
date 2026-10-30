@@ -1,0 +1,127 @@
+/* Menu component.
+ *
+ * Native basis: <menu> is the platform's unordered list of actions — the
+ * list semantics come with the element; the component adds the item
+ * vocabulary. The menu itself is a popover: composing with .ui-popover
+ * keeps one canonical shell (surface, elevation, anchor placement, the
+ * open/close motion — Popover's implementation, no duplicate). The
+ * component only overrides the shell padding and the list rhythm.
+ *
+ * Canonical structure:
+ *   <button class="ui-button ui-popover-trigger" type="button" popovertarget="m1">Actions</button>
+ *   <menu class="ui-popover ui-menu" id="m1" popover>
+ *     <li><button class="ui-menu-item" type="button">Rename</button></li>
+ *     <li><hr class="ui-divider" /></li>
+ *     <li><button class="ui-menu-item" type="button" data-variant="attention">Delete</button></li>
+ *   </menu>
+ *
+ * The menu must be imported after popover.css: the shell padding
+ * (.ui-menu) and the generic popover padding (.ui-popover) have the same
+ * specificity and the later rule wins.
+ *
+ * Items: <button class="ui-menu-item"> (action) or <a class="ui-menu-item">
+ * (navigation). Closing after an action is native — Invoker Commands:
+ *   <button class="ui-menu-item" type="button" command="hide-popover" commandfor="m1">Rename</button>
+ * the click event still fires after the command, so the host JS layer
+ * runs its own action; engines without the attribute simply keep the menu
+ * open (graceful degradation).
+ *
+ * Focus: with `autofocus` on the first item, the show steps move focus
+ * into the menu (native, Drawer precedent); without it, focus stays on
+ * the trigger and Tab reaches the items through the top layer.
+ *
+ * Colors via local tokens (host-overridable):
+ *   item text        --ui-color-text (body pair),
+ *   hover fill       --ui-color-hover (pointer-gated, Button ghost policy),
+ *   attention item   --ui-color-attention text on --ui-color-attention-tint
+ *                    hover fill (the Alert pair, documented 60 minimum).
+ *
+ * Forced colors: the system repaints button colors natively.
+ */
+
+.ui-menu {
+  /* Local tokens — shell padding + the list rhythm between items. */
+  --ui-menu-gap: var(--ui-space-2xs);
+  --ui-menu-min-inline-size: 12rem;
+
+  list-style: none;
+  margin: 0;
+  padding: var(--ui-space-2xs);
+
+  /* The popover shell sizes the menu to its content (inline-size:
+   * max-content); a menu narrower than its longest label is a strip. */
+  min-inline-size: var(--ui-menu-min-inline-size);
+}
+
+.ui-menu li {
+  margin: 0;
+}
+
+.ui-menu li + li {
+  margin-block-start: var(--ui-menu-gap);
+}
+
+/* The divider's own block margins come off — the list rhythm above
+ * provides the spacing. */
+.ui-menu .ui-divider {
+  margin-block: 0;
+}
+
+.ui-menu-item {
+  box-sizing: border-box;
+  display: block;
+  inline-size: 100%;
+  font: inherit;
+  text-align: start;
+  color: var(--ui-color-text);
+  background: transparent;
+  border: none;
+  border-radius: var(--ui-radius-sm);
+  padding: var(--ui-space-2xs) var(--ui-space-sm);
+  cursor: pointer;
+  user-select: none;
+  text-decoration: none;
+  transition: background-color var(--ui-duration-fast) ease;
+}
+
+/* Attention: the urgency tone as text on the menu surface (the registered
+ * body pair); the hover fill steps to the family tint (the Alert pair). */
+.ui-menu-item[data-variant='attention'] {
+  color: var(--ui-color-attention);
+}
+
+/* Disabled — native :disabled covers <button>; aria-disabled covers links. */
+.ui-menu-item:disabled,
+.ui-menu-item[aria-disabled='true'] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Hover carries the affordance (Button ghost policy); hover is
+ * pointer-gated (sticky :hover on touch would latch the highlight) and
+ * never restyles a disabled control. */
+@media (hover: hover) and (pointer: fine) {
+  .ui-menu-item:hover:not(:disabled, [aria-disabled='true']) {
+    background: var(--ui-color-hover);
+  }
+
+  .ui-menu-item[data-variant='attention']:hover:not(:disabled, [aria-disabled='true']) {
+    background: var(--ui-color-attention-tint);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-menu-item {
+    transition: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .ui-menu {
+    forced-color-adjust: auto;
+  }
+
+  .ui-menu-item {
+    forced-color-adjust: auto;
+  }
+}

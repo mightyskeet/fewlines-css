@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script>
+      try {
+        var t = localStorage.getItem('theme');
+        if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+      } catch (e) {}
+    </script>
+    <script>
+      try {
+        var b = JSON.parse(localStorage.getItem('colors-bases') || 'null');
+        if (b) {
+          var r = document.documentElement,
+            s = r.style;
+          for (var k in b) {
+            s.setProperty(k, b[k]);
+          }
+          r.setAttribute('data-palette', 'custom');
+        }
+      } catch (e) {}
+    </script>
+    <title>Menu — @fewlines/css</title>
+    <link rel="stylesheet" href="/core.css" />
+    <link rel="stylesheet" href="/docs.css" />
+    <link rel="stylesheet" href="/colors-derive.css" />
+    <script src="/site-sidebar.js" defer blocking="render"></script>
+    <script src="/site-toc.js" defer blocking="render"></script>
+    <script src="/vendor/hljs.min.js" defer></script>
+    <script src="/site-code.js" defer></script>
+    <style>
+      /* Pair scoping: the demo pairs share anchor names — the same rule the
+       * popover docs use (anchor-scope on the common wrapper). */
+      @supports (anchor-name: --ui-anchor) {
+        .menu-demo-pair {
+          anchor-scope: all;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <site-sidebar></site-sidebar>
+
+    <main>
+      <header class="page-header">
+        <h1>Menu</h1>
+        <p>
+          A list of actions in an overlay: the native <code>&lt;menu&gt;</code> element inside the
+          popover shell. Opening, placement, light dismiss and Escape come with the platform; the
+          menu is only the list vocabulary on top.
+        </p>
+      </header>
+
+      <section>
+        <h2>Semantic basis</h2>
+        <p>
+          <code>&lt;menu&gt;</code> is the platform's unordered list of actions — the list semantics
+          and the separator role of <code>&lt;hr&gt;</code> come with the elements. The menu itself
+          is a popover: it composes with <code>ui-popover</code> (one canonical shell — surface,
+          elevation, anchor placement, the open/close motion). No ARIA role substitution:
+          <code>role="menu"</code>/<code>menuitem</code> would promise arrow-key navigation and a
+          roving tabindex that pure CSS cannot deliver. The items stay plain buttons and links;
+          hosts that need the ARIA menu pattern add it in their own JS layer.
+        </p>
+      </section>
+
+      <section>
+        <h2>Canonical markup</h2>
+        <pre><code>&lt;button class="ui-button ui-popover-trigger" type="button" popovertarget="file-menu"&gt;
+  Actions
+&lt;/button&gt;
+
+&lt;menu class="ui-popover ui-menu" id="file-menu" popover&gt;
+  &lt;li&gt;
+    &lt;button class="ui-menu-item" type="button" command="hide-popover" commandfor="file-menu"&gt;
+      Rename
+    &lt;/button&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;hr class="ui-divider" /&gt;&lt;/li&gt;
+  &lt;li&gt;
+    &lt;button class="ui-menu-item" type="button" data-variant="attention"
+            command="hide-popover" commandfor="file-menu"&gt;
+      Delete
+    &lt;/button&gt;
+  &lt;/li&gt;
+&lt;/menu&gt;</code></pre>
+        <p>
+          <code>class="ui-popover ui-menu"</code>: the shell (surface, placement
+          <code>data-block</code>/<code>data-inline</code>, motion) is the Popover component; the
+          menu adds the list and item styles. Closing after an action is native — Invoker Commands
+          (<code>command="hide-popover"</code> + <code>commandfor</code>): the click event still
+          fires after the command, so the host JS layer runs its own action. Engines without the
+          attribute simply keep the menu open.
+        </p>
+      </section>
+
+      <section>
+        <h2>Actions menu</h2>
+        <div class="example menu-demo-pair">
+          <button class="ui-button ui-popover-trigger" type="button" popovertarget="demo-actions">
+            Actions
+          </button>
+          <menu class="ui-popover ui-menu" id="demo-actions" popover>
+            <li>
+              <button
+                class="ui-menu-item"
+                type="button"
+                autofocus
+                command="hide-popover"
+                commandfor="demo-actions"
+              >
+                Rename
+              </button>
+            </li>
+            <li>
+              <button
+                class="ui-menu-item"
+                type="button"
+                command="hide-popover"
+                commandfor="demo-actions"
+              >
+                Duplicate
+              </button>
+            </li>
+            <li>
+              <button
+                class="ui-menu-item"
+                type="button"
+                disabled
+                command="hide-popover"
+                commandfor="demo-actions"
+              >
+                Archive
+              </button>
+            </li>
+            <li><hr class="ui-divider" /></li>
+            <li>
+              <button
+                class="ui-menu-item"
+                type="button"
+                data-variant="attention"
+                command="hide-popover"
+                commandfor="demo-actions"
+              >
+                Delete
+              </button>
+            </li>
+          </menu>
+        </div>
+        <p>
+          <code>autofocus</code> on the first item moves focus into the menu on open (native popover
+          show steps). <kbd>Tab</kbd> walks the items, <kbd>Enter</kbd> activates,
+          <kbd>Escape</kbd> closes. The separator is the native <code>&lt;hr&gt;</code>; the
+          attention item signals the destructive action through text color, not a fill.
+        </p>
+      </section>
+
+      <section>
+        <h2>Navigation menu</h2>
+        <div class="example menu-demo-pair">
+          <button
+            class="ui-button ui-popover-trigger"
+            type="button"
+            popovertarget="demo-nav"
+            popovertargetaction="show"
+          >
+            Sections
+          </button>
+          <menu
+            class="ui-popover ui-menu"
+            id="demo-nav"
+            popover
+            data-block="block-end"
+            data-inline="span-inline-end"
+          >
+            <li><a class="ui-menu-item" href="#actions">Actions menu</a></li>
+            <li><a class="ui-menu-item" href="#navigation">Navigation menu</a></li>
+            <li><a class="ui-menu-item" href="#customization">Customization</a></li>
+            <li><a class="ui-menu-item" href="#accessibility" aria-disabled="true">Do not</a></li>
+          </menu>
+        </div>
+        <p>
+          Items are <code>&lt;a href&gt;</code> — the menu is a navigation list; the link states
+          come from the element (the disabled link uses <code>aria-disabled="true"</code>).
+          <code>data-block</code>/<code>data-inline</code> align the menu to the trigger's end edge
+          — the classic dropdown placement, and Popover's placement vocabulary applies unchanged.
+        </p>
+      </section>
+
+      <section>
+        <h2>Customization</h2>
+        <pre><code>.compact-menu {
+  --ui-menu-gap: var(--ui-space-3xs);
+  --ui-menu-min-inline-size: 10rem;
+}
+
+.shell-menu {
+  max-inline-size: 24rem; /* Popover's shell cap */
+}</code></pre>
+        <p>
+          The list rhythm (<code>--ui-menu-gap</code>) and the minimum width
+          (<code>--ui-menu-min-inline-size</code>) are the menu's own local tokens; the shell
+          overrides (surface, elevation, <code>max-inline-size</code>) belong to the Popover
+          component.
+        </p>
+      </section>
+
+      <section id="accessibility">
+        <h2>Accessibility</h2>
+        <ul>
+          <li>
+            The menu announces as a list of actions: <code>&lt;menu&gt;</code> is a list, items are
+            buttons and links with their labels, the separator is the native
+            <code>&lt;hr&gt;</code> (separator role).
+          </li>
+          <li>
+            <kbd>Tab</kbd> between items, <kbd>Enter</kbd>/<kbd>Space</kbd> activate
+            <code>&lt;button&gt;</code>, <kbd>Enter</kbd> activates <code>&lt;a&gt;</code>;
+            <kbd>Escape</kbd> and an outside click close the menu natively.
+          </li>
+          <li>
+            <code>autofocus</code> on the first item moves focus into the menu on open; closing
+            returns focus to the trigger (native popover behavior).
+          </li>
+          <li>
+            Disabled items are native <code>&lt;button disabled&gt;</code> — out of the tab order; a
+            disabled link uses <code>aria-disabled="true"</code>.
+          </li>
+          <li>
+            The APCA pairs are existing registrations: <code>text</code>/<code>attention</code> on
+            <code>surface-raised</code> and the <code>attention</code>/<code>attention-tint</code>
+            hover fill (the Alert pair).
+          </li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Do not</h2>
+        <ul>
+          <li>
+            No <code>role="menu"</code>/<code>menuitem</code> — the roles promise arrow-key
+            navigation and a roving tabindex that pure CSS cannot deliver.
+          </li>
+          <li>
+            No items without <code>&lt;li&gt;</code> — the <code>&lt;menu&gt;</code> content model
+            only allows list items.
+          </li>
+          <li>
+            No JS for opening/closing in the core — <code>popovertarget</code>,
+            <code>command</code> and light dismiss are native; a host JS layer can add the arrow-key
+            menu pattern.
+          </li>
+          <li>
+            <code>command="close"</code>/<code>request-close</code> are dialog commands — the
+            popover target takes <code>command="hide-popover"</code>.
+          </li>
+        </ul>
+      </section>
+    </main>
+    <site-toc></site-toc>
+
+    <footer>
+      <p>Full contract: <code>packages/core/src/components/menu/menu.md</code></p>
+    </footer>
+  </body>
+</html>

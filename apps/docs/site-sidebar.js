@@ -30,6 +30,7 @@ const PAGES = [
   { href: '/fieldset', label: 'Fieldset' },
   { href: '/dialog', label: 'Dialog' },
   { href: '/popover', label: 'Popover' },
+  { href: '/menu', label: 'Menu' },
   { href: '/drawer', label: 'Drawer' },
   { href: '/accordion', label: 'Accordion' },
   { href: '/alert', label: 'Alert' },
