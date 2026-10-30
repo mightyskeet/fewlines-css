@@ -211,7 +211,16 @@
  * scale has no steps in this range and the ring needs room for the 4px
  * thickness. Direction is explicit: from 12 o'clock clockwise (RTL note:
  * the conic direction is fixed regardless of direction — progress
- * direction is not critical for understanding the state). */
+ * direction is not critical for understanding the state).
+ *
+ * Rounded cap: the arc's end edge is a hard radial cut (a conic cannot
+ * round it, and SVG with stroke-linecap is out of contract). The cap is a
+ * painted dot — a small radial-gradient layer centered on the ring's
+ * midline at the arc end angle. The position is polar math off the same
+ * registered --ui-progress-value (sin/cos of value * 3.6deg — trig
+ * functions, compatibility notes 2026-10-30), so the dot glides along
+ * the ring with the same 400ms ease as the arc. The start cap at 12
+ * o'clock stays square by design. */
 .ui-progress[data-shape='circle'] {
   /* Same gradient token feeds the element (Firefox) and the Chromium bar —
    * one source of truth; the indeterminate state redefines it to an arc. */
@@ -221,11 +230,38 @@
     var(--ui-progress-track) 0
   );
   --ui-progress-ring-thickness: var(--ui-space-2xs);
+  --ui-progress-circle-diameter: 2.5rem;
 
-  inline-size: 2.5rem;
-  block-size: 2.5rem;
+  /* The arc end angle is value * 3.6deg from 12 o'clock clockwise; the dot
+   * center sits on the ring midline: center + midline-radius * (sin, -cos).
+   * x = D/2 + Rm * sin(θ); y = D/2 - Rm * cos(θ); Rm = (D - T) / 2. */
+  --ui-progress-cap-x: calc(
+    var(--ui-progress-circle-diameter) / 2 +
+      (var(--ui-progress-circle-diameter) - var(--ui-progress-ring-thickness)) / 2 *
+      sin(calc(var(--ui-progress-value) * 3.6deg))
+  );
+  --ui-progress-cap-y: calc(
+    var(--ui-progress-circle-diameter) / 2 -
+      (var(--ui-progress-circle-diameter) - var(--ui-progress-ring-thickness)) / 2 *
+      cos(calc(var(--ui-progress-value) * 3.6deg))
+  );
+
+  /* Paint stack: the cap dot on top of the arc — one token for both engine
+   * paint targets. Dot radius = half the ring thickness: flush with the
+   * ring edges (the mask cuts along the same borders); a 1% transparent
+   * tail anti-aliases the dot edge. */
+  --ui-progress-ring-paint: radial-gradient(
+      circle calc(var(--ui-progress-ring-thickness) / 2)
+      at var(--ui-progress-cap-x) var(--ui-progress-cap-y),
+      var(--ui-progress-fill) 99%,
+      transparent
+    ),
+    var(--ui-progress-conic);
+
+  inline-size: var(--ui-progress-circle-diameter);
+  block-size: var(--ui-progress-circle-diameter);
   border-radius: 50%;
-  background: var(--ui-progress-conic);
+  background: var(--ui-progress-ring-paint);
 
   /* Registered <number> (see @property above) — the arc eases to a new
    * value instead of jumping; graceful degradation elsewhere. */
@@ -241,9 +277,9 @@
 }
 
 /* Chromium paints the bar pseudo over the element — feed it the same
- * gradient; the fill pseudo must stay out of the way. */
+ * paint stack; the fill pseudo must stay out of the way. */
 .ui-progress[data-shape='circle']::-webkit-progress-bar {
-  background: var(--ui-progress-conic);
+  background: var(--ui-progress-ring-paint);
 }
 
 .ui-progress[data-shape='circle']::-webkit-progress-value,
@@ -251,27 +287,33 @@
   background: transparent;
 }
 
+/* Sizes: only the diameter token changes — the cap math derives from it. */
 .ui-progress[data-shape='circle'][data-size='sm'] {
-  inline-size: 2rem;
-  block-size: 2rem;
+  --ui-progress-circle-diameter: 2rem;
 }
 
 .ui-progress[data-shape='circle'][data-size='lg'] {
-  inline-size: 3rem;
-  block-size: 3rem;
+  --ui-progress-circle-diameter: 3rem;
 }
 
 /* Indeterminate: a quarter arc spinning around the center. The rotation is
  * on the element itself — pseudos are part of the element's render and
  * would rotate with it (a transform on a pseudo would double the speed in
  * Chromium — divergence). Redefining the shared gradient token switches
- * element and Chromium bar to the arc together. */
+ * element and Chromium bar to the arc together. The cap parks at the arc
+ * end (90deg = 3 o'clock): sin(90deg) = 1, cos(90deg) = 0 — plain lengths,
+ * no trig, immune to a stale host-set --ui-progress-value. */
 .ui-progress[data-shape='circle']:indeterminate {
   --ui-progress-conic: conic-gradient(
     from 0deg,
     var(--ui-progress-fill) 90deg,
     var(--ui-progress-track) 0
   );
+  --ui-progress-cap-x: calc(
+    var(--ui-progress-circle-diameter) / 2 +
+      (var(--ui-progress-circle-diameter) - var(--ui-progress-ring-thickness)) / 2
+  );
+  --ui-progress-cap-y: calc(var(--ui-progress-circle-diameter) / 2);
 
   animation: ui-progress-spin 1s linear infinite;
 }

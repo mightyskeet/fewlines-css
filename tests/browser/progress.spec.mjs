@@ -298,6 +298,11 @@ test('circle: square ring element with conic paint and mask (element computed st
   // The registered <number> resolves: the host-set inline value (70) drives
   // the arc — the dual-source contract (attribute + property) works.
   expect(el.backgroundImage).toContain('70%');
+  // The painted end cap: a radial-gradient dot layer on top of the arc
+  // (Chromium resolves the trig position to px; engines differ in
+  // serialization — only the layer presence is pinned here).
+  expect(el.backgroundImage.startsWith('radial-gradient(')).toBe(true);
+  expect(el.backgroundImage).toContain('conic-gradient');
   expect(el.maskImage).toContain('radial-gradient');
   expect(el.transitionProperty).toContain('--ui-progress-value'); // @property-registered
 });
@@ -372,7 +377,7 @@ test('circle: Chromium bar carries the conic (CSSOM wiring)', async ({ page, bro
     return null;
   });
 
-  expect(background).toBe('var(--ui-progress-conic)');
+  expect(background).toBe('var(--ui-progress-ring-paint)');
 });
 
 test('circle: reduced motion stops the spin and the value transition', async ({ page }) => {
