@@ -37,8 +37,8 @@
         <h1>Progress</h1>
         <p>
           Operation progress indicator on the native <code>&lt;progress&gt;</code>: value model,
-          progressbar role and the indeterminate state come with the element. Not interactive —
-          no states, no JS.
+          progressbar role and the indeterminate state come with the element. Not interactive — no
+          states, no JS.
         </p>
       </header>
 
@@ -58,9 +58,9 @@
         <pre><code>&lt;progress class="ui-progress" max="100" value="70" aria-label="Uploading"&gt;&lt;/progress&gt;</code></pre>
         <p>
           The accessible name is mandatory — a <code>&lt;label&gt;</code> or
-          <code>aria-label</code> (the same host contract as the table <code>&lt;caption&gt;</code>).
-          The engine announces the percentage itself, so a textual «70%» next to the bar is not
-          required.
+          <code>aria-label</code> (the same host contract as the table
+          <code>&lt;caption&gt;</code>). The engine announces the percentage itself, so a textual
+          «70%» next to the bar is not required.
         </p>
       </section>
 
@@ -78,7 +78,13 @@
       <section>
         <h2>Shimmer</h2>
         <div class="example">
-          <progress class="ui-progress" data-shimmer max="100" value="60" aria-label="Uploading with shimmer"></progress>
+          <progress
+            class="ui-progress"
+            data-shimmer
+            max="100"
+            value="60"
+            aria-label="Uploading with shimmer"
+          ></progress>
         </div>
         <p>
           Opt-in <code>data-shimmer</code>: a highlight band sweeps across the fill of a determinate
@@ -124,19 +130,31 @@
           the role, the <code>value</code>/<code>max</code> model and
           <code>:indeterminate</code> stay native. The arc is a conic gradient cut into a ring by a
           mask. The attribute drives the accessibility tree; the paint reads
-          <code>--ui-progress-value</code> (0–100), set by the host next to the attributes —
-          attr() is not cross-engine and runtime JS is out of contract. Without the property the
-          ring degrades to a full track. A missing <code>value</code> gives the spinning arc.
-          Reduced motion: the arc settles instantly and the spin stands still.
+          <code>--ui-progress-value</code> (0–100), set by the host next to the attributes — attr()
+          is not cross-engine and runtime JS is out of contract. Without the property the ring
+          degrades to a full track. A missing <code>value</code> gives the spinning arc. Reduced
+          motion: the arc settles instantly and the spin stands still.
         </p>
       </section>
 
       <section>
         <h2>Sizes</h2>
         <div class="example">
-          <progress class="ui-progress" data-size="sm" max="100" value="40" aria-label="Small"></progress>
+          <progress
+            class="ui-progress"
+            data-size="sm"
+            max="100"
+            value="40"
+            aria-label="Small"
+          ></progress>
           <progress class="ui-progress" max="100" value="40" aria-label="Default"></progress>
-          <progress class="ui-progress" data-size="lg" max="100" value="40" aria-label="Large"></progress>
+          <progress
+            class="ui-progress"
+            data-size="lg"
+            max="100"
+            value="40"
+            aria-label="Large"
+          ></progress>
         </div>
         <p>
           <code>data-size="sm|lg"</code>; default is md (no attribute). Density only: the bar
@@ -147,10 +165,9 @@
       <section>
         <h2>Customization</h2>
         <p>
-          The fill follows the brand family by default (the checked Switch model); the track is
-          the de-emphasised soft surface, borderless (the Badge-neutral model) — a hairline fails
-          at thin sizes. Hosts re-theme through
-          the local tokens — no variants, no classes:
+          The fill follows the brand family by default (the checked Switch model); the track is the
+          de-emphasised soft surface, borderless (the Badge-neutral model) — a hairline fails at
+          thin sizes. Hosts re-theme through the local tokens — no variants, no classes:
         </p>
         <pre><code>.upload-warning {
   --ui-progress-fill: var(--ui-color-attention);
@@ -165,11 +182,13 @@
             The fill/track pair is registered in the APCA matrix as a non-text pair
             (<code>brand/surface-tint</code>); the track boundary reuses the neutral Alert pair.
           </li>
-          <li>Reduced motion: the shimmer (<code>data-shimmer</code>) is silenced; the
-            indeterminate motion is engine-native.</li>
           <li>
-            Forced colors restore the native <code>appearance</code> — the system progress bar
-            takes over with guaranteed system contrast.
+            Reduced motion: the shimmer (<code>data-shimmer</code>) is silenced; the indeterminate
+            motion is engine-native.
+          </li>
+          <li>
+            Forced colors restore the native <code>appearance</code> — the system progress bar takes
+            over with guaranteed system contrast.
           </li>
         </ul>
       </section>
@@ -178,8 +197,8 @@
         <h2>Do not</h2>
         <ul>
           <li>
-            No <code>&lt;div&gt;</code> bar instead of <code>&lt;progress&gt;</code> — the role,
-            the value model and <code>:indeterminate</code> come with the element.
+            No <code>&lt;div&gt;</code> bar instead of <code>&lt;progress&gt;</code> — the role, the
+            value model and <code>:indeterminate</code> come with the element.
           </li>
           <li>No unnamed progress bars — the accessible name is part of the contract.</li>
           <li>

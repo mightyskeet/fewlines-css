@@ -49,7 +49,10 @@ test('default determinate bar: borderless tint track, brand fill', async ({ page
   expect(el.fillVar).toBe(await token(page, '--ui-color-brand'));
 });
 
-test('the fill rule for this engine carries the fill token (CSSOM wiring)', async ({ page, browserName }) => {
+test('the fill rule for this engine carries the fill token (CSSOM wiring)', async ({
+  page,
+  browserName,
+}) => {
   // Engines drop foreign-vendor pseudo rules from the CSSOM: Chromium keeps
   // only ::-webkit-progress-value, Firefox only ::-moz-progress-bar.
   const needle = browserName === 'firefox' ? '-moz-progress-bar' : '-webkit-progress-value';
@@ -61,8 +64,7 @@ test('the fill rule for this engine carries the fill token (CSSOM wiring)', asyn
           const hit = walk(rule.cssRules);
           if (hit) return hit;
         }
-        if (rule.selectorText?.includes(needle))
-          return rule.style.getPropertyValue('background');
+        if (rule.selectorText?.includes(needle)) return rule.style.getPropertyValue('background');
       }
       return null;
     };
@@ -76,8 +78,14 @@ test('the fill rule for this engine carries the fill token (CSSOM wiring)', asyn
   expect(background).toBe('var(--ui-progress-fill)');
 });
 
-test('painted fill: brand on the track (Firefox ::-moz-progress-bar)', async ({ page, browserName }) => {
-  test.skip(browserName !== 'firefox', '::-moz-progress-bar is Firefox-only; Chromium falls back to element styles (compatibility notes)');
+test('painted fill: brand on the track (Firefox ::-moz-progress-bar)', async ({
+  page,
+  browserName,
+}) => {
+  test.skip(
+    browserName !== 'firefox',
+    '::-moz-progress-bar is Firefox-only; Chromium falls back to element styles (compatibility notes)',
+  );
 
   const fill = await page
     .locator('#progress-default')
@@ -117,7 +125,10 @@ test('forced colors restore the native progress bar', async ({ page }) => {
   expect(appearance).toBe('auto');
 });
 
-test('shimmer: gradient band + animation on the fill rule (CSSOM wiring)', async ({ page, browserName }) => {
+test('shimmer: gradient band + animation on the fill rule (CSSOM wiring)', async ({
+  page,
+  browserName,
+}) => {
   // The same engine-paint trap as the fill: Chromium cannot reach the
   // pseudo's computed styles — the wiring is asserted via CSSOM.
   const needle = browserName === 'firefox' ? '-moz-progress-bar' : '-webkit-progress-value';
@@ -308,8 +319,12 @@ test('circle: square ring element with conic paint and mask (element computed st
 });
 
 test('circle: diameter steps sm 2rem / md 2.5rem / lg 3rem', async ({ page }) => {
-  const sm = await page.locator('#progress-circle-sm').evaluate((el) => getComputedStyle(el).inlineSize);
-  const lg = await page.locator('#progress-circle-lg').evaluate((el) => getComputedStyle(el).inlineSize);
+  const sm = await page
+    .locator('#progress-circle-sm')
+    .evaluate((el) => getComputedStyle(el).inlineSize);
+  const lg = await page
+    .locator('#progress-circle-lg')
+    .evaluate((el) => getComputedStyle(el).inlineSize);
   expect(sm).toBe('32px');
   expect(lg).toBe('48px');
 });
@@ -333,7 +348,8 @@ test('circle: --ui-progress-value registered as <number> (CSSOM @property)', asy
   const prop = await page.evaluate(() => {
     const walk = (rules) => {
       for (const rule of rules) {
-        if (rule.name === '--ui-progress-value') return { syntax: rule.syntax, inherits: rule.inherits };
+        if (rule.name === '--ui-progress-value')
+          return { syntax: rule.syntax, inherits: rule.inherits };
         if (rule.cssRules) {
           const hit = walk(rule.cssRules);
           if (hit) return hit;
@@ -353,7 +369,10 @@ test('circle: --ui-progress-value registered as <number> (CSSOM @property)', asy
 });
 
 test('circle: Chromium bar carries the conic (CSSOM wiring)', async ({ page, browserName }) => {
-  test.skip(browserName !== 'chromium', '::-webkit-progress-bar is Chromium/WebKit paint; foreign-vendor rules are dropped elsewhere');
+  test.skip(
+    browserName !== 'chromium',
+    '::-webkit-progress-bar is Chromium/WebKit paint; foreign-vendor rules are dropped elsewhere',
+  );
 
   const background = await page.evaluate(() => {
     const walk = (rules) => {

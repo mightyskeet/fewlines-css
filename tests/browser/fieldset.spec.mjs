@@ -13,8 +13,7 @@ test.beforeEach(async ({ page }) => {
 });
 
 const token = (page, name) =>
-  page
-    .evaluate((n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim(), name);
+  page.evaluate((n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim(), name);
 
 test('frame uses the border/radius tokens', async ({ page }) => {
   const styles = await page.locator('#fieldset-basic').evaluate((el) => {
@@ -79,9 +78,7 @@ test('gap between legend and first member is the fieldset block-start padding', 
   expect(Math.abs(gap)).toBeLessThanOrEqual(1);
 });
 
-test('members stack with the existing .ui-field + * rule (no double spacing)', async ({
-  page,
-}) => {
+test('members stack with the existing .ui-field + * rule (no double spacing)', async ({ page }) => {
   const gap = await page.locator('#fieldset-basic').evaluate((el) => {
     const fields = el.querySelectorAll('.ui-field');
     const first = fields[0].getBoundingClientRect();

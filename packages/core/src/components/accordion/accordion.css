@@ -103,8 +103,7 @@
   block-size: 0.75rem;
   margin-inline-start: auto;
   background-image:
-    linear-gradient(var(--ui-color-text-muted) 0 0),
-    linear-gradient(var(--ui-color-text-muted) 0 0);
+    linear-gradient(var(--ui-color-text-muted) 0 0), linear-gradient(var(--ui-color-text-muted) 0 0);
   background-repeat: no-repeat;
   background-position: center;
   background-size:

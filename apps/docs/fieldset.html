@@ -36,8 +36,8 @@
       <header class="page-header">
         <h1>Fieldset</h1>
         <p>
-          Grouping of related form controls: frame with the legend cut, the group's accessible
-          name and native group-level disabling. No JS.
+          Grouping of related form controls: frame with the legend cut, the group's accessible name
+          and native group-level disabling. No JS.
         </p>
       </header>
 
@@ -47,7 +47,8 @@
           <code>&lt;fieldset&gt;</code>/<code>&lt;legend&gt;</code> — the group semantics and the
           accessible name are native; <code>fieldset[disabled]</code> natively disables every
           descendant control. The layout is the UA flow: spacing between members comes from the
-          stack rules (<code>.ui-field + *</code>, <code>.ui-switch-field + .ui-switch-field</code>).
+          stack rules (<code>.ui-field + *</code>,
+          <code>.ui-switch-field + .ui-switch-field</code>).
         </p>
       </section>
 
@@ -87,9 +88,7 @@
             </label>
           </fieldset>
         </div>
-        <p>
-          Members are placed adjacent — the gaps come from the stack rules, no margins to set.
-        </p>
+        <p>Members are placed adjacent — the gaps come from the stack rules, no margins to set.</p>
       </section>
 
       <section>
@@ -104,8 +103,8 @@
           </fieldset>
         </div>
         <p>
-          <code>disabled</code> on the fieldset is the native group switch: every descendant
-          control is disabled, the legend mutes. No per-control attributes needed.
+          <code>disabled</code> on the fieldset is the native group switch: every descendant control
+          is disabled, the legend mutes. No per-control attributes needed.
         </p>
       </section>
 
@@ -155,12 +154,10 @@
           </li>
           <li>No removing the legend — the accessible name is required.</li>
           <li>
-            No grid/flex on the fieldset — the legend border split belongs to the engine's
-            special layout.
+            No grid/flex on the fieldset — the legend border split belongs to the engine's special
+            layout.
           </li>
-          <li>
-            No JS emulation of group disabling — <code>fieldset[disabled]</code> is native.
-          </li>
+          <li>No JS emulation of group disabling — <code>fieldset[disabled]</code> is native.</li>
           <li>
             Not a decorative frame for content without controls — for sections there are headings,
             for breaks there is Divider.

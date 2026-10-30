@@ -85,7 +85,11 @@ test('required select paints the attention border after user-invalid', async ({ 
 test('select paints its own chevron inset from the edge', async ({ page }) => {
   const styles = await page.locator('#select-md').evaluate((el) => {
     const cs = getComputedStyle(el);
-    return { appearance: cs.appearance, image: cs.backgroundImage, position: cs.backgroundPosition };
+    return {
+      appearance: cs.appearance,
+      image: cs.backgroundImage,
+      position: cs.backgroundPosition,
+    };
   });
 
   // The native glyph is engine-drawn and unstylable — the stylesheet owns it
@@ -102,8 +106,7 @@ test('forced colors restore the native select arrow', async ({ page }) => {
 });
 
 test('anything after a field keeps the stack gap (button included)', async ({ page }) => {
-  const gap = async (locator) =>
-    locator.evaluate((el) => getComputedStyle(el).marginBlockStart);
+  const gap = async (locator) => locator.evaluate((el) => getComputedStyle(el).marginBlockStart);
 
   // The submit button follows the last field — same gap as field after field
   const field = page.locator('#test-form label.ui-field').last();

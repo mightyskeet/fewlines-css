@@ -257,9 +257,10 @@
    * 0.5px feather (same trick as the mask below): a hard gradient stop
    * (99%→100% of a 2px radius) is rasterized without anti-aliasing and
    * renders as a staircase — probed 2026-10-30. */
-  --ui-progress-ring-paint: radial-gradient(
-      circle calc(var(--ui-progress-ring-thickness) / 2)
-      at var(--ui-progress-cap-x) var(--ui-progress-cap-y),
+  --ui-progress-ring-paint:
+    radial-gradient(
+      circle calc(var(--ui-progress-ring-thickness) / 2) at var(--ui-progress-cap-x)
+        var(--ui-progress-cap-y),
       var(--ui-progress-fill) calc(var(--ui-progress-ring-thickness) / 2 - 0.5px),
       transparent calc(var(--ui-progress-ring-thickness) / 2)
     ),
