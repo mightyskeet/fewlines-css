@@ -15,13 +15,14 @@ test.beforeEach(async ({ page }) => {
 const token = async (page, name) =>
   page.evaluate((n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim(), name);
 
-test('default paint: tint surface + shimmer sweep running', async ({ page }) => {
+test('default paint: tint surface + shared shimmer sweep running', async ({ page }) => {
   const el = await page.locator('#skeleton-default').evaluate((el) => {
     const s = getComputedStyle(el);
     return {
       display: s.display,
       backgroundColor: s.backgroundColor,
       backgroundImage: s.backgroundImage,
+      backgroundSize: s.backgroundSize,
       highlight: s.getPropertyValue('--ui-skeleton-highlight').trim(),
       animationName: s.animationName,
       animationDuration: s.animationDuration,
@@ -31,11 +32,57 @@ test('default paint: tint surface + shimmer sweep running', async ({ page }) => 
 
   expect(el.display).toBe('block');
   expect(el.backgroundColor).toBe(await token(page, '--ui-color-surface-tint'));
+  // The shared band paint resolves on the element: 120deg lean (30deg from
+  // vertical) with the local color mix inside.
   expect(el.backgroundImage).toContain('linear-gradient');
+  expect(el.backgroundImage).toContain('120deg');
   expect(el.highlight).toContain('color-mix');
-  expect(el.animationName).toBe('ui-skeleton-sweep');
+  // The band width is the unified fixed length, not a fraction of the area.
+  expect(el.backgroundSize).toBe('96px 100%'); // --ui-shimmer-band: 6rem
+  expect(el.animationName).toBe('ui-shimmer-sweep');
   expect(el.animationDuration).toBe('1.5s');
   expect(el.animationPlayState).toBe('running');
+});
+
+test('the sweep keyframes land the fixed band exactly off both edges (CSSOM)', async ({ page }) => {
+  const frames = await page.evaluate(() => {
+    const walk = (rules) => {
+      for (const rule of rules) {
+        if (rule.name === 'ui-shimmer-sweep')
+          return {
+            from: rule.findRule('from').style.backgroundPosition,
+            to: rule.findRule('to').style.backgroundPosition,
+          };
+        if (rule.cssRules) {
+          const hit = walk(rule.cssRules);
+          if (hit) return hit;
+        }
+      }
+      return null;
+    };
+    for (const sheet of document.styleSheets) {
+      const hit = walk(sheet.cssRules);
+      if (hit) return hit;
+    }
+    return null;
+  });
+
+  expect(frames.from).toContain('calc(-1 * var(--ui-shimmer-band))');
+  expect(frames.to).toContain('calc(100% + var(--ui-shimmer-band))');
+});
+
+test('the sweep actually interpolates calc endpoints (probe, not a discrete flip)', async ({
+  page,
+}) => {
+  // calc() mixing % and length must interpolate smoothly (CSS Values 4) —
+  // if an engine cannot interpolate, background-position flips at 50%.
+  const sample = () =>
+    page.locator('#skeleton-default').evaluate((el) => getComputedStyle(el).backgroundPositionX);
+  const first = await sample();
+  await page.waitForTimeout(300);
+  const second = await sample();
+
+  expect(first).not.toBe(second);
 });
 
 test('reduced motion parks the sweep on the calm surface', async ({ page }) => {

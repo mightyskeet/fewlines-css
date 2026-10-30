@@ -156,17 +156,44 @@ test('shimmer: gradient band + animation on the fill rule (CSSOM wiring)', async
   }, needle);
 
   expect(rule.selector).toContain(':not(:indeterminate)'); // no shimmer on the indeterminate sweep
-  expect(rule.backgroundImage).toContain('linear-gradient');
-  expect(rule.backgroundImage).toContain('color-mix');
-  expect(rule.animation).toContain('ui-progress-sweep');
-  expect(rule.animation).toContain('var(--ui-progress-shimmer-duration)');
+  // The band paint moved to the shared shimmer module — the fill rule
+  // carries only the shared gradient token; the color mix lives on the
+  // element (--ui-shimmer-color) and resolves inside the pseudo.
+  expect(rule.backgroundImage).toBe('var(--ui-shimmer-band-paint)');
+  expect(rule.animation).toContain('ui-shimmer-sweep');
+  expect(rule.animation).toContain('var(--ui-shimmer-duration)');
+
+  const elementColor = await page.evaluate(() => {
+    const walk = (rules) => {
+      for (const rule of rules) {
+        // The element-level color binding — no engine pseudo in the selector.
+        if (
+          rule.selectorText?.includes('data-shimmer') &&
+          rule.selectorText.includes(':not(:indeterminate)') &&
+          !rule.selectorText.includes('::-')
+        )
+          return rule.style.getPropertyValue('--ui-shimmer-color');
+        if (rule.cssRules) {
+          const hit = walk(rule.cssRules);
+          if (hit) return hit;
+        }
+      }
+      return null;
+    };
+    for (const sheet of document.styleSheets) {
+      const hit = walk(sheet.cssRules);
+      if (hit) return hit;
+    }
+    return null;
+  });
+  expect(elementColor).toContain('color-mix');
 });
 
 test('shimmer keyframes sweep background-position without a dead pause', async ({ page }) => {
   const frames = await page.evaluate(() => {
     const walk = (rules) => {
       for (const rule of rules) {
-        if (rule.name === 'ui-progress-sweep')
+        if (rule.name === 'ui-shimmer-sweep')
           return {
             from: rule.findRule('from').style.backgroundPosition,
             to: rule.findRule('to').style.backgroundPosition,
@@ -185,10 +212,10 @@ test('shimmer keyframes sweep background-position without a dead pause', async (
     return null;
   });
 
-  // Chromium serializes the 0 y-offset as 0px, Firefox as 0% — the sweep is
-  // the x percentage, that is what the contract pins.
-  expect(frames.from.startsWith('-100%')).toBe(true);
-  expect(frames.to.startsWith('200%')).toBe(true);
+  // The fixed-band sweep: length endpoints landing the tile exactly off
+  // both edges (the shared shimmer module's contract).
+  expect(frames.from).toContain('calc(-1 * var(--ui-shimmer-band))');
+  expect(frames.to).toContain('calc(100% + var(--ui-shimmer-band))');
 });
 
 test('shimmer opt-in gates: attribute + determinate', async ({ page }) => {
@@ -227,8 +254,8 @@ test('indeterminate: the component sweeps the fill (engine motion does not survi
   });
 
   expect(el.indeterminate).toBe(true);
-  expect(el.animationName).toBe('ui-progress-sweep'); // Firefox carries the track on the element
-  expect(el.animationDuration).toBe('1s');
+  expect(el.animationName).toBe('ui-shimmer-sweep'); // Firefox carries the track on the element
+  expect(el.animationDuration).toBe('1.5s');
   expect(el.backgroundColor).toBe(await token(page, '--ui-color-surface-tint'));
   expect(el.backgroundImage).toContain('linear-gradient');
 });

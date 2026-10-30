@@ -27,11 +27,13 @@
  *
  * Shimmer (opt-in, data-shimmer): a highlight band sweeps across the fill of
  * a determinate bar. Determinate only — the indeterminate state runs its own
- * sweep (see below) and two motions would conflict. The band is painted by a
- * background-image gradient on the fill pseudo-elements (the same engine
- * paint model as the fill itself), animated via background-position (CSS
- * animations, compatibility notes 2026-10-30). Reduced motion silences it
- * without losing the contract — the state is still carried by the fill.
+ * sweep (see below) and two motions would conflict. The motion is the shared
+ * shimmer module (shimmer.css): one band paint (30deg lean, fixed width)
+ * swept via background-position (CSS animations, compatibility notes
+ * 2026-10-30) — this component only binds its own paint colors to it. The
+ * band is painted by a background-image gradient on the fill pseudo-elements
+ * (the same engine paint model as the fill itself). Reduced motion silences
+ * it without losing the contract — the state is still carried by the fill.
  * Not part of the circle contract: the band would sweep the whole disc, not
  * the ring arc.
  *
@@ -72,7 +74,6 @@
   /* Local knobs — the host customization points (same model as Divider). */
   --ui-progress-fill: var(--ui-color-brand);
   --ui-progress-track: var(--ui-color-surface-tint);
-  --ui-progress-shimmer-duration: 1.5s;
 
   appearance: none;
   box-sizing: border-box;
@@ -139,55 +140,45 @@
 }
 
 /* Shimmer: opt-in data-shimmer, determinate only (:not(:indeterminate) — the
- * indeterminate sweep below owns the motion there). The base fill color
- * stays solid under a narrow translucent-free highlight band that sweeps
- * from fully off the left edge (-100%) to fully off the right (200%) — no
- * dead pause between loops. The band mixes the fill towards on-brand
- * (the registered text pair — guaranteed visible against the fill in both
- * themes); a mix towards the track was probed imperceptible. */
-.ui-progress[data-shimmer]:not(:indeterminate)::-webkit-progress-value,
-.ui-progress[data-shimmer]:not(:indeterminate)::-moz-progress-bar {
-  background-image: linear-gradient(
-    90deg,
-    transparent 30%,
-    color-mix(in oklch, var(--ui-color-on-brand) 50%, var(--ui-progress-fill)) 50%,
-    transparent 70%
-  );
-  background-repeat: no-repeat;
-  background-size: 50% 100%;
-  animation: ui-progress-sweep var(--ui-progress-shimmer-duration) linear infinite;
+ * indeterminate sweep below owns the motion there). The band paint comes
+ * from the shared shimmer module (shimmer.css); this rule only binds the
+ * color — a mix of the fill towards on-brand (the registered text pair —
+ * guaranteed visible against the fill in both themes; a mix towards the
+ * track was probed imperceptible). The custom property is set on the
+ * element and inherits into the engine pseudo-elements, where the gradient
+ * resolves it. */
+.ui-progress[data-shimmer]:not(:indeterminate) {
+  --ui-shimmer-color: color-mix(in oklch, var(--ui-color-on-brand) 50%, var(--ui-progress-fill));
 }
 
-@keyframes ui-progress-sweep {
-  from {
-    background-position: -100% 0;
-  }
-
-  to {
-    background-position: 200% 0;
-  }
+.ui-progress[data-shimmer]:not(:indeterminate)::-webkit-progress-value,
+.ui-progress[data-shimmer]:not(:indeterminate)::-moz-progress-bar {
+  background-image: var(--ui-shimmer-band-paint);
+  background-repeat: no-repeat;
+  background-size: var(--ui-shimmer-band) 100%;
+  animation: ui-shimmer-sweep var(--ui-shimmer-duration) linear infinite;
 }
 
 /* Indeterminate: the engine's native motion does not survive painting the
  * pseudos (probe 2026-10-30, all three engines) — the bar renders 100%
  * full and static. Sweep the fill ourselves: a full-contrast band moving
- * across the full-width track. Firefox carries the track on the element,
+ * across the track. Firefox carries the track on the element,
  * Chromium/WebKit on the bar pseudo — both get the same background and the
  * same animation; the engine fill pseudo goes transparent so the painted
- * fill never covers the track. Same keyframes as the shimmer — one sweep
- * mechanic. The circle has its own spinning arc. */
+ * fill never covers the track. Same shared shimmer module as the shimmer —
+ * one sweep mechanic, the bare fill as the band color. The circle has its
+ * own spinning arc. */
+.ui-progress:indeterminate:not([data-shape='circle']) {
+  --ui-shimmer-color: var(--ui-progress-fill);
+}
+
 .ui-progress:indeterminate:not([data-shape='circle']),
 .ui-progress:indeterminate:not([data-shape='circle'])::-webkit-progress-bar {
   background-color: var(--ui-progress-track);
-  background-image: linear-gradient(
-    90deg,
-    transparent 30%,
-    var(--ui-progress-fill) 50%,
-    transparent 70%
-  );
+  background-image: var(--ui-shimmer-band-paint);
   background-repeat: no-repeat;
-  background-size: 50% 100%;
-  animation: ui-progress-sweep 1s linear infinite;
+  background-size: var(--ui-shimmer-band) 100%;
+  animation: ui-shimmer-sweep var(--ui-shimmer-duration) linear infinite;
 }
 
 .ui-progress:indeterminate::-webkit-progress-value,

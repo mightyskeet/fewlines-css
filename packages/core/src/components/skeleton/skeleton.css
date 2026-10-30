@@ -18,11 +18,12 @@
  *
  * Motion: the shimmer is always on — a skeleton without motion is just a
  * gray block (the Progress indeterminate sweep set the precedent for
- * component-owned decorative motion). The mechanic is the Progress
- * shimmer's: a highlight band (background-image gradient) swept via
- * background-position (CSS animations, compatibility notes 2026-10-30).
- * The band mixes the surface towards the page text — a visible-but-calm
- * step in both themes (the surface/tint pair itself is decorative here).
+ * component-owned decorative motion). The motion itself is the shared
+ * shimmer module (shimmer.css): one band paint (30deg lean, fixed width)
+ * swept via background-position (CSS animations, compatibility notes
+ * 2026-10-30) — the skeleton only binds its own paint color to it. The
+ * band mixes the surface towards the page text — a visible-but-calm step
+ * in both themes (the surface/tint pair itself is decorative here).
  * Reduced motion parks the sweep — a calm static surface remains.
  *
  * Forced colors: the system strips the background paint; the empty box
@@ -37,8 +38,10 @@
     var(--ui-color-text) 12%,
     var(--ui-skeleton-surface)
   );
-  --ui-skeleton-duration: 1.5s;
   --ui-skeleton-radius: var(--ui-radius-md);
+
+  /* Bind the local paint to the shared shimmer band (shimmer.css). */
+  --ui-shimmer-color: var(--ui-skeleton-highlight);
 
   display: block;
   box-sizing: border-box;
@@ -46,25 +49,10 @@
   block-size: 1em; /* one text line at the surrounding font-size */
   border-radius: var(--ui-skeleton-radius);
   background-color: var(--ui-skeleton-surface);
-  background-image: linear-gradient(
-    90deg,
-    transparent 30%,
-    var(--ui-skeleton-highlight) 50%,
-    transparent 70%
-  );
+  background-image: var(--ui-shimmer-band-paint);
   background-repeat: no-repeat;
-  background-size: 50% 100%;
-  animation: ui-skeleton-sweep var(--ui-skeleton-duration) linear infinite;
-}
-
-@keyframes ui-skeleton-sweep {
-  from {
-    background-position: -100% 0;
-  }
-
-  to {
-    background-position: 200% 0;
-  }
+  background-size: var(--ui-shimmer-band) 100%;
+  animation: ui-shimmer-sweep var(--ui-shimmer-duration) linear infinite;
 }
 
 /* Reduced motion: the sweep is decoration — park it on the calm surface. */

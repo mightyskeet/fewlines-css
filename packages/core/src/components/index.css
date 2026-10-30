@@ -15,6 +15,7 @@
 @import './alert/alert.css';
 @import './badge/badge.css';
 @import './divider/divider.css';
+@import './shimmer/shimmer.css';
 @import './progress/progress.css';
 @import './tabs/tabs.css';
 @import './timeline/timeline.css';

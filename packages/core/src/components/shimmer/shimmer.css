@@ -1,0 +1,56 @@
+/* Shimmer — shared loading motion (internal building block, not a
+ * component class; no .ui-* selector of its own).
+ *
+ * The loading components (Skeleton, Progress) share ONE sweep: a highlight
+ * band of a fixed width crossing the element. One definition keeps the
+ * motion identical everywhere — the visual model is a single moving layer
+ * that each component's box "reveals"; the box is the mask cutout.
+ *
+ * The paint is element-local: the shared gradient references
+ * --ui-shimmer-color, which every consumer binds to its own paint token
+ * (skeleton: the muted text mix; Progress shimmer: the on-brand mix;
+ * Progress indeterminate: the bare fill). Custom property substitution is
+ * element-local, so one gradient recipe serves every paint.
+ *
+ * Sweep math: background-position percentages resolve against
+ * (area - tile), so the old -100% → 200% sweep only works for a tile of
+ * exactly 50% of the area. A fixed band needs length endpoints: from
+ * calc(-1 * band) (the tile fully off the left edge) to
+ * calc(100% + band) (fully off the right) — no dead pause, for any band
+ * width and any element size. The band is a length by contract: a
+ * percentage in the endpoints would re-resolve against (area - tile) and
+ * break the exact off-screen landing.
+ *
+ * Trade-offs (documented in the component contracts): on an element
+ * narrower than the band the sweep reads as a pulse of the whole surface;
+ * with one shared duration the sweep speed grows with the element width
+ * (the band travels width + band per cycle).
+ *
+ * Consumers import this file before their own (index.css order).
+ * Reduced-motion silencing stays in each component — it targets that
+ * component's own paint targets.
+ */
+
+.ui-skeleton,
+.ui-progress {
+  --ui-shimmer-band: 6rem;
+  --ui-shimmer-duration: 1.5s;
+
+  /* One canonical band: 30deg lean, the consumer supplies the color. */
+  --ui-shimmer-band-paint: linear-gradient(
+    120deg,
+    transparent 30%,
+    var(--ui-shimmer-color) 50%,
+    transparent 70%
+  );
+}
+
+@keyframes ui-shimmer-sweep {
+  from {
+    background-position: calc(-1 * var(--ui-shimmer-band)) 0;
+  }
+
+  to {
+    background-position: calc(100% + var(--ui-shimmer-band)) 0;
+  }
+}
