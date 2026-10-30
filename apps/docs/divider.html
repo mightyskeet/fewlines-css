@@ -67,15 +67,28 @@
           <hr class="ui-divider" />
           <hr class="ui-divider" data-variant="dashed" />
           <hr class="ui-divider" data-variant="strong" />
-          <hr class="ui-divider" data-variant="inset" />
         </div>
         <p>
-          <code>data-variant="dashed|strong|inset"</code>; default (no attribute) is the solid
+          <code>data-variant="dashed|strong"</code>; default (no attribute) is the solid
           border-token line. <code>dashed</code> changes only the line style;
           <code>strong</code> takes the <code>border-strong</code> role — prominence through the
-          color, not a thicker line (a thick hr reads as a rule in data tables, not a break);
-          <code>inset</code> indents the line from the logical inline start (mirrored in RTL), the
-          line yields to the leading content column. One variant per element.
+          color, not a thicker line (a thick hr reads as a rule in data tables, not a break).
+        </p>
+      </section>
+
+      <section>
+        <h2>Inset</h2>
+        <div class="example">
+          <hr class="ui-divider" data-inset="start" />
+          <hr class="ui-divider" data-inset="both" />
+          <hr class="ui-divider" data-variant="dashed" data-inset="start" />
+        </div>
+        <p>
+          <code>data-inset="start|both"</code> is an orthogonal modifier: it indents the line and
+          combines with any variant. <code>start</code> indents from the logical inline start
+          (mirrored in RTL), the line yields to the leading content column; <code>both</code>
+          indents symmetrically on both sides. Example: a dashed line with a start inset —
+          <code>data-variant="dashed" data-inset="start"</code>.
         </p>
       </section>
 
@@ -113,7 +126,8 @@
           <li>No text or interactive content inside the break.</li>
           <li>
             No variant classes — variants are expressed only via
-            <code>data-variant</code>, density only via <code>data-size</code>.
+            <code>data-variant</code>, inset only via <code>data-inset</code>, density only via
+            <code>data-size</code>.
           </li>
         </ul>
       </section>

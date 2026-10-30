@@ -52,12 +52,39 @@ test('strong uses the border-strong token, same geometry', async ({ page }) => {
   expect(styles.color).toBe(await token(page, '--ui-color-border-strong'));
 });
 
-test('inset indents the logical inline start only', async ({ page }) => {
-  const styles = await page.locator('#divider-inset').evaluate((el) => {
+test('inset start indents the logical inline start only', async ({ page }) => {
+  const styles = await page.locator('#divider-inset-start').evaluate((el) => {
     const s = getComputedStyle(el);
     return { start: s.marginInlineStart, end: s.marginInlineEnd };
   });
 
+  expect(styles.start).toBe('24px');
+  expect(styles.end).toBe('0px');
+});
+
+test('inset both indents symmetrically on both sides', async ({ page }) => {
+  const styles = await page.locator('#divider-inset-both').evaluate((el) => {
+    const s = getComputedStyle(el);
+    return { start: s.marginInlineStart, end: s.marginInlineEnd };
+  });
+
+  expect(styles.start).toBe('24px');
+  expect(styles.end).toBe('24px');
+});
+
+test('inset combines with the variant: dashed line keeps its style and indent', async ({ page }) => {
+  const styles = await page.locator('#divider-dashed-inset').evaluate((el) => {
+    const s = getComputedStyle(el);
+    return {
+      style: s.borderTopStyle,
+      color: s.borderTopColor,
+      start: s.marginInlineStart,
+      end: s.marginInlineEnd,
+    };
+  });
+
+  expect(styles.style).toBe('dashed');
+  expect(styles.color).toBe(await token(page, '--ui-color-border'));
   expect(styles.start).toBe('24px');
   expect(styles.end).toBe('0px');
 });

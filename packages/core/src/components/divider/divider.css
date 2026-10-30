@@ -6,12 +6,16 @@
  *
  * Canonical structure:
  *   <hr class="ui-divider">
- *   <hr class="ui-divider" data-variant="dashed">
+ *   <hr class="ui-divider" data-variant="dashed" data-inset="start">
  *
  * Variants via data-variant name the line look:
- *   solid (default) | dashed | strong | inset.
+ *   solid (default) | dashed | strong.
  * The line is one local custom-property pair on the element border, so the
  * variants stay one declaration each.
+ *
+ * data-inset is an orthogonal modifier: it indents the line and combines with
+ * any variant. Values: start (the MUI inset model — the line yields to the
+ * leading content column) | both (symmetric indent on both sides).
  *
  * Sizes via data-size: sm | lg (default — md, attribute omitted). Only the
  * block margins scale (density, like Button); the line stays 1px.
@@ -42,10 +46,15 @@
   --ui-divider-line-color: var(--ui-color-border-strong);
 }
 
-/* Start-side indent (the MUI inset model): the line yields to the leading
- * content column, e.g. under avatars in lists. */
-.ui-divider[data-variant='inset'] {
+/* Inset modifiers (orthogonal to the line look): start-side indent is the
+ * MUI model — the line yields to the leading content column, e.g. under
+ * avatars in lists; both is the symmetric two-sided indent. */
+.ui-divider[data-inset='start'] {
   margin-inline: var(--ui-space-lg) 0;
+}
+
+.ui-divider[data-inset='both'] {
+  margin-inline: var(--ui-space-lg);
 }
 
 .ui-divider[data-size='sm'] {
