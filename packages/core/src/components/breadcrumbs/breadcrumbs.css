@@ -36,6 +36,12 @@
  *     <li><a class="ui-menu-item" href="/projects">Projects</a></li>
  *   </menu>
  *
+ * The toggle's air is symmetric: the glyph "…" sits its dots on the
+ * baseline, where the slash's ink hugs the following crumb (the slash
+ * leans through its box, bottom-left to top-right), so the raw glyph
+ * reads closer to the right slash; the extra inline padding (one gap on
+ * top of the separators' margins on each side) evens the segment out.
+ *
  * The button must carry an aria-label — the visible glyph "…" is not a
  * name. `ui-popover-trigger` opts the trigger into the Popover anchor
  * contract (below the trigger, flipped above on overflow); scoping
@@ -48,7 +54,10 @@
  * the <li> (a block container): text-overflow does not apply to flex
  * containers. overflow: hidden also zeroes the flex item's automatic
  * minimum size, so a narrow container shrinks the crumb further (the cap
- * is a maximum, not a fixed width).
+ * is a maximum, not a fixed width). The clipped part is real content —
+ * the host carries the full name in the native `title` attribute (the
+ * standard hover hint restores it; the markup contract requires it on a
+ * truncated crumb).
  *
  * Layout: the ol is a wrapping flex row; the horizontal rhythm belongs to
  * the separator margins (a wrapped row may start with a stray separator —
@@ -69,7 +78,7 @@
  */
 
 .ui-breadcrumbs {
-  --ui-breadcrumbs-gap: var(--ui-space-2xs);
+  --ui-breadcrumbs-gap: var(--ui-space-xs);
   --ui-breadcrumbs-max: 40ch;
   --ui-breadcrumbs-separator-color: var(--ui-color-text-muted);
   --ui-breadcrumbs-toggle-color: var(--ui-color-text-muted);
@@ -86,16 +95,32 @@
 }
 
 /* Separator: drawn once per following crumb, with an empty alternative
- * text (invisible to assistive tech). */
-.ui-breadcrumbs li + li::before {
+ * text (invisible to assistive tech). Scoped to the trail's list — the
+ * collapsed-levels Menu popover lives inside the <nav> too, and its
+ * items must not grow separators (or link hovers). */
+.ui-breadcrumbs ol > li + li::before {
   content: '/' / '';
   margin-inline: var(--ui-breadcrumbs-gap);
   color: var(--ui-breadcrumbs-separator-color);
 }
 
+/* The collapsed <li> is a flex row: the pretty-printed markup leaves
+ * whitespace text nodes around the button (the newline-indent after
+ * <li>), and inline flow collapses them into a rendered space BEFORE the
+ * button — while the trailing one is dropped at the line end — pushing
+ * the button off-center (probed 2026-10-30: the li box grew by exactly
+ * one space). Flexbox does not create anonymous items from whitespace-only
+ * runs, so the button sits exactly one gap from the slash on each side.
+ * The current-crumb <li> stays a block container: text-overflow does not
+ * apply to flex containers. */
+.ui-breadcrumbs ol > li:has(> button[popovertarget]) {
+  display: flex;
+  align-items: baseline;
+}
+
 /* Current crumb: the truncation cap (long page names cannot push the
  * trail wide). The attribute may sit on the <li> or on the crumb's link. */
-.ui-breadcrumbs li:is([aria-current='page'], :has(> [aria-current='page'])) {
+.ui-breadcrumbs ol > li:is([aria-current='page'], :has(> [aria-current='page'])) {
   max-inline-size: var(--ui-breadcrumbs-max);
   overflow: hidden;
   text-overflow: ellipsis;
@@ -103,13 +128,15 @@
 }
 
 /* The collapsed-levels toggle: a small muted affordance, not a button
- * variant — the trail owns the styling. */
-.ui-breadcrumbs button {
+ * variant — the trail owns the styling. The inline padding (a gap on top
+ * of the separators' margins, each side) is the symmetric air around the
+ * baseline dots — see the header comment. */
+.ui-breadcrumbs ol button {
   font: inherit;
   color: var(--ui-breadcrumbs-toggle-color);
   background: transparent;
   border: none;
-  padding: 0;
+  padding: 0 var(--ui-breadcrumbs-gap);
   margin: 0;
   cursor: pointer;
 }
@@ -117,12 +144,12 @@
 /* Links: the base link color stays (the interactive affordance); the
  * underline is dropped at rest (the trail structure identifies the link)
  * and returns on hover (pointer-gated, the sticky-hover guard). */
-.ui-breadcrumbs a {
+.ui-breadcrumbs ol a {
   text-decoration: none;
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .ui-breadcrumbs a:hover {
+  .ui-breadcrumbs ol a:hover {
     text-decoration: underline;
   }
 }

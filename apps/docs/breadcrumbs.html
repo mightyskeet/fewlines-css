@@ -126,6 +126,16 @@
           the visible glyph «…» is not a name. Collapsed is not an attribute variant: it is a
           documented composition with the Menu component.
         </p>
+        <p>
+          Separators are drawn around the toggle like around every crumb; the toggle carries extra
+          inline padding (one <code>--ui-breadcrumbs-gap</code> on each side, on top of the
+          separators' margins) so the air reads even: the «…» dots sit on the baseline, where the
+          slash's stroke hugs the following crumb, and a bare glyph would read pressed against the
+          right slash. The collapsed <code>&lt;li&gt;</code> is a flex row — the pretty-printed
+          markup leaves whitespace text nodes around the button, and inline flow renders the leading
+          one as a real space (the trailing one is dropped) — flexbox ignores whitespace-only runs,
+          so the button stays on the rhythm.
+        </p>
       </section>
 
       <section>
@@ -135,7 +145,12 @@
             <ol role="list">
               <li><a href="#truncation">Home</a></li>
               <li><a href="#truncation">Library</a></li>
-              <li aria-current="page">very-long-name-of-the-current-page</li>
+              <li
+                aria-current="page"
+                title="a-very-long-title-for-the-current-page-which-is-truncated-to-an-acceptable-length"
+              >
+                a-very-long-title-for-the-current-page-which-is-truncated-to-an-acceptable-length
+              </li>
             </ol>
           </nav>
         </div>
@@ -143,7 +158,10 @@
           The current crumb is capped at <code>--ui-breadcrumbs-max</code> (default
           <code>40ch</code>) and clips with a text-overflow ellipsis — a long page name cannot push
           the trail wide. The cap is a maximum, not a fixed width: in a narrow container the crumb
-          shrinks further (the automatic flex minimum is zeroed by the clipping).
+          shrinks further (the automatic flex minimum is zeroed by the clipping). The clipped part
+          is real content: a truncated crumb carries the full name in the native
+          <code>title</code> attribute — the standard hover hint restores it, and the name reads in
+          full.
         </p>
       </section>
 
@@ -157,7 +175,7 @@
         <pre><code>.page-trail {
   --ui-breadcrumbs-max: 24ch;
   --ui-breadcrumbs-separator-color: var(--ui-color-border-strong);
-  --ui-breadcrumbs-gap: var(--ui-space-xs);
+  --ui-breadcrumbs-gap: var(--ui-space-sm);
 }</code></pre>
       </section>
 

@@ -48,7 +48,7 @@ test('the list owns the layout: no list chrome, wrapping flex row', async ({ pag
   expect(list.display).toBe('flex');
   expect(list.flexWrap).toBe('wrap');
   expect(list.alignItems).toBe('baseline');
-  expect(list.rowGap).toBe('4px');
+  expect(list.rowGap).toBe('8px');
 });
 
 test('separators are drawn by the component with an empty alt text', async ({ page }) => {
@@ -73,7 +73,60 @@ test('separators are drawn by the component with an empty alt text', async ({ pa
   expect(separator.content).toContain('/');
   expect(separator.content).toContain('""');
   expect(separator.color).toBe(await token(page, '--ui-color-text-muted'));
-  expect(separator.marginInline).toBe('4px');
+  expect(separator.marginInline).toBe('8px');
+});
+
+test('separators are uniform in the trail; the menu gets none', async ({ page }) => {
+  // The collapsed segment keeps the slash separators like every crumb;
+  // the toggle's extra inline padding evens the air around the baseline
+  // dots (the slash leans against them).
+  const contents = await page
+    .locator('#breadcrumbs-collapsed ol > li')
+    .evaluateAll((lis) => lis.map((li) => getComputedStyle(li, '::before').content));
+  expect(contents[0]).toBe('none'); // the first crumb has no incoming separator
+  expect(contents[1]).toContain('/');
+  expect(contents[2]).toContain('/');
+  expect(contents[3]).toContain('/');
+
+  // The toggle's symmetric air: a gap on top of the separators' margins.
+  const toggle = await page.locator('#breadcrumbs-toggle').evaluate((el) => {
+    const s = getComputedStyle(el);
+    return { paddingInline: s.paddingInline };
+  });
+  expect(toggle.paddingInline).toBe('8px');
+
+  // The Menu popover lives inside the <nav> — its items get neither
+  // separators nor the trail's link hover (regression: a lone "/" line
+  // rendered above every menu item).
+  const menuItems = await page
+    .locator('#breadcrumbs-menu li')
+    .evaluateAll((lis) => lis.map((li) => getComputedStyle(li, '::before').content));
+  expect(menuItems).toEqual(['none', 'none']);
+});
+
+test('the collapsed li ignores markup whitespace around the button', async ({ page }) => {
+  // Regression: the pretty-printed markup leaves whitespace text nodes
+  // around the button; inline flow rendered the leading one as a real
+  // space (the trailing one is dropped), pushing the button off-rhythm.
+  // The flex li must place the button box at exactly margins + slash +
+  // margin — the slash advance is measured in the page font, not
+  // hardcoded (the toggle's padding lives inside its box).
+  const data = await page
+    .locator('#breadcrumbs-collapsed ol > li')
+    .nth(1)
+    .evaluate((el) => {
+      const btn = el.querySelector('button');
+      const s = getComputedStyle(el, '::before');
+      const c = document.createElement('canvas').getContext('2d');
+      c.font = getComputedStyle(btn).font;
+      return {
+        btnOffset: btn.getBoundingClientRect().left - el.getBoundingClientRect().left,
+        marginLeft: parseFloat(s.marginInlineStart),
+        marginRight: parseFloat(s.marginInlineEnd),
+        slashAdvance: c.measureText('/').width,
+      };
+    });
+  expect(data.btnOffset).toBeCloseTo(data.marginLeft + data.slashAdvance + data.marginRight, 0);
 });
 
 test('the current crumb is capped and clipped with an ellipsis', async ({ page }) => {
@@ -94,6 +147,12 @@ test('the current crumb is capped and clipped with an ellipsis', async ({ page }
   expect(crumb.whiteSpace).toBe('nowrap');
   // The long title is actually clamped to the cap, not just styled.
   expect(crumb.width).toBeLessThanOrEqual(Math.ceil(cap));
+  // The clipped part is real content — the full name rides in the
+  // native title attribute (the markup contract for a truncated crumb).
+  const full = await page.locator('#breadcrumbs-current-long').getAttribute('title');
+  expect(full).toBe(
+    'a-very-long-title-for-the-current-page-which-is-truncated-to-an-acceptable-length',
+  );
 });
 
 test('aria-current on the crumb link is honored (:has)', async ({ page }) => {
