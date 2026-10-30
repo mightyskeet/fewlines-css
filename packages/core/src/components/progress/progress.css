@@ -79,6 +79,11 @@
   display: block;
   inline-size: 100%; /* UA widths diverge across engines — fill the container */
 
+  /* Firefox paints a UA border on <progress> that survives appearance:none
+   * (probe 2026-10-30: 1px solid gray) — the track is a borderless soft
+   * surface (Badge-neutral model), so the UA border comes off. */
+  border: none;
+
   /* Track: the de-emphasised soft surface, borderless — the Badge-neutral
    * / zebra model. A hairline fails at thin sizes (two 1px lines a few px
    * apart at sm); the state indicator contract (WCAG 1.4.11) is carried by
