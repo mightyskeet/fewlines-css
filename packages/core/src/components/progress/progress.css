@@ -253,13 +253,15 @@
 
   /* Paint stack: the cap dot on top of the arc — one token for both engine
    * paint targets. Dot radius = half the ring thickness: flush with the
-   * ring edges (the mask cuts along the same borders); a 1% transparent
-   * tail anti-aliases the dot edge. */
+   * ring edges (the mask cuts along the same borders). The edge gets a
+   * 0.5px feather (same trick as the mask below): a hard gradient stop
+   * (99%→100% of a 2px radius) is rasterized without anti-aliasing and
+   * renders as a staircase — probed 2026-10-30. */
   --ui-progress-ring-paint: radial-gradient(
       circle calc(var(--ui-progress-ring-thickness) / 2)
       at var(--ui-progress-cap-x) var(--ui-progress-cap-y),
-      var(--ui-progress-fill) 99%,
-      transparent
+      var(--ui-progress-fill) calc(var(--ui-progress-ring-thickness) / 2 - 0.5px),
+      transparent calc(var(--ui-progress-ring-thickness) / 2)
     ),
     var(--ui-progress-conic);
 
