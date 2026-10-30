@@ -92,6 +92,22 @@ test('the slide actually interpolates (probe, not a discrete flip)', async ({ pa
   expect(first).not.toBe(second);
 });
 
+test('the band color splits by theme: calmer in light, lifted in dark', async ({ page }) => {
+  const bandColor = () =>
+    page
+      .locator('#skeleton-default')
+      .evaluate((el) => getComputedStyle(el, '::after').backgroundImage);
+
+  await page.emulateMedia({ colorScheme: 'light' });
+  const light = await bandColor();
+  await page.emulateMedia({ colorScheme: 'dark' });
+  const dark = await bandColor();
+
+  // Both resolve through the same mix formula with a different strength
+  // (8% in light, 12% in dark) — the resolved colors must differ.
+  expect(light).not.toBe(dark);
+});
+
 test('reduced motion removes the band', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
   const bandDisplay = await page

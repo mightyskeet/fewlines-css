@@ -38,10 +38,13 @@
 .ui-skeleton {
   /* Local knobs — the host customization points (same model as Progress). */
   --ui-skeleton-surface: var(--ui-color-surface-tint);
-  --ui-skeleton-highlight: color-mix(
-    in oklch,
-    var(--ui-color-text) 12%,
-    var(--ui-skeleton-surface)
+
+  /* Theme split: a dark streak on a light surface reads stronger than a
+   * light one on a dark surface at the same mix — the light theme calms
+   * down to 8%, the dark keeps its 12% lift. */
+  --ui-skeleton-highlight: light-dark(
+    color-mix(in oklch, var(--ui-color-text) 8%, var(--ui-skeleton-surface)),
+    color-mix(in oklch, var(--ui-color-text) 12%, var(--ui-skeleton-surface))
   );
   --ui-skeleton-radius: var(--ui-radius-md);
 
