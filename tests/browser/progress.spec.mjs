@@ -212,10 +212,11 @@ test('shimmer keyframes sweep background-position without a dead pause', async (
     return null;
   });
 
-  // The fixed-band sweep: length endpoints landing the tile exactly off
-  // both edges (the shared shimmer module's contract).
-  expect(frames.from).toContain('calc(-1 * var(--ui-shimmer-band))');
-  expect(frames.to).toContain('calc(100% + var(--ui-shimmer-band))');
+  // The proportional sweep: the 200% tile's transparent stop edges land
+  // exactly on the box edges of the wide-flat fill target — no dead pause,
+  // no loop pop (the shared shimmer module's contract).
+  expect(frames.from).toContain('130%');
+  expect(frames.to).toContain('-30%');
 });
 
 test('shimmer opt-in gates: attribute + determinate', async ({ page }) => {

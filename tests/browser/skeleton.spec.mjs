@@ -3,9 +3,9 @@ import { expect, test } from '@playwright/test';
 /**
  * Skeleton component tests.
  * The skeleton is a decorative placeholder: there is no native behavior to
- * exercise, so the contract under test is the paint (tint surface + shimmer
- * sweep), the host-driven geometry and the absence of interactive semantics
- * (tests/README.md).
+ * exercise, so the contract under test is the paint (tint surface + skewed
+ * shimmer band overlay), the host-driven geometry and the absence of
+ * interactive semantics (tests/README.md).
  */
 
 test.beforeEach(async ({ page }) => {
@@ -15,43 +15,51 @@ test.beforeEach(async ({ page }) => {
 const token = async (page, name) =>
   page.evaluate((n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim(), name);
 
-test('default paint: tint surface + shared shimmer sweep running', async ({ page }) => {
+test('default paint: tint surface + skewed shimmer band overlay', async ({ page }) => {
   const el = await page.locator('#skeleton-default').evaluate((el) => {
     const s = getComputedStyle(el);
+    const band = getComputedStyle(el, '::after');
     return {
       display: s.display,
       backgroundColor: s.backgroundColor,
-      backgroundImage: s.backgroundImage,
-      backgroundSize: s.backgroundSize,
-      highlight: s.getPropertyValue('--ui-skeleton-highlight').trim(),
-      animationName: s.animationName,
-      animationDuration: s.animationDuration,
-      animationPlayState: s.animationPlayState,
+      overflow: s.overflow,
+      bandDisplay: band.display,
+      bandBackground: band.backgroundImage,
+      bandColor: s.getPropertyValue('--ui-shimmer-color').trim(),
+      bandWidth: band.width,
+      bandAnimation: band.animationName,
+      bandDuration: band.animationDuration,
+      bandPlayState: band.animationPlayState,
+      elementBox: el.getBoundingClientRect(),
     };
   });
+  const bandBox = await page
+    .locator('#skeleton-default')
+    .evaluate((el) => getComputedStyle(el, '::after').width);
 
   expect(el.display).toBe('block');
   expect(el.backgroundColor).toBe(await token(page, '--ui-color-surface-tint'));
-  // The shared band paint resolves on the element: 120deg lean (30deg from
-  // vertical) with the local color mix inside.
-  expect(el.backgroundImage).toContain('linear-gradient');
-  expect(el.backgroundImage).toContain('120deg');
-  expect(el.highlight).toContain('color-mix');
-  // The band width is the unified fixed length, not a fraction of the area.
-  expect(el.backgroundSize).toBe('96px 100%'); // --ui-shimmer-band: 6rem
-  expect(el.animationName).toBe('ui-shimmer-sweep');
-  expect(el.animationDuration).toBe('1.5s');
-  expect(el.animationPlayState).toBe('running');
+  expect(el.overflow).toBe('hidden'); // the band clips at the box and its radius
+  expect(el.bandDisplay).toBe('block');
+  // The band's own soft gradient: horizontal axis, the lean comes from the
+  // skew transform (geometry, not a tile-sliced diagonal gradient).
+  expect(el.bandBackground).toContain('linear-gradient(90deg');
+  expect(el.bandColor).toContain('color-mix'); // the shared color slot resolved
+  // The band scales with the box: 40% of the element width.
+  expect(parseFloat(bandBox)).toBeCloseTo(el.elementBox.width * 0.4, 1);
+  expect(el.bandAnimation).toBe('ui-shimmer-slide');
+  expect(el.bandDuration).toBe('1.5s');
+  expect(el.bandPlayState).toBe('running');
 });
 
-test('the sweep keyframes land the fixed band exactly off both edges (CSSOM)', async ({ page }) => {
+test('the band carries the 30deg lean as a transform (CSSOM keyframes)', async ({ page }) => {
   const frames = await page.evaluate(() => {
     const walk = (rules) => {
       for (const rule of rules) {
-        if (rule.name === 'ui-shimmer-sweep')
+        if (rule.name === 'ui-shimmer-slide')
           return {
-            from: rule.findRule('from').style.backgroundPosition,
-            to: rule.findRule('to').style.backgroundPosition,
+            from: rule.findRule('from').style.transform,
+            to: rule.findRule('to').style.transform,
           };
         if (rule.cssRules) {
           const hit = walk(rule.cssRules);
@@ -67,17 +75,16 @@ test('the sweep keyframes land the fixed band exactly off both edges (CSSOM)', a
     return null;
   });
 
-  expect(frames.from).toContain('calc(-1 * var(--ui-shimmer-band))');
-  expect(frames.to).toContain('calc(100% + var(--ui-shimmer-band))');
+  // The lean is part of the animated transform (one property carries both);
+  // the endpoints assume the 40%-of-box band width.
+  expect(frames.from).toContain('skewX(calc(var(--ui-shimmer-lean) * -1))');
+  expect(frames.from).toContain('translateX(-110%)');
+  expect(frames.to).toContain('translateX(260%)');
 });
 
-test('the sweep actually interpolates calc endpoints (probe, not a discrete flip)', async ({
-  page,
-}) => {
-  // calc() mixing % and length must interpolate smoothly (CSS Values 4) —
-  // if an engine cannot interpolate, background-position flips at 50%.
+test('the slide actually interpolates (probe, not a discrete flip)', async ({ page }) => {
   const sample = () =>
-    page.locator('#skeleton-default').evaluate((el) => getComputedStyle(el).backgroundPositionX);
+    page.locator('#skeleton-default').evaluate((el) => getComputedStyle(el, '::after').transform);
   const first = await sample();
   await page.waitForTimeout(300);
   const second = await sample();
@@ -85,15 +92,25 @@ test('the sweep actually interpolates calc endpoints (probe, not a discrete flip
   expect(first).not.toBe(second);
 });
 
-test('reduced motion parks the sweep on the calm surface', async ({ page }) => {
+test('reduced motion removes the band', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
+  const bandDisplay = await page
+    .locator('#skeleton-default')
+    .evaluate((el) => getComputedStyle(el, '::after').display);
+  expect(bandDisplay).toBe('none');
+});
+
+test('forced colors drop the band, the box keeps the layout space', async ({ page }) => {
+  await page.emulateMedia({ forcedColors: 'active' });
   const el = await page.locator('#skeleton-default').evaluate((el) => {
     const s = getComputedStyle(el);
-    return { animationName: s.animationName, backgroundImage: s.backgroundImage };
+    return {
+      bandDisplay: getComputedStyle(el, '::after').display,
+      box: el.getBoundingClientRect(),
+    };
   });
-
-  expect(el.animationName).toBe('none');
-  expect(el.backgroundImage).toBe('none');
+  expect(el.bandDisplay).toBe('none');
+  expect(el.box.height).toBeGreaterThan(0);
 });
 
 test('defaults fit a text line: full width, one em tall', async ({ page }) => {

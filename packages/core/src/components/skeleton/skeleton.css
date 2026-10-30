@@ -18,16 +18,21 @@
  *
  * Motion: the shimmer is always on — a skeleton without motion is just a
  * gray block (the Progress indeterminate sweep set the precedent for
- * component-owned decorative motion). The motion itself is the shared
- * shimmer module (shimmer.css): one band paint (30deg lean, fixed width)
- * swept via background-position (CSS animations, compatibility notes
- * 2026-10-30) — the skeleton only binds its own paint color to it. The
- * band mixes the surface towards the page text — a visible-but-calm step
+ * component-owned decorative motion). The band is a skewed ::after overlay
+ * driven by the shared shimmer module (shimmer.css, ui-shimmer-slide): the
+ * 30deg lean is a transform, so the stripe is clipped by this box (and its
+ * radius) instead of being sliced by background-tile edges — a diagonal
+ * gradient inside a background tile shows vertical seams where it crosses
+ * the tile edge (probe + user report, 2026-10-30, compatibility notes).
+ * The band scales with the box (40%) — a fixed-length band reads as a thin
+ * sliver on long elements — and fades to transparent at its own ends, so
+ * the keyframes' off-screen overshoot is invisible for any shape. The band
+ * color mixes the surface towards the page text — a visible-but-calm step
  * in both themes (the surface/tint pair itself is decorative here).
- * Reduced motion parks the sweep — a calm static surface remains.
+ * Reduced motion removes the band — a calm static surface remains.
  *
- * Forced colors: the system strips the background paint; the empty box
- * keeps reserving the layout space (decorative paint, nothing to preserve).
+ * Forced colors: the system strips the paint; the empty box keeps reserving
+ * the layout space (decorative paint, nothing to preserve).
  */
 
 .ui-skeleton {
@@ -43,22 +48,40 @@
   /* Bind the local paint to the shared shimmer band (shimmer.css). */
   --ui-shimmer-color: var(--ui-skeleton-highlight);
 
+  position: relative;
   display: block;
   box-sizing: border-box;
   inline-size: 100%; /* a text line spans the measure; host narrows as needed */
   block-size: 1em; /* one text line at the surrounding font-size */
   border-radius: var(--ui-skeleton-radius);
+  overflow: hidden; /* the sliding band clips at the box and its radius */
   background-color: var(--ui-skeleton-surface);
-  background-image: var(--ui-shimmer-band-paint);
-  background-repeat: no-repeat;
-  background-size: var(--ui-shimmer-band) 100%;
-  animation: ui-shimmer-sweep var(--ui-shimmer-duration) linear infinite;
 }
 
-/* Reduced motion: the sweep is decoration — park it on the calm surface. */
+/* The band: an overlay, not a background — geometry (skew) gives the lean,
+ * the box clips it. The soft gradient ends make the sweep's overshoot
+ * invisible; the width is a fixed fraction of the box (the slide keyframes'
+ * endpoints are tuned to 40% — see shimmer.css). */
+.ui-skeleton::after {
+  content: '';
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  inline-size: 40%;
+  background-image: linear-gradient(90deg, transparent, var(--ui-shimmer-color), transparent);
+  animation: ui-shimmer-slide var(--ui-shimmer-duration) linear infinite;
+}
+
+/* Reduced motion: the band is decoration — remove it entirely. */
 @media (prefers-reduced-motion: reduce) {
-  .ui-skeleton {
-    animation: none;
-    background-image: none;
+  .ui-skeleton::after {
+    display: none;
+  }
+}
+
+/* Forced colors: the paint is stripped anyway — drop the band explicitly. */
+@media (forced-colors: active) {
+  .ui-skeleton::after {
+    display: none;
   }
 }

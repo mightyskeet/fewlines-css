@@ -28,12 +28,14 @@
  * Shimmer (opt-in, data-shimmer): a highlight band sweeps across the fill of
  * a determinate bar. Determinate only — the indeterminate state runs its own
  * sweep (see below) and two motions would conflict. The motion is the shared
- * shimmer module (shimmer.css): one band paint (30deg lean, fixed width)
- * swept via background-position (CSS animations, compatibility notes
- * 2026-10-30) — this component only binds its own paint colors to it. The
- * band is painted by a background-image gradient on the fill pseudo-elements
- * (the same engine paint model as the fill itself). Reduced motion silences
- * it without losing the contract — the state is still carried by the fill.
+ * shimmer module (shimmer.css): one band paint (30deg lean, proportional to
+ * the target) swept via background-position (CSS animations,
+ * compatibility notes 2026-10-30) — this component only binds its own
+ * paint colors to it. The band is painted by a background-image gradient on
+ * the fill pseudo-elements (the same engine paint model as the fill itself)
+ * with a 200% tile: the band scales with the fill instead of reading as a
+ * thin sliver on long bars. Reduced motion silences it without losing the
+ * contract — the state is still carried by the fill.
  * Not part of the circle contract: the band would sweep the whole disc, not
  * the ring arc.
  *
@@ -155,7 +157,7 @@
 .ui-progress[data-shimmer]:not(:indeterminate)::-moz-progress-bar {
   background-image: var(--ui-shimmer-band-paint);
   background-repeat: no-repeat;
-  background-size: var(--ui-shimmer-band) 100%;
+  background-size: 200% 100%;
   animation: ui-shimmer-sweep var(--ui-shimmer-duration) linear infinite;
 }
 
@@ -177,7 +179,7 @@
   background-color: var(--ui-progress-track);
   background-image: var(--ui-shimmer-band-paint);
   background-repeat: no-repeat;
-  background-size: var(--ui-shimmer-band) 100%;
+  background-size: 200% 100%;
   animation: ui-shimmer-sweep var(--ui-shimmer-duration) linear infinite;
 }
 

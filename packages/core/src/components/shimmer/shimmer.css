@@ -1,30 +1,40 @@
 /* Shimmer — shared loading motion (internal building block, not a
  * component class; no .ui-* selector of its own).
  *
- * The loading components (Skeleton, Progress) share ONE sweep: a highlight
- * band of a fixed width crossing the element. One definition keeps the
- * motion identical everywhere — the visual model is a single moving layer
- * that each component's box "reveals"; the box is the mask cutout.
+ * The loading components (Skeleton, Progress) share ONE band look and ONE
+ * set of knobs; the motion has two canonical keyframes because the paint
+ * targets differ:
  *
- * The paint is element-local: the shared gradient references
- * --ui-shimmer-color, which every consumer binds to its own paint token
- * (skeleton: the muted text mix; Progress shimmer: the on-brand mix;
- * Progress indeterminate: the bare fill). Custom property substitution is
- * element-local, so one gradient recipe serves every paint.
+ * - ui-shimmer-slide (translate) — for box-shaped components (Skeleton's
+ *   ::after overlay). The band is a skewed overlay: the 30deg lean is a
+ *   transform, not a gradient angle, so the stripe's ends are clipped by
+ *   the component's overflow (with its radius) instead of being sliced by
+ *   background-tile edges — a diagonal gradient painted inside a narrow
+ *   background tile shows vertical seams where the stripe crosses the tile
+ *   edge (probe + user report, 2026-10-30). The band is 40% of the box and
+ *   fades to transparent at its own ends, so the off-screen overshoot in
+ *   the keyframes (-110% → 260% of the band width) is invisible and the
+ *   loop is seamless for any element shape. translate is compositor-friendly.
+ * - ui-shimmer-sweep (background-position) — for engine pseudo-element
+ *   paint targets (Progress's ::-webkit-progress-value / ::-moz-progress-bar),
+ *   where no overlay pseudo can be added. The tile is 200% of the box with
+ *   the band as its soft middle third: the band scales with the element
+ *   (a fixed-length band reads as a thin sliver on long elements), and the
+ *   wide transparent tile margins keep the tile seams invisible. A tile of
+ *   exactly 100% cannot move at all (percentage positions resolve against
+ *   the zero leftover (area - tile)), and min()/max() mixed tiles are
+ *   rejected: the exact off-screen endpoints cannot be expressed for them
+ *   (percent endpoints re-resolve against (area - tile), lengths cannot
+ *   reference the box width) — the sweep would stall or pop at the loop.
+ *   The endpoints 130% → -30% land the tile's transparent stop edges
+ *   exactly on the box edges of a wide-flat target (every Progress paint
+ *   target is a thin bar), so there is no dead pause and no loop pop.
  *
- * Sweep math: background-position percentages resolve against
- * (area - tile), so the old -100% → 200% sweep only works for a tile of
- * exactly 50% of the area. A fixed band needs length endpoints: from
- * calc(-1 * band) (the tile fully off the left edge) to
- * calc(100% + band) (fully off the right) — no dead pause, for any band
- * width and any element size. The band is a length by contract: a
- * percentage in the endpoints would re-resolve against (area - tile) and
- * break the exact off-screen landing.
- *
- * Trade-offs (documented in the component contracts): on an element
- * narrower than the band the sweep reads as a pulse of the whole surface;
- * with one shared duration the sweep speed grows with the element width
- * (the band travels width + band per cycle).
+ * The paint is element-local: every gradient references --ui-shimmer-color,
+ * which each consumer binds to its own paint token (skeleton: the muted
+ * text mix; Progress shimmer: the on-brand mix; Progress indeterminate:
+ * the bare fill). Custom property substitution is element-local, so the
+ * shared recipes serve every paint.
  *
  * Consumers import this file before their own (index.css order).
  * Reduced-motion silencing stays in each component — it targets that
@@ -33,24 +43,40 @@
 
 .ui-skeleton,
 .ui-progress {
-  --ui-shimmer-band: 6rem;
   --ui-shimmer-duration: 1.5s;
+  --ui-shimmer-lean: 30deg;
 
-  /* One canonical band: 30deg lean, the consumer supplies the color. */
+  /* One canonical band paint for the background sweep (Progress): the lean
+   * on top of a horizontal axis, the consumer supplies the color. */
   --ui-shimmer-band-paint: linear-gradient(
-    120deg,
-    transparent 30%,
+    calc(90deg + var(--ui-shimmer-lean)),
+    transparent 35%,
     var(--ui-shimmer-color) 50%,
-    transparent 70%
+    transparent 65%
   );
 }
 
-@keyframes ui-shimmer-sweep {
+/* Sliding overlay band (Skeleton): the lean is part of the animated
+ * transform — keyframes carry it so one property carries both. Endpoints
+ * assume the 40%-of-box band width (the overlay's inline-size contract). */
+@keyframes ui-shimmer-slide {
   from {
-    background-position: calc(-1 * var(--ui-shimmer-band)) 0;
+    transform: skewX(calc(var(--ui-shimmer-lean) * -1)) translateX(-110%);
   }
 
   to {
-    background-position: calc(100% + var(--ui-shimmer-band)) 0;
+    transform: skewX(calc(var(--ui-shimmer-lean) * -1)) translateX(260%);
+  }
+}
+
+/* Background sweep (Progress): the tile is 200% of the box — see the
+ * header for the math. */
+@keyframes ui-shimmer-sweep {
+  from {
+    background-position: 130% 0;
+  }
+
+  to {
+    background-position: -30% 0;
   }
 }
