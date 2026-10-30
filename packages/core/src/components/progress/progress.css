@@ -236,6 +236,7 @@
     var(--ui-progress-fill) 90deg,
     var(--ui-progress-track) 0
   );
+
   animation: ui-progress-spin 1s linear infinite;
 }
 
