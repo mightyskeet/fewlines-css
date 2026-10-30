@@ -1,0 +1,248 @@
+/* Stepper component.
+ *
+ * Native basis: <ol>/<li> — the platform's ordered list (the step sequence
+ * and the item structure come with the element) plus the native ARIA step
+ * state: `aria-current="step"` marks the current step. The done state has no
+ * platform attribute — the host declares it with the boolean `data-done`
+ * attribute (the same host-declared vocabulary as data-variant); upcoming is
+ * the default (no attribute).
+ *
+ * Canonical structure:
+ *   <ol class="ui-stepper" role="list">
+ *     <li data-done><a href="/cart">Cart</a></li>
+ *     <li aria-current="step"><a href="/checkout">Checkout</a></li>
+ *     <li>Review</li>
+ *   </ol>
+ *
+ * role="list" — insurance for the list-style: none quirk (the Timeline
+ * precedent).
+ *
+ * State placement: the attributes live on the <li> for static steps or on
+ * the step's interactive child (a link) — the CSS honors both through
+ * :has(> …) on the direct child. Setting both attributes on one step is not
+ * defined; data-done wins if both are present.
+ *
+ * Orientation: vertical (default — the Timeline sibling geometry) and
+ * data-orientation="horizontal" (the classic wizard row).
+ *
+ * Geometry (all logical — RTL mirrors itself):
+ *   vertical    the Timeline model: rail = li::after (2px border on a
+ *               zero-width pseudo — survives forced colors), marker =
+ *               li::before ring centered on the rail; entries own the block
+ *               gap (padding, not margin) so the rail is continuous.
+ *   horizontal  the ol is a flex row of equal columns; the marker joins the
+ *               flow on top of the column and each entry draws its incoming
+ *               half-segment (::after) from the entry's start edge to its
+ *               own marker center — adjacent entries make a continuous line
+ *               between marker centers; the first entry has no incoming
+ *               segment.
+ *
+ * Markers carry the state by shape, not by color alone (WCAG 1.4.1):
+ *   done      a solid accent disc (border transparent, accent fill);
+ *   current   an accent ring with an accent dot (a radial-gradient layer);
+ *   upcoming  the hollow Timeline ring (border-strong on the surface fill).
+ * The fills are opaque and mask the rail passing behind the marker.
+ *
+ * Colors via local tokens (host-overridable):
+ *   accent        --ui-color-brand (done disc, current ring/dot) — validated
+ *                 nonText pair on surface (tests/apca);
+ *   marker ring   --ui-color-border-strong (upcoming) — the Timeline pair;
+ *   rail          --ui-color-border — decorative by construction (the list
+ *                 semantics and aria-current carry the state), same policy
+ *                 as the divider line.
+ *
+ * APCA pairs used (validated in tests/apca):
+ *   current ring/dot + done disc: brand/surface (nonText);
+ *   upcoming ring:                border-strong/surface (nonText);
+ *   rail:                         decorative — no pair (divider policy).
+ *
+ * Forced colors: the rails and the rings are borders — the system repaints
+ * them natively; the dot's gradient layer and the disc fill are stripped to
+ * the system canvas, so all markers read as rings (the semantics stay with
+ * aria-current); data-done gets an explicit CanvasText ring.
+ *
+ * Links inside steps keep the base link color; the underline is dropped at
+ * rest (the step structure identifies the link) and returns on hover
+ * (pointer-gated, the sticky-hover guard).
+ */
+
+.ui-stepper {
+  --ui-stepper-marker-size: var(--ui-space-sm);
+  --ui-stepper-indent: var(--ui-space-xl);
+  --ui-stepper-line-width: 2px;
+  --ui-stepper-marker-offset: var(--ui-space-2xs);
+  --ui-stepper-gap-block: var(--ui-space-lg);
+  --ui-stepper-gap-inline: var(--ui-space-sm);
+  --ui-stepper-rail-color: var(--ui-color-border);
+  --ui-stepper-marker-color: var(--ui-color-border-strong);
+  --ui-stepper-marker-fill: var(--ui-color-surface);
+  --ui-stepper-accent: var(--ui-color-brand);
+
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Vertical (default): the Timeline geometry. */
+
+.ui-stepper li {
+  position: relative;
+  padding-inline-start: var(--ui-stepper-indent);
+}
+
+/* Entries own the block gap (padding, not margin): adjacent boxes keep the
+ * rail continuous. */
+.ui-stepper li + li {
+  padding-block-start: var(--ui-stepper-gap-block);
+}
+
+/* The entry's outermost margins are zeroed so the content starts at the
+ * marker's optical position; inner spacing stays host content. */
+.ui-stepper li > :first-child {
+  margin-block-start: 0;
+}
+
+.ui-stepper li > :last-child {
+  margin-block-end: 0;
+}
+
+/* Marker: the hollow upcoming ring is the default; the state rules below
+ * recolor it. */
+.ui-stepper li::before {
+  content: '';
+  position: absolute;
+  inset-inline-start: calc((var(--ui-stepper-indent) - var(--ui-stepper-marker-size)) / 2);
+  inset-block-start: var(--ui-stepper-marker-offset);
+  box-sizing: border-box;
+  inline-size: var(--ui-stepper-marker-size);
+  block-size: var(--ui-stepper-marker-size);
+  border: var(--ui-stepper-line-width) solid var(--ui-stepper-marker-color);
+  border-radius: var(--ui-radius-full);
+
+  /* corner-shape: round overrides the tokens-layer squircle (Switch
+   * precedent): at a clamped full radius squircle flattens the stadium. */
+  corner-shape: round;
+  background: var(--ui-stepper-marker-fill);
+  z-index: 1;
+}
+
+.ui-stepper li + li::before {
+  inset-block-start: calc(var(--ui-stepper-gap-block) + var(--ui-stepper-marker-offset));
+}
+
+/* Current step: the accent ring with an accent dot (the dot rides on the
+ * fill layer — the opaque surface fill still masks the rail). */
+.ui-stepper li:is([aria-current='step'], :has(> [aria-current='step']))::before {
+  border-color: var(--ui-stepper-accent);
+  background-image: radial-gradient(
+    circle closest-side,
+    var(--ui-stepper-accent) 100%,
+    transparent
+  );
+  background-size: 50% 50%;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* Done step: the solid accent disc. The transparent border keeps the box
+ * geometry identical across the states. */
+.ui-stepper li:is([data-done], :has(> [data-done]))::before {
+  border-color: transparent;
+  background: var(--ui-stepper-accent);
+}
+
+/* Rail: a 2px border on a zero-width pseudo — the border survives forced
+ * colors. Continuous across entries (the entries own the gap as padding). */
+.ui-stepper li::after {
+  content: '';
+  position: absolute;
+  inset-inline-start: calc((var(--ui-stepper-indent) - var(--ui-stepper-line-width)) / 2);
+  inline-size: 0;
+  inset-block: 0;
+  border-inline-start: var(--ui-stepper-line-width) solid var(--ui-stepper-rail-color);
+}
+
+/* The first entry's rail starts at the ring's top (no stub above it). */
+.ui-stepper li:first-child::after {
+  inset-block-start: var(--ui-stepper-marker-offset);
+}
+
+/* The last entry's rail ends at the last ring's bottom. */
+.ui-stepper li:last-child::after {
+  inset-block-end: auto;
+  block-size: calc(
+    var(--ui-stepper-gap-block) + var(--ui-stepper-marker-offset) + var(--ui-stepper-marker-size)
+  );
+}
+
+/* A single entry has no outgoing rail. */
+.ui-stepper li:only-child::after {
+  display: none;
+}
+
+/* Horizontal: the classic wizard row — equal columns, the marker on top,
+ * the label centered below. */
+
+.ui-stepper[data-orientation='horizontal'] {
+  display: flex;
+}
+
+.ui-stepper[data-orientation='horizontal'] li {
+  flex: 1;
+  min-inline-size: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--ui-stepper-gap-inline);
+  text-align: center;
+  padding: 0;
+}
+
+.ui-stepper[data-orientation='horizontal'] li + li {
+  padding-block-start: 0;
+}
+
+/* The marker joins the flow (top of the column). */
+.ui-stepper[data-orientation='horizontal'] li::before {
+  position: static;
+  inset: auto;
+  flex: none;
+}
+
+/* Each entry draws its incoming half-segment: from the entry's start edge
+ * to its own marker center — the marker's opaque fill masks the pass-through
+ * and adjacent entries make a continuous line between marker centers. */
+.ui-stepper[data-orientation='horizontal'] li::after {
+  inset-block: calc(var(--ui-stepper-marker-size) / 2) auto;
+  inset-inline-start: 0;
+  inline-size: 50%;
+  block-size: 0;
+  border: none;
+  border-block-start: var(--ui-stepper-line-width) solid var(--ui-stepper-rail-color);
+}
+
+/* The first entry has no incoming segment. */
+.ui-stepper[data-orientation='horizontal'] li:first-child::after {
+  display: none;
+}
+
+/* Links inside steps: the base link color stays (the interactive
+ * affordance); the underline is dropped at rest and returns on hover. */
+.ui-stepper a {
+  text-decoration: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .ui-stepper a:hover {
+    text-decoration: underline;
+  }
+}
+
+/* Forced colors: the rails and the rings are borders — the system repaints
+ * them natively. The dot's gradient layer and the disc fill are stripped to
+ * the system canvas; the done disc keeps a visible ring. */
+@media (forced-colors: active) {
+  .ui-stepper li:is([data-done], :has(> [data-done]))::before {
+    border-color: CanvasText;
+  }
+}

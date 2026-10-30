@@ -111,6 +111,10 @@ export const tokenPairs = [
   // the rail is decorative (the divider policy), no pair.
   { fg: 'border-strong', bg: 'surface', role: 'nonText', note: 'timeline marker ring' },
 
+  // Stepper: the state markers are non-text indicators (WCAG 1.4.11) —
+  // the done disc and the current ring/dot on the page surface.
+  { fg: 'brand', bg: 'surface', role: 'nonText', note: 'stepper state markers' },
+
   // Utility roles. Link: hyperlink text on the page and raised surfaces.
   // Selection: the tint under the author text color (the same soft-surface
   // pair the neutral Alert uses).

@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script>
+      try {
+        var t = localStorage.getItem('theme');
+        if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+      } catch (e) {}
+    </script>
+    <script>
+      try {
+        var b = JSON.parse(localStorage.getItem('colors-bases') || 'null');
+        if (b) {
+          var r = document.documentElement,
+            s = r.style;
+          for (var k in b) s.setProperty(k, b[k]);
+          r.setAttribute('data-palette', 'custom');
+        }
+      } catch (e) {}
+    </script>
+    <title>Stepper — @fewlines/css</title>
+    <link rel="stylesheet" href="/core.css" />
+    <link rel="stylesheet" href="/docs.css" />
+    <link rel="stylesheet" href="/colors-derive.css" />
+    <script src="/site-sidebar.js" defer blocking="render"></script>
+    <script src="/site-toc.js" defer blocking="render"></script>
+    <script src="/vendor/hljs.min.js" defer></script>
+    <script src="/site-code.js" defer></script>
+  </head>
+  <body>
+    <site-sidebar></site-sidebar>
+
+    <main>
+      <header class="page-header">
+        <h1>Stepper</h1>
+        <p>
+          Step-by-step progress of a process on the native <code>&lt;ol&gt;</code>: the step
+          sequence comes with the element, the current step is the native
+          <code>aria-current="step"</code> state, the done state is a host-declared
+          <code>data-done</code> attribute. Steps may be links. No JS.
+        </p>
+      </header>
+
+      <section>
+        <h2>Semantic basis</h2>
+        <p>
+          The component is the native ordered list plus the native ARIA step state:
+          <code>aria-current="step"</code> marks the current step and is announced by screen
+          readers. The platform has no "completed" attribute, so the host declares done steps with
+          the boolean <code>data-done</code> attribute — the same host-declared vocabulary as
+          <code>data-variant</code>. Upcoming steps carry no attributes. A stepper is not a
+          timeline: a <a href="/timeline">timeline</a> is a static chronology of events, the stepper
+          carries the done/current/upcoming progress of a process. The visual vocabulary (markers,
+          rail) is shared.
+        </p>
+      </section>
+
+      <section>
+        <h2>Canonical markup</h2>
+        <pre><code>&lt;ol class="ui-stepper" role="list"&gt;
+  &lt;li data-done&gt;&lt;a href="/cart"&gt;Cart&lt;/a&gt;&lt;/li&gt;
+  &lt;li aria-current="step"&gt;&lt;a href="/checkout"&gt;Checkout&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Review&lt;/li&gt;
+&lt;/ol&gt;</code></pre>
+        <p>
+          <code>role="list"</code> is insurance for the <code>list-style: none</code> quirk (the
+          timeline precedent). Interactive steps are <code>&lt;a href&gt;</code> elements inside the
+          <code>&lt;li&gt;</code>; static steps are plain text or any host element. The state
+          attributes live on the <code>&lt;li&gt;</code> or on the step's interactive child — the
+          CSS honors both. The step content is host-authored: a label, a number, a description — the
+          component only zeroes the outermost margins of the entry's first and last children.
+        </p>
+      </section>
+
+      <section>
+        <h2>States</h2>
+        <div class="example">
+          <ol class="ui-stepper" role="list">
+            <li data-done><a href="#states">Cart</a></li>
+            <li aria-current="step"><a href="#states">Checkout</a></li>
+            <li>Review</li>
+          </ol>
+        </div>
+        <p>
+          The marker carries the state by shape, not by color alone (WCAG 1.4.1): done is a solid
+          accent disc, current is an accent ring with a dot, upcoming is the hollow ring. The opaque
+          fills mask the rail passing behind the marker.
+        </p>
+      </section>
+
+      <section>
+        <h2>Orientation</h2>
+        <div class="example">
+          <ol class="ui-stepper" data-orientation="horizontal" role="list">
+            <li data-done><a href="#orientation">Cart</a></li>
+            <li aria-current="step"><a href="#orientation">Checkout</a></li>
+            <li>Review</li>
+          </ol>
+        </div>
+        <p>
+          The default orientation is vertical (the timeline sibling geometry).
+          <code>data-orientation="horizontal"</code> is the classic wizard row: equal columns, the
+          marker on top, the label centered below, a continuous line between the marker centers. All
+          positioning is logical — the layout mirrors itself in RTL.
+        </p>
+      </section>
+
+      <section>
+        <h2>Customization</h2>
+        <p>
+          The accent is the brand token; the upcoming ring is <code>border-strong</code>, the rail
+          is <code>border</code> — both decorative (the semantics stay in the list and
+          <code>aria-current</code>). Hosts re-theme through the local tokens — no variants, no
+          classes:
+        </p>
+        <pre><code>.onboarding-steps {
+  --ui-stepper-accent: var(--ui-color-attention);
+  --ui-stepper-gap-block: var(--ui-space-md);
+}</code></pre>
+      </section>
+
+      <section>
+        <h2>Accessibility</h2>
+        <ul>
+          <li>
+            The list roles are native; the current step is the native
+            <code>aria-current="step"</code> state.
+          </li>
+          <li>
+            The done state is not announced by screen readers (the platform has no such attribute) —
+            hosts that need it add their own text or visually hidden note.
+          </li>
+          <li>
+            The state is carried by the marker shape, not by color alone (WCAG 1.4.1). The
+            <code>brand</code> on <code>surface</code> marker pairs are registered in the APCA
+            matrix as non-text pairs; the rail reuses the divider policy (decorative line, no pair).
+          </li>
+          <li>
+            Forced colors repaint the rails and the rings with the system colors — both are borders;
+            the gradient dot and the disc fill are stripped to the system canvas.
+          </li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Do not</h2>
+        <ul>
+          <li>
+            No <code>&lt;div&gt;</code> grid instead of <code>&lt;ol&gt;</code> — the list semantics
+            are the contract.
+          </li>
+          <li>
+            No chronology of events here — a timeline is a different component (<a href="/timeline"
+              >Timeline</a
+            >).
+          </li>
+          <li>
+            No <code>data-done</code> and <code>aria-current="step"</code> on the same step; no
+            state classes (<code>.is-done</code> and friends) — attributes only.
+          </li>
+          <li>No entry margins for density — the inter-step rhythm belongs to the local tokens.</li>
+        </ul>
+      </section>
+    </main>
+    <site-toc></site-toc>
+
+    <footer>
+      <p>Full contract: <code>packages/core/src/components/stepper/stepper.md</code></p>
+    </footer>
+  </body>
+</html>

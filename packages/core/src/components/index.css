@@ -19,6 +19,7 @@
 @import './progress/progress.css';
 @import './tabs/tabs.css';
 @import './timeline/timeline.css';
+@import './stepper/stepper.css';
 @import './switch/switch.css';
 @import './choice/choice.css';
 @import './tooltip/tooltip.css';

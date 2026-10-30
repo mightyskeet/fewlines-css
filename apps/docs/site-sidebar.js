@@ -39,6 +39,7 @@ const PAGES = [
   { href: '/skeleton', label: 'Skeleton' },
   { href: '/progress', label: 'Progress' },
   { href: '/timeline', label: 'Timeline' },
+  { href: '/stepper', label: 'Stepper' },
   { href: '/tabs', label: 'Tabs' },
   { href: '/switch', label: 'Switch' },
   { href: '/tooltip', label: 'Tooltip' },

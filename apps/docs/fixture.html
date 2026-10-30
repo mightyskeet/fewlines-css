@@ -746,6 +746,29 @@
         </ol>
       </section>
 
+      <!-- Stepper -->
+      <section id="steppers">
+        <ol class="ui-stepper" role="list" id="stepper-default">
+          <li data-done id="stepper-step-done">
+            <a href="#steppers" id="stepper-link-done">Cart</a>
+          </li>
+          <li aria-current="step" id="stepper-step-current">
+            <a href="#steppers" id="stepper-link-current">Checkout</a>
+          </li>
+          <li id="stepper-step-upcoming">Review</li>
+        </ol>
+        <ol class="ui-stepper" data-orientation="horizontal" role="list" id="stepper-horizontal">
+          <li data-done><a href="#steppers">Cart</a></li>
+          <li aria-current="step"><a href="#steppers">Checkout</a></li>
+          <li>Review</li>
+        </ol>
+        <ol class="ui-stepper" role="list" id="stepper-linkstate">
+          <li>
+            <a href="#steppers" aria-current="step" id="stepper-link-current-child">Current</a>
+          </li>
+        </ol>
+      </section>
+
       <!-- Base typography -->
       <section id="typography">
         <p id="typography-inline">
