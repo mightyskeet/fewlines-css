@@ -27,10 +27,11 @@
  *           rail; the opaque surface fill masks the rail passing behind it.
  *   content starts after the marker gutter (--ui-space-xl indent).
  *
- * The marker sits at the entry's first line (offset --ui-timeline-marker-
- * offset: an optical approximation of the first line's center over the
- * space scale — the exact centering would need the lh unit, which is not in
- * the platform vocabulary this component consumes).
+ * The marker is centered on the entry's first line exactly: the offset is
+ * (1lh - size) / 2 — the lh unit resolves against the entry's inherited
+ * line-height, which matches the canonical default-size first line (a host
+ * heading as the first child carries its own metrics and drifts; hosts
+ * re-align through the --ui-timeline-marker-offset token).
  *
  * The entry's content is host-authored: the component only zeroes the
  * outermost margins of the entry's first/last children so the entry box
@@ -57,7 +58,7 @@
   --ui-timeline-marker-size: var(--ui-space-sm);
   --ui-timeline-indent: var(--ui-space-xl);
   --ui-timeline-line-width: 2px;
-  --ui-timeline-marker-offset: var(--ui-space-2xs);
+  --ui-timeline-marker-offset: calc((1lh - var(--ui-timeline-marker-size)) / 2);
   --ui-timeline-gap-block: var(--ui-space-lg);
   --ui-timeline-marker-color: var(--ui-color-border-strong);
   --ui-timeline-marker-fill: var(--ui-color-surface);
@@ -96,9 +97,7 @@
 .ui-timeline li::before {
   content: '';
   position: absolute;
-  inset-inline-start: calc(
-    (var(--ui-timeline-indent) - var(--ui-timeline-marker-size)) / 2
-  );
+  inset-inline-start: calc((var(--ui-timeline-indent) - var(--ui-timeline-marker-size)) / 2);
   inset-block-start: var(--ui-timeline-marker-offset);
   box-sizing: border-box;
   inline-size: var(--ui-timeline-marker-size);
@@ -114,9 +113,7 @@
 }
 
 .ui-timeline li + li::before {
-  inset-block-start: calc(
-    var(--ui-timeline-gap-block) + var(--ui-timeline-marker-offset)
-  );
+  inset-block-start: calc(var(--ui-timeline-gap-block) + var(--ui-timeline-marker-offset));
 }
 
 /* Rail: a 2px border on a zero-width pseudo — the border survives forced
@@ -126,13 +123,10 @@
 .ui-timeline li::after {
   content: '';
   position: absolute;
-  inset-inline-start: calc(
-    (var(--ui-timeline-indent) - var(--ui-timeline-line-width)) / 2
-  );
+  inset-inline-start: calc((var(--ui-timeline-indent) - var(--ui-timeline-line-width)) / 2);
   inline-size: 0;
   inset-block: 0;
-  border-inline-start: var(--ui-timeline-line-width) solid
-    var(--ui-timeline-rail-color);
+  border-inline-start: var(--ui-timeline-line-width) solid var(--ui-timeline-rail-color);
 }
 
 /* The first entry's rail starts at the ring's top (no stub above it). */
@@ -145,8 +139,7 @@
 .ui-timeline li:last-child::after {
   inset-block-end: auto;
   block-size: calc(
-    var(--ui-timeline-gap-block) + var(--ui-timeline-marker-offset) +
-      var(--ui-timeline-marker-size)
+    var(--ui-timeline-gap-block) + var(--ui-timeline-marker-offset) + var(--ui-timeline-marker-size)
   );
 }
 
