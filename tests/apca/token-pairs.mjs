@@ -107,6 +107,10 @@ export const tokenPairs = [
   // surface (the Badge-neutral model), no boundary pair needed.
   { fg: 'brand', bg: 'surface-tint', role: 'nonText', note: 'progress fill on track' },
 
+  // Timeline: the marker ring is a non-text boundary (an event marker);
+  // the rail is decorative (the divider policy), no pair.
+  { fg: 'border-strong', bg: 'surface', role: 'nonText', note: 'timeline marker ring' },
+
   // Utility roles. Link: hyperlink text on the page and raised surfaces.
   // Selection: the tint under the author text color (the same soft-surface
   // pair the neutral Alert uses).

@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script>
+      try {
+        var t = localStorage.getItem('theme');
+        if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+      } catch (e) {}
+    </script>
+    <script>
+      try {
+        var b = JSON.parse(localStorage.getItem('colors-bases') || 'null');
+        if (b) {
+          var r = document.documentElement,
+            s = r.style;
+          for (var k in b) s.setProperty(k, b[k]);
+          r.setAttribute('data-palette', 'custom');
+        }
+      } catch (e) {}
+    </script>
+    <title>Timeline — @fewlines/css</title>
+    <link rel="stylesheet" href="/core.css" />
+    <link rel="stylesheet" href="/docs.css" />
+    <link rel="stylesheet" href="/colors-derive.css" />
+    <script src="/site-sidebar.js" defer blocking="render"></script>
+    <script src="/site-toc.js" defer blocking="render"></script>
+    <script src="/vendor/hljs.min.js" defer></script>
+    <script src="/site-code.js" defer></script>
+  </head>
+  <body>
+    <site-sidebar></site-sidebar>
+
+    <main>
+      <header class="page-header">
+        <h1>Timeline</h1>
+        <p>
+          Chronology of events on the native <code>&lt;ol&gt;</code>: the list semantics, the
+          sequence and the order direction come with the element. The component adds the rail,
+          the marker and the density. Not interactive — no states, no JS.
+        </p>
+      </header>
+
+      <section>
+        <h2>Semantic basis</h2>
+        <p>
+          The component is the native ordered list: the <code>list</code>/<code>listitem</code>
+          roles come with the elements; the order direction is host-owned (<code>reversed</code>
+          for newest-first, no JS). The component is the rail-and-marker vocabulary, opt-in over
+          the base layer. A stepper (a step-by-step progress with done/current/upcoming states) is
+          a different semantic and a different component.
+        </p>
+      </section>
+
+      <section>
+        <h2>Canonical markup</h2>
+        <pre><code>&lt;ol class="ui-timeline" role="list"&gt;
+  &lt;li&gt;
+    &lt;p class="ui-timeline-meta"&gt;Oct 29, 2026&lt;/p&gt;
+    &lt;h3&gt;Component shipped&lt;/h3&gt;
+    &lt;p&gt;The list semantics are native.&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;</code></pre>
+        <p>
+          <code>role="list"</code> is insurance for the <code>list-style: none</code> quirk (older
+          VoiceOver dropped the list semantics when the marker was removed; harmless everywhere).
+          The entry content is host-authored: <code>ui-timeline-meta</code> is the optional small
+          line (the fluent role), the rest is plain content — the component only zeroes the
+          outermost margins of the entry's first and last children so the entry box belongs to the
+          list.
+        </p>
+      </section>
+
+      <section>
+        <h2>Geometry</h2>
+        <div class="example">
+          <ol class="ui-timeline" role="list">
+            <li>
+              <p class="ui-timeline-meta">Oct 29, 2026</p>
+              <h3>Component shipped</h3>
+              <p>The marker ring is centered on the rail; the rail is continuous across entries.</p>
+            </li>
+            <li>
+              <p class="ui-timeline-meta">Oct 24, 2026</p>
+              <h3>Typography calibrated</h3>
+              <p>The entries own the block gap — padding, not margin, so the line never breaks.</p>
+            </li>
+          </ol>
+        </div>
+        <p>
+          The rail is a 2px border on a zero-width pseudo — it survives forced colors (a
+          background strip would not). The marker is a 12px ring on the
+          <code>border-strong</code> token; its opaque surface fill masks the rail passing behind
+          it. All positioning is logical — the layout mirrors itself in RTL.
+        </p>
+      </section>
+
+      <section>
+        <h2>Sizes</h2>
+        <div class="example">
+          <ol class="ui-timeline" role="list" data-size="sm">
+            <li><h3>Small</h3></li>
+            <li><h3>Small</h3></li>
+          </ol>
+          <ol class="ui-timeline" role="list" data-size="lg">
+            <li><h3>Large</h3></li>
+            <li><h3>Large</h3></li>
+          </ol>
+        </div>
+        <p>
+          <code>data-size="sm|lg"</code>; default is md (no attribute). Density only: the block
+          gap between entries scales over the space scale (16 / 24 / 32 px), the marker and the
+          indent stay fixed (the Divider model).
+        </p>
+      </section>
+
+      <section>
+        <h2>Customization</h2>
+        <p>
+          The rail is the border token, the ring is the border-strong token — both decorative
+          (the list semantics carry the structure). Hosts re-theme through the local tokens — no
+          variants, no classes:
+        </p>
+        <pre><code>.release-timeline {
+  --ui-timeline-rail-color: var(--ui-color-brand);
+  --ui-timeline-marker-color: var(--ui-color-brand);
+}</code></pre>
+      </section>
+
+      <section>
+        <h2>Accessibility</h2>
+        <ul>
+          <li>
+            The list roles are native; the order direction is native (<code>reversed</code>). The
+            rail and the marker are decorative by construction — the structure is in the list.
+          </li>
+          <li>
+            The marker ring pair (<code>border-strong</code> on <code>surface</code>) is registered
+            in the APCA matrix as a non-text pair; the rail reuses the divider policy
+            (decorative line, no pair).
+          </li>
+          <li>
+            Forced colors repaint the rail and the ring with the system colors — both are borders.
+          </li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Do not</h2>
+        <ul>
+          <li>
+            No <code>&lt;div&gt;</code> grid instead of <code>&lt;ol&gt;</code> — the list semantics
+            are the contract.
+          </li>
+          <li>
+            No stepper semantics here — a stepper (done/current/upcoming with
+            <code>aria-current="step"</code>) is a different component.
+          </li>
+          <li>No horizontal variant in markup; the entry margins — density only via <code>data-size</code>.</li>
+          <li>No variant classes — hosts re-theme through the local tokens.</li>
+        </ul>
+      </section>
+    </main>
+    <site-toc></site-toc>
+
+    <footer>
+      <p>Full contract: <code>packages/core/src/components/timeline/timeline.md</code></p>
+    </footer>
+  </body>
+</html>
