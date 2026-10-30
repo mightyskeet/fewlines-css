@@ -40,6 +40,14 @@
  *     the rail rows keep their link heights regardless of which panel is
  *     open (track-size distribution spreads the span across all rows).
  *
+ * Motion: the panel entry animates (fade + a slight rise, the Dialog motion
+ * model). The transition is declared on the visible state only: the entry
+ * runs (the after-change style carries it; `allow-discrete` flips `display`
+ * at the start of the entry, so the panel renders immediately), and the exit
+ * stays instant — the hidden panel's after-change style has no transition,
+ * so the panels never overlap and the layout never doubles.
+ * `@starting-style` anchors the first frame. reduced motion parks it.
+ *
  * Colors via local tokens (host-overridable):
  *   inactive link --ui-color-text-muted (fluent pair, registered),
  *   active link   --ui-color-text (body pair, registered),
@@ -110,6 +118,25 @@
 .ui-tabs-panel:target,
 .ui-tabs:not(:has(> .ui-tabs-panel:target)) > :where(.ui-tab:first-child + .ui-tabs-panel) {
   display: block;
+  opacity: 1;
+  translate: none;
+
+  /* Declared on the visible state only: the entry animates, the exit (the
+   * hidden state carries no transition) is instant. */
+  transition:
+    opacity var(--ui-duration-normal) ease,
+    translate var(--ui-duration-normal) ease,
+    display var(--ui-duration-normal) ease allow-discrete;
+}
+
+/* Entry anchor: transitions do not start from display:none, so the
+ * from-state is declared explicitly for the opening frame. */
+@starting-style {
+  .ui-tabs-panel:target,
+  .ui-tabs:not(:has(> .ui-tabs-panel:target)) > :where(.ui-tab:first-child + .ui-tabs-panel) {
+    opacity: 0;
+    translate: 0 var(--ui-space-2xs);
+  }
 }
 
 /* The panel's outermost margin is zeroed so the bar → panel rhythm belongs
@@ -149,7 +176,11 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .ui-tab {
+  /* The panel's transition lives on the visible state (higher specificity
+   * than the bare class) — the reduce rule mirrors those selectors. */
+  .ui-tab,
+  .ui-tabs-panel:target,
+  .ui-tabs:not(:has(> .ui-tabs-panel:target)) > :where(.ui-tab:first-child + .ui-tabs-panel) {
     transition: none;
   }
 }

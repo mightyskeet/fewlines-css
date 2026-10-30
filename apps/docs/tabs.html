@@ -149,6 +149,19 @@
       </section>
 
       <section>
+        <h2>Motion</h2>
+        <p>
+          The panel's entry animates — a fade with a slight rise at the same duration the dialogs
+          use. The transition is declared on the visible state only, so the exit stays instant: the
+          panels never overlap and the layout never doubles. <code>prefers-reduced-motion</code>
+          parks the animation. View transitions are not part of this: fragment navigation is
+          same-document, and the automatic page-to-page transitions do not fire on it — a
+          page-transition-style crossfade would need host JavaScript and is out of the core's
+          contract.
+        </p>
+      </section>
+
+      <section>
         <h2>Customization</h2>
         <pre><code>.settings-tabs {
   --ui-tabs-accent: var(--ui-color-brand);

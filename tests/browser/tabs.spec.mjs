@@ -160,6 +160,28 @@ test('reduced motion: no transitions', async ({ page }) => {
     () => getComputedStyle(document.querySelector('#tabs-one')).transitionDuration,
   );
   expect(t).toBe('0s');
+
+  const p = await page.evaluate(
+    () => getComputedStyle(document.querySelector('#tabs-panel-one')).transitionDuration,
+  );
+  expect(p).toBe('0s');
+});
+
+test('panel entry animates, the exit is instant (no overlap)', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await page.click('#tabs-two');
+  // The entering panel runs its entry transition (fade + rise).
+  const animations = await page.evaluate(
+    () => document.getElementById('tabs-panel-two').getAnimations().length,
+  );
+  expect(animations).toBeGreaterThan(0);
+
+  // The exiting panel has no transition in its after-change style — it
+  // hides immediately, so the panels never overlap.
+  const exited = await page.evaluate(
+    () => getComputedStyle(document.getElementById('tabs-panel-one')).display,
+  );
+  expect(exited).toBe('none');
 });
 
 test('normal motion: the tab link transitions color', async ({ page }) => {
