@@ -36,10 +36,6 @@
  * outermost margins of the entry's first/last children so the entry box
  * equals the marker column (the inter-entry rhythm stays on the component).
  *
- * Sizes via data-size: sm | lg (default — md, attribute omitted). Density
- * only: the block gap between entries scales (space-md/lg/xl), the marker
- * and the indent stay fixed (the Divider model).
- *
  * Colors via local tokens (host-overridable):
  *   marker  --ui-color-border-strong (the ring) — validated nonText pair
  *           on surface (tests/apca); the fill is the page surface (masks
@@ -157,15 +153,6 @@
 /* A single entry has no outgoing rail. */
 .ui-timeline li:only-child::after {
   display: none;
-}
-
-/* Density only: the block gap between entries scales. */
-.ui-timeline[data-size='sm'] {
-  --ui-timeline-gap-block: var(--ui-space-md);
-}
-
-.ui-timeline[data-size='lg'] {
-  --ui-timeline-gap-block: var(--ui-space-xl);
 }
 
 /* Optional meta line: the small step at the fluent role (the cite

@@ -3,7 +3,7 @@ import { expect, test } from '@playwright/test';
 /**
  * Timeline component tests.
  * A timeline is a static list: the contract under test is the marker/rail
- * geometry (tokens, offsets), the entry rhythm (data-size) and the native
+ * geometry (tokens, offsets), the entry rhythm and the native
  * list semantics (tests/README.md).
  */
 
@@ -163,26 +163,6 @@ test('a single entry has no outgoing rail', async ({ page }) => {
       return { display: s.display };
     });
   expect(rail.display).toBe('none');
-});
-
-test('sizes scale only the block gap', async ({ page }) => {
-  const sm = await page
-    .locator('#timeline-sm li')
-    .nth(1)
-    .evaluate((el) => {
-      const s = getComputedStyle(el);
-      return { paddingBlockStart: s.paddingBlockStart };
-    });
-  expect(sm.paddingBlockStart).toBe('16px');
-
-  const lg = await page
-    .locator('#timeline-lg li')
-    .nth(1)
-    .evaluate((el) => {
-      const s = getComputedStyle(el);
-      return { paddingBlockStart: s.paddingBlockStart };
-    });
-  expect(lg.paddingBlockStart).toBe('32px');
 });
 
 test('the meta line renders at the fluent role on the muted color', async ({ page }) => {

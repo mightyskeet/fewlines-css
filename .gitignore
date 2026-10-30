@@ -35,3 +35,4 @@ apps/docs/vendor/colorparsley.mjs
 
 # Local experiments
 .experiments/
+tests/shot-*.png
