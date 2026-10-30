@@ -8,7 +8,8 @@
     "test:apca": "node apca/check.mjs",
     "test:purity": "node purity/check.mjs",
     "pretest:browser": "node prepare.mjs",
-    "test:browser": "playwright test browser accessibility",
+    "test:browser": "playwright test browser accessibility theming",
+    "test:theming": "node theming/sweep.mjs",
     "test": "node prepare.mjs && playwright test"
   },
   "devDependencies": {

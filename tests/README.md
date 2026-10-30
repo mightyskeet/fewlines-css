@@ -6,7 +6,9 @@ Playwright harness for @fewlines/css.
 
 - `browser/` — native behavior tests: dialog, popover, forms, theme
 - `accessibility/` — axe-core + explicit keyboard/focus tests
-- `apca/` — APCA token matrix check (`apca-w3`)
+- `apca/` — APCA token matrix check (`apca-w3`) — Node, derived defaults
+- `theming/` — derivation tests: the seed + formulas layer in the real
+  engine (CI abbreviated hue grid, step 30°) + the full 360-point sweep
 - `purity/` — package purity check: no runtime JS/deps in core
 
 ## Политика покрытия
@@ -54,14 +56,20 @@ CI проверяет, что опубликованный core package не с�
 
 ```sh
 pnpm --filter @fewlines/tests test:prepare   # copy built CSS to apps/docs
-pnpm --filter @fewlines/tests test:browser   # browser + accessibility
+pnpm --filter @fewlines/tests test:browser   # browser + accessibility + theming (CI grid)
 pnpm --filter @fewlines/tests test:apca      # APCA token matrix
+pnpm --filter @fewlines/tests test:theming   # full 360-point hue sweep (manual run)
 pnpm --filter @fewlines/tests test:purity    # package purity
 ```
 
 `test:browser` runs `test:prepare` automatically (pretest hook).
 The webServer serves `apps/docs` on port 4173; fixture pages load the built
 core CSS from `/core.css`.
+
+`test:theming` (the full 360-point derivation sweep) is a standalone script:
+it needs the static server running first (`npx -y serve -l 4173 ../apps/docs`)
+and sweeps the seed hue grid in chromium + firefox — a manual run, not part
+of the CI gate.
 
 ## Notes
 

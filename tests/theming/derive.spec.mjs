@@ -1,11 +1,10 @@
-// Smoke check for the core derivation (packages/core/src/tokens/derive.css;
-// plan: docs/plans/2026-10-26-color-derivation.md). Loads /colors.html from
-// the static server (playwright.config.mjs webServer), reads the
-// always-visible live tables on default bases and reports pass/fail per
-// pair and theme for each engine. Manual run: node apca/derive-smoke.mjs
+// Derivation tests (tests/theming): the seed + formulas layer against the
+// real engine, on the Colors page whose tables are the live measurement.
+//
+// The last test is the CI-abbreviated hue grid (step 30°) — the full
+// 360-point sweep runs separately: node theming/sweep.mjs.
 import { test, expect } from '@playwright/test';
-
-const PAIRS = process.env.SMOKE_PAIRS_ONLY === '1';
+import { runHueSweep } from './page-sweep.mjs';
 
 test('derivation layer: default bases pass the token matrix', async ({ page, browserName }) => {
   const errors = [];
@@ -113,8 +112,8 @@ test('palette widget: slider, persistence, reset', async ({ page }) => {
   // Reset clears the storage and returns the sliders to the layer's defaults
   // (the scope attribute stays — the Colors page always runs the layer).
   await page.getByRole('button', { name: 'Reset' }).click();
-  await expect(page.evaluate(() => localStorage.getItem('colors-bases'))).resolves.toBeNull();
   await expect(page.locator('html')).toHaveAttribute('data-palette', 'custom');
+  await expect(page.evaluate(() => localStorage.getItem('colors-bases'))).resolves.toBeNull();
 });
 
 test('derivation: tint and fill keep the family hue', async ({ page }) => {
@@ -145,13 +144,13 @@ test('derivation: tint and fill keep the family hue', async ({ page }) => {
   for (const token of ['--ui-color-attention-tint', '--ui-color-attention']) {
     const hue = await hueOf(token);
     const drift = Math.abs(((hue - 160 + 540) % 360) - 180);
-    expect(drift, `${token} keeps the family hue (got ${hue})`).toBeLessThanOrEqual(2);
+    expect(drift, `${token} keeps the family hue`).toBeLessThanOrEqual(2);
   }
 });
 
 test('derivation: colors are a pure function of the bases (no stickiness)', async ({ page }) => {
   // The sticky-prone configuration: data-theme set (token transitions armed).
-  await p_addInitThemeLight(page);
+  await page.addInitScript(() => localStorage.setItem('theme', 'light'));
   await page.goto('/colors');
 
   const baseline = await readTintWithDefaults(page);
@@ -169,10 +168,51 @@ test('derivation: colors are a pure function of the bases (no stickiness)', asyn
   expect(await readTint(page), 'tint returns to the default value').toBe(baseline);
 });
 
-/** Set the sidebar-style saved theme before page load (data-theme present). */
-async function p_addInitThemeLight(page) {
-  await page.addInitScript(() => localStorage.setItem('theme', 'light'));
-}
+test('derivation: the fill polarity branch jumps the APCA dead zone', async ({ page }) => {
+  await page.goto('/colors');
+
+  const lightnessOf = (token) =>
+    page.evaluate(
+      ({ token }) => {
+        const probe = document.createElement('div');
+        probe.style.cssText = 'position:absolute;visibility:hidden;';
+        document.body.append(probe);
+        probe.style.color = `oklch(from var(${token}) l c h)`;
+        const m = getComputedStyle(probe).color.match(/oklch\(\s*([\d.]+)(%?)\s/);
+        probe.remove();
+        if (!m) throw new Error(`no oklch in ${getComputedStyle(probe).color}`);
+        return m[2] === '%' ? Number(m[1]) / 100 : Number(m[1]);
+      },
+      { token },
+    );
+
+  const setSeedL = (l) =>
+    page.evaluate((l) => {
+      const root = document.documentElement;
+      root.setAttribute('data-palette', 'custom');
+      root.style.setProperty('--ui-base-attention-light-l', String(l));
+    }, l);
+
+  // vivid branch (seed L 0.69): the fill recalibrates to 0.28 + 0.37 * 0.69
+  // and the on-* pole is white.
+  await setSeedL(0.69);
+  expect(await lightnessOf('--ui-color-attention'), 'vivid fill lightness').toBeCloseTo(0.5353, 2);
+  expect(await lightnessOf('--ui-color-on-attention'), 'vivid pole is white').toBeGreaterThan(0.99);
+
+  // pastel branch (seed L 0.71): the fill jumps to 0.8 + 0.38 * 0.01 — the
+  // zone 0.54-0.8 is never entered — and the pole flips to near-black.
+  await setSeedL(0.71);
+  expect(await lightnessOf('--ui-color-attention'), 'pastel fill lightness').toBeCloseTo(0.8038, 2);
+  expect(await lightnessOf('--ui-color-on-attention'), 'pastel pole is near-black').toBeLessThan(
+    0.12,
+  );
+});
+
+test('derivation sweep: the hue grid keeps the registry valid (CI, step 30°)', async ({ page }) => {
+  await page.goto('/colors');
+  const { failures } = await page.evaluate(runHueSweep, 30);
+  expect(failures, 'every hue point passes the registry thresholds').toEqual([]);
+});
 
 /** Activate the scope at default bases, then read the attention tint color. */
 async function readTintWithDefaults(page) {

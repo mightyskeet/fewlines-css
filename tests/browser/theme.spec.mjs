@@ -102,6 +102,43 @@ test('theme transition is registered and animatable', async ({ page }) => {
   await page.evaluate(() => document.documentElement.removeAttribute('data-theme'));
 });
 
+test('theme transition interpolates derived tokens (not a snap)', async ({ page }) => {
+  await page.emulateMedia({ colorScheme: 'light' });
+
+  const readSurface = () =>
+    page.evaluate(() => {
+      const el = document.createElement('div');
+      el.style.background = 'var(--ui-color-surface)';
+      document.body.append(el);
+      const ctx = document.createElement('canvas').getContext('2d');
+      ctx.fillStyle = '#000';
+      ctx.fillStyle = getComputedStyle(el).backgroundColor;
+      ctx.fillRect(0, 0, 1, 1);
+      const rgb = [...ctx.getImageData(0, 0, 1, 1).data].slice(0, 3);
+      el.remove();
+      return rgb;
+    });
+
+  const light = await readSurface();
+  await page.evaluate(() => document.documentElement.setAttribute('data-theme', 'dark'));
+  await page.waitForTimeout(400);
+  const dark = await readSurface();
+
+  // The transition is armed only while data-theme is present; removing it
+  // snaps back to light, so the next dark flip starts the animation fresh.
+  await page.evaluate(() => document.documentElement.removeAttribute('data-theme'));
+  await page.waitForTimeout(400);
+  await page.evaluate(() => document.documentElement.setAttribute('data-theme', 'dark'));
+  await page.waitForTimeout(130);
+  const mid = await readSurface();
+
+  const ends = [light[0], dark[0]].sort((a, b) => a - b);
+  expect(mid[0], 'mid-flight value is strictly between the endpoints').toBeGreaterThan(ends[0]);
+  expect(mid[0], 'mid-flight value is strictly between the endpoints').toBeLessThan(ends[1]);
+
+  await page.evaluate(() => document.documentElement.removeAttribute('data-theme'));
+});
+
 test('theme transition disabled under prefers-reduced-motion', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.evaluate(() => document.documentElement.setAttribute('data-theme', 'dark'));
