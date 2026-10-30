@@ -18,13 +18,16 @@
  * engine pseudo targets — both fed from the same local custom properties,
  * so there is one source of truth (compatibility notes, 2026-10-29).
  *
- * Indeterminate: the value attribute absent matches :indeterminate and the
- * engine runs its own native motion, painted with the themed fill color.
- * No component-side keyframes — the platform animates, we only theme.
+ * Indeterminate: the value attribute absent matches :indeterminate. The
+ * engine's native indeterminate motion does not survive painting the
+ * pseudo-elements (probe 2026-10-30, compatibility notes): all three
+ * engines render a static 100% full bar. The component runs its own sweep
+ * — a full-contrast band moving across the track (same keyframes as the
+ * shimmer), parked as a static half bar under reduced motion.
  *
  * Shimmer (opt-in, data-shimmer): a highlight band sweeps across the fill of
- * a determinate bar. Determinate only — on :indeterminate the engine already
- * animates the bar and two motions would conflict. The band is painted by a
+ * a determinate bar. Determinate only — the indeterminate state runs its own
+ * sweep (see below) and two motions would conflict. The band is painted by a
  * background-image gradient on the fill pseudo-elements (the same engine
  * paint model as the fill itself), animated via background-position (CSS
  * animations, compatibility notes 2026-10-30). Reduced motion silences it
@@ -131,26 +134,26 @@
 }
 
 /* Shimmer: opt-in data-shimmer, determinate only (:not(:indeterminate) — the
- * engine's indeterminate motion must not compete with a second animation).
- * The band mixes the fill towards the track (70/30) — a highlight stays
- * inside the fill/track pair, no new color contract. The gradient tile is
- * half the fill wide and sweeps from fully off the left edge (-100%) to
- * fully off the right (200%) — no dead pause between loops. The base fill
- * color below the image keeps the bar solid wherever the tile is not. */
+ * indeterminate sweep below owns the motion there). The base fill color
+ * stays solid under a narrow translucent-free highlight band that sweeps
+ * from fully off the left edge (-100%) to fully off the right (200%) — no
+ * dead pause between loops. The band mixes the fill towards on-brand
+ * (the registered text pair — guaranteed visible against the fill in both
+ * themes); a mix towards the track was probed imperceptible. */
 .ui-progress[data-shimmer]:not(:indeterminate)::-webkit-progress-value,
 .ui-progress[data-shimmer]:not(:indeterminate)::-moz-progress-bar {
   background-image: linear-gradient(
     90deg,
-    var(--ui-progress-fill),
-    color-mix(in oklch, var(--ui-progress-fill) 70%, var(--ui-progress-track)) 50%,
-    var(--ui-progress-fill)
+    transparent 30%,
+    color-mix(in oklch, var(--ui-color-on-brand) 50%, var(--ui-progress-fill)) 50%,
+    transparent 70%
   );
   background-repeat: no-repeat;
   background-size: 50% 100%;
-  animation: ui-progress-shimmer var(--ui-progress-shimmer-duration) linear infinite;
+  animation: ui-progress-sweep var(--ui-progress-shimmer-duration) linear infinite;
 }
 
-@keyframes ui-progress-shimmer {
+@keyframes ui-progress-sweep {
   from {
     background-position: -100% 0;
   }
@@ -160,13 +163,46 @@
   }
 }
 
+/* Indeterminate: the engine's native motion does not survive painting the
+ * pseudos (probe 2026-10-30, all three engines) — the bar renders 100%
+ * full and static. Sweep the fill ourselves: a full-contrast band moving
+ * across the full-width track. Firefox carries the track on the element,
+ * Chromium/WebKit on the bar pseudo — both get the same background and the
+ * same animation; the engine fill pseudo goes transparent so the painted
+ * fill never covers the track. Same keyframes as the shimmer — one sweep
+ * mechanic. The circle has its own spinning arc. */
+.ui-progress:indeterminate:not([data-shape='circle']),
+.ui-progress:indeterminate:not([data-shape='circle'])::-webkit-progress-bar {
+  background-color: var(--ui-progress-track);
+  background-image: linear-gradient(
+    90deg,
+    transparent 30%,
+    var(--ui-progress-fill) 50%,
+    transparent 70%
+  );
+  background-repeat: no-repeat;
+  background-size: 50% 100%;
+  animation: ui-progress-sweep 1s linear infinite;
+}
+
+.ui-progress:indeterminate::-webkit-progress-value,
+.ui-progress:indeterminate::-moz-progress-bar {
+  background: transparent;
+}
+
 /* Reduced motion: the shimmer is decoration — silence it entirely; the fill
- * still carries the state (same contract as the base component). */
+ * still carries the state (same contract as the base component). The
+ * indeterminate sweep parks as a static half bar — no motion, still "busy". */
 @media (prefers-reduced-motion: reduce) {
   .ui-progress[data-shimmer]:not(:indeterminate)::-webkit-progress-value,
   .ui-progress[data-shimmer]:not(:indeterminate)::-moz-progress-bar {
     animation: none;
     background-image: none;
+  }
+
+  .ui-progress:indeterminate:not([data-shape='circle']),
+  .ui-progress:indeterminate:not([data-shape='circle'])::-webkit-progress-bar {
+    animation: none;
   }
 }
 

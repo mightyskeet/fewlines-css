@@ -144,10 +144,10 @@ test('shimmer: gradient band + animation on the fill rule (CSSOM wiring)', async
     return null;
   }, needle);
 
-  expect(rule.selector).toContain(':not(:indeterminate)'); // no shimmer on engine motion
+  expect(rule.selector).toContain(':not(:indeterminate)'); // no shimmer on the indeterminate sweep
   expect(rule.backgroundImage).toContain('linear-gradient');
   expect(rule.backgroundImage).toContain('color-mix');
-  expect(rule.animation).toContain('ui-progress-shimmer');
+  expect(rule.animation).toContain('ui-progress-sweep');
   expect(rule.animation).toContain('var(--ui-progress-shimmer-duration)');
 });
 
@@ -155,7 +155,7 @@ test('shimmer keyframes sweep background-position without a dead pause', async (
   const frames = await page.evaluate(() => {
     const walk = (rules) => {
       for (const rule of rules) {
-        if (rule.name === 'ui-progress-shimmer')
+        if (rule.name === 'ui-progress-sweep')
           return {
             from: rule.findRule('from').style.backgroundPosition,
             to: rule.findRule('to').style.backgroundPosition,
@@ -196,6 +196,30 @@ test('shimmer opt-in gates: attribute + determinate', async ({ page }) => {
   expect(gates.on).toBe(true);
   expect(gates.indeterminate).toBe(false);
   expect(gates.plain).toBe(false);
+});
+
+test('indeterminate: the component sweeps the fill (engine motion does not survive painting)', async ({
+  page,
+}) => {
+  // Probe 2026-10-30 (compatibility notes): painted pseudos silence the
+  // native indeterminate motion in all three engines — the bar renders
+  // static 100% full. The component runs the sweep itself.
+  const el = await page.locator('#progress-indeterminate').evaluate((el) => {
+    const s = getComputedStyle(el);
+    return {
+      indeterminate: el.matches(':indeterminate'),
+      animationName: s.animationName,
+      animationDuration: s.animationDuration,
+      backgroundColor: s.backgroundColor,
+      backgroundImage: s.backgroundImage,
+    };
+  });
+
+  expect(el.indeterminate).toBe(true);
+  expect(el.animationName).toBe('ui-progress-sweep'); // Firefox carries the track on the element
+  expect(el.animationDuration).toBe('1s');
+  expect(el.backgroundColor).toBe(await token(page, '--ui-color-surface-tint'));
+  expect(el.backgroundImage).toContain('linear-gradient');
 });
 
 test('reduced motion silences the shimmer on the fill rule', async ({ page, browserName }) => {
@@ -240,6 +264,14 @@ test('reduced motion silences the shimmer on the fill rule', async ({ page, brow
   // longhand animation-name is stable across engines.
   expect(silenced.animationName).toBe('none');
   expect(silenced.backgroundImage).toBe('none');
+});
+
+test('reduced motion parks the indeterminate sweep as a static half bar', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  const animationName = await page
+    .locator('#progress-indeterminate')
+    .evaluate((el) => getComputedStyle(el).animationName);
+  expect(animationName).toBe('none');
 });
 
 test('circle: square ring element with conic paint and mask (element computed styles)', async ({
@@ -325,7 +357,10 @@ test('circle: Chromium bar carries the conic (CSSOM wiring)', async ({ page, bro
           const hit = walk(rule.cssRules);
           if (hit) return hit;
         }
-        if (rule.selectorText?.includes('data-shape') && rule.selectorText.includes('-webkit-progress-bar'))
+        // The plain circle bar selector only — the indeterminate sweep rule
+        // also mentions data-shape inside :not([data-shape='circle']). The
+        // CSSOM keeps the author quotes: [data-shape="circle"].
+        if (rule.selectorText?.includes('.ui-progress[data-shape="circle"]::-webkit-progress-bar'))
           return rule.style.getPropertyValue('background');
       }
       return null;
