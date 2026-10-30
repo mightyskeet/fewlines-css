@@ -190,6 +190,26 @@
       </section>
 
       <section>
+        <h2>Placement</h2>
+        <p>
+          The menu is positioned by the Popover component — the shell <em>is</em> the popover, so
+          the placement vocabulary applies unchanged and the menu adds none of its own. Set
+          <code>data-block</code> / <code>data-inline</code> on the menu with the
+          <code>position-area</code> keywords per axis: above the trigger
+          (<code>data-block="block-start"</code>), at the sides (<code
+            >data-inline="inline-start"</code
+          >
+          / <code>data-inline="inline-end"</code>), corners combine both, and the
+          <code>span-*</code> keywords pin the menu flush to the trigger's edge. Without attributes
+          the menu opens below the trigger and flips above on overflow. Anchoring needs the trigger
+          to carry <code>ui-popover-trigger</code>; several trigger/menu pairs on one page must
+          scope the anchor names (<code>anchor-scope: all</code> on a common wrapper). There is no
+          collision handling — if the chosen side does not fit, pick the other side explicitly. The
+          <a href="/popover">Popover page</a> shows all nine placement cells.
+        </p>
+      </section>
+
+      <section>
         <h2>Customization</h2>
         <pre><code>.compact-menu {
   --ui-menu-gap: var(--ui-space-3xs);
