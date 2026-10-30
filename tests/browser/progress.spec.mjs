@@ -241,3 +241,120 @@ test('reduced motion silences the shimmer on the fill rule', async ({ page, brow
   expect(silenced.animationName).toBe('none');
   expect(silenced.backgroundImage).toBe('none');
 });
+
+test('circle: square ring element with conic paint and mask (element computed styles)', async ({
+  page,
+}) => {
+  // Unlike the fill pseudos, the circle paints on the element itself —
+  // computed styles are reachable in every engine.
+  const el = await page.locator('#progress-circle').evaluate((el) => {
+    const s = getComputedStyle(el);
+    return {
+      inlineSize: s.inlineSize,
+      blockSize: s.blockSize,
+      borderRadius: s.borderRadius,
+      backgroundImage: s.backgroundImage,
+      maskImage: s.maskImage,
+      transitionProperty: s.transitionProperty,
+    };
+  });
+
+  expect(el.inlineSize).toBe('40px'); // 2.5rem
+  expect(el.blockSize).toBe('40px');
+  expect(el.borderRadius).toBe('50%');
+  expect(el.backgroundImage).toContain('conic-gradient');
+  // The registered <number> resolves: the host-set inline value (70) drives
+  // the arc — the dual-source contract (attribute + property) works.
+  expect(el.backgroundImage).toContain('70%');
+  expect(el.maskImage).toContain('radial-gradient');
+  expect(el.transitionProperty).toContain('--ui-progress-value'); // @property-registered
+});
+
+test('circle: diameter steps sm 2rem / md 2.5rem / lg 3rem', async ({ page }) => {
+  const sm = await page.locator('#progress-circle-sm').evaluate((el) => getComputedStyle(el).inlineSize);
+  const lg = await page.locator('#progress-circle-lg').evaluate((el) => getComputedStyle(el).inlineSize);
+  expect(sm).toBe('32px');
+  expect(lg).toBe('48px');
+});
+
+test('circle: indeterminate spins the element', async ({ page }) => {
+  const el = await page.locator('#progress-circle-indeterminate').evaluate((el) => {
+    const s = getComputedStyle(el);
+    return {
+      indeterminate: el.matches(':indeterminate'),
+      animationName: s.animationName,
+      backgroundImage: s.backgroundImage,
+    };
+  });
+
+  expect(el.indeterminate).toBe(true);
+  expect(el.animationName).toBe('ui-progress-spin');
+  expect(el.backgroundImage).toContain('conic-gradient'); // the arc redefinition
+});
+
+test('circle: --ui-progress-value registered as <number> (CSSOM @property)', async ({ page }) => {
+  const prop = await page.evaluate(() => {
+    const walk = (rules) => {
+      for (const rule of rules) {
+        if (rule.name === '--ui-progress-value') return { syntax: rule.syntax, inherits: rule.inherits };
+        if (rule.cssRules) {
+          const hit = walk(rule.cssRules);
+          if (hit) return hit;
+        }
+      }
+      return null;
+    };
+    for (const sheet of document.styleSheets) {
+      const hit = walk(sheet.cssRules);
+      if (hit) return hit;
+    }
+    return null;
+  });
+
+  expect(prop.syntax).toBe('<number>');
+  expect(prop.inherits).toBe(false);
+});
+
+test('circle: Chromium bar carries the conic (CSSOM wiring)', async ({ page, browserName }) => {
+  test.skip(browserName !== 'chromium', '::-webkit-progress-bar is Chromium/WebKit paint; foreign-vendor rules are dropped elsewhere');
+
+  const background = await page.evaluate(() => {
+    const walk = (rules) => {
+      for (const rule of rules) {
+        if (rule.cssRules) {
+          const hit = walk(rule.cssRules);
+          if (hit) return hit;
+        }
+        if (rule.selectorText?.includes('data-shape') && rule.selectorText.includes('-webkit-progress-bar'))
+          return rule.style.getPropertyValue('background');
+      }
+      return null;
+    };
+    for (const sheet of document.styleSheets) {
+      const hit = walk(sheet.cssRules);
+      if (hit) return hit;
+    }
+    return null;
+  });
+
+  expect(background).toBe('var(--ui-progress-conic)');
+});
+
+test('circle: reduced motion stops the spin and the value transition', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  const el = await page.locator('#progress-circle-indeterminate').evaluate((el) => {
+    const s = getComputedStyle(el);
+    return { animationName: s.animationName, transitionDuration: s.transitionDuration };
+  });
+
+  expect(el.animationName).toBe('none');
+  expect(el.transitionDuration).toBe('0s');
+});
+
+test('circle: forced colors drop the mask', async ({ page }) => {
+  await page.emulateMedia({ forcedColors: 'active' });
+  const maskImage = await page
+    .locator('#progress-circle')
+    .evaluate((el) => getComputedStyle(el).maskImage);
+  expect(maskImage).toBe('none');
+});
