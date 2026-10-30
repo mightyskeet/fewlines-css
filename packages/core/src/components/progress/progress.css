@@ -164,23 +164,29 @@
 /* Indeterminate: the engine's native motion does not survive painting the
  * pseudos (probe 2026-10-30, all three engines) — the bar renders 100%
  * full and static. Sweep the fill ourselves: a full-contrast band moving
- * across the track. Firefox carries the track on the element,
- * Chromium/WebKit on the bar pseudo — both get the same background and the
- * same animation; the engine fill pseudo goes transparent so the painted
- * fill never covers the track. Same shared shimmer module as the shimmer —
- * one sweep mechanic, the bare fill as the band color. The circle has its
- * own spinning arc. */
+ * across the track. The paint target is the ELEMENT in every engine —
+ * Firefox paints the element as the track natively, and Chromium's bar
+ * pseudo is unusable here: it neither paints its own background-image nor
+ * lets the element's animated band beneath show through its opaque
+ * background-color (only the cap slivers of the diverging rounded clips
+ * glint through — the "corners light up" probe, compatibility notes
+ * 2026-10-30). Same shared shimmer module as the shimmer — one sweep
+ * mechanic, the bare fill as the band color. The circle has its own
+ * spinning arc. */
 .ui-progress:indeterminate:not([data-shape='circle']) {
   --ui-shimmer-color: var(--ui-progress-fill);
-}
 
-.ui-progress:indeterminate:not([data-shape='circle']),
-.ui-progress:indeterminate:not([data-shape='circle'])::-webkit-progress-bar {
   background-color: var(--ui-progress-track);
   background-image: var(--ui-shimmer-band-paint);
   background-repeat: no-repeat;
   background-size: 200% 100%;
   animation: ui-shimmer-sweep var(--ui-shimmer-duration) linear infinite;
+}
+
+/* The Chromium bar pseudo steps aside so the element's paint shows
+ * (determinate keeps the two-target model above). */
+.ui-progress:indeterminate:not([data-shape='circle'])::-webkit-progress-bar {
+  background: transparent;
 }
 
 .ui-progress:indeterminate::-webkit-progress-value,
@@ -198,8 +204,7 @@
     background-image: none;
   }
 
-  .ui-progress:indeterminate:not([data-shape='circle']),
-  .ui-progress:indeterminate:not([data-shape='circle'])::-webkit-progress-bar {
+  .ui-progress:indeterminate:not([data-shape='circle']) {
     animation: none;
   }
 }
