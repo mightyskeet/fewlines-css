@@ -29,13 +29,21 @@
  *   vertical    the Timeline model: rail = li::after (2px border on a
  *               zero-width pseudo — survives forced colors), marker =
  *               li::before ring centered on the rail; entries own the block
- *               gap (padding, not margin) so the rail is continuous.
- *   horizontal  the ol is a flex row of equal columns; the marker joins the
- *               flow on top of the column and each entry draws its incoming
- *               half-segment (::after) from the entry's start edge to its
- *               own marker center — adjacent entries make a continuous line
- *               between marker centers; the first entry has no incoming
- *               segment.
+ *               gap (padding, not margin) so the rail is continuous. The
+ *               marker is centered on the content's first line exactly:
+ *               the offset is (1lh - size) / 2 — the lh unit resolves
+ *               against the entry's inherited line-height, which matches
+ *               the canonical default-size first line (a host heading as
+ *               the first child carries its own metrics and drifts).
+ *   horizontal  the ol is a flex row of equal columns (flex: 1 1 0% —
+ *               the equality is what makes the percentage math below
+ *               exact); the marker joins the flow on top of the column and
+ *               each entry draws its incoming segment (::after) from the
+ *               previous marker's center to its own (inset-inline-start:
+ *               -50%, inline-size: 100%): adjacent entries make a
+ *               continuous line between marker centers, the opaque marker
+ *               fills mask the pass-through; the first entry has no
+ *               incoming segment.
  *
  * Markers carry the state by shape, not by color alone (WCAG 1.4.1):
  *   done      a solid accent disc (border transparent, accent fill);
@@ -70,7 +78,7 @@
   --ui-stepper-marker-size: var(--ui-space-sm);
   --ui-stepper-indent: var(--ui-space-xl);
   --ui-stepper-line-width: 2px;
-  --ui-stepper-marker-offset: var(--ui-space-2xs);
+  --ui-stepper-marker-offset: calc((1lh - var(--ui-stepper-marker-size)) / 2);
   --ui-stepper-gap-block: var(--ui-space-lg);
   --ui-stepper-gap-inline: var(--ui-space-sm);
   --ui-stepper-rail-color: var(--ui-color-border);
@@ -209,13 +217,14 @@
   flex: none;
 }
 
-/* Each entry draws its incoming half-segment: from the entry's start edge
- * to its own marker center — the marker's opaque fill masks the pass-through
- * and adjacent entries make a continuous line between marker centers. */
+/* Each entry draws its incoming segment: from the previous marker's center
+ * to its own (-50% + 100% — exact at equal flex columns). The markers'
+ * opaque fills mask the pass-through; adjacent segments make a continuous
+ * line between marker centers. */
 .ui-stepper[data-orientation='horizontal'] li::after {
   inset-block: calc(var(--ui-stepper-marker-size) / 2) auto;
-  inset-inline-start: 0;
-  inline-size: 50%;
+  inset-inline-start: -50%;
+  inline-size: 100%;
   block-size: 0;
   border: none;
   border-block-start: var(--ui-stepper-line-width) solid var(--ui-stepper-rail-color);

@@ -15,6 +15,18 @@ test.beforeEach(async ({ page }) => {
 const token = async (page, name) =>
   page.evaluate((n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim(), name);
 
+/** The entry's used line height in px (the fluid scale makes the body
+ * font size viewport-dependent — no hardcoded px expectations). */
+const entryLineHeight = (page, liId) =>
+  page
+    .locator(`#${liId}`)
+    .first()
+    .evaluate((el) => {
+      const s = getComputedStyle(el);
+      const lh = parseFloat(s.lineHeight);
+      return s.lineHeight.endsWith('px') ? lh : lh * parseFloat(s.fontSize);
+    });
+
 const marker = (page, liId) =>
   page.locator(`#${liId}`).evaluate((el) => {
     const s = getComputedStyle(el, '::before');
@@ -65,6 +77,8 @@ test('the list owns the layout: no list chrome, adjacent entries', async ({ page
 });
 
 test('the upcoming marker is the hollow timeline ring', async ({ page }) => {
+  const lh = await entryLineHeight(page, 'stepper-default');
+  const offset = (lh - 12) / 2;
   const m = await marker(page, 'stepper-step-upcoming');
   expect(m.borderStyle).toBe('solid');
   expect(m.borderWidth).toBe('2px');
@@ -74,8 +88,8 @@ test('the upcoming marker is the hollow timeline ring', async ({ page }) => {
   expect(m.radius).toBe('9999px');
   expect(m.insetInlineStart).toBe('10px');
   // The upcoming step is not the first entry — its marker carries the
-  // block gap (the li + li shift, the timeline model).
-  expect(m.insetBlockStart).toBe('28px');
+  // block gap on top of the first-line offset ((1lh - size) / 2).
+  expect(m.insetBlockStart).toBe(`${24 + offset}px`);
   expect(m.backgroundColor).toBe(await token(page, '--ui-color-surface'));
   expect(m.backgroundImage).toBe('none');
   expect(m.zIndex).toBe('1');
@@ -105,6 +119,8 @@ test('the state attribute on the interactive child is honored (:has)', async ({ 
 });
 
 test('the rail is a border on the border token, spanning each entry', async ({ page }) => {
+  const lh = await entryLineHeight(page, 'stepper-default');
+  const offset = (lh - 12) / 2;
   const first = await page
     .locator('#stepper-default li')
     .first()
@@ -122,7 +138,8 @@ test('the rail is a border on the border token, spanning each entry', async ({ p
   expect(first.borderWidth).toBe('2px');
   expect(first.borderColor).toBe(await token(page, '--ui-color-border'));
   expect(first.insetInlineStart).toBe('15px');
-  expect(first.insetBlock).toBe('4px 0px');
+  // The rail starts at the ring's top: the first-line offset (1lh - size)/2.
+  expect(first.insetBlock).toBe(`${offset}px 0px`);
 
   const next = await page
     .locator('#stepper-default li')
@@ -135,6 +152,8 @@ test('the rail is a border on the border token, spanning each entry', async ({ p
 });
 
 test('the last entry rail ends at the last ring bottom', async ({ page }) => {
+  const lh = await entryLineHeight(page, 'stepper-default');
+  const offset = (lh - 12) / 2;
   const rail = await page
     .locator('#stepper-default li')
     .nth(2)
@@ -143,8 +162,9 @@ test('the last entry rail ends at the last ring bottom', async ({ page }) => {
       return { blockSize: s.blockSize };
     });
   // The last rule sets inset-block-end: auto; Chromium reports the used
-  // value for it, so the observable contract is the trimmed block-size.
-  expect(rail.blockSize).toBe('40px');
+  // value for it, so the observable contract is the trimmed block-size:
+  // the block gap + the first-line offset + the ring itself.
+  expect(rail.blockSize).toBe(`${24 + offset + 12}px`);
 });
 
 test('horizontal: equal centered columns, the marker in the flow', async ({ page }) => {
@@ -207,9 +227,10 @@ test('horizontal: the incoming half-segment spans from the edge to the marker ce
         borderStyle: s.borderTopStyle,
         borderWidth: s.borderTopWidth,
         borderColor: s.borderTopColor,
-        // Chromium reports the used value — a percentage resolves to px.
+        // Chromium reports the used value — percentages resolve to px.
         inlineSize: parseFloat(s.inlineSize),
-        halfEntry: el.offsetWidth / 2,
+        insetInlineStart: parseFloat(s.insetInlineStart),
+        entryWidth: el.offsetWidth,
         insetBlockStart: s.insetBlockStart,
         blockHeight: s.blockSize,
       };
@@ -217,7 +238,10 @@ test('horizontal: the incoming half-segment spans from the edge to the marker ce
   expect(second.borderStyle).toBe('solid');
   expect(second.borderWidth).toBe('2px');
   expect(second.borderColor).toBe(await token(page, '--ui-color-border'));
-  expect(second.inlineSize).toBeCloseTo(second.halfEntry, 0);
+  // The segment spans from the previous marker's center to this entry's
+  // own marker center: width = one entry, start = half an entry back.
+  expect(second.inlineSize).toBeCloseTo(second.entryWidth, 0);
+  expect(second.insetInlineStart).toBeCloseTo(-second.entryWidth / 2, 0);
   expect(second.insetBlockStart).toBe('6px');
   expect(second.blockHeight).toBe('0px');
 });

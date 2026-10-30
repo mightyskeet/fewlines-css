@@ -100,7 +100,9 @@
           </ol>
         </div>
         <p>
-          The default orientation is vertical (the timeline sibling geometry).
+          The default orientation is vertical (the timeline sibling geometry) — the marker is
+          centered exactly on the content's first line (the <code>lh</code> unit; a host heading as
+          the first child carries its own metrics and is re-aligned through the local token).
           <code>data-orientation="horizontal"</code> is the classic wizard row: equal columns, the
           marker on top, the label centered below, a continuous line between the marker centers. All
           positioning is logical — the layout mirrors itself in RTL.
