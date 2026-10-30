@@ -36,9 +36,7 @@ test('menu item with command="hide-popover" closes the menu natively', async ({ 
   const clicked = page.evaluate(
     () =>
       new Promise((resolve) => {
-        document
-          .querySelector('#menu-item-rename')
-          .addEventListener('click', () => resolve(true));
+        document.querySelector('#menu-item-rename').addEventListener('click', () => resolve(true));
       }),
   );
   await page.click('#menu-item-rename');

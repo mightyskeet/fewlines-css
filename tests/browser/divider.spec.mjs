@@ -72,7 +72,9 @@ test('inset both indents symmetrically on both sides', async ({ page }) => {
   expect(styles.end).toBe('24px');
 });
 
-test('inset combines with the variant: dashed line keeps its style and indent', async ({ page }) => {
+test('inset combines with the variant: dashed line keeps its style and indent', async ({
+  page,
+}) => {
   const styles = await page.locator('#divider-dashed-inset').evaluate((el) => {
     const s = getComputedStyle(el);
     return {
