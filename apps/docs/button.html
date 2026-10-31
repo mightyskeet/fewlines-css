@@ -33,13 +33,29 @@
        * button keeps its exact width; a CSS ring spinner — ::after on the
        * button itself, no extra markup — is absolutely centered on top.
        * State comes from aria-busy (the Skeleton host contract), not a
-       * class. Colors assume the brand-filled surface (default button);
-       * corner-shape: round overrides the tokens-layer squircle, which
-       * turns the circle into a rounded square (same exception as
-       * badge/switch/progress in core). */
+       * class. The spinner wears the label color of its variant (the same
+       * mapping button.css uses for text); --ui-spinner-color carries it
+       * through the transparent label. corner-shape: round overrides the
+       * tokens-layer squircle, which turns the circle into a rounded
+       * square (same exception as badge/switch/progress in core). */
       .ui-button[aria-busy='true'] {
         position: relative;
         color: transparent;
+        --ui-spinner-color: var(--ui-color-on-brand);
+      }
+
+      .ui-button[data-variant='secondary'][aria-busy='true'] {
+        --ui-spinner-color: var(--ui-color-brand);
+      }
+
+      .ui-button[data-variant='outline'][aria-busy='true'],
+      .ui-button[data-variant='ghost'][aria-busy='true'],
+      .ui-button[data-variant='link'][aria-busy='true'] {
+        --ui-spinner-color: var(--ui-color-text);
+      }
+
+      .ui-button[data-variant='attention'][aria-busy='true'] {
+        --ui-spinner-color: var(--ui-color-on-attention);
       }
 
       .ui-button[aria-busy='true']::after {
@@ -51,8 +67,8 @@
         inline-size: 1rem;
         corner-shape: round;
         border-radius: 50%;
-        border: 2px solid color-mix(in oklch, var(--ui-color-on-brand) 35%, transparent);
-        border-top-color: var(--ui-color-on-brand);
+        border: 2px solid color-mix(in oklch, var(--ui-spinner-color) 35%, transparent);
+        border-top-color: var(--ui-spinner-color);
         animation: ui-button-spin 1s linear infinite;
       }
 
@@ -194,14 +210,25 @@
           <button class="ui-button" type="button" disabled>Disabled</button>
           <a class="ui-button" href="#">Link as button</a>
           <button class="ui-button" type="button" aria-busy="true">Loading</button>
+          <button class="ui-button" type="button" data-variant="secondary" aria-busy="true">
+            Loading
+          </button>
+          <button class="ui-button" type="button" data-variant="outline" aria-busy="true">
+            Loading
+          </button>
+          <button class="ui-button" type="button" data-variant="attention" aria-busy="true">
+            Loading
+          </button>
         </div>
         <p>
           Disabled via <code>:disabled</code> (excluded from tab order natively);
           <code>aria-disabled="true"</code> for <code>&lt;a&gt;</code>. Focus ring comes from the
           base layer (<code>--ui-focus-ring</code>) — do not override. Loading keeps the label in
           flow (<code>color: transparent</code> — the width never changes) and overlays a CSS ring
-          spinner on the button's own <code>::after</code> (<code>aria-busy="true"</code>); reduced
-          motion parks the ring, the state stays visible.
+          spinner on the button's own <code>::after</code> (<code>aria-busy="true"</code>); the
+          spinner wears the label color of its variant — <code>on-brand</code>, <code>brand</code>,
+          <code>text</code> (also ghost and link) or <code>on-attention</code>; reduced motion parks
+          the ring, the state stays visible.
         </p>
       </section>
 
