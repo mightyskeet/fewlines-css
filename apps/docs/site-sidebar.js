@@ -90,6 +90,8 @@ class SiteSidebar extends HTMLElement {
     for (const { href, label, group: section } of PAGES) {
       if (section !== group) {
         group = section;
+        // Separator before each new section once the nav has content.
+        if (nav.children.length) nav.append(document.createElement('hr'));
         if (group) {
           const heading = document.createElement('h2');
           heading.className = 'site-nav-group';

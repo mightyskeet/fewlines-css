@@ -88,10 +88,11 @@ site-sidebar {
 }
 
 /* Group headings (overline style): one per .site-nav section, rendered by
- * site-sidebar.js. Gap between groups comes from the heading's block-start
- * margin, so the first group adds no leading space. */
+ * site-sidebar.js. Sections are separated by the core-styled <hr>; its
+ * block-end margin is the only gap above a heading, so the heading adds no
+ * block-start margin of its own. */
 .site-nav h2 {
-  margin-block: var(--ui-space-md) var(--ui-space-2xs);
+  margin-block: 0 var(--ui-space-2xs);
   font: 600 var(--ui-font-size-xs) / 1.4 var(--ui-font-sans);
   letter-spacing: 0.08em;
   text-transform: uppercase;
