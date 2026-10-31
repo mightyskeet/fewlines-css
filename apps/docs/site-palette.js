@@ -499,6 +499,7 @@ class SitePaletteActions extends HTMLElement {
     const reset = document.createElement('button');
     reset.type = 'button';
     reset.className = 'ui-button';
+    reset.dataset.variant = 'attention';
     reset.textContent = 'Reset';
     reset.addEventListener('click', () => {
       state = {};
