@@ -48,19 +48,29 @@ CI runs a 30° hue-step grid, a full 360-point sweep runs separately).
 
 ## Components
 
-| Component | Basis                               | Classes                                                                           |
-| --------- | ----------------------------------- | --------------------------------------------------------------------------------- |
-| Button    | `<button>`, `<a>`                   | `ui-button`, `data-variant`, `data-size`                                          |
-| Field     | `<input>/<textarea>/<select>`       | `ui-field`, `ui-input`, `ui-textarea`, `ui-select`, `ui-field-error`, `data-size` |
-| Dialog    | `<dialog>` (top-layer)              | `ui-dialog`                                                                       |
-| Popover   | Popover API + anchor positioning    | `ui-popover`, `ui-popover-trigger`                                                |
-| Drawer    | `<div popover>` (edge panel)        | `ui-drawer`, `data-variant` (the host sets the `popover` attribute)               |
-| Accordion | `<details>/<summary>`               | `ui-accordion`, `ui-accordion-summary`                                            |
-| Alert     | static message container            | `ui-alert`, `data-variant`, `ui-alert-title/body`                                 |
-| Badge     | static inline status label          | `ui-badge`, `data-variant`                                                        |
-| Switch    | `<input type="checkbox" switch>`    | `ui-switch`, `ui-switch-field`, `ui-switch-label`                                 |
-| Table     | `<table>` + `<caption>`             | `ui-table`, `ui-table-wrap`, `data-zebra`, `data-sticky`, `data-align`            |
-| Tooltip   | `popover="hint"` / interest invoker | `ui-tooltip`, `ui-tooltip-trigger`                                                |
+| Component   | Basis                                       | Classes                                                                                             |
+| ----------- | ------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| Button      | `<button>`, `<a>`                           | `ui-button`, `data-variant`, `data-size`                                                            |
+| Field       | `<input>/<textarea>/<select>`               | `ui-field`, `ui-input`, `ui-textarea`, `ui-select`, `ui-field-label/description/error`, `data-size` |
+| Fieldset    | `<fieldset>`                                | `ui-fieldset`, `ui-fieldset-legend`                                                                 |
+| Choice      | checkboxes and radios                       | `ui-choice-field`, `ui-checkbox`, `ui-radio` (+ `ui-fieldset`)                                      |
+| Switch      | `<input type="checkbox" switch>`            | `ui-switch`, `ui-switch-field`                                                                      |
+| Dialog      | `<dialog>` (top-layer)                      | `ui-dialog`                                                                                         |
+| Popover     | Popover API + anchor positioning            | `ui-popover`, `ui-popover-trigger`, `data-block`, `data-inline`                                     |
+| Menu        | `<menu>` in a popover                       | `ui-popover ui-menu` (+ `ui-menu-item`)                                                             |
+| Drawer      | `<div popover>` (edge panel)                | `ui-drawer`, `data-variant` (the host sets the `popover` attribute)                                 |
+| Tooltip     | `popover="hint"` / interest invoker         | `ui-tooltip-trigger`, `ui-tooltip`                                                                  |
+| Accordion   | `<details>/<summary>`                       | `ui-accordion`, `ui-accordion-summary`, `ui-accordion-content`                                      |
+| Alert       | static message container                    | `ui-alert`, `ui-alert-title/body`, `data-variant`                                                   |
+| Badge       | static inline status label                  | `ui-badge`, `data-variant`                                                                          |
+| Divider     | `<hr>`                                      | `ui-divider`                                                                                        |
+| Progress    | `<progress>`                                | `ui-progress`                                                                                       |
+| Skeleton    | empty `<span>` placeholder                  | `ui-skeleton`                                                                                       |
+| Stepper     | `<ol>` stepwise progress                    | `ui-stepper`, `data-done`, `aria-current="step"`                                                    |
+| Tabs        | panel switching with the address in the URL | `ui-tabs`, `ui-tab`, `ui-tabs-panel`                                                                |
+| Timeline    | `<ol>` event chronology                     | `ui-timeline`, `ui-timeline-meta`                                                                   |
+| Breadcrumbs | `<nav>` navigation trail                    | `ui-breadcrumbs` (+ Menu popover for the collapsed state)                                           |
+| Table       | `<table>` + `<caption>`                     | `ui-table`, `ui-table-wrap`, `data-zebra`, `data-sticky`, `data-align`                              |
 
 Beyond the components, the base layer styles semantic text elements without
 classes: `code`/`kbd`/`samp`, `pre`, `mark`, `abbr`, links, `blockquote`,
