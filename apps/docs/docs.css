@@ -318,6 +318,9 @@ main > section {
     box-sizing: border-box;
     max-block-size: calc(100vh - var(--site-header-size));
     overflow: auto;
+    /* Thin scrollbar: the nav's inner scroll is secondary chrome; engines
+     * below the feature floor keep the default width (compatibility.md). */
+    scrollbar-width: thin;
     margin-block-end: 0;
     padding-block: var(--ui-space-lg);
   }
