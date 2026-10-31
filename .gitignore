@@ -21,7 +21,8 @@ tests/playwright-report/
 .DS_Store
 Thumbs.db
 
-# Editor
+# Editor / local tool config
+.vscode/
 *.log
 
 # Generated test fixture CSS (copied from packages/core/dist by tests/prepare.mjs)
