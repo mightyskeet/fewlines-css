@@ -1,0 +1,46 @@
+name: Deploy site
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        # version comes from packageManager field in package.json
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      # The root postinstall (tests/prepare.mjs) builds the core package and
+      # copies the generated site assets (css/core.css, vendored apca-w3,
+      # bundled palette widget) into apps/docs.
+      - name: Install dependencies and prepare site assets
+        run: pnpm install --frozen-lockfile
+
+      - name: Upload site
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: apps/docs
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
