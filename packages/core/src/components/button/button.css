@@ -121,23 +121,25 @@
   padding: 0;
 }
 
-/* Press = hover fill + mechanical response (state model, theme notes) —
- * the same model as the attention variant. Same specificity as the variant
- * rules below, which come later — pressed variant buttons keep their family
- * fill unless the variant re-states its hover fill with higher specificity
- * (outline/ghost/secondary). */
-.ui-button:active {
-  background: var(--ui-color-brand-hover);
-  translate: 0 1px;
-}
-
 /* Disabled — native :disabled covers <button>; aria-disabled covers links.
- * Before the hover rules (no-descending-specificity: hover excludes it). */
+ * Before the press/hover rules (no-descending-specificity: both exclude it). */
 .ui-button:disabled,
 .ui-button[aria-disabled='true'] {
   opacity: 0.5;
   cursor: not-allowed;
   translate: none;
+}
+
+/* Press = hover fill + mechanical response (state model, theme notes) —
+ * the same model as the attention variant. Same specificity as the variant
+ * rules below, which come later — pressed variant buttons keep their family
+ * fill unless the variant re-states its hover fill with higher specificity
+ * (outline/ghost/secondary). Disabled controls are excluded like hover:
+ * WebKit matches :active on disabled buttons (Chromium/Gecko do not) —
+ * without the exclusion a press in Safari restyles the disabled fill. */
+.ui-button:active:not(:disabled, [aria-disabled='true']) {
+  background: var(--ui-color-brand-hover);
+  translate: 0 1px;
 }
 
 /* Secondary: brand pastel fill (the default badge pastel), no visible
@@ -147,7 +149,7 @@
   background: var(--ui-color-brand-tint);
 }
 
-.ui-button[data-variant='secondary']:active {
+.ui-button[data-variant='secondary']:active:not(:disabled, [aria-disabled='true']) {
   background: var(--ui-color-brand-tint-hover);
 }
 
@@ -161,7 +163,7 @@
   border-color: color-mix(in oklab, var(--ui-color-border), var(--ui-color-border-strong));
 }
 
-.ui-button[data-variant='outline']:active {
+.ui-button[data-variant='outline']:active:not(:disabled, [aria-disabled='true']) {
   background: var(--ui-color-hover);
 }
 
@@ -174,7 +176,7 @@
 }
 
 /* Ghost press keeps the hover fill. */
-.ui-button[data-variant='ghost']:active {
+.ui-button[data-variant='ghost']:active:not(:disabled, [aria-disabled='true']) {
   background: var(--ui-color-hover);
 }
 
@@ -190,13 +192,13 @@
   text-underline-offset: 0.15em;
 }
 
-.ui-button[data-variant='link']:active {
-  background: transparent;
-  translate: none;
-}
-
 .ui-button[data-variant='link']:hover {
   text-decoration: underline;
+}
+
+.ui-button[data-variant='link']:active:not(:disabled, [aria-disabled='true']) {
+  background: transparent;
+  translate: none;
 }
 
 /* Attention: solid urgency fill (errors, destructive actions). */

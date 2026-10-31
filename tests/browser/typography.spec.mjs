@@ -53,9 +53,11 @@ test('document text follows the default step', async ({ page }) => {
 test('headings map onto the canonical scale steps', async ({ page }) => {
   await page.goto('/typography.html');
 
+  // main-scoped: the docs sidebar renders group overlines as h2 before the
+  // content — decorative chrome, intentionally off the document scale.
   const cases = [
-    ['h1', '--ui-font-size-2xl', '700'],
-    ['h2', '--ui-font-size-xl', '700'],
+    ['main h1', '--ui-font-size-2xl', '700'],
+    ['main h2', '--ui-font-size-xl', '700'],
     ['.example h3', '--ui-font-size-lg', '700'],
     ['.example h4', '--ui-font-size-md', '700'],
     ['.example h5', '--ui-font-size-default', '700'],
