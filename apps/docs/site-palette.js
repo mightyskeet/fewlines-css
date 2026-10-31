@@ -1,5 +1,4 @@
-// Inline palette widget for the Colors page (plan:
-// docs/plans/2026-10-26-color-derivation.md).
+// Inline palette widget for the Colors page.
 //
 // The page hosts one section per base family; the widget's pieces are
 // embedded there as autonomous custom elements: <site-palette-family>
