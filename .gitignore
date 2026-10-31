@@ -10,8 +10,8 @@ coverage/
 packages/core/dist/
 
 # Test artifacts
-test-results/
-playwright-report/
+tests/test-results/
+tests/playwright-report/
 
 # Environment
 .env
