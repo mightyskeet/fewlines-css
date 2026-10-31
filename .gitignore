@@ -38,3 +38,11 @@ apps/docs/vendor/colorparsley.mjs
 # Local experiments
 .experiments/
 tests/shot-*.png
+
+# Local development (agent tooling and docs) — never published
+.vscode/
+
+
+
+
+
