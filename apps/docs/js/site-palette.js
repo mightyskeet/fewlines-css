@@ -25,11 +25,11 @@
 // This is host/tooling JS — the core package stays CSS-only
 // and is not a library goal.
 
-import { tokenPairs, roleThresholds } from './token-pairs.mjs';
+import { tokenPairs, roleThresholds } from '../../../tests/apca/token-pairs.mjs';
 // The same apca-w3 build the CI gate (tests/apca/check.mjs) uses, vendored
 // for the browser by tests/prepare.mjs — the widget's pass/fail must match
 // CI, not a hand-rolled approximation.
-import { APCAcontrast, sRGBtoY } from './vendor/apca-w3.mjs';
+import { APCAcontrast, sRGBtoY } from '../vendor/apca-w3.mjs';
 
 const KEY = 'colors-bases';
 

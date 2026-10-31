@@ -21,13 +21,13 @@
       } catch (e) {}
     </script>
     <title>Stepper — @fewlines/css</title>
-    <link rel="stylesheet" href="/core.css" />
-    <link rel="stylesheet" href="/docs.css" />
-    <link rel="stylesheet" href="/colors-derive.css" />
-    <script src="/site-sidebar.js" defer blocking="render"></script>
-    <script src="/site-toc.js" defer blocking="render"></script>
-    <script src="/vendor/hljs.min.js" defer></script>
-    <script src="/site-code.js" defer></script>
+    <link rel="stylesheet" href="../core.css" />
+    <link rel="stylesheet" href="../css/docs.css" />
+    <link rel="stylesheet" href="../css/colors-derive.css" />
+    <script src="../js/site-sidebar.js" defer blocking="render"></script>
+    <script src="../js/site-toc.js" defer blocking="render"></script>
+    <script src="../vendor/hljs.min.js" defer></script>
+    <script src="../js/site-code.js" defer></script>
   </head>
   <body>
     <site-sidebar></site-sidebar>
@@ -51,9 +51,9 @@
           readers. The platform has no "completed" attribute, so the host declares done steps with
           the boolean <code>data-done</code> attribute — the same host-declared vocabulary as
           <code>data-variant</code>. Upcoming steps carry no attributes. A stepper is not a
-          timeline: a <a href="/timeline">timeline</a> is a static chronology of events, the stepper
-          carries the done/current/upcoming progress of a process. The visual vocabulary (markers,
-          rail) is shared.
+          timeline: a <a href="timeline.html">timeline</a> is a static chronology of events, the
+          stepper carries the done/current/upcoming progress of a process. The visual vocabulary
+          (markers, rail) is shared.
         </p>
       </section>
 
@@ -154,7 +154,8 @@
             are the contract.
           </li>
           <li>
-            No chronology of events here — a timeline is a different component (<a href="/timeline"
+            No chronology of events here — a timeline is a different component (<a
+              href="timeline.html"
               >Timeline</a
             >).
           </li>

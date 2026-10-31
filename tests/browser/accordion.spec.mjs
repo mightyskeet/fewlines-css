@@ -151,7 +151,7 @@ test('closed accordion has no phantom height (minmax(0, 0fr) floor)', async ({ p
 });
 
 test('exclusive group: opening one closes the other', async ({ page }) => {
-  await page.goto('/accordion.html');
+  await page.goto('/components/accordion.html');
 
   const a = page.locator('.example details[name="faq"]').first();
   const b = page.locator('.example details[name="faq"]').nth(1);

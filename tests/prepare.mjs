@@ -51,14 +51,10 @@ if (distMissing || stale) {
 mkdirSync(dirname(target), { recursive: true });
 copyFileSync(distCss, target);
 
-// The palette widget (apps/docs/site-palette.js) imports the token-pair
-// registry and the apca-w3 contrast math as ESM modules — same copy
-// mechanism as core.css, no manual duplication of the registry, and the
-// widget's APCA numbers match the CI gate (tests/apca/check.mjs).
-copyFileSync(
-  join(testsRoot, 'apca', 'token-pairs.mjs'),
-  join(repoRoot, 'apps', 'docs', 'token-pairs.mjs'),
-);
+// The palette widget imports the token-pair registry straight from the
+// test registry source (tests/apca/token-pairs.mjs) at bundle time, and
+// the apca-w3 contrast math is copied from npm — so the widget's APCA
+// numbers always match the CI gate (tests/apca/check.mjs).
 copyFileSync(
   join(repoRoot, 'node_modules', 'apca-w3', 'src', 'apca-w3.js'),
   join(repoRoot, 'apps', 'docs', 'vendor', 'apca-w3.mjs'),
@@ -82,3 +78,21 @@ copyFileSync(
   join(repoRoot, 'apps', 'docs', 'vendor', 'colorparsley.mjs'),
 );
 console.log('Copied core CSS to apps/docs/core.css');
+
+// The browser specs load /fixture.html from the served site root, but the
+// fixture itself is test scaffolding: it lives in tests/fixtures/ and is
+// copied in (gitignored) so the committed site folder has no test files.
+copyFileSync(
+  join(testsRoot, 'fixtures', 'fixture.html'),
+  join(repoRoot, 'apps', 'docs', 'fixture.html'),
+);
+console.log('Copied fixture to apps/docs/fixture.html');
+
+// Bundle the palette widget into a plain (non-module) script: colors.html
+// loads js/palette.js with a regular <script>, which works from file:// —
+// ESM imports do not. The bundle imports the registry from tests/ at
+// build time, so it is rebuilt whenever prepare runs.
+execSync('pnpm --filter @fewlines/docs build', {
+  cwd: repoRoot,
+  stdio: 'inherit',
+});

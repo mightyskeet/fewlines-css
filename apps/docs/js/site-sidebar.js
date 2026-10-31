@@ -26,36 +26,43 @@
  * group: #nav() starts a new (heading + list) section whenever `group`
  * changes. Overview has no group and renders without a heading. */
 const PAGES = [
-  { href: '/', label: 'Overview' },
-  { href: '/colors', label: 'Colors', group: 'Foundation' },
-  { href: '/typography', label: 'Typography', group: 'Foundation' },
-  { href: '/divider', label: 'Divider', group: 'Foundation' },
-  { href: '/button', label: 'Button', group: 'Forms' },
-  { href: '/choice', label: 'Choice', group: 'Forms' },
-  { href: '/field', label: 'Field', group: 'Forms' },
-  { href: '/fieldset', label: 'Fieldset', group: 'Forms' },
-  { href: '/switch', label: 'Switch', group: 'Forms' },
-  { href: '/dialog', label: 'Dialog', group: 'Overlays' },
-  { href: '/popover', label: 'Popover', group: 'Overlays' },
-  { href: '/menu', label: 'Menu', group: 'Overlays' },
-  { href: '/drawer', label: 'Drawer', group: 'Overlays' },
-  { href: '/tooltip', label: 'Tooltip', group: 'Overlays' },
-  { href: '/alert', label: 'Alert', group: 'Indicators' },
-  { href: '/badge', label: 'Badge', group: 'Indicators' },
-  { href: '/skeleton', label: 'Skeleton', group: 'Indicators' },
-  { href: '/progress', label: 'Progress', group: 'Indicators' },
-  { href: '/timeline', label: 'Timeline', group: 'Indicators' },
-  { href: '/stepper', label: 'Stepper', group: 'Indicators' },
-  { href: '/breadcrumbs', label: 'Breadcrumbs', group: 'Navigation' },
-  { href: '/tabs', label: 'Tabs', group: 'Navigation' },
-  { href: '/accordion', label: 'Accordion', group: 'Navigation' },
-  { href: '/table', label: 'Table', group: 'Data' },
+  { href: 'index.html', label: 'Overview' },
+  { href: 'colors.html', label: 'Colors', group: 'Foundation' },
+  { href: 'typography.html', label: 'Typography', group: 'Foundation' },
+  { href: 'components/divider.html', label: 'Divider', group: 'Foundation' },
+  { href: 'components/button.html', label: 'Button', group: 'Forms' },
+  { href: 'components/choice.html', label: 'Choice', group: 'Forms' },
+  { href: 'components/field.html', label: 'Field', group: 'Forms' },
+  { href: 'components/fieldset.html', label: 'Fieldset', group: 'Forms' },
+  { href: 'components/switch.html', label: 'Switch', group: 'Forms' },
+  { href: 'components/dialog.html', label: 'Dialog', group: 'Overlays' },
+  { href: 'components/popover.html', label: 'Popover', group: 'Overlays' },
+  { href: 'components/menu.html', label: 'Menu', group: 'Overlays' },
+  { href: 'components/drawer.html', label: 'Drawer', group: 'Overlays' },
+  { href: 'components/tooltip.html', label: 'Tooltip', group: 'Overlays' },
+  { href: 'components/alert.html', label: 'Alert', group: 'Indicators' },
+  { href: 'components/badge.html', label: 'Badge', group: 'Indicators' },
+  { href: 'components/skeleton.html', label: 'Skeleton', group: 'Indicators' },
+  { href: 'components/progress.html', label: 'Progress', group: 'Indicators' },
+  { href: 'components/timeline.html', label: 'Timeline', group: 'Indicators' },
+  { href: 'components/stepper.html', label: 'Stepper', group: 'Indicators' },
+  { href: 'components/breadcrumbs.html', label: 'Breadcrumbs', group: 'Navigation' },
+  { href: 'components/tabs.html', label: 'Tabs', group: 'Navigation' },
+  { href: 'components/accordion.html', label: 'Accordion', group: 'Navigation' },
+  { href: 'components/table.html', label: 'Table', group: 'Data' },
 ];
 
-/* The current-page check is extensionless: links use the clean URLs the
- * static server serves directly (no redirect on click), and visits may
- * still land on either form. */
-const pageName = (href) => href.replace(/^\//, '') || 'index';
+/* Pages live at the site root and in components/; every link gets a base
+ * prefix so the plain relative hrefs resolve from either depth — and so
+ * the whole site works from file:// with no static server. */
+const base = location.pathname.includes('/components/') ? '../' : './';
+/* Current-page check compares file names only, so it matches from both
+ * depths (index.html, components/badge.html → badge). */
+const pageName = (href) =>
+  href
+    .split('/')
+    .pop()
+    .replace(/\.html$/, '') || 'index';
 
 class SiteSidebar extends HTMLElement {
   connectedCallback() {
@@ -77,20 +84,19 @@ class SiteSidebar extends HTMLElement {
   #brand() {
     const link = document.createElement('a');
     link.className = 'site-brand';
-    link.href = '/';
+    link.href = `${base}index.html`;
     link.textContent = '@fewlines/css';
     return link;
   }
 
   #nav() {
-    // Links use the clean URLs the static server serves directly — no
-    // redirect between the click and the page, which cross-document view
-    // transitions require (2026-10-29).
+    // Links are plain relative paths (see `base` above) — the site works
+    // from file:// and any static host, no clean-URL rewriting needed.
     const current =
       location.pathname
-        .replace(/\.html$/, '')
         .split('/')
-        .pop() || 'index';
+        .pop()
+        .replace(/\.html$/, '') || 'index';
     const nav = document.createElement('nav');
     nav.className = 'site-nav';
     nav.setAttribute('aria-label', 'Documentation');
@@ -114,7 +120,7 @@ class SiteSidebar extends HTMLElement {
       }
       const item = document.createElement('li');
       const link = document.createElement('a');
-      link.href = href;
+      link.href = `${base}${href}`;
       link.textContent = label;
       if (pageName(href) === current) link.setAttribute('aria-current', 'page');
       item.append(link);

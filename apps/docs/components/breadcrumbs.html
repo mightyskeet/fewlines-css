@@ -21,13 +21,13 @@
       } catch (e) {}
     </script>
     <title>Breadcrumbs — @fewlines/css</title>
-    <link rel="stylesheet" href="/core.css" />
-    <link rel="stylesheet" href="/docs.css" />
-    <link rel="stylesheet" href="/colors-derive.css" />
-    <script src="/site-sidebar.js" defer blocking="render"></script>
-    <script src="/site-toc.js" defer blocking="render"></script>
-    <script src="/vendor/hljs.min.js" defer></script>
-    <script src="/site-code.js" defer></script>
+    <link rel="stylesheet" href="../core.css" />
+    <link rel="stylesheet" href="../css/docs.css" />
+    <link rel="stylesheet" href="../css/colors-derive.css" />
+    <script src="../js/site-sidebar.js" defer blocking="render"></script>
+    <script src="../js/site-toc.js" defer blocking="render"></script>
+    <script src="../vendor/hljs.min.js" defer></script>
+    <script src="../js/site-code.js" defer></script>
   </head>
   <body>
     <site-sidebar></site-sidebar>
@@ -50,8 +50,8 @@
           list of crumbs, links for the ancestors and <code>aria-current="page"</code> for the
           current page (announced by screen readers). The attribute may sit on the
           <code>&lt;li&gt;</code> (a plain-text crumb) or on the crumb's link — the CSS honors both.
-          A stepper carries the progress of a process (<a href="/stepper">Stepper</a>), a breadcrumb
-          carries the position in a hierarchy.
+          A stepper carries the progress of a process (<a href="stepper.html">Stepper</a>), a
+          breadcrumb carries the position in a hierarchy.
         </p>
       </section>
 
@@ -121,10 +121,10 @@
         <p>
           The host collapses the middle crumbs into one <code>&lt;li&gt;</code> with a
           <code>button[popovertarget]</code> — a declarative trigger, zero JS; the hidden levels are
-          listed in a <a href="/menu">menu</a> popover (the canonical shell: light dismiss, Escape,
-          anchor positioning below the trigger). The button must carry an <code>aria-label</code> —
-          the visible glyph «…» is not a name. Collapsed is not an attribute variant: it is a
-          documented composition with the Menu component.
+          listed in a <a href="menu.html">menu</a> popover (the canonical shell: light dismiss,
+          Escape, anchor positioning below the trigger). The button must carry an
+          <code>aria-label</code> — the visible glyph «…» is not a name. Collapsed is not an
+          attribute variant: it is a documented composition with the Menu component.
         </p>
         <p>
           Separators are drawn around the toggle like around every crumb; the toggle carries extra
