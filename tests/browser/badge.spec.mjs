@@ -84,7 +84,7 @@ test('solid model uses the on-* text over the bare family tone', async ({ page }
 });
 
 test('variants resolve to distinct tint surfaces', async ({ page }) => {
-  const ids = ['badge-default', 'badge-brand', 'badge-neutral', 'badge-attention'];
+  const ids = ['badge-default', 'badge-neutral', 'badge-attention'];
   const backgrounds = new Set();
   const colors = new Set();
   for (const id of ids) {
@@ -95,8 +95,7 @@ test('variants resolve to distinct tint surfaces', async ({ page }) => {
     backgrounds.add(styles.background);
     colors.add(styles.color);
   }
-  // brand == default (the explicit twin shares the values), and the
-  // formula system makes the pastel grays *distinct* steps: the neutral
+  // The formula system makes the pastel grays *distinct* steps: the neutral
   // surface tint (the soft mix) and the brand pastel (the tint deviation
   // from the page pole) are no longer one static step (the old palette had
   // both at neutral-200). The formula system's calibration is the source

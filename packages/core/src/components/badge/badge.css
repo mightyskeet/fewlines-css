@@ -13,9 +13,9 @@
  * Variants via data-variant, fill model via data-solid. The default
  * (variant omitted) is the brand pastel: brand-tint surface + bare brand
  * text — it follows a re-themed brand. Variant values name every other
- * look plus the explicit brand twin:
- *   pastel (feedback, like Alert): brand | neutral | attention — tint
- *     surface + bare family text (brand == default; neutral: the gray
+ * look:
+ *   pastel (feedback, like Alert): neutral | attention — tint
+ *     surface + bare family text (neutral: the gray
  *     member of the page gamut, surface-tint + text).
  *   solid (bright fill, light text): bare `data-solid` (no variant) = the
  *     brand family (on-brand/brand); `data-variant="..." data-solid` = the
@@ -23,7 +23,7 @@
  *     `neutral` + solid is the brand-independent inverted gray (text fill,
  *     surface label).
  * APCA pairs used (validated in tests/apca):
- *   default/brand:  brand on brand-tint (pastel minimum, Lc 60)
+ *   default:        brand on brand-tint (pastel minimum, Lc 60)
  *   neutral pastel: text on surface-tint (body threshold, Lc 75)
  *   attention pastel: attention on attention-tint (pastel minimum, Lc 60)
  *   solid:          on-{brand,attention} on the bare tone (body threshold);
@@ -70,14 +70,8 @@
 }
 
 /* Tint variants (the feedback model, like Alert). The brand pastel is the
- * default and also an explicit variant (symmetry with neutral/attention);
- * `neutral` is the gray member of the page gamut; `attention` is the
- * urgency family. */
-.ui-badge[data-variant='brand'] {
-  --ui-badge-fg: var(--ui-color-brand);
-  --ui-badge-bg: var(--ui-color-brand-tint);
-}
-
+ * default (no attribute); `neutral` is the gray member of the page gamut;
+ * `attention` is the urgency family. */
 .ui-badge[data-variant='neutral'] {
   --ui-badge-fg: var(--ui-color-text);
   --ui-badge-bg: var(--ui-color-surface-tint);
