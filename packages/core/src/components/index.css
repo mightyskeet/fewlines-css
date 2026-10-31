@@ -1,5 +1,5 @@
 /* Components layer. Each component is one css file next to this index.
- * Component contracts (docs for coding agents) live in component references.
+ * Component contracts live in skills/fewlines-css/references/.
  */
 @import './button.css';
 @import './field.css';
