@@ -33,32 +33,44 @@
 }
 
 :root {
-  /* Smooth in-page anchor scrolling; anchors stop 2rem above the target
+  /* Fixed site header height (docs-local layout constant, not a token):
+   * offsets the page below the header and clips the sticky sidebar/TOC
+   * underneath it. */
+  --site-header-size: 3.5rem;
+  /* Smooth in-page anchor scrolling; anchors stop below the fixed header
    * instead of flush at the viewport edge. */
   scroll-behavior: smooth;
-  scroll-padding-block-start: 2rem;
+  scroll-padding-block-start: calc(var(--site-header-size) + 0.5rem);
 }
 
-site-sidebar {
+/* Fixed site header across the viewport: brand left, theme toggle right
+ * (site-sidebar.js). Paints above the static page content without an
+ * explicit z-index (position: fixed vs in-flow content); overlays and
+ * dialogs still top above it via the top layer. */
+.site-header {
+  position: fixed;
+  inset-block-start: 0;
+  inset-inline: 0;
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
-  gap: var(--ui-space-sm) var(--ui-space-md);
-  padding-block-end: var(--ui-space-md);
-  margin-block-end: var(--ui-space-xl);
+  justify-content: space-between;
+  gap: var(--ui-space-md);
+  block-size: var(--site-header-size);
+  padding-inline: var(--ui-space-lg);
+  background: var(--ui-color-surface);
   border-block-end: 1px solid var(--ui-color-border);
 }
 
+/* Navigation sidebar only (brand and toggle live in the fixed header). */
+site-sidebar {
+  margin-block-end: var(--ui-space-xl);
+}
+
 .site-brand {
-  margin-inline-end: auto;
   font-size: 1.125rem;
   font-weight: 600;
   color: var(--ui-color-text);
   text-decoration: none;
-}
-
-.site-nav {
-  flex-basis: 100%;
 }
 
 .site-nav ul {
@@ -93,6 +105,9 @@ site-sidebar {
  * block-start margin of its own. */
 .site-nav h2 {
   margin-block: 0 var(--ui-space-2xs);
+  /* Link text starts at the same inset (links carry the hover background
+   * out to the edge, headings align with the text). */
+  padding-inline: var(--ui-space-sm);
   font: 600 var(--ui-font-size-xs) / 1.4 var(--ui-font-sans);
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -103,6 +118,8 @@ body {
   max-inline-size: 60rem;
   margin-block: 0;
   margin-inline: auto;
+  /* Clear the fixed site header. */
+  padding-block-start: var(--site-header-size);
   padding-inline: var(--ui-space-xl);
   /* Air below the content when scrolled to the bottom (and room for the
    * palette FAB, site-palette.js). */
@@ -233,12 +250,13 @@ main > section {
 
   site-toc:not(:empty) {
     position: sticky;
-    top: 0;
+    /* Stick below the fixed header, not under it. */
+    top: var(--site-header-size);
     grid-column: 3;
     grid-row: 1;
     align-self: start;
     display: block;
-    max-block-size: 100vh;
+    max-block-size: calc(100vh - var(--site-header-size));
     overflow: auto;
     font-size: var(--ui-font-size-sm);
     /* Overflow clips at the padding box: keep enough room for the
@@ -284,32 +302,17 @@ main > section {
 
   site-sidebar {
     position: sticky;
-    top: 0;
+    /* Stick below the fixed header, not under it. */
+    top: var(--site-header-size);
     grid-column: 1;
     grid-row: 1 / span 2;
     align-self: start;
-    flex-direction: column;
-    align-items: stretch;
-    flex-wrap: nowrap;
-    gap: var(--ui-space-lg);
-    max-block-size: 100vh;
+    /* Fit between the header and the viewport bottom; the nav scrolls
+     * inside what doesn't fit (24 pages of links exceed one screen). */
+    max-block-size: calc(100vh - var(--site-header-size));
     overflow: auto;
     margin-block-end: 0;
     padding-block: var(--ui-space-lg);
-    /* Overflow clips at the padding box: keep enough room for the
-     * focus ring (2px outline + 2px offset) not to be cut on the left;
-     * .site-brand adds its own larger inset for alignment. */
-    padding-inline: var(--ui-space-xs) var(--ui-space-lg);
-    border-block-end: 0;
-  }
-
-  .site-brand {
-    margin-inline-end: 0;
-    padding-inline-start: var(--ui-space-sm);
-  }
-
-  .site-nav {
-    flex-basis: auto;
   }
 
   .site-nav ul {

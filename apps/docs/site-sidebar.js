@@ -1,4 +1,6 @@
-// Docs-site chrome: shared sidebar (brand, page navigation, theme toggle).
+// Docs-site chrome: fixed header (brand, theme toggle) + navigation
+// sidebar, rendered by one custom element (<site-sidebar> is the single
+// mount point in every page's markup).
 // This is host/tooling JS — the core package stays CSS-only
 // (overview notes, «Не является целью»).
 //
@@ -10,10 +12,11 @@
 // Adding a docs page = one entry in PAGES below; every sidebar picks up the
 // link automatically. The page title/description are static markup inside
 // <main> (header.page-header), so they render even if this script never
-// loads — the sidebar itself fails open (nav simply missing).
+// loads — the chrome itself fails open (header and nav simply missing).
 //
-// Layout contract (docs.css): flex column on wide screens (sticky grid
-// sidebar), wrap row on narrow ones.
+// Layout contract (docs.css): .site-header is fixed across the viewport;
+// site-sidebar is in flow on narrow screens and a sticky grid sidebar on
+// wide ones, clipped below the header (--site-header-size).
 //
 // Light DOM on purpose: page styles apply to the rendered chrome.
 // Custom elements — autonomous — are baseline high (Can I Use: Chrome 54,
@@ -60,7 +63,15 @@ class SiteSidebar extends HTMLElement {
     if (this.dataset.chrome) return;
     this.dataset.chrome = 'true';
 
-    this.append(this.#brand(), this.#nav(), this.#themeToggle());
+    this.append(this.#header(), this.#nav());
+  }
+
+  // Fixed header spanning the viewport: brand left, theme toggle right.
+  #header() {
+    const header = document.createElement('header');
+    header.className = 'site-header';
+    header.append(this.#brand(), this.#themeToggle());
+    return header;
   }
 
   #brand() {
