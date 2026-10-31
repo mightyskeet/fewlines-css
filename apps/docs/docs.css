@@ -308,7 +308,10 @@ main > section {
     grid-row: 1 / span 2;
     align-self: start;
     /* Fit between the header and the viewport bottom; the nav scrolls
-     * inside what doesn't fit (24 pages of links exceed one screen). */
+     * inside what doesn't fit (24 pages of links exceed one screen).
+     * border-box: the core sets no global box-sizing, and with the default
+     * content-box the padding pushed the scrollbar below the viewport. */
+    box-sizing: border-box;
     max-block-size: calc(100vh - var(--site-header-size));
     overflow: auto;
     margin-block-end: 0;
