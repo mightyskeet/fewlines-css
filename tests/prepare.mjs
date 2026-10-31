@@ -16,6 +16,7 @@ import {
   writeFileSync,
 } from 'node:fs';
 import { execSync } from 'node:child_process';
+import { buildSync } from 'esbuild';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -92,7 +93,10 @@ console.log('Copied fixture to apps/docs/fixture.html');
 // loads js/palette.js with a regular <script>, which works from file:// —
 // ESM imports do not. The bundle imports the registry from tests/ at
 // build time, so it is rebuilt whenever prepare runs.
-execSync('pnpm --filter @fewlines/docs build', {
-  cwd: repoRoot,
-  stdio: 'inherit',
+buildSync({
+  entryPoints: [join(repoRoot, 'apps', 'docs', 'js', 'site-palette.js')],
+  bundle: true,
+  format: 'iife',
+  outfile: join(repoRoot, 'apps', 'docs', 'js', 'palette.js'),
 });
+console.log('Bundled apps/docs/js/palette.js');
