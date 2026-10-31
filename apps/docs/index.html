@@ -56,27 +56,35 @@
         <h2>Components</h2>
         <p>
           Each component has one documented page with its canonical markup, variants, states and
-          accessibility notes. The base layer also styles semantic text elements (<code>code</code>,
+          accessibility notes — grouped in the sidebar (Foundation, Forms, Overlays, Indicators,
+          Navigation, Data). The base layer also styles semantic text elements (<code>code</code>,
           <kbd>kbd</kbd>, <code>pre</code>, <code>mark</code>, <code>abbr</code>, links, quotes).
         </p>
-        <ul>
-          <li><a href="typography.html">Base typography</a></li>
-          <li><a href="pages/accordion.html">Accordion</a></li>
-          <li><a href="pages/alert.html">Alert</a></li>
-          <li><a href="pages/badge.html">Badge</a></li>
-          <li><a href="pages/button.html">Button</a></li>
-          <li><a href="pages/choice.html">Choice</a></li>
-          <li><a href="colors.html">Colors</a></li>
-          <li><a href="pages/dialog.html">Dialog</a></li>
-          <li><a href="pages/divider.html">Divider</a></li>
-          <li><a href="pages/drawer.html">Drawer</a></li>
-          <li><a href="pages/field.html">Field</a></li>
-          <li><a href="pages/fieldset.html">Fieldset</a></li>
-          <li><a href="pages/popover.html">Popover</a></li>
-          <li><a href="pages/switch.html">Switch</a></li>
-          <li><a href="pages/table.html">Table</a></li>
-          <li><a href="pages/tooltip.html">Tooltip</a></li>
-        </ul>
+      </section>
+
+      <section>
+        <h2>Installation</h2>
+        <pre><code>pnpm add @fewlines/css</code></pre>
+        <pre><code>/* whole package (bundler: Vite etc.) */
+@import '@fewlines/css';
+
+/* tokens only */
+@import '@fewlines/css/tokens';</code></pre>
+        <p>
+          Theming follows the system preference (<code>light-dark()</code> +
+          <code>color-scheme</code>); an explicit override is
+          <code>data-theme="light|dark"</code> on the root element.
+        </p>
+      </section>
+
+      <section>
+        <h2>Using with AI assistants</h2>
+        <p>
+          The repository ships an agent skill: <code>skills/fewlines-css/</code> — a compact
+          <code>SKILL.md</code> (install, theming, component index, system rules) plus per-component
+          references with canonical markup, variants and constraints. Point your coding agent at the
+          raw <code>SKILL.md</code> URL, or copy the folder into your skills directory.
+        </p>
       </section>
     </main>
     <site-toc></site-toc>
