@@ -6,12 +6,12 @@
  * Single-tier fluid scale: the raw step tokens --ui-font-size-* are the
  * only typography API. Consumers (base headings, text-style classes,
  * components) pair a step with an explicit weight and line height — the
- * canonical mapping is documented in theme notes; there is no separate
+ * canonical mapping is documented in; there is no separate
  * role-token layer.
  *
  * Four host-overridable knobs generate the scale:
  *   --ui-fluid-vmin/vmax — the interpolation window over the viewport
- *     width (100dvw — scrollbar-free, compatibility notes);
+ * width (100dvw — scrollbar-free);
  *   --ui-type-scale-small/large — the per-step ratio on narrow/wide
  *     viewports: step(n) = base * ratio^n, base = 1rem + fluid * 0.125rem.
  *
@@ -20,7 +20,7 @@
  * (at ratio 1.333: 18 / 1.333^2 ≈ 10px), so xs/sm/md are anchored: explicit
  * min->max pairs interpolated linearly through the same --ui-fluid factor.
  * The anchors keep the APCA size ranges intact (small >= 11px full-contrast,
- * fluent >= 14px — accessibility notes) whatever ratio the host sets.
+ * fluent >= 14px —) whatever ratio the host sets.
  * Hosts opt out of fluid entirely by pinning vmin = vmax (or overriding
  * individual step tokens); overrides beyond the calibrated defaults carry
  * the host's own APCA responsibility.
@@ -31,7 +31,7 @@
 
   /* Fluid infrastructure. progress() is clamped to 0..1 by spec, so values
    * below vmin / above vmax pin to the boundary anchors (direct use:
-   * compatibility notes — Chrome 138, FF 155, Safari 26, at or below the
+ * — Chrome 138, FF 155, Safari 26, at or below the
    * matrix floor). */
   --ui-fluid-vmin: 400px;
   --ui-fluid-vmax: 1200px;

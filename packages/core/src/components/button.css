@@ -2,7 +2,7 @@
  *
  * Native basis: <button>, <a> with button semantics, native states.
  * States come from the platform: :hover, :focus-visible (base layer),
- * :active, :disabled — no JS state classes (architecture notes, CSS как слой presentation и state).
+ * :active, :disabled — no JS state classes.
  *
  * Six variants via data-variant (shadcn model):
  *   default (attribute omitted) — the brand family, inverted polarity by
@@ -130,7 +130,7 @@
   translate: none;
 }
 
-/* Press = hover fill + mechanical response (state model, theme notes) —
+/* Press = hover fill + mechanical response (state model) —
  * the same model as the attention variant. Same specificity as the variant
  * rules below, which come later — pressed variant buttons keep their family
  * fill unless the variant re-states its hover fill with higher specificity

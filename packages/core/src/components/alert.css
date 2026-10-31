@@ -1,7 +1,7 @@
 /* Alert component.
  *
  * Native basis: static text container. The platform has no native alert
- * element, so the semantic layer is host-owned (architecture notes, Native first):
+ * element, so the semantic layer is host-owned :
  *   - static callout: no role;
  *   - dynamically inserted, urgent (errors): role="alert" (assertive);
  *   - dynamically inserted, informational: role="status" (polite).
@@ -19,7 +19,7 @@
  *
  * Variant colors are surfaced through derived local properties so each
  * variant block only remaps two values. They consume semantic tokens only
- * (theme notes).
+ *.
  *
  * APCA pairs used (validated in tests/apca):
  *   default: text/surface-tint (body); border-strong on surface-tint
@@ -54,7 +54,7 @@
 /* Title carries the variant color (--ui-alert-title); the message text stays
  * neutral (--ui-color-text) so long-form content keeps maximal readability.
  * The title sits on the md step (600, 18->20px) — the widget level of the
- * canonical heading mapping (theme notes); the element is a <p>: an alert
+ * canonical heading mapping ; the element is a <p>: an alert
  * is not a document section, a heading element would pollute the outline. */
 .ui-alert-title {
   font: 600 var(--ui-font-size-md) / 1.3 var(--ui-font-sans);

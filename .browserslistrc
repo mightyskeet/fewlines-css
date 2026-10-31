@@ -1,25 +1,18 @@
 # Browserslist contract — fewLinesCSS
 #
-# Политика (compatibility notes, architecture notes):
-# - Floor не снижается ради удобства реализации отдельной фичи.
-# - Каждая существенная platform feature проверяется через Can I Use MCP
-#   (caniuse_feature + browserslist_compatibility_check) до использования.
-# - Решения фиксируются в compatibility notes.
+# Policy: the floor is not lowered for the convenience of implementing a
+# single feature. Every significant platform feature is verified against
+# caniuse.com (feature lookups + browserslist compatibility check) before
+# use, and decisions are recorded.
 #
-# Основная матрица: последние 2 версии всех evergreen-браузеров + Safari/iOS,
-# актуальные на момент релиза. Dead-браузеры исключены.
+# Main matrix: the last 2 versions of all evergreen browsers + Safari/iOS,
+# current at release time. Dead browsers are excluded.
 #
-# NOTE: compatibility-аудит platform features выполнен 2026-10-01,
-# решения зафиксированы в compatibility notes. Матрица подтверждена:
-# все core-фичи (@layer, :has(), light-dark(), popover, dialog) поддерживаются
-# полностью; anchor positioning и field-sizing — progressive enhancement
-# через @supports внутри единственной канонической реализации.
-#
-# op_mini и kaios исключены явно: это feature-phone браузеры, не способные
-# исполнить modern CSS baseline вообще. Их присутствие в "last 2 versions"
-# заставляло Lightning CSS даунлевелить light-dark() в media-query fallback,
-# что ломает data-theme override (theme notes). Это не снижение floor ради
-# одной фичи, а определение реальной целевой матрицы.
+# op_mini and kaios are excluded explicitly: they are feature-phone browsers
+# incapable of executing the modern CSS baseline at all. Their presence in
+# "last 2 versions" forced Lightning CSS to downlevel light-dark() into a
+# media-query fallback, which breaks the data-theme override. That is not a
+# floor lowered for one feature — it is the real target matrix.
 
 last 2 versions
 not dead

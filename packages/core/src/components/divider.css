@@ -23,7 +23,7 @@
  * Out of contract: a centered [line — label — line] divider. A void <hr>
  * has exactly two pseudo-elements (a labelled layout needs three boxes) and
  * the knockout-background hack breaks on tinted surfaces, forced colors and
- * any host background (compatibility notes, 2026-10-29).
+ * any host background (2026-10-29).
  */
 
 .ui-divider {

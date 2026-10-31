@@ -32,7 +32,7 @@
  * does not paint borders on sticky table headers under collapse
  * (bugzil.la/1727594), and Chromium has never applied sticky to thead/tr —
  * applying it to th under the separate model is portable (Can I Use MCP,
- * compatibility notes, 2026-10-02).
+ *, 2026-10-02).
  *
  * APCA pairs used (validated in tests/apca, no new pairs):
  *   text on surface / surface-subtle / hover (body) — cells, zebra and hover rows
@@ -45,7 +45,7 @@
 
   /* The table is typographically more compact than the document: the sm
    * step (14->14.5px, 400) — the support level of the canonical mapping
-   * (theme notes). Header cells add the medium weight on top (below).
+ *. Header cells add the medium weight on top (below).
    * The `font` shorthand resets font-variant-* on .ui-table only —
    * tabular numerals are declared per cell (data-align) and win. */
   font: 400 var(--ui-font-size-sm) / 1.45 var(--ui-font-sans);
@@ -76,7 +76,7 @@
   font-weight: var(--ui-font-weight-bold);
 }
 
-/* Row hover: the hover fill (--ui-color-hover, state model theme notes) is
+/* Row hover: the hover fill (--ui-color-hover, state model) is
  * visible against both the base surface and the zebra fill — the zebra
  * selector repeats because the stripe rule outspecifies the plain :hover.
  * Pointer-gated like Button/Switch (sticky :hover on touch would latch the

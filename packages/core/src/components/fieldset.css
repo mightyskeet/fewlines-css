@@ -16,7 +16,7 @@
  * .ui-switch-field), the same "adjacent members" model as Alert. No
  * grid/flex on <fieldset>: the legend border split is the engine's special
  * fieldset layout, plain flow is the only model that renders identically
- * across engines (compatibility notes, 2026-10-29).
+ * across engines (2026-10-29).
  *
  * UA traps handled here:
  *   - UA min-inline-size: min-content makes a fieldset overflow its parent
@@ -44,7 +44,7 @@
 
 .ui-fieldset-legend {
   /* Chrome text on the field-label level: the sm step, 500 (canonical
-   * mapping, theme notes) — the legend is the group's label, not a
+ * mapping) — the legend is the group's label, not a
    * section heading. */
   font: 500 var(--ui-font-size-sm) / 1.45 var(--ui-font-sans);
   color: var(--ui-color-text);

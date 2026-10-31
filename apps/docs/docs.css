@@ -4,12 +4,12 @@
  * override. Page-specific styles live in the pages; fixture pages are
  * test-only and do not link this.
  *
- * Platform features (compatibility notes, 2026-10-02): CSS Grid and
+ * Platform features (2026-10-02): CSS Grid and
  * position:sticky — direct use, floors (Chrome 58/91, FF 54/59,
  * Safari 10.1/13) far above the .browserslistrc matrix; narrow screens get
  * a single-column layout from the mobile-first defaults. */
 
-/* Cross-document view transitions (compatibility notes, 2026-10-29):
+/* Cross-document view transitions (2026-10-29):
  * same-origin page navigations crossfade instead of flashing white.
  * Progressive enhancement: Chrome/Edge 126+, Safari 18.2+; engines without
  * the at-rule ignore it and navigate instantly (Firefox has Level 1 only —
@@ -280,7 +280,7 @@ main > section {
     list-style: none;
     /* Anchor links in the list act as scroll markers: the link to the
      * section currently in view matches :target-current. Progressive
-     * enhancement (compatibility notes, 2026-10-25): Chrome/Edge 140+;
+ * enhancement (2026-10-25): Chrome/Edge 140+;
      * engines without support render a plain TOC. */
     scroll-target-group: auto;
   }

@@ -178,7 +178,7 @@
       <!-- Menu -->
       <section id="menus">
         <!-- Pair scoping: with a shared anchor name every popover would
-             anchor to the last trigger in DOM order (compatibility notes). -->
+             anchor to the last trigger in DOM order -->
         <div style="anchor-scope: all">
           <button
             class="ui-button ui-popover-trigger"
@@ -290,7 +290,7 @@
       <section id="tooltips">
         <!-- Each pair is scoped with anchor-scope: all — triggers share the
              --ui-tooltip-anchor name, and without scoping every hint anchors
-             to the last trigger in DOM order (compatibility notes). -->
+             to the last trigger in DOM order -->
         <!-- Canonical pair: interestfor (hover/focus, Chromium). Click stays
              the trigger's own action — no popovertarget on action triggers. -->
         <div style="anchor-scope: all">
@@ -306,7 +306,7 @@
           <span class="ui-tooltip" id="testTooltip" popover="hint">Saves your changes</span>
         </div>
         <!-- Opt-in click pattern for an inert trigger: popovertarget opens the
-             hint on click in engines without interest (compatibility notes).
+             hint on click in engines without interest
              The margin keeps the second pair clear of the first hint's hit
              area while the first hint is open (hint exclusivity test). -->
         <div style="anchor-scope: all; margin-block-start: 3rem">

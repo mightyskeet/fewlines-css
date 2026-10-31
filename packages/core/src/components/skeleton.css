@@ -23,7 +23,7 @@
  * 30deg lean is a transform, so the stripe is clipped by this box (and its
  * radius) instead of being sliced by background-tile edges — a diagonal
  * gradient inside a background tile shows vertical seams where it crosses
- * the tile edge (probe + user report, 2026-10-30, compatibility notes).
+ * the tile edge (probe + user report, 2026-10-30).
  * The band scales with the box (40%, floored at 2.5rem, capped at 75% —
  * see the ::after rule) and fades to transparent at its own ends, so
  * the keyframes' off-screen overshoot is invisible for any shape. The band

@@ -2,7 +2,7 @@
  *
  * Native basis: Popover API — `popover` (auto) on the drawer container,
  * declarative triggers (popovertarget), light dismiss, Escape, top-layer,
- * :popover-open. Zero JS required (architecture notes, Native first). Non-modal by
+ * :popover-open. Zero JS required. Non-modal by
  * design: the page stays interactive and focus is not trapped — a blocking
  * panel is Dialog (modal-only, see dialog.md).
  *
@@ -36,7 +36,7 @@
  * back (translate to the off-screen edge, opacity to 0). `allow-discrete`
  * keeps the panel in the top layer until the exit transition ends. Entry is
  * anchored by @starting-style. Both directions use the same logged features
- * (@starting-style + allow-discrete, compatibility notes).
+ * (@starting-style + allow-discrete).
  *
  * APCA pair used (validated in tests/apca): text on surface-raised (body).
  */
@@ -139,7 +139,7 @@
 }
 
 /* Page scroll lock while open — pure CSS via :has() (direct use,
- * compatibility notes). scrollbar-gutter reserves the classic scrollbar
+ *). scrollbar-gutter reserves the classic scrollbar
  * track so the page does not shift. Engines without :popover-open skip the
  * lock (graceful); iOS Safari may still scroll the background (UA
  * limitation). Drawer content scrolls independently. */

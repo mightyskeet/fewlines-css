@@ -1,7 +1,7 @@
 /* Elevation tokens — box-shadow depth levels.
  *
  * Components consume these tokens; hardcoded shadows are forbidden
- * (theme notes — one semantic layer for all visual values).
+ * one semantic layer for all visual values).
  *
  * The alpha is calibrated per geometry, not a single "strength" number:
  * a small tight shadow needs a higher alpha to read than a large soft one.
@@ -19,7 +19,7 @@
  * metaphor (full-screen overlay, not a floating card).
  *
  * Color values inside the shadow resolve through light-dark(), an already
- * audited feature (compatibility notes — direct use). Shadows are stripped
+ * audited feature — direct use). Shadows are stripped
  * by forced-colors mode natively; no extra adaptation needed.
  */
 :root {

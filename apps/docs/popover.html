@@ -50,7 +50,7 @@
       }
       /* Pair scoping: with a shared anchor name every popover would anchor
        * to the last trigger in DOM order; anchor-scope limits the lookup
-       * to the cell's own subtree (compatibility notes). Placement
+ * to the cell's own subtree . Placement
        * values and margins come from core via data-block / data-inline. */
       @supports (anchor-name: --ui-anchor) {
         .placement-cell {
@@ -139,8 +139,7 @@
           the trigger, the classic menu/tooltip alignment. Single keywords on an axis leave a gap on
           the edge facing the trigger; <code>span-*</code> and <code>center</code> stay flush. Each
           cell scopes the anchor lookup with <code>anchor-scope: all</code>, so the shared anchor
-          name pairs every popover with its own trigger. Verified in Chromium, Firefox and WebKit
-          (compatibility notes).
+          name pairs every popover with its own trigger. Verified in Chromium, Firefox and WebKit.
         </p>
         <div class="placement-grid">
           <div class="placement-cell">
@@ -440,8 +439,6 @@
     </main>
     <site-toc></site-toc>
 
-    <footer>
-      <p>Full contract: <code>packages/core/src/components/popover/popover.md</code></p>
-    </footer>
+    <footer></footer>
   </body>
 </html>

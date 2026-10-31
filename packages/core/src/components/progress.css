@@ -16,11 +16,11 @@
  * ::-webkit-progress-value; Firefox paints the fill on ::-moz-progress-bar
  * and keeps the element background as the track. One canonical look, two
  * engine pseudo targets — both fed from the same local custom properties,
- * so there is one source of truth (compatibility notes, 2026-10-29).
+ * so there is one source of truth (2026-10-29).
  *
  * Indeterminate: the value attribute absent matches :indeterminate. The
  * engine's native indeterminate motion does not survive painting the
- * pseudo-elements (probe 2026-10-30, compatibility notes): all three
+ * pseudo-elements (probe 2026-10-30): all three
  * engines render a static 100% full bar. The component runs its own sweep
  * — a full-contrast band moving across the track (same keyframes as the
  * shimmer), parked as a static half bar under reduced motion.
@@ -30,7 +30,7 @@
  * sweep (see below) and two motions would conflict. The motion is the shared
  * shimmer module (shimmer.css): one band paint (30deg lean, proportional to
  * the target) swept via background-position (CSS animations,
- * compatibility notes 2026-10-30) — this component only binds its own
+ * 2026-10-30) — this component only binds its own
  * paint colors to it. The band is painted by a background-image gradient on
  * the fill pseudo-elements (the same engine paint model as the fill itself)
  * with a 200% tile: the band scales with the fill instead of reading as a
@@ -47,12 +47,12 @@
  * local custom property; the fill pseudo-elements go transparent so the
  * engine fill never paints over the ring. The ring is cut by a radial
  * mask (background-clip: border-area is rejected — no Firefox,
- * compatibility notes 2026-10-30).
+ * 2026-10-30).
  *
  * The value that drives the arc is the custom property --ui-progress-value
  * (0-100), set by the HOST next to the value/max attributes: the attribute
  * drives the accessibility tree, the property drives the paint. attr() is
- * rejected (Safari only TP, compatibility notes 2026-10-30) and a
+ * rejected (Safari only TP 2026-10-30) and a
  * MutationObserver is impossible (zero runtime JS) — the dual source of
  * truth is a documented host duty (like Table's aria-label).
  *
@@ -169,7 +169,7 @@
  * pseudo is unusable here: it neither paints its own background-image nor
  * lets the element's animated band beneath show through its opaque
  * background-color (only the cap slivers of the diverging rounded clips
- * glint through — the "corners light up" probe, compatibility notes
+ * glint through — the "corners light up" probe
  * 2026-10-30). Same shared shimmer module as the shimmer — one sweep
  * mechanic, the bare fill as the band color. The circle has its own
  * spinning arc. */
@@ -221,7 +221,7 @@
  * painted dot — a small radial-gradient layer centered on the ring's
  * midline at the arc end angle. The position is polar math off the same
  * registered --ui-progress-value (sin/cos of value * 3.6deg — trig
- * functions, compatibility notes 2026-10-30), so the dot glides along
+ * functions 2026-10-30), so the dot glides along
  * the ring with the same 400ms ease as the arc. The start cap at 12
  * o'clock stays square by design. */
 .ui-progress[data-shape='circle'] {

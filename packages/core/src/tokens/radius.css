@@ -7,7 +7,7 @@
   --ui-radius-full: 9999px;
 }
 
-/* Squircle corners (compatibility notes, 2026-10-24): Chromium/Edge 139+
+/* Squircle corners (2026-10-24): Chromium/Edge 139+
  * only, everywhere else the block is skipped and the plain radii above apply.
  * The squircle shape cuts ~0.073*r^2 of the corner vs ~0.215*r^2 for round
  * (superellipse(4) vs circle), so matching the visual cut needs ~x1.7 radius:

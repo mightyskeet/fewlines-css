@@ -3,13 +3,13 @@
  * Native basis: <input type="checkbox"> — native toggle, native keyboard
  * (Space), native form participation, native :checked/:disabled states.
  * The `switch` attribute upgrades the exposed role to `switch` where the
- * engine supports it (Safari 17.4+, compatibility notes) — progressive
+ * engine supports it (Safari 17.4+) — progressive
  * enhancement: without it the control is a native checkbox with identical
  * behavior and a valid on/off role. No JS, no state classes.
  *
  * Visual: appearance:none + custom track/thumb. The thumb is ::before on
  * the input — not tracked by caniuse; rendering verified empirically
- * (Chromium, Firefox, WebKit — compatibility notes, 2026-10-01).
+ * (Chromium, Firefox, WebKit —, 2026-10-01).
  *
  * Canonical structure:
  *   <label class="ui-switch-field">
@@ -24,7 +24,7 @@
  *   = 14px = 0.875rem, applied as translate on :checked.
  *
  * APCA note: thumb/track separation is non-text decoration carried by the
- * shadow (manual audit per accessibility notes); the on/off state is
+ * shadow (manual audit per); the on/off state is
  * carried by thumb position, not by color alone (WCAG 1.4.1).
  */
 

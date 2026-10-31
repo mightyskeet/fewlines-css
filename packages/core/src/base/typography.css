@@ -2,7 +2,7 @@
  *
  * 1. Font: --ui-font-* tokens are declared in tokens/typography.css; without
  *    this rule the browser renders the UA default (Times New Roman). system-ui
- *    is direct use (compatibility notes: Chrome 56+, FF 92+, Safari 11+ —
+ * is direct use (Chrome 56+, FF 92+, Safari 11+ —
  *    above the matrix floor).
  * 2. Page colors: without color/background from semantic tokens the page text
  *    and canvas come from the UA color-scheme adjustment, which switches
@@ -13,7 +13,7 @@
  * 3. Text content elements (<code>, <pre>, <mark>, <a>, <blockquote>, ...):
  *    the platform already provides the semantics, the base layer provides one
  *    canonical presentation — hosts style nothing for plain text content.
- *    Native first (architecture notes, Native first): no classes, no states of our own.
+ * Native first : no classes, no states of our own.
  *    Every color pair consumed here is registered in tests/apca.
  *
  * Element selectors sit in the base layer below components, so component
@@ -39,7 +39,7 @@ body {
 
 /* Paragraphs balance their last lines (no single-word orphans) where
  * supported; engines without the value keep the UA wrap (progressive
- * enhancement, compatibility notes, 2026-10-24). */
+ * enhancement, 2026-10-24). */
 p {
   text-wrap: pretty;
 }
@@ -52,7 +52,7 @@ li {
 
 /* Canonical heading typography: h1–h6 map onto the fluid scale steps
  * (tokens/typography.css) with explicit weights and line heights — the
- * canonical mapping lives in theme notes. All levels share weight 700;
+ * canonical mapping lives in. All levels share weight 700;
  * the lower levels close up to the text sizes: at the calibrated ratio
  * there is no room for six distinct sizes below h3. Margins
  * stay UA: headings participate in host layout systems; these rules own
@@ -99,7 +99,7 @@ h6 {
  * every line fragment when inline code wraps. Decorative enhancement —
  * without support the code is fully readable; the matrix floor Safari
  * supports only the -webkit- prefixed form, Chromium/FF the unprefixed one
- * (compatibility notes, 2026-10-03).
+ * (2026-10-03).
  *
  * Padding is in em, not space tokens: it scales with the fragment itself
  * (0.875em of the host context), so the pill proportions hold at any
@@ -118,7 +118,7 @@ samp {
   /* stylelint-disable-next-line property-no-vendor-prefix --
    * the matrix floor Safari (26.6) supports clone only in the -webkit-
    * prefixed form; Chromium/FF take the unprefixed one
-   * (compatibility notes, 2026-10-03). */
+ * (2026-10-03). */
   -webkit-box-decoration-break: clone;
   box-decoration-break: clone;
 }
@@ -144,7 +144,7 @@ var {
  * embedded panels (decision 2026-10-24). Nested inline code elements reset so
  * a canonical <pre><code> pair is not double-padded and does not shrink the
  * font twice. tab-size is an <integer> — direct use, floor is far above
- * (compatibility notes, 2026-10-03). */
+ * (2026-10-03). */
 pre {
   font-family: var(--ui-font-mono);
   font-size: 0.875em;
@@ -184,7 +184,7 @@ mark {
  * barely visible at body sizes, so the line gets an explicit 0.125rem
  * thickness and offset); the title attribute supplies the expansion to
  * assistive tech and the tooltip. skip-ink: none keeps the dotted line
- * unbroken across descenders (direct use: compatibility notes,
+ * unbroken across descenders (direct use:,
  * 2026-10-03). */
 abbr[title] {
   text-decoration: underline dotted;
@@ -265,8 +265,8 @@ sub {
 /* Spellcheck indicators: the engine's error markers repaint with the
  * urgency tone — the same family as validation errors. The pseudo-elements
  * match flagged words only where the engine supports them; without support
- * the rule is ignored and the native squiggle stays (compatibility notes,
- * 2026-10-29: Chrome/Edge 121+, Safari 17.4+, Firefox — none). */
+ * the rule is ignored and the native squiggle stays
+ * (2026-10-29: Chrome/Edge 121+, Safari 17.4+, Firefox — none). */
 ::spelling-error,
 ::grammar-error {
   text-decoration: underline wavy;

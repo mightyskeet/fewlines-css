@@ -149,12 +149,11 @@ try {
 }
 
 try {
-  const componentDirs = readdirSync(join(distRoot, 'components'), {
+  const componentEntries = readdirSync(join(distRoot, 'components'), {
     withFileTypes: true,
-  }).filter((e) => e.isDirectory());
-  const withCss = componentDirs.filter((dir) =>
-    readdirSync(join(distRoot, 'components', dir.name)).some((f) => f.endsWith('.css')),
-  );
+  });
+  // Flat layout: one css file per component (components/badge.css).
+  const withCss = componentEntries.filter((e) => e.isFile() && e.name.endsWith('.css'));
   if (withCss.length === 0) {
     fail('dist/components/* has no component CSS — "./components/*" export is broken');
   } else {

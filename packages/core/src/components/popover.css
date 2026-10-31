@@ -1,7 +1,7 @@
 /* Popover component.
  *
  * Native basis: Popover API — declarative triggers (popovertarget),
- * light dismiss, Escape, top-layer, :popover-open. Zero JS (architecture notes, Native first).
+ * light dismiss, Escape, top-layer, :popover-open. Zero JS.
  *
  * Canonical structure:
  *   <button class="ui-button ui-popover-trigger" popovertarget="p1">Trigger</button>
@@ -13,7 +13,7 @@
  * unset axis falls back to span-all (centered on the anchor). Without
  * attributes: below the trigger, flipped above on overflow; without
  * anchor support: centered (fixed).
- * No positioning runtime in core (architecture notes, «Positioning и overlays»).
+ * No positioning runtime in core.
  *
  * Anchor contract:
  *   - implicit anchor: popovertarget button is the anchor (native, Chrome 133+,
@@ -21,7 +21,7 @@
  *     on popover;
  *   - fallback positions: block-end then block-start (flip), inline centered;
  *   - collision handling: NOT provided — position-visibility: anchor-valid is
- *     out of matrix (compatibility notes); host picks placement explicitly.
+ * out of matrix ; host picks placement explicitly.
  *
  * Motion: the transition is declared on the element (not scoped to the open
  * state) and the hidden state lives in the base styles, so closing animates
@@ -30,7 +30,7 @@
  * anchored by @starting-style. The exit runs in Chromium only (overlay
  * property is Chromium/Edge-only; Firefox/WebKit hide instantly) —
  * graceful degradation inside the single canonical implementation
- * (compatibility notes).
+ *.
  */
 
 .ui-popover {
@@ -75,7 +75,7 @@
 }
 
 /* Anchor positioning enhancement — single canonical implementation,
- * gated by @supports (compatibility notes: partial support).
+ * gated by @supports (partial support).
  * stylelint-disable-next-line declaration-property-value-no-unknown --
  * position-area/position-try-fallbacks values are valid CSS Anchor
  * Positioning syntax; stylelint's property database does not know them yet. */
@@ -95,7 +95,7 @@
      * 'span-inline' does not exist in the anchor-positioning grammar
      * (invalid value → property ignored); physical 'span-left/right' are
      * invalid in Chromium as well — only logical keywords are used,
-     * see compatibility notes. */
+ * see. */
     position-area: block-end center;
     position-try-fallbacks: block-start center;
     /* stylelint-enable declaration-property-value-no-unknown */
@@ -141,7 +141,7 @@
    * wrapper) or give each pair its own anchor name — otherwise the last
    * trigger in DOM order anchors every popover.
    * When universal attr() ships across the matrix (missing in Safari 27,
-   * compatibility notes), the ten identity rules below collapse into
+ *), the ten identity rules below collapse into
    * attr(data-block type(<position-area>)). */
   /* stylelint-disable declaration-property-value-no-unknown */
   .ui-popover[data-block],

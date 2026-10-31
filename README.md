@@ -2,74 +2,73 @@
 
 Platform-native UI system: semantic HTML, modern CSS, **zero runtime JavaScript**.
 
-Библиотека не изобретает runtime поверх браузера — она использует то, что уже
-умеют HTML и CSS, и добавляет единый визуальный язык, темизацию,
-accessibility-контракт и предсказуемый API. Предназначена для обычного HTML и
-для приложений, которые разрабатывают coding agents.
+The library does not invent a runtime on top of the browser — it uses what
+HTML and CSS can already do, and adds a unified visual language, theming,
+an accessibility contract and a predictable API. Built for plain HTML and for
+applications developed by coding agents.
 
-## Принципы
+## Principles
 
-- **Native first** — `<button>`, `<dialog>`, Popover API, нативные формы и
-  валидация; никаких собственных state machine.
-- **Zero runtime JS** — core содержит только CSS (проверяется автоматически).
-- **One canonical markup** — одна каноническая структура на компонент.
-- **Controlled regression** — одна реализация, fallback через `@supports`.
-- **Проверяемое качество** — browser, accessibility, APCA тесты
-  тесты как часть контракта компонента.
+- **Native first** — `<button>`, `<dialog>`, the Popover API, native forms
+  and validation; no custom state machines.
+- **Zero runtime JS** — the core ships CSS only (verified automatically).
+- **One canonical markup** — one canonical structure per component.
+- **Controlled regression** — one implementation, fallbacks via `@supports`.
+- **Verifiable quality** — browser, accessibility and APCA tests are part
+  of the component contract.
 
-## Установка и подключение
+## Installation and usage
 
 ```sh
 pnpm add @fewlines/css
 ```
 
 ```css
-/* Vite / bundler: весь пакет */
+/* Vite / bundler: the whole package */
 @import '@fewlines/css';
 
-/* или только токены */
+/* or tokens only */
 @import '@fewlines/css/tokens';
 ```
 
-Тема: по умолчанию следует системной (`light-dark()` + `color-scheme`); явный
-override — `data-theme="light|dark"` на корневом элементе. Подробнее:
-`theme notes`.
+Theming: the default follows the system preference (`light-dark()` +
+`color-scheme`); an explicit override is `data-theme="light|dark"` on the root
+element.
 
-## Тема и брендинг: seed + формулы
+## Theme and branding: seed + formulas
 
-Все semantic-цвета — не статическая палитра, а производные от seed-токенов
-(`--ui-base-*`, один OKLCH seed на семью на тему). Перекрасить систему —
-переопределить seed-токены в своём CSS: semantic-токены пересчитываются сами,
-ноль JS. Live-инструмент подбора seed — страница Colors в документации;
-вне калиброванных дефолтов ответственность host'а (проверяется таблицей
-WCAG+APCA на той же странице). Развёртка проверяется тестами `tests/theming`
-(CI — сетка шага 30°, полный 360-точечный прогон — отдельной командой).
+All semantic colors are not a static palette but derived from seed tokens
+(`--ui-base-*`, one OKLCH seed per family per theme). Recoloring the system
+means overriding the seed tokens in your CSS: semantic tokens recompute on
+their own, zero JS. A live seed-picker tool is the Colors page of the
+documentation site; anything outside the calibrated defaults is the host's
+responsibility (verified by the WCAG+APCA table on the same page). The
+derivation is covered by theming tests (`tests/browser/theme.spec.mjs`;
+CI runs a 30° hue-step grid, a full 360-point sweep runs separately).
 
-## Компоненты
+## Components
 
-| Компонент | Basis                               | Классы                                                                            |
+| Component | Basis                               | Classes                                                                           |
 | --------- | ----------------------------------- | --------------------------------------------------------------------------------- |
 | Button    | `<button>`, `<a>`                   | `ui-button`, `data-variant`, `data-size`                                          |
 | Field     | `<input>/<textarea>/<select>`       | `ui-field`, `ui-input`, `ui-textarea`, `ui-select`, `ui-field-error`, `data-size` |
 | Dialog    | `<dialog>` (top-layer)              | `ui-dialog`                                                                       |
 | Popover   | Popover API + anchor positioning    | `ui-popover`, `ui-popover-trigger`                                                |
-| Drawer    | `<div popover>` (панель от края)    | `ui-drawer`, `data-variant` (атрибут `popover` задаёт host)                       |
+| Drawer    | `<div popover>` (edge panel)        | `ui-drawer`, `data-variant` (the host sets the `popover` attribute)               |
 | Accordion | `<details>/<summary>`               | `ui-accordion`, `ui-accordion-summary`                                            |
-| Alert     | статический контейнер сообщений     | `ui-alert`, `data-variant`, `ui-alert-title/body`                                 |
-| Badge     | статический inline статус-лейбл     | `ui-badge`, `data-variant`                                                        |
+| Alert     | static message container            | `ui-alert`, `data-variant`, `ui-alert-title/body`                                 |
+| Badge     | static inline status label          | `ui-badge`, `data-variant`                                                        |
 | Switch    | `<input type="checkbox" switch>`    | `ui-switch`, `ui-switch-field`, `ui-switch-label`                                 |
 | Table     | `<table>` + `<caption>`             | `ui-table`, `ui-table-wrap`, `data-zebra`, `data-sticky`, `data-align`            |
 | Tooltip   | `popover="hint"` / interest invoker | `ui-tooltip`, `ui-tooltip-trigger`                                                |
 
-Помимо компонентов base layer оформляет семантические текстовые элементы без
-классов: `code`/`kbd`/`samp`, `pre`, `mark`, `abbr`, ссылки, `blockquote`,
+Beyond the components, the base layer styles semantic text elements without
+classes: `code`/`kbd`/`samp`, `pre`, `mark`, `abbr`, links, `blockquote`,
+`hr`, `sub`/`sup`, `::selection`.
 
-typography»).
+Canonical markup and live examples: `apps/docs/`.
 
-
-`packages/core/src/components/*/[name].md`. Живые примеры: `apps/docs/`.
-
-## Разработка
+## Development
 
 ```sh
 pnpm install
@@ -78,17 +77,7 @@ pnpm lint           # stylelint
 pnpm format:check   # prettier
 ```
 
-Тесты (Playwright, APCA, purity): см. `tests/README.md`.
-
-## Документация
-
-- `overview notes` — идея и позиционирование;
-- `architecture notes` — принципы и структура;
-- `workflow notes` — порядок работы агента;
-
-- `compatibility notes` — browser policy и решения;
-- `accessibility notes` — APCA-политика;
-- `theme notes` — токены и тема.
+Tests (Playwright, APCA, purity): see `tests/README.md`.
 
 ## License
 

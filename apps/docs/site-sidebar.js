@@ -2,7 +2,7 @@
 // sidebar, rendered by one custom element (<site-sidebar> is the single
 // mount point in every page's markup).
 // This is host/tooling JS — the core package stays CSS-only
-// (overview notes, «Не является целью»).
+// and is not a library goal.
 //
 // Theme persistence: the click handler below writes localStorage['theme'];
 // restoring it before first paint is a tiny inline <script> in every page's
@@ -85,7 +85,7 @@ class SiteSidebar extends HTMLElement {
   #nav() {
     // Links use the clean URLs the static server serves directly — no
     // redirect between the click and the page, which cross-document view
-    // transitions require (compatibility notes, 2026-10-29).
+    // transitions require (2026-10-29).
     const current =
       location.pathname
         .replace(/\.html$/, '')
@@ -129,7 +129,7 @@ class SiteSidebar extends HTMLElement {
     button.className = 'ui-button theme-toggle';
     button.textContent = 'Toggle theme';
     button.addEventListener('click', () => {
-      // Host concern (theme notes 7.2): persistence is the host's job.
+      // Host concern (theme tokens 7.2): persistence is the host's job.
       const root = document.documentElement;
       const current =
         root.getAttribute('data-theme') ??

@@ -1,7 +1,7 @@
 /* Field / Input component.
  *
  * Native basis: <input>, <label>, <fieldset>/<legend>, native form validation
- * states. No JS (architecture notes, Native first).
+ * states. No JS.
  *
  * Canonical structure:
  *   <label class="ui-field">
@@ -45,7 +45,7 @@
 
 .ui-field-label {
   /* The label is chrome text: the sm step, 500 — the same level as the rest
-   * of the chrome (canonical mapping, theme notes). */
+ * of the chrome (canonical mapping). */
   font: 500 var(--ui-font-size-sm) / 1.45 var(--ui-font-sans);
   color: var(--ui-color-text);
 }
@@ -144,7 +144,7 @@
 }
 
 /* Textarea autosize: field-sizing: content is a progressive enhancement
- * (compatibility notes: Chrome 123+, FF 152+, Safari 26.2+). Applied by
+ * (Chrome 123+, FF 152+, Safari 26.2+). Applied by
  * default inside @supports; the component is fully usable without it
  * (fixed size from rows attribute). Opt-out: data-field-sizing='fixed'.
  * Bounds: min 3lh (readable empty state), max 50vh (page stays scrollable). */
@@ -190,7 +190,7 @@
 /* File input: the native button is styled with tokens; the field provides the
  * frame, the button carries the interactive surface. block-size: 100% makes
  * the button fill the field (engines without it render the natural height —
- * graceful, compatibility notes). */
+ * graceful). */
 .ui-input[type='file'] {
   padding: 0;
 }
@@ -228,7 +228,7 @@
   opacity: 1;
 }
 
-/* field-sizing: content is a progressive enhancement (compatibility notes) */
+/* field-sizing: content is a progressive enhancement */
 @supports (field-sizing: content) {
   .ui-input[data-field-sizing='content'] {
     field-sizing: content;

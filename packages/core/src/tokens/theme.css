@@ -5,9 +5,9 @@
  *
  * light-dark() resolves against the *used* color scheme, so the override works
  * by pinning color-scheme on :root. Persistence of the user's choice is the
- * host application's responsibility (theme notes).
+ * host application's responsibility.
  *
- * color-scheme is NOT animatable — it switches discretely (theme notes).
+ * color-scheme is NOT animatable — it switches discretely.
  */
 :root[data-theme='light'] {
   color-scheme: light;

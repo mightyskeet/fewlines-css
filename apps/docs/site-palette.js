@@ -23,7 +23,7 @@
 // base tokens they cover, and Reset returns them to core's defaults.
 //
 // This is host/tooling JS — the core package stays CSS-only
-// (overview notes, «Не является целью»).
+// and is not a library goal.
 
 import { tokenPairs, roleThresholds } from './token-pairs.mjs';
 // The same apca-w3 build the CI gate (tests/apca/check.mjs) uses, vendored
@@ -163,7 +163,7 @@ const FAMILY_TOKENS = {
 };
 
 /** Pairs without a derived token stay out of the tables (scrim is static and
- * the disabled role is exempt from conformance — plan, "Ограничения"). */
+ * the disabled role is exempt from conformance — project constraints). */
 const tablePairs = tokenPairs.filter((pair) => pair.role !== 'disabled');
 
 const tokenFamily = new Map();

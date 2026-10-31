@@ -67,7 +67,7 @@
           <code>kbd</code> reads as an inverted key cap — the brand fill with its on-color. Wrapped
           inline code repeats its padding per line via <code>box-decoration-break: clone</code> —
           decorative enhancement, the matrix floor Safari needs the <code>-webkit-</code> prefixed
-          form (compatibility notes).
+          form.
         </p>
       </section>
 
@@ -181,9 +181,9 @@
           <code>::spelling-error</code> and <code>::grammar-error</code> repaint the engine's error
           markers with a wavy <code>--ui-color-attention</code> underline — the urgency tone of
           validation errors. The pseudo-elements apply to any editable content, so the demo is a
-          bare <code>contenteditable</code> region. Progressive enhancement (compatibility notes):
-          Chrome 121+ and Safari 17.4+ take the custom look; without support the rule is ignored and
-          the native squiggle stays. The demo needs a browser dictionary for English.
+          bare <code>contenteditable</code> region. Progressive enhancement: Chrome 121+ and Safari
+          17.4+ take the custom look; without support the rule is ignored and the native squiggle
+          stays. The demo needs a browser dictionary for English.
         </p>
       </section>
 
@@ -201,7 +201,6 @@
           <code>h1</code>&ndash;<code>h6</code> map onto the fluid scale steps with explicit weights
           (700 throughout); the lower levels close up to the text sizes — at the calibrated ratio
           there is no room for six distinct sizes below <code>h3</code>
-          (theme notes).
         </p>
       </section>
 
@@ -209,11 +208,11 @@
         <h2>Fluid scale</h2>
         <p>
           The heading ladder above rides the fluid scale: sizes interpolate with the viewport width
-          (<code>progress()</code> + <code>pow()</code>, compatibility notes), pinning outside the
+          (<code>progress()</code> + <code>pow()</code>), pinning outside the
           <code>--ui-fluid-vmin</code>&hellip;<code>--ui-fluid-vmax</code> window. Every
           <code>h1</code>&ndash;<code>h6</code> pairs its scale step with an explicit weight and
-          line height — the canonical mapping lives in theme notes; there are no typographic
-          classes: positions without a matching element are set from the step tokens directly.
+          line height — the canonical mapping is defined once; there are no typographic classes:
+          positions without a matching element are set from the step tokens directly.
         </p>
       </section>
 
@@ -240,7 +239,6 @@
             No component classes for text content — do not wrap
             <code>code</code>/<code>mark</code> etc. in <code>ui-*</code> components; there are no
             typographic classes — positions without a matching element are set from the step tokens
-            (theme notes).
           </li>
           <li>
             Do not set xs-step fine print in <code>--ui-color-text-muted</code> — the muted pair

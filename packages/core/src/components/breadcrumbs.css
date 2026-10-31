@@ -22,7 +22,7 @@
  * Separators are drawn by the component (`li + li::before`) — the host
  * never adds separator markup. `content: '/' / ''` gives the slash an
  * empty alternative text, so assistive tech skips the punctuation
- * (compatibility notes, 2026-10-30 — direct use).
+ * (2026-10-30 — direct use).
  *
  * Collapsed levels: the host collapses the middle crumbs into one <li>
  * holding a button[popovertarget] — a declarative trigger, zero JS; the

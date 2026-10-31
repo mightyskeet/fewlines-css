@@ -2,7 +2,7 @@
  *
  * Native basis: <dialog> element — modal-only, top-layer, ::backdrop,
  * native Escape handling, native focus trapping, form method="dialog".
- * Zero JS required (architecture notes, Native first).
+ * Zero JS required.
  *
  * Canonical structure:
  *   <dialog class="ui-dialog">
@@ -19,7 +19,7 @@
  * dialog rendered until the exit transition ends; entry is anchored by
  * @starting-style. The exit runs in Chromium only (overlay property is
  * Chromium/Edge-only; Firefox/WebKit hide instantly) — graceful degradation
- * inside the single canonical implementation (compatibility notes).
+ * inside the single canonical implementation.
  */
 
 .ui-dialog {
@@ -91,7 +91,7 @@
 }
 
 /* Page scroll lock while open — pure CSS via :has() (direct use,
- * compatibility notes). scrollbar-gutter reserves the classic scrollbar
+ *). scrollbar-gutter reserves the classic scrollbar
  * track so the page does not shift. iOS Safari may still scroll the
  * background (UA limitation). */
 html:has(.ui-dialog[open]) {

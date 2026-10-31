@@ -11,46 +11,47 @@ Playwright harness for @fewlines/css.
   engine (CI abbreviated hue grid, step 30°) + the full 360-point sweep
 - `purity/` — package purity check: no runtime JS/deps in core
 
-## Политика покрытия
+## Coverage policy
 
-### Статические проверки
+### Static checks
 
 - syntax, lint/format;
-- invalid nesting, явные specificity problems;
-- duplicate/conflicting rules, когда tooling способен их обнаружить;
+- invalid nesting, explicit specificity problems;
+- duplicate/conflicting rules, where tooling can detect them;
 - package contents (purity check).
 
 ### Browser tests
 
-Playwright или эквивалент покрывает реальное native behavior:
+Playwright or an equivalent covers real native behavior:
 
 - **Dialog** — open/close, modal state, Escape, backdrop, form semantics, focus;
 - **Popover** — declarative trigger, open state, light dismiss, Escape, anchor
   positioning, fallback;
 - **Forms** — labels, validation, disabled/required/invalid/focus states.
 
-Известная дивергенция (2026-10-24): WebKit не возвращает фокус на триггер при
-закрытии `<dialog>` (спек ждёт возврата; воспроизводится на старом CSS —
-не наш регресс). Тест `dialog focus … returns to trigger on close` помечен
-`test.fail()` для webkit — при починке WebKit тест «перевернётся» и это
-заметно. Раз в несколько релизов WebKit стоит перепроверять.
+Known divergence (2026-10-24): WebKit does not return focus to the trigger
+when closing a `<dialog>` (the spec expects the return; it reproduces with an
+older CSS build — not our regression). The `dialog focus … returns to trigger
+on close` test is marked `test.fail()` for webkit — once WebKit is fixed, the
+test "flips" and this is visible. WebKit is worth rechecking every few
+releases.
 
-Accessibility: automated axe/browser checks — дополнительный слой; они не
-заменяют явные keyboard/focus тесты (accessibility notes).
+Accessibility: automated axe/browser checks are an additional layer; they do
+not replace explicit keyboard/focus tests.
 
-### Геометрия и визуал
+### Geometry and visuals
 
-Screenshot-based visual regression удалён (решение 2026-10-15): бейзлайны
-зависят от платформы и шрифтов, гейт в CI фактически не работал, поддержка
-перевешивала пользу. Геометрию и отступы покрывают code review, демо-страницы и
-computed-style проверки в browser tests. Изменение визуального результата не
-считать автоматически regression или автоматически приемлемым: определить
-причину.
+Screenshot-based visual regression was removed (decision 2026-10-15):
+baselines are platform- and font-dependent, the CI gate effectively did not
+work, and maintenance outweighed the benefit. Geometry and spacing are covered
+by code review, the demo pages and computed-style assertions in browser
+tests. A change in the visual result is not automatically a regression and
+not automatically acceptable: determine the cause.
 
 ### Package purity
 
-CI проверяет, что опубликованный core package не содержит runtime JS и
-неожиданных runtime dependencies (`tests/purity/check.mjs`).
+CI verifies that the published core package contains no runtime JS and no
+unexpected runtime dependencies (`tests/purity/check.mjs`).
 
 ## Commands
 
