@@ -80,15 +80,6 @@ copyFileSync(
 );
 console.log('Copied core CSS to apps/docs/css/core.css');
 
-// The browser specs load /fixture.html from the served site root, but the
-// fixture itself is test scaffolding: it lives in tests/fixtures/ and is
-// copied in (gitignored) so the committed site folder has no test files.
-copyFileSync(
-  join(testsRoot, 'fixtures', 'fixture.html'),
-  join(repoRoot, 'apps', 'docs', 'fixture.html'),
-);
-console.log('Copied fixture to apps/docs/fixture.html');
-
 // Bundle the palette widget into a plain (non-module) script: colors.html
 // loads js/palette.js with a regular <script>, which works from file:// —
 // ESM imports do not. The bundle imports the registry from tests/ at

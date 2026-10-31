@@ -26,9 +26,8 @@ Thumbs.db
 *.log
 
 # Generated site assets (copied/built by tests/prepare.mjs): core CSS, the
-# test fixture, the vendored apca-w3 math and the bundled palette widget
+# vendored apca-w3 math and the bundled palette widget
 apps/docs/css/core.css
-apps/docs/fixture.html
 apps/docs/vendor/apca-w3.mjs
 apps/docs/vendor/colorparsley.mjs
 

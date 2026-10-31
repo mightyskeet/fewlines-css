@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from '../fixtures/test.mjs';
 
 /**
  * Menu behavior tests (tests/README.md).

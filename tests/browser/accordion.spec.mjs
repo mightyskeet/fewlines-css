@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from '../fixtures/test.mjs';
 
 /**
  * Native accordion behavior tests (tests/README.md).
