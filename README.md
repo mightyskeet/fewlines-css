@@ -68,6 +68,14 @@ classes: `code`/`kbd`/`samp`, `pre`, `mark`, `abbr`, links, `blockquote`,
 
 Canonical markup and live examples: `apps/docs/`.
 
+## Using with AI assistants
+
+The repository ships an agent skill: `skills/fewlines-css/` — a compact
+`SKILL.md` (install, theming, component index, system rules) plus
+per-component references with canonical markup, variants, states and
+constraints. Point your coding agent at the raw `SKILL.md` URL, or copy the
+folder into your skills directory.
+
 ## Development
 
 ```sh
