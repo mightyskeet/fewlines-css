@@ -39,7 +39,7 @@
  * APCA pairs used (validated in tests/apca, no new tokens):
  *   checked fill: on-brand/brand (the solid button pair);
  *   frame: border/border-strong on surface-raised (nonText);
- *   required: attention border (nonText).
+ *   required: attention border + tint (nonText).
  */
 
 .ui-choice-field {
@@ -162,6 +162,12 @@
 .ui-checkbox:disabled,
 .ui-radio:disabled {
   opacity: 0.5;
+}
+
+/* Invalid checkbox mirrors ui-input's attention tint. :checked keeps the
+ * brand fill: the on-brand mark is paired with brand, not with tint. */
+.ui-checkbox:user-invalid:not(:checked) {
+  background: var(--ui-color-attention-tint);
 }
 
 /* Hover never overrides the checked or invalid border, and never restyles
