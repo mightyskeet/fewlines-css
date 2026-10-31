@@ -163,6 +163,55 @@ try {
   fail('dist/components missing — "./components/*" export is broken');
 }
 
+// 9. Canonical markup sync: three copies of the component API must not
+// drift apart — the styled classes in dist must be exercised by the test
+// fixture and documented in the public skill references; the fixture may
+// only use classes the bundle styles or the canonical markup comments in
+// src document (e.g. unstyled semantic hooks like ui-switch-label).
+// Anti-examples in the references' "Do not" sections are not checked in
+// the reverse direction on purpose.
+try {
+  const cssCls = (s) => new Set([...s.matchAll(/\.ui-[a-z0-9-]+/g)].map((m) => m[0].slice(1)));
+  const docCls = (s) => new Set([...s.matchAll(/(?<![\w-])ui-[a-z0-9-]+/g)].map((m) => m[0]));
+
+  let dist = new Set();
+  walk(join(distRoot, 'components'), (file) => {
+    if (file.endsWith('.css')) dist = new Set([...dist, ...cssCls(readFileSync(file, 'utf8'))]);
+  });
+
+  let src = new Set();
+  walk(join(coreRoot, 'src'), (file) => {
+    if (file.endsWith('.css')) src = new Set([...src, ...docCls(readFileSync(file, 'utf8'))]);
+  });
+
+  const fixture = docCls(readFileSync(join(testsRoot, '..', 'fixtures', 'fixture.html'), 'utf8'));
+
+  const skillsRoot = join(repoRoot, 'skills', 'fewlines-css');
+  let refs = new Set();
+  walk(skillsRoot, (file) => {
+    if (file.endsWith('.md')) refs = new Set([...refs, ...docCls(readFileSync(file, 'utf8'))]);
+  });
+
+  const missing = (need, have) => [...need].filter((c) => !have.has(c)).sort();
+
+  const notInFixture = missing(dist, fixture);
+  if (notInFixture.length)
+    fail(`classes styled in dist but absent from fixture: ${notInFixture.join(', ')}`);
+  else pass(`all ${dist.size} dist classes exercised by the fixture`);
+
+  const notInRefs = missing(dist, refs);
+  if (notInRefs.length)
+    fail(`classes styled in dist but absent from skill references: ${notInRefs.join(', ')}`);
+  else pass(`all ${dist.size} dist classes documented in skill references`);
+
+  const stale = missing(fixture, new Set([...dist, ...src]));
+  if (stale.length)
+    fail(`fixture uses classes neither styled in dist nor documented in src: ${stale.join(', ')}`);
+  else pass('fixture uses only classes from the bundle or canonical markup');
+} catch (e) {
+  fail(`canonical markup sync check could not run: ${e.message}`);
+}
+
 if (violations > 0) {
   console.error(`${violations} violation(s)`);
   process.exit(1);
