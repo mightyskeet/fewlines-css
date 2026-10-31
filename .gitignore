@@ -25,9 +25,6 @@ Thumbs.db
 .vscode/
 *.log
 
-# Generated test fixture CSS (copied from packages/core/dist by tests/prepare.mjs)
-apps/docs/css/core.css
-
 # Generated site assets (copied/built by tests/prepare.mjs): core CSS, the
 # test fixture, the vendored apca-w3 math and the bundled palette widget
 apps/docs/css/core.css
@@ -38,11 +35,3 @@ apps/docs/vendor/colorparsley.mjs
 # Local experiments
 .experiments/
 tests/shot-*.png
-
-# Local development (agent tooling and docs) — never published
-/.vscode/
-
-
-
-
-
