@@ -23,7 +23,7 @@ const testsRoot = dirname(fileURLToPath(import.meta.url));
 const repoRoot = join(testsRoot, '..');
 const coreRoot = join(repoRoot, 'packages', 'core');
 const distCss = join(coreRoot, 'dist', 'index.css');
-const target = join(repoRoot, 'apps', 'docs', 'core.css');
+const target = join(repoRoot, 'apps', 'docs', 'css', 'core.css');
 
 function newestMtime(dir) {
   let newest = 0;
@@ -77,7 +77,7 @@ copyFileSync(
   join(dirname(apcaReal), 'colorparsley', 'src', 'colorparsley.js'),
   join(repoRoot, 'apps', 'docs', 'vendor', 'colorparsley.mjs'),
 );
-console.log('Copied core CSS to apps/docs/core.css');
+console.log('Copied core CSS to apps/docs/css/core.css');
 
 // The browser specs load /fixture.html from the served site root, but the
 // fixture itself is test scaffolding: it lives in tests/fixtures/ and is

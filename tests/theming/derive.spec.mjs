@@ -13,7 +13,7 @@ test('derivation layer: default bases pass the token matrix', async ({ page, bro
     if (m.type() === 'error') errors.push(m.text());
   });
 
-  await page.goto('/colors.html');
+  await page.goto('/pages/colors.html');
   await expect(page.locator('.palette-table tr')).not.toHaveCount(0);
 
   // The tables are always visible; a scope flip does not schedule a recompute
@@ -76,7 +76,7 @@ test('derivation layer: default bases pass the token matrix', async ({ page, bro
 });
 
 test('palette widget: slider, persistence, reset', async ({ page }) => {
-  await page.goto('/colors.html');
+  await page.goto('/pages/colors.html');
 
   const linkLightness = page
     .locator('site-palette-family[family="Link"] input[type="range"]')
@@ -117,7 +117,7 @@ test('palette widget: slider, persistence, reset', async ({ page }) => {
 });
 
 test('derivation: tint and fill keep the family hue', async ({ page }) => {
-  await page.goto('/colors.html');
+  await page.goto('/pages/colors.html');
   const hueOf = (token) =>
     page.evaluate(
       ({ token }) => {
@@ -151,7 +151,7 @@ test('derivation: tint and fill keep the family hue', async ({ page }) => {
 test('derivation: colors are a pure function of the bases (no stickiness)', async ({ page }) => {
   // The sticky-prone configuration: data-theme set (token transitions armed).
   await page.addInitScript(() => localStorage.setItem('theme', 'light'));
-  await page.goto('/colors.html');
+  await page.goto('/pages/colors.html');
 
   const baseline = await readTintWithDefaults(page);
   // drag the hue away and back — the shades must land on the same values
@@ -169,7 +169,7 @@ test('derivation: colors are a pure function of the bases (no stickiness)', asyn
 });
 
 test('derivation: the fill polarity branch jumps the APCA dead zone', async ({ page }) => {
-  await page.goto('/colors.html');
+  await page.goto('/pages/colors.html');
 
   const lightnessOf = (token) =>
     page.evaluate(
@@ -209,7 +209,7 @@ test('derivation: the fill polarity branch jumps the APCA dead zone', async ({ p
 });
 
 test('derivation sweep: the hue grid keeps the registry valid (CI, step 30°)', async ({ page }) => {
-  await page.goto('/colors.html');
+  await page.goto('/pages/colors.html');
   const { failures } = await page.evaluate(runHueSweep, 30);
   expect(failures, 'every hue point passes the registry thresholds').toEqual([]);
 });

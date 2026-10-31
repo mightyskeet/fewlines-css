@@ -24,7 +24,7 @@ const tokenFont = (page, token) =>
   }, token);
 
 test('type sizes grow with the viewport and pin outside the window', async ({ page }) => {
-  await page.goto('/typography.html');
+  await page.goto('/pages/typography.html');
 
   await page.setViewportSize({ width: 300, height: 800 });
   const belowVmin = await readFont(page.locator('.page-header h1'));
@@ -45,13 +45,13 @@ test('type sizes grow with the viewport and pin outside the window', async ({ pa
 });
 
 test('document text follows the default step', async ({ page }) => {
-  await page.goto('/typography.html');
+  await page.goto('/pages/typography.html');
   const body = await readFont(page.locator('body'));
   expect(await tokenFont(page, '--ui-font-size-default')).toBe(body);
 });
 
 test('headings map onto the canonical scale steps', async ({ page }) => {
-  await page.goto('/typography.html');
+  await page.goto('/pages/typography.html');
 
   // main-scoped: the docs sidebar renders group overlines as h2 before the
   // content — decorative chrome, intentionally off the document scale.

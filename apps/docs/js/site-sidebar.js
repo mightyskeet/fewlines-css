@@ -27,37 +27,37 @@
  * changes. Overview has no group and renders without a heading. */
 const PAGES = [
   { href: 'index.html', label: 'Overview' },
-  { href: 'colors.html', label: 'Colors', group: 'Foundation' },
-  { href: 'typography.html', label: 'Typography', group: 'Foundation' },
-  { href: 'components/divider.html', label: 'Divider', group: 'Foundation' },
-  { href: 'components/button.html', label: 'Button', group: 'Forms' },
-  { href: 'components/choice.html', label: 'Choice', group: 'Forms' },
-  { href: 'components/field.html', label: 'Field', group: 'Forms' },
-  { href: 'components/fieldset.html', label: 'Fieldset', group: 'Forms' },
-  { href: 'components/switch.html', label: 'Switch', group: 'Forms' },
-  { href: 'components/dialog.html', label: 'Dialog', group: 'Overlays' },
-  { href: 'components/popover.html', label: 'Popover', group: 'Overlays' },
-  { href: 'components/menu.html', label: 'Menu', group: 'Overlays' },
-  { href: 'components/drawer.html', label: 'Drawer', group: 'Overlays' },
-  { href: 'components/tooltip.html', label: 'Tooltip', group: 'Overlays' },
-  { href: 'components/alert.html', label: 'Alert', group: 'Indicators' },
-  { href: 'components/badge.html', label: 'Badge', group: 'Indicators' },
-  { href: 'components/skeleton.html', label: 'Skeleton', group: 'Indicators' },
-  { href: 'components/progress.html', label: 'Progress', group: 'Indicators' },
-  { href: 'components/timeline.html', label: 'Timeline', group: 'Indicators' },
-  { href: 'components/stepper.html', label: 'Stepper', group: 'Indicators' },
-  { href: 'components/breadcrumbs.html', label: 'Breadcrumbs', group: 'Navigation' },
-  { href: 'components/tabs.html', label: 'Tabs', group: 'Navigation' },
-  { href: 'components/accordion.html', label: 'Accordion', group: 'Navigation' },
-  { href: 'components/table.html', label: 'Table', group: 'Data' },
+  { href: 'pages/colors.html', label: 'Colors', group: 'Foundation' },
+  { href: 'pages/typography.html', label: 'Typography', group: 'Foundation' },
+  { href: 'pages/divider.html', label: 'Divider', group: 'Foundation' },
+  { href: 'pages/button.html', label: 'Button', group: 'Forms' },
+  { href: 'pages/choice.html', label: 'Choice', group: 'Forms' },
+  { href: 'pages/field.html', label: 'Field', group: 'Forms' },
+  { href: 'pages/fieldset.html', label: 'Fieldset', group: 'Forms' },
+  { href: 'pages/switch.html', label: 'Switch', group: 'Forms' },
+  { href: 'pages/dialog.html', label: 'Dialog', group: 'Overlays' },
+  { href: 'pages/popover.html', label: 'Popover', group: 'Overlays' },
+  { href: 'pages/menu.html', label: 'Menu', group: 'Overlays' },
+  { href: 'pages/drawer.html', label: 'Drawer', group: 'Overlays' },
+  { href: 'pages/tooltip.html', label: 'Tooltip', group: 'Overlays' },
+  { href: 'pages/alert.html', label: 'Alert', group: 'Indicators' },
+  { href: 'pages/badge.html', label: 'Badge', group: 'Indicators' },
+  { href: 'pages/skeleton.html', label: 'Skeleton', group: 'Indicators' },
+  { href: 'pages/progress.html', label: 'Progress', group: 'Indicators' },
+  { href: 'pages/timeline.html', label: 'Timeline', group: 'Indicators' },
+  { href: 'pages/stepper.html', label: 'Stepper', group: 'Indicators' },
+  { href: 'pages/breadcrumbs.html', label: 'Breadcrumbs', group: 'Navigation' },
+  { href: 'pages/tabs.html', label: 'Tabs', group: 'Navigation' },
+  { href: 'pages/accordion.html', label: 'Accordion', group: 'Navigation' },
+  { href: 'pages/table.html', label: 'Table', group: 'Data' },
 ];
 
-/* Pages live at the site root and in components/; every link gets a base
+/* Pages live at the site root and in pages/; every link gets a base
  * prefix so the plain relative hrefs resolve from either depth — and so
  * the whole site works from file:// with no static server. */
-const base = location.pathname.includes('/components/') ? '../' : './';
+const base = location.pathname.includes('/pages/') ? '../' : './';
 /* Current-page check compares file names only, so it matches from both
- * depths (index.html, components/badge.html → badge). */
+ * depths (index.html, pages/badge.html → badge). */
 const pageName = (href) =>
   href
     .split('/')

@@ -22,9 +22,9 @@
       } catch (e) {}
     </script>
     <title>Colors — @fewlines/css</title>
-    <link rel="stylesheet" href="core.css" />
-    <link rel="stylesheet" href="css/docs.css" />
-    <link rel="stylesheet" href="css/colors-derive.css" />
+    <link rel="stylesheet" href="../css/core.css" />
+    <link rel="stylesheet" href="../css/docs.css" />
+    <link rel="stylesheet" href="../css/colors-derive.css" />
     <style>
       .swatch-grid {
         columns: 2;
@@ -64,16 +64,16 @@
         margin-block: 0 var(--ui-space-sm);
       }
     </style>
-    <script src="js/site-sidebar.js" defer blocking="render"></script>
-    <script src="js/site-toc.js" defer blocking="render"></script>
-    <script src="vendor/hljs.min.js" defer></script>
-    <script src="js/site-code.js" defer></script>
+    <script src="../js/site-sidebar.js" defer blocking="render"></script>
+    <script src="../js/site-toc.js" defer blocking="render"></script>
+    <script src="../vendor/hljs.min.js" defer></script>
+    <script src="../js/site-code.js" defer></script>
     <!-- blocking=render: the palette module mutates :root (probe element,
       * root.style.transition) right after first paint, which aborts the
       * cross-document view transition mid-run (InvalidStateError). Run it
       * before the first frame instead — the snapshot then shows the
       * settled page, and Reset/Copy CSS are present from the start. -->
-    <script src="js/palette.js" defer></script>
+    <script src="../js/palette.js" defer></script>
   </head>
   <body>
     <site-sidebar></site-sidebar>
