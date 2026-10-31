@@ -121,8 +121,12 @@ body {
   /* Clear the fixed site header. */
   padding-block-start: var(--site-header-size);
   padding-inline: var(--ui-space-xl);
-  /* Air below the content when scrolled to the bottom (and room for the
-   * palette FAB, site-palette.js). */
+}
+
+/* Bottom air belongs to the central column, not the body (it would pad
+ * every grid column). Every docs page ends with <footer>; the only page
+ * without one is the test-only fixture, which does not load this file. */
+footer {
   padding-block-end: 8rem;
 }
 
