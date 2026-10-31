@@ -4,7 +4,6 @@
   "private": true,
   "description": "Static HTML documentation site for @fewlines/css.",
   "scripts": {
-    "dev": "node ../../tests/prepare.mjs && npx serve .",
     "build": "esbuild js/site-palette.js --bundle --format=iife --outfile=js/palette.js",
     "lint": "echo 'no lint for static html yet'"
   },

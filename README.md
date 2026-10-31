@@ -71,11 +71,15 @@ Canonical markup and live examples: `apps/docs/`.
 ## Development
 
 ```sh
-pnpm install
+pnpm install        # installs deps, builds core, copies assets — repo is ready
 pnpm build          # Lightning CSS → packages/core/dist
 pnpm lint           # stylelint
 pnpm format:check   # prettier
 ```
+
+The docs site (`apps/docs/`) is static HTML — open `index.html` directly in a
+browser. After changing core CSS, refresh the site with `node tests/prepare.mjs`
+(it rebuilds core if needed).
 
 Tests (Playwright, APCA, purity): see `tests/README.md`.
 
