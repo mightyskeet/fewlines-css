@@ -323,6 +323,7 @@ main > section {
     scrollbar-width: thin;
     margin-block-end: 0;
     padding-block: var(--ui-space-lg);
+    padding-inline-end: var(--ui-space-xs);
   }
 
   .site-nav ul {
