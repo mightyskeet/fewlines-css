@@ -1,3 +1,7 @@
 apps/docs/js/palette.js
 apps/docs/vendor/
 packages/core/dist/
+
+# Local-only dot directories (kept out of the repository via .git/info/exclude)
+/.*/
+!/.github/

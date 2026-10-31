@@ -1,9 +1,11 @@
 # Timeline
 
 ## Purpose
+
 Event chronology: a list of events in order with a connecting rail and markers. Not interactive; the order is set by the host. One canonical element — `<ol>` with `role="list"`, no JS.
 
 ## Native basis
+
 - Elements `<ol>/<li>`: native list semantics (sequence, item structure) — `list`/`listitem` roles built in.
 - Order is the host's: `reversed` on `<ol>` for "newest first" — a native attribute with native reversed-order semantics, no JS.
 - `role="list"` guards against the `list-style: none` quirk (VoiceOver historically lost list semantics when markers were removed; harmless everywhere).
@@ -12,6 +14,7 @@ Event chronology: a list of events in order with a connecting rail and markers. 
 - Forced colors: rail and ring are borders — the system recolors them natively; the ring fill follows system canvas.
 
 ## Canonical markup
+
 ```html
 <ol class="ui-timeline" role="list">
   <li>
@@ -21,6 +24,7 @@ Event chronology: a list of events in order with a connecting rail and markers. 
   </li>
 </ol>
 ```
+
 - `role="list"` is part of the canon.
 - Item content is host content: `ui-timeline-meta` is an optional class (small line — date, stage); heading and body are any host elements (h3, p, …) with no component styles (base typography).
 - `reversed` on `<ol>` for "newest first".
@@ -30,6 +34,7 @@ Event chronology: a list of events in order with a connecting rail and markers. 
 - Marker centered on the first content line: offset = `(1lh - size) / 2`; adjust via `--ui-timeline-marker-offset` if the first child has its own font metrics.
 
 ## Variants and sizes
+
 - No variants, no size variants, no `data-*` attributes — one canonical vertical component; horizontal layouts are the host's job.
 - Local tokens (host overrides, no variant classes):
   - `--ui-timeline-marker-size` — ring size (default `--ui-space-md`, 16px);
@@ -42,15 +47,18 @@ Event chronology: a list of events in order with a connecting rail and markers. 
   - `--ui-timeline-marker-offset` — vertical marker offset (default `calc((1lh - var(--ui-timeline-marker-size)) / 2)`).
 
 ## States
+
 - No states: no hover, no focus, no animations (reduced motion handling not required).
 - Forced colors: rail and ring recolor natively as borders; ring fill follows system canvas.
 
 ## Keyboard and accessibility
+
 - Native `list`/`listitem` roles; sequence order is native list semantics; direction (`reversed`) is the host's.
 - Decorative by construction: rail and markers carry no meaning (WCAG 1.4.1) — structure and chronology are expressed by the list items.
 - `ui-timeline-meta` is styled as a small muted line.
 
 ## Do not
+
 - Do not replace `<ol>/<li>` with `<div>` grids — list semantics would be lost.
 - Do not use Timeline for step progress ("done/current/upcoming") — that is Stepper, a separate component.
 - Do not put `ui-timeline-meta` in an item more than once, and do not make it the item's only content (it is a caption, not content).

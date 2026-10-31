@@ -1,9 +1,11 @@
 # Accordion
 
 ## Purpose
+
 Expandable content block: FAQs, settings, grouped content. Opening and closing are native — no JS required.
 
 ## Native basis
+
 - `<details>` / `<summary>` — native disclosure widget.
 - `details[open]` — native state attribute.
 - Keyboard behavior is native: Enter/Space on `<summary>` toggles.
@@ -12,6 +14,7 @@ Expandable content block: FAQs, settings, grouped content. Opening and closing a
 - The native marker is replaced by a +/− indicator; `[open]` collapses the vertical bar (smooth morph). Forced colors fall back to a text glyph.
 
 ## Canonical markup
+
 ```html
 <details class="ui-accordion">
   <summary class="ui-accordion-summary">Title</summary>
@@ -29,9 +32,11 @@ Exclusive accordion (close others when one opens) is the native `name` attribute
 ```
 
 ## Variants and sizes
+
 One canonical variant; no `data-variant` or `data-size` attributes. Exclusive grouping is via the native `name` attribute (see above).
 
 ## States
+
 - open — `details[open]` (native attribute).
 - hover — `:hover` on summary; fill is rounded to the element radius; in the open state the bottom corners are square (the bottom is content).
 - focus — `:focus-visible` from the base layer.
@@ -40,12 +45,14 @@ One canonical variant; no `data-variant` or `data-size` attributes. Exclusive gr
 - forced colors — `forced-color-adjust: auto`.
 
 ## Keyboard and accessibility
+
 - Disclosure role is native; accessible name is the `<summary>` content.
 - Enter/Space — native toggling.
 - `aria-expanded` is not needed — state is read from the native `open`.
 - Accordion content is available to screen readers in both states.
 
 ## Do not
+
 - Do not emulate an accordion with `div` + JS toggle — you lose native state, keyboard behavior, and accessibility.
 - Do not add JS for opening/closing.
 - Do not remove `<summary>` — without it, details cannot expand.
