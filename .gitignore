@@ -40,7 +40,7 @@ apps/docs/vendor/colorparsley.mjs
 tests/shot-*.png
 
 # Local development (agent tooling and docs) — never published
-.vscode/
+/.vscode/
 
 
 
