@@ -1,4 +1,4 @@
-# @fewlines/css
+# fewlines-css
 
 Platform-native UI system: semantic HTML, modern CSS, **zero runtime JavaScript**.
 
@@ -20,15 +20,15 @@ applications developed by coding agents.
 ## Installation and usage
 
 ```sh
-pnpm add @fewlines/css
+pnpm add fewlines-css
 ```
 
 ```css
 /* Vite / bundler: the whole package */
-@import '@fewlines/css';
+@import 'fewlines-css';
 
 /* or tokens only */
-@import '@fewlines/css/tokens';
+@import 'fewlines-css/tokens';
 ```
 
 Theming: the default follows the system preference (`light-dark()` +

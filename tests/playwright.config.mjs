@@ -1,7 +1,7 @@
 import { defineConfig } from '@playwright/test';
 
 /**
- * Playwright harness for @fewlines/css.
+ * Playwright harness for fewlines-css.
  *
  * Serves apps/docs (which links the built core CSS) and runs:
  * - browser/   native behavior tests (dialog, popover, forms)

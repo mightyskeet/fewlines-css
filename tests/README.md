@@ -1,6 +1,6 @@
 # Test harness
 
-Playwright harness for @fewlines/css.
+Playwright harness for fewlines-css.
 
 ## Layout
 
@@ -56,11 +56,11 @@ unexpected runtime dependencies (`tests/purity/check.mjs`).
 ## Commands
 
 ```sh
-pnpm --filter @fewlines/tests test:prepare   # copy built CSS to apps/docs
-pnpm --filter @fewlines/tests test:browser   # browser + accessibility + theming (CI grid)
-pnpm --filter @fewlines/tests test:apca      # APCA token matrix
-pnpm --filter @fewlines/tests test:theming   # full 360-point hue sweep (manual run)
-pnpm --filter @fewlines/tests test:purity    # package purity
+pnpm --filter fewlines-tests test:prepare   # copy built CSS to apps/docs
+pnpm --filter fewlines-tests test:browser   # browser + accessibility + theming (CI grid)
+pnpm --filter fewlines-tests test:apca      # APCA token matrix
+pnpm --filter fewlines-tests test:theming   # full 360-point hue sweep (manual run)
+pnpm --filter fewlines-tests test:purity    # package purity
 ```
 
 `test:browser` runs `test:prepare` automatically (pretest hook).

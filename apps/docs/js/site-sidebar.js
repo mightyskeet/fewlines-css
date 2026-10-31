@@ -85,7 +85,7 @@ class SiteSidebar extends HTMLElement {
     const link = document.createElement('a');
     link.className = 'site-brand';
     link.href = `${base}index.html`;
-    link.textContent = '@fewlines/css';
+    link.textContent = 'fewlines-css';
     return link;
   }
 

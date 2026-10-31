@@ -1,5 +1,5 @@
 /**
- * Build script for @fewlines/css.
+ * Build script for fewlines-css.
  *
  * Compiles src/ -> dist/ with Lightning CSS:
  * - minification

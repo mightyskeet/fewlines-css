@@ -1,4 +1,4 @@
-/* @fewlines/css — entrypoint.
+/* fewlines-css — entrypoint.
  *
  * Cascade layers order is the architectural contract:
  * tokens -> base -> components.

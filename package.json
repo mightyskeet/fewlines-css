@@ -11,7 +11,7 @@
     "postinstall": "node tests/prepare.mjs",
     "build": "pnpm -r build",
     "lint": "pnpm -r lint",
-    "verify": "pnpm format:check && pnpm build && pnpm -r lint && pnpm --filter @fewlines/tests test:purity && pnpm --filter @fewlines/tests test",
+    "verify": "pnpm format:check && pnpm build && pnpm -r lint && pnpm --filter fewlines-tests test:purity && pnpm --filter fewlines-tests test",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },

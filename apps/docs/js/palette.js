@@ -597,7 +597,7 @@
     const computed = readComputed();
     const lines = PROPS.map((prop) => `  ${prop}: ${state[prop] ?? computed[prop]};`);
     return [
-      "/* Base tokens for the color derivation (@fewlines/css, tokens/derive.css).",
+      "/* Base tokens for the color derivation (fewlines-css, tokens/derive.css).",
       " * Override these on :root \u2014 the whole palette re-derives.",
       " */",
       ":root {",

@@ -1,8 +1,8 @@
 {
-  "name": "@fewlines/tests",
+  "name": "fewlines-tests",
   "version": "0.1.0",
   "private": true,
-  "description": "Browser, accessibility and APCA test harness for @fewlines/css.",
+  "description": "Browser, accessibility and APCA test harness for fewlines-css.",
   "scripts": {
     "test:prepare": "node prepare.mjs",
     "test:apca": "node apca/check.mjs",

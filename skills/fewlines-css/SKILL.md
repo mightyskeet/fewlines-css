@@ -1,12 +1,12 @@
 ---
 name: fewlines-css
 description: >
-  Build UIs with @fewlines/css — a platform-native CSS UI system (semantic
+  Build UIs with fewlines-css — a platform-native CSS UI system (semantic
   HTML, modern CSS, zero runtime JavaScript). Use when creating or styling
   interfaces with this library: components, theming, forms, overlays.
 ---
 
-# @fewlines/css — agent skill
+# fewlines-css — agent skill
 
 Platform-native UI system: semantic HTML, modern CSS, zero runtime JS.
 Native first: `<button>`, `<dialog>`, the Popover API, native forms and
@@ -17,15 +17,15 @@ States are native selectors only (`:hover`, `:active`, `:disabled`,
 ## Install and import
 
 ```sh
-pnpm add @fewlines/css
+pnpm add fewlines-css
 ```
 
 ```css
 /* whole package (bundler: Vite etc.) */
-@import '@fewlines/css';
+@import 'fewlines-css';
 
 /* tokens only */
-@import '@fewlines/css/tokens';
+@import 'fewlines-css/tokens';
 ```
 
 Theming: the default follows the system preference (`light-dark()` +
