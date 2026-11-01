@@ -29,9 +29,10 @@ root element. Recolor the system by overriding seed tokens (e.g.
 
 ## Documentation
 
-Components, canonical markup and live examples: the documentation site and
-the repository README. An agent skill (`SKILL.md` + per-component
-references) ships in the repository under `skills/fewlines-css/`.
+Components, canonical markup and live examples:
+[fewlines-css documentation](https://mightyskeet.github.io/fewlines-css/).
+An agent skill (`SKILL.md` + per-component references) ships in the
+repository under `skills/fewlines-css/`.
 
 ## License
 

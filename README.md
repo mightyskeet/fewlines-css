@@ -76,7 +76,8 @@ Beyond the components, the base layer styles semantic text elements without
 classes: `code`/`kbd`/`samp`, `pre`, `mark`, `abbr`, links, `blockquote`,
 `hr`, `sub`/`sup`, `::selection`.
 
-Canonical markup and live examples: `apps/docs/`.
+Canonical markup and live examples: [fewlines-css documentation](https://mightyskeet.github.io/fewlines-css/)
+(sources: `apps/docs/`).
 
 ## Using with AI assistants
 
