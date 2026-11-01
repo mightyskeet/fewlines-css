@@ -73,6 +73,27 @@ site-sidebar {
   text-decoration: none;
 }
 
+/* Header clusters: brand + version badge on the left, GitHub link and
+ * theme toggle on the right (the header itself is space-between). */
+.site-header-start,
+.site-header-end {
+  display: flex;
+  align-items: baseline;
+  gap: var(--ui-space-sm);
+  min-block-size: 0;
+}
+
+.site-header-end {
+  align-items: center;
+}
+
+/* The Octicon rides the button font size; spacing comes from .ui-button's
+ * built-in flex gap. */
+.site-header-end .site-github-mark {
+  inline-size: 1em;
+  block-size: 1em;
+}
+
 .site-nav ul {
   display: flex;
   flex-wrap: wrap;
