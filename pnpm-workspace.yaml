@@ -3,3 +3,4 @@ packages:
   - tests
 allowBuilds:
   lightningcss-cli: true
+  esbuild: true
