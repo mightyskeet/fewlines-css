@@ -44,11 +44,14 @@
 }
 
 /* Fixed site header across the viewport: brand left, theme toggle right
- * (site-sidebar.js). The explicit z-index is required: later tree content
- * that creates its own stacking context (a z-index pseudo like the
- * timeline marker, or a transform animation like the indeterminate circle
- * progress) paints at z:auto/0 in tree order and would otherwise cover the
- * fixed header. Overlays and dialogs still top above it via the top layer. */
+ * (site-sidebar.js). On wide screens the header renders inside the sticky
+ * <site-sidebar>, whose stacking context would trap the header at z:auto
+ * tree order — later stacking contexts (the timeline marker's z-index
+ * pseudo, the indeterminate circle progress's transform animation) painted
+ * above it. The sidebar carries the z-index that raises the whole chrome;
+ * on narrow screens the header is a direct child of <body>'s flow and
+ * raises itself. Overlays and dialogs still top above both via the top
+ * layer. */
 .site-header {
   position: fixed;
   z-index: 10;
@@ -329,6 +332,10 @@ main > section {
 
   site-sidebar {
     position: sticky;
+    /* Sticky always creates a stacking context: without a z-index the whole
+     * chrome (the fixed header included) paints at z:auto tree order, before
+     * <main> — stacking contexts in the content covered the header. */
+    z-index: 10;
     /* Stick below the fixed header, not under it. */
     top: var(--site-header-size);
     grid-column: 1;
