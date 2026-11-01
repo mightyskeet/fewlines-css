@@ -122,10 +122,6 @@
           contrast headroom).
         </p>
       </section>
-      <!-- Direct child of <main>, not of the section above: position:sticky
-        * is bounded by its parent, and the bar must stay pinned (below the
-        * fixed header) for the rest of the page — see docs.css. -->
-      <site-palette-actions></site-palette-actions>
 
       <section>
         <h2>Neutral</h2>
@@ -285,6 +281,11 @@
         <site-palette-table family="Attention"></site-palette-table>
         <p>The table also tracks the Neutral sliders — the pairs share a surface background.</p>
       </section>
+
+      <!-- Last child of <main>: with position:sticky bottom:0 the bar is
+        * pinned to the viewport bottom for the whole page scroll and docks
+        * into the flow at the end of the content — see docs.css. -->
+      <site-palette-actions></site-palette-actions>
     </main>
     <site-toc></site-toc>
 

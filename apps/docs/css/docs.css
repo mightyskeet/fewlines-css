@@ -44,11 +44,9 @@
 }
 
 /* Fixed site header across the viewport: brand left, theme toggle right
- * (site-sidebar.js). Paints above the static page content; the explicit
- * z-index also keeps it above the sticky palette actions bar (both are
- * positioned — without it the later bar in tree order would cover the
- * header's bottom border). Overlays and dialogs still top above it via
- * the top layer. */
+ * (site-sidebar.js). Paints above the static page content without an
+ * explicit z-index (position: fixed vs in-flow content); overlays and
+ * dialogs still top above it via the top layer. */
 .site-header {
   position: fixed;
   inset-block-start: 0;
@@ -61,7 +59,6 @@
   padding-inline: var(--ui-space-lg);
   background: var(--ui-color-surface);
   border-block-end: 1px solid var(--ui-color-border);
-  z-index: 1;
 }
 
 /* Navigation sidebar only (brand and toggle live in the fixed header). */
@@ -374,15 +371,18 @@ main > section {
  * header for the rest of the page and Reset / Copy CSS stay on view while
  * the families below are tuned. Surface background: content scrolls under
  * it once pinned; painted above static content like the fixed header. */
+/* Sticky palette actions: the host is the last child of <main> (sticky is
+ * bounded by its parent), so with bottom:0 the bar pins to the viewport
+ * bottom for the whole page scroll and docks into the flow at the end of
+ * the content. Surface background and a top hairline: content scrolls
+ * beneath it while pinned. */
 site-palette-actions {
   display: block;
   position: sticky;
-  top: var(--site-header-size);
+  bottom: 0;
   background: var(--ui-color-surface);
-  padding-block: var(--ui-space-xs);
-  /* Same hairline as the header above: separates the bar from the
-   * content scrolling beneath it. */
-  border-block-end: 1px solid var(--ui-color-border);
+  padding-block: var(--ui-space-lg);
+  border-block-start: 1px solid var(--ui-color-border);
 }
 
 .palette-table {
