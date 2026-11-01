@@ -3,6 +3,10 @@
   "version": "0.1.0",
   "description": "Platform-native CSS UI system. Zero runtime JavaScript.",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mightyskeet/fewlines-css.git"
+  },
   "type": "module",
   "sideEffects": [
     "**/*.css"
