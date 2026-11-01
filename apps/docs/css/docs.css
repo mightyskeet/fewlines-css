@@ -44,11 +44,14 @@
 }
 
 /* Fixed site header across the viewport: brand left, theme toggle right
- * (site-sidebar.js). Paints above the static page content without an
- * explicit z-index (position: fixed vs in-flow content); overlays and
- * dialogs still top above it via the top layer. */
+ * (site-sidebar.js). The explicit z-index is required: later tree content
+ * that creates its own stacking context (a z-index pseudo like the
+ * timeline marker, or a transform animation like the indeterminate circle
+ * progress) paints at z:auto/0 in tree order and would otherwise cover the
+ * fixed header. Overlays and dialogs still top above it via the top layer. */
 .site-header {
   position: fixed;
+  z-index: 10;
   inset-block-start: 0;
   inset-inline: 0;
   display: flex;
@@ -343,7 +346,9 @@ main > section {
     scrollbar-width: thin;
     margin-block-end: 0;
     padding-block: var(--ui-space-lg);
-    padding-inline-end: var(--ui-space-xs);
+    /* Overflow clips at the padding box: keep room on both sides for the
+     * focus ring (2px outline + 2px offset) not to be cut at the edges. */
+    padding-inline: var(--ui-space-xs);
   }
 
   .site-nav ul {
