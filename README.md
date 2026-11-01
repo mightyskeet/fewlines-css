@@ -83,8 +83,21 @@ Canonical markup and live examples: `apps/docs/`.
 The repository ships an agent skill: `skills/fewlines-css/` — a compact
 `SKILL.md` (install, theming, component index, system rules) plus
 per-component references with canonical markup, variants, states and
-constraints. Point your coding agent at the raw `SKILL.md` URL, or copy the
-folder into your skills directory.
+constraints.
+
+For OpenCode, add the raw catalog to `opencode.json` — the skill is fetched
+and cached automatically, and refreshed when the catalog version changes:
+
+```jsonc
+{
+  "$schema": "https://opencode.ai/config.json",
+  "skills": ["https://raw.githubusercontent.com/mightyskeet/fewlines-css/main/skills"],
+}
+```
+
+For any other agent, copy the `skills/fewlines-css/` folder into your skills
+directory (`.claude/skills/`, `.agents/skills/`, `~/.config/opencode/skills/`
+and similar).
 
 ## Development
 
