@@ -366,6 +366,19 @@ main > section {
   gap: var(--ui-space-sm);
 }
 
+/* Sticky palette actions: the host is a direct child of <main> (a section
+ * would bound the sticky range to itself), so the bar pins below the fixed
+ * header for the rest of the page and Reset / Copy CSS stay on view while
+ * the families below are tuned. Surface background: content scrolls under
+ * it once pinned; painted above static content like the fixed header. */
+site-palette-actions {
+  display: block;
+  position: sticky;
+  top: var(--site-header-size);
+  background: var(--ui-color-surface);
+  padding-block: var(--ui-space-xs);
+}
+
 .palette-table {
   inline-size: 100%;
   margin-block-end: var(--ui-space-lg);

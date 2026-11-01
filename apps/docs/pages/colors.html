@@ -121,8 +121,11 @@
           default, 0 collapses the shades into the poles, above 1 amplifies them (and spends
           contrast headroom).
         </p>
-        <site-palette-actions></site-palette-actions>
       </section>
+      <!-- Direct child of <main>, not of the section above: position:sticky
+        * is bounded by its parent, and the bar must stay pinned (below the
+        * fixed header) for the rest of the page — see docs.css. -->
+      <site-palette-actions></site-palette-actions>
 
       <section>
         <h2>Neutral</h2>
