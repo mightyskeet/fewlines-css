@@ -70,7 +70,7 @@
   color: var(--ui-color-text);
   background: var(--ui-color-surface-raised);
   border: 1px solid var(--ui-color-border);
-  border-radius: var(--ui-radius-sm);
+  border-radius: var(--ui-radius-md);
   padding-block: var(--ui-space-2xs);
   padding-inline: var(--ui-space-sm);
   accent-color: var(--ui-color-brand);
