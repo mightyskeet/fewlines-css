@@ -92,6 +92,9 @@ styling from the base layer. No classes needed:
 - Typography: one fluid scale — `--ui-font-size-*` steps are the only API;
   headings `h1`–`h6` are styled by the base layer; controls (Button/Field)
   always sit on the `default` step, `data-size` only changes density.
+- Spacing: `--ui-space-*` steps are one fluid proportional scale riding the
+  shared `--ui-fluid` factor — do not hardcode px/rem gaps alongside them;
+  hosts opt out by pinning `--ui-fluid-vmin = --ui-fluid-vmax`.
 - Elevation: shadows only via `--ui-elevation-1..3`; custom `box-shadow`
   in components is forbidden; Dialog/Drawer use a scrim instead of shadows.
 - States: activation only via native selectors; do not invent state classes.

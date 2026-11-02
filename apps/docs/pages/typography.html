@@ -215,6 +215,14 @@
           line height — the canonical mapping is defined once; there are no typographic classes:
           positions without a matching element are set from the step tokens directly.
         </p>
+        <p>
+          The same <code>--ui-fluid</code> factor drives the spacing scale: the
+          <code>--ui-space-*</code> steps are whole multiples of one 4px-derived step times a
+          proportional multiplier (0.75 at the narrow anchor &rarr; 1 at the wide one), so the
+          scale's ratios hold at any viewport width — unlike typography, no per-step anchors are
+          needed. Hosts opt out the same way: pin <code>--ui-fluid-vmin</code> =
+          <code>--ui-fluid-vmax</code>.
+        </p>
       </section>
 
       <section>
