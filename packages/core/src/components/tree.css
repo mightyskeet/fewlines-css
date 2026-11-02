@@ -22,18 +22,21 @@
  * (VoiceOver used to drop list semantics when the marker is removed).
  *
  * A branch node is <details>/<summary> — native disclosure, native
- * keyboard (Enter/Space on summary), no JS. A static (always-open)
- * branch is <li>text<ul>…</ul></li> — same geometry, no disclosure.
+ * keyboard (Enter/Space on summary), no JS. An always-open branch is
+ * <details open>; a bare <li>text<ul> branch has no marker for the rail
+ * to hang from — the drop would cross the node text (see contract).
  * No ARIA tree roles: the interactive treeview control is out of scope
  * (docs/TODO.md); the disclosure tree covers display.
  *
  * Geometry (all logical — RTL mirrors itself):
  *   drop    ul::before — the children rail's top segment: hangs from the
  *           parent's first line center (inset-block-start: -0.5 * 1lh),
- *           at one line width left of the node text edge (the rail
- *           centerline x). Children boxes start at the parent's content
- *           edge, so the rail x is identical in the ul's and every
- *           child's coordinate system.
+ *           aligned to the parent's disclosure marker center (the rail
+ *           centerline x; the marker is the summary's first inline box,
+ *           its advance ≈ 1em of the marker font → center = marker-size
+ *           / 2). Children boxes start at the parent's content edge, so
+ *           the rail x is identical in the ul's and every child's
+ *           coordinate system.
  *   elbow   li::before (nested li only) — the incoming rail: vertical
  *           from the li's top down to the node's first-line center, plus
  *           the horizontal branch into the node, rounded at the corner
@@ -43,6 +46,10 @@
  *           straight rail passes through and the branch curves off it);
  *           a last child has no outgoing rail — its elbow terminates
  *           the line ("└─").
+ *
+ * The rail pseudos paint at z-index -1 inside the tree's own stacking
+ * context: under the node content and the marker glyph (the drop passes
+ * through the marker's box), above anything outside the tree.
  *
  * The li boxes are adjacent (inter-node spacing is padding-block, not
  * margin — Timeline precedent), so the rails never break. The node's
@@ -76,6 +83,8 @@
   --ui-tree-indent: var(--ui-space-md);
   --ui-tree-gap-block: var(--ui-space-2xs);
   --ui-tree-line-width: 2px;
+  --ui-tree-marker-size: 0.75em;
+  --ui-tree-marker-center: calc(0.5 * var(--ui-tree-marker-size));
   --ui-tree-node-offset: calc(0.5 * 1lh + 0.5 * var(--ui-tree-line-width));
   --ui-tree-rail-color: var(--ui-color-border);
   --ui-tree-rail-radius: var(--ui-radius-sm);
@@ -83,6 +92,12 @@
   list-style: none;
   margin: 0;
   padding: 0;
+
+  /* Stacking context: the rail pseudos sit at z-index -1 — under the node
+   * content (the drop crosses the marker's glyph box) but above anything
+   * outside the tree. */
+  position: relative;
+  z-index: 0;
 }
 
 /* Nested lists: no chrome, positioning context for the drop pseudo. */
@@ -95,15 +110,18 @@
 
 /* The children rail's top segment: from the parent's first-line center
  * down to the list's first child elbow (which starts at the ul's top).
- * One line width left of the node text edge — clear of the glyphs. */
+ * Aligned to the parent's disclosure marker center: the marker is the
+ * summary's first inline box (inside), its advance ≈ 1em of the marker
+ * font, so the center is marker-size / 2 from the content edge. */
 .ui-tree ul::before {
   content: '';
   position: absolute;
-  inset-inline-start: calc(-1.5 * var(--ui-tree-line-width));
+  inset-inline-start: calc(var(--ui-tree-marker-center) - 0.5 * var(--ui-tree-line-width));
   inline-size: 0;
   inset-block-start: calc(-0.5 * 1lh);
   block-size: calc(0.5 * 1lh);
   border-inline-start: var(--ui-tree-line-width) solid var(--ui-tree-rail-color);
+  z-index: -1;
 }
 
 .ui-tree li {
@@ -129,19 +147,22 @@
 
 /* The elbow: the incoming rail (vertical, from the node's top down to
  * its first-line center) plus the horizontal branch into the node,
- * rounded at the corner. The rail centerline sits one line width left
- * of the node box; the stub reaches the node's content edge exactly
- * (the +1.5 * width compensates the pseudo's inline-start inset). */
+ * rounded at the corner. The rail centerline is the parent marker's
+ * center; the stub reaches the node's content edge exactly (the
+ * +0.5 * width compensates the pseudo's inline-start inset). */
 .ui-tree li li::before {
   content: '';
   position: absolute;
-  inset-inline-start: calc(-1.5 * var(--ui-tree-line-width));
-  inline-size: calc(var(--ui-tree-indent) + 1.5 * var(--ui-tree-line-width));
+  inset-inline-start: calc(var(--ui-tree-marker-center) - 0.5 * var(--ui-tree-line-width));
+  inline-size: calc(
+    var(--ui-tree-indent) - var(--ui-tree-marker-center) + 0.5 * var(--ui-tree-line-width)
+  );
   inset-block-start: 0;
   block-size: var(--ui-tree-node-offset);
   border-inline-start: var(--ui-tree-line-width) solid var(--ui-tree-rail-color);
   border-block-end: var(--ui-tree-line-width) solid var(--ui-tree-rail-color);
   border-end-start-radius: var(--ui-tree-rail-radius);
+  z-index: -1;
 }
 
 /* The incoming rail continuing below the branch point: it starts inside
@@ -151,10 +172,11 @@
 .ui-tree li li::after {
   content: '';
   position: absolute;
-  inset-inline-start: calc(-1.5 * var(--ui-tree-line-width));
+  inset-inline-start: calc(var(--ui-tree-marker-center) - 0.5 * var(--ui-tree-line-width));
   inline-size: 0;
   inset-block: calc(var(--ui-tree-node-offset) - var(--ui-tree-rail-radius)) 0;
   border-inline-start: var(--ui-tree-line-width) solid var(--ui-tree-rail-color);
+  z-index: -1;
 }
 
 .ui-tree li:last-child::after {
@@ -162,7 +184,13 @@
 }
 
 /* Disclosure branch: native marker (native forced-colors and RTL for
- * free), pointer affordance, native focus ring from the base layer. */
+ * free), pointer affordance, native focus ring from the base layer.
+ * The marker is slightly smaller than the node text; the rail hangs
+ * from its center (--ui-tree-marker-center). */
 .ui-tree summary {
   cursor: pointer;
+}
+
+.ui-tree summary::marker {
+  font-size: var(--ui-tree-marker-size);
 }

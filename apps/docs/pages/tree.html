@@ -49,10 +49,10 @@
           The component is the native nested list: the <code>list</code>/<code>listitem</code> roles
           and the hierarchy come with the elements. A branch node is a native
           <code>&lt;details&gt;</code> — the disclosure state, the keyboard behavior (Enter/Space on
-          the summary) and the marker are the platform's. A static (always-open) branch is a plain
-          nested list. The component adds the rail-and-elbow vocabulary — the guide lines — opt-in
-          over the base layer. The interactive treeview control (ARIA <code>tree</code> semantics)
-          is out of scope without a JS layer.
+          the summary) and the marker are the platform's; an always-open branch is
+          <code>&lt;details open&gt;</code>. The component adds the rail-and-elbow vocabulary — the
+          guide lines — opt-in over the base layer. The interactive treeview control (ARIA
+          <code>tree</code> semantics) is out of scope without a JS layer.
         </p>
       </section>
 
@@ -114,10 +114,12 @@
           The rails are 2px borders on zero-width pseudos — they survive forced colors (a background
           strip would not). Each node's elbow exits at the node's first-line center (<code
             >(1lh + line-width) / 2</code
-          >); the children rail hangs one line width left of the parent's text edge and drops from
-          the parent's first-line center. The last branch terminates with the rounded elbow
-          (<code>└─</code>); a passing rail runs straight through the junction and the branch curves
-          off it (<code>├─</code>). All positioning is logical — the layout mirrors itself in RTL.
+          >); the children rail is aligned to the parent's marker center and drops from the parent's
+          first-line center — the line emerges from beneath the triangle (the rails paint under the
+          node content, <code>z-index: -1</code> inside the tree's stacking context). The last
+          branch terminates with the rounded elbow (<code>└─</code>); a passing rail runs straight
+          through the junction and the branch curves off it (<code>├─</code>). All positioning is
+          logical — the layout mirrors itself in RTL.
         </p>
       </section>
 
