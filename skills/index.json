@@ -2,7 +2,7 @@
   "skills": [
     {
       "name": "fewlines-css",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "files": [
         "SKILL.md",
         "references/accordion.md",
@@ -26,7 +26,8 @@
         "references/table.md",
         "references/tabs.md",
         "references/timeline.md",
-        "references/tooltip.md"
+        "references/tooltip.md",
+        "references/tree.md"
       ]
     }
   ]
