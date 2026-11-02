@@ -72,8 +72,9 @@
         <p>
           <code>role="list"</code> is insurance for the <code>list-style: none</code> quirk — on
           every list. Node content is host-authored: leaf nodes are any host elements; the component
-          only zeroes the outermost margins of the node's first and last children. The summary keeps
-          the native disclosure marker.
+          only zeroes the outermost margins of the node's first and last children. The disclosure
+          marker is a component-drawn chevron (the select's conic wedge): a fixed box keeps the rail
+          alignment and the text indent deterministic; open turns it ▶ → ▼.
         </p>
       </section>
 

@@ -39,7 +39,8 @@ Nested content tree with rail indentation: reply chains, outlines, file lists. C
 
 - `role="list"` is part of the canon on every list.
 - Node content is host content: leaf nodes are any host elements (text, links, bubbles); the component only zeroes the outermost margins of the node's first/last children.
-- Branch nodes: `<details open>` (open by default is the host's choice); the summary is the node line and keeps the native disclosure marker, slightly smaller than the node text (`::marker` font-size = `--ui-tree-marker-size`; native forced-colors and RTL mirroring for free).
+- Branch nodes: `<details open>` (open by default is the host's choice); the summary is the node line. The native marker is replaced by a component-drawn chevron (the select's conic wedge on `summary::before`): a fixed box makes the rail alignment and the text indent deterministic — the native marker's advance is engine-specific and `::marker` takes no margins. The chevron is smaller than the node text and hangs from the line's center; the rail is aligned to its center.
+- Open state: the wedge turns ▶ → ▼ via the individual `rotate` property (interpolates smoothly; reduced motion disables the transition). RTL mirrors the closed wedge via `scale: -1 1` under `@supports selector(:dir(rtl))` — the rotation composes with the mirror. Forced colors fall back to a text glyph (the accordion precedent).
 - The horizontal branch exits at the node's first-line center (`(1lh + line-width) / 2`); the vertical children rail is aligned to the parent's marker center (the marker is the summary's first inline box, its advance ≈ 1em of the marker font → center = marker-size / 2) and drops from the parent's first-line center.
 - All layout is logical properties — mirrors in RTL.
 
@@ -50,7 +51,8 @@ Nested content tree with rail indentation: reply chains, outlines, file lists. C
   - `--ui-tree-indent` — nesting step (default `--ui-space-md`);
   - `--ui-tree-gap-block` — inter-node spacing (default `--ui-space-2xs`);
   - `--ui-tree-line-width` — rail thickness (default `2px`);
-  - `--ui-tree-marker-size` — disclosure marker size (default `0.75em`; also the rail's alignment reference: the rail hangs from the marker's center);
+  - `--ui-tree-marker-size` — disclosure chevron box (default `0.625em`; also the rail's alignment reference: the rail hangs from the marker's center);
+  - `--ui-tree-marker-gap` — gap between the chevron and the node text (default `0.375em`; marker box + gap = 1em, the text indent of a branch node);
   - `--ui-tree-marker-center` — the rail's inline offset from the node box (default `calc(0.5 * var(--ui-tree-marker-size))`);
   - `--ui-tree-node-offset` — first-line center from the node's top (default `calc(0.5 * 1lh + 0.5 * var(--ui-tree-line-width))`; adjust if the node text has its own font metrics, e.g. a heading);
   - `--ui-tree-rail-color` — guide line color (default `border`);
@@ -60,8 +62,8 @@ Nested content tree with rail indentation: reply chains, outlines, file lists. C
 
 - No component states: no hover, no focus, no animations (reduced motion handling not required; collapsing is instant).
 - `details[open]` is the native branch state; closed branches simply shrink the node's box — the rails re-flow themselves.
-- Paint order: the rails sit at `z-index: -1` inside the tree's own stacking context (`.ui-tree` is `position: relative; z-index: 0`) — under the node content and the marker glyph (the drop passes through the marker's box and emerges from beneath it), above anything outside the tree; host node backgrounds (e.g. comment bubbles) also paint over the rails.
-- Forced colors: rails are borders — the system recolors them natively; the disclosure marker is native.
+- Paint order: the rails sit at `z-index: -1` inside the tree's own stacking context (`.ui-tree` is `position: relative; z-index: 0`) — under the node content and the chevron (the drop passes through the marker's box and emerges from beneath it), above anything outside the tree; host node backgrounds (e.g. comment bubbles) also paint over the rails.
+- Forced colors: rails are borders — the system recolors them natively; the chevron falls back to a text glyph.
 
 ## Keyboard and accessibility
 

@@ -86,9 +86,9 @@ test('a root node has no incoming rail', async ({ page }) => {
 test('the elbow is the incoming rail plus the branch, rounded at the corner', async ({ page }) => {
   const lh = await nodeLineHeight(page, '#tree-nested-leaf');
   const fs = await nodeFontSize(page, '#tree-nested-leaf');
-  // The rail hangs from the marker's center: 0.5 * marker-size (0.75em),
+  // The rail hangs from the marker's center: 0.5 * marker-size (0.625em),
   // minus half the line width for the pseudo's border inset.
-  const center = 0.375 * fs;
+  const center = 0.3125 * fs;
   const radius = parseFloat(await tokenLength(page, '--ui-radius-sm'));
   const elbow = await page.locator('#tree-nested-leaf').evaluate((el) => {
     const s = getComputedStyle(el, '::before');
@@ -145,10 +145,22 @@ test('the rail continues below the branch point, ends at the last elbow', async 
   expect(last).toBe('none');
 });
 
+test('a node following a sibling keeps the rail through the gap', async ({ page }) => {
+  const lh = await nodeLineHeight(page, '#tree-default ul li:nth-child(2)');
+  const elbow = await page.locator('#tree-default ul li:nth-child(2)').evaluate((el) => {
+    const s = getComputedStyle(el, '::before');
+    return { insetBlockStart: s.insetBlockStart, blockSize: s.blockSize };
+  });
+  // The elbow still starts at the box top (the rail runs through the
+  // top padding); the stub grows down to the first-line center.
+  expect(elbow.insetBlockStart).toBe('0px');
+  expect(elbow.blockSize).toBe(`${4 + lh / 2 + 1}px`);
+});
+
 test('the children rail hangs from the parent line center', async ({ page }) => {
   const lh = await nodeLineHeight(page, '#tree-branch-open > summary');
   const fs = await nodeFontSize(page, '#tree-branch-open > summary');
-  const center = 0.375 * fs;
+  const center = 0.3125 * fs;
   const drop = await page.locator('#tree-branch-open > ul').evaluate((el) => {
     const s = getComputedStyle(el, '::before');
     return {
