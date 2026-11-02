@@ -54,6 +54,7 @@ const PAGES = [
   { href: 'pages/breadcrumbs.html', label: 'Breadcrumbs', group: 'Navigation' },
   { href: 'pages/tabs.html', label: 'Tabs', group: 'Navigation' },
   { href: 'pages/accordion.html', label: 'Accordion', group: 'Navigation' },
+  { href: 'pages/tree.html', label: 'Tree', group: 'Navigation' },
   { href: 'pages/table.html', label: 'Table', group: 'Data' },
 ];
 

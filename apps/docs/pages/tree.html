@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script>
+      try {
+        var t = localStorage.getItem('theme');
+        if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+      } catch (e) {}
+    </script>
+    <script>
+      try {
+        var b = JSON.parse(localStorage.getItem('colors-bases') || 'null');
+        if (b) {
+          var r = document.documentElement,
+            s = r.style;
+          for (var k in b) s.setProperty(k, b[k]);
+          r.setAttribute('data-palette', 'custom');
+        }
+      } catch (e) {}
+    </script>
+    <title>Tree — fewlines-css</title>
+    <link rel="stylesheet" href="../css/core.css" />
+    <link rel="stylesheet" href="../css/docs.css" />
+    <link rel="stylesheet" href="../css/colors-derive.css" />
+    <script src="../js/site-version.js" defer></script>
+    <script src="../js/site-sidebar.js" defer blocking="render"></script>
+    <script src="../js/site-toc.js" defer blocking="render"></script>
+    <script src="../vendor/hljs.min.js" defer></script>
+    <script src="../js/site-code.js" defer></script>
+  </head>
+  <body>
+    <site-sidebar></site-sidebar>
+
+    <main>
+      <header class="page-header">
+        <h1>Tree</h1>
+        <p>
+          A hierarchy of content on the native nested <code>&lt;ul&gt;</code>: reply chains,
+          outlines, file lists. Branch collapsing is the native <code>&lt;details&gt;</code>
+          disclosure — no JS, no ARIA tree roles.
+        </p>
+      </header>
+
+      <section>
+        <h2>Semantic basis</h2>
+        <p>
+          The component is the native nested list: the <code>list</code>/<code>listitem</code> roles
+          and the hierarchy come with the elements. A branch node is a native
+          <code>&lt;details&gt;</code> — the disclosure state, the keyboard behavior (Enter/Space on
+          the summary) and the marker are the platform's. A static (always-open) branch is a plain
+          nested list. The component adds the rail-and-elbow vocabulary — the guide lines — opt-in
+          over the base layer. The interactive treeview control (ARIA <code>tree</code> semantics)
+          is out of scope without a JS layer.
+        </p>
+      </section>
+
+      <section>
+        <h2>Canonical markup</h2>
+        <pre><code>&lt;ul class="ui-tree" role="list"&gt;
+  &lt;li&gt;package.json&lt;/li&gt;
+  &lt;li&gt;
+    &lt;details open&gt;
+      &lt;summary&gt;src&lt;/summary&gt;
+      &lt;ul role="list"&gt;
+        &lt;li&gt;button.css&lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/details&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;</code></pre>
+        <p>
+          <code>role="list"</code> is insurance for the <code>list-style: none</code> quirk — on
+          every list. Node content is host-authored: leaf nodes are any host elements; the component
+          only zeroes the outermost margins of the node's first and last children. The summary keeps
+          the native disclosure marker.
+        </p>
+      </section>
+
+      <section>
+        <h2>Geometry</h2>
+        <div class="example">
+          <ul class="ui-tree" role="list">
+            <li>package.json</li>
+            <li>
+              <details open>
+                <summary>src</summary>
+                <ul role="list">
+                  <li>button.css</li>
+                  <li>
+                    <details open>
+                      <summary>fields</summary>
+                      <ul role="list">
+                        <li>input.css</li>
+                        <li>select.css</li>
+                      </ul>
+                    </details>
+                  </li>
+                  <li>table.css</li>
+                </ul>
+              </details>
+            </li>
+            <li>
+              <details>
+                <summary>tests</summary>
+                <ul role="list">
+                  <li>browser</li>
+                </ul>
+              </details>
+            </li>
+          </ul>
+        </div>
+        <p>
+          The rails are 2px borders on zero-width pseudos — they survive forced colors (a background
+          strip would not). Each node's elbow exits at the node's first-line center (<code
+            >(1lh + line-width) / 2</code
+          >); the children rail hangs one line width left of the parent's text edge and drops from
+          the parent's first-line center. The last branch terminates with the rounded elbow
+          (<code>└─</code>); a passing rail runs straight through the junction and the branch curves
+          off it (<code>├─</code>). All positioning is logical — the layout mirrors itself in RTL.
+        </p>
+      </section>
+
+      <section>
+        <h2>Reply chains</h2>
+        <div class="example">
+          <ul class="ui-tree" role="list">
+            <li>
+              <p><strong>ana</strong> — shipped the marker alignment fix</p>
+              <ul role="list">
+                <li>
+                  <p><strong>kir</strong> — the 1lh offset works for multi-line nodes too</p>
+                  <ul role="list">
+                    <li>
+                      <p><strong>ana</strong> — same contract as Timeline</p>
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  <p><strong>joe</strong> — verified in RTL</p>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+        <p>
+          The same geometry reads as a comment thread: each reply's branch exits at the reply's
+          first-line center, the thread rail runs continuously alongside the nested replies.
+        </p>
+      </section>
+
+      <section>
+        <h2>Customization</h2>
+        <p>
+          The rail is the <code>border</code> token — decorative (the list semantics carry the
+          structure). Hosts re-theme through the local tokens — no variants, no classes:
+        </p>
+        <pre><code>.release-tree {
+  --ui-tree-indent: var(--ui-space-lg);
+  --ui-tree-rail-color: var(--ui-color-brand);
+}</code></pre>
+      </section>
+
+      <section>
+        <h2>Accessibility</h2>
+        <ul>
+          <li>
+            The list roles are native; the hierarchy is native nesting. Branch disclosure is native
+            (<code>details</code>/<code>summary</code>): Enter/Space toggle, the accessible name is
+            the summary content, <code>aria-expanded</code> is not needed.
+          </li>
+          <li>
+            The rails are decorative by construction — the structure is in the nesting (WCAG 1.4.1).
+            The rail reuses the divider policy (decorative line, no APCA pair).
+          </li>
+          <li>Forced colors repaint the rails (borders) and the marker natively.</li>
+          <li>Collapsing is instant: no motion, reduced-motion handling not required.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Do not</h2>
+        <ul>
+          <li>
+            No anchor positioning for the connectors: a repeated anchor name resolves to the first
+            element in tree order — every reply would attach to the first comment; in nested DOM the
+            borders need no anchors at all.
+          </li>
+          <li>
+            No <code>&lt;div&gt;</code> grid instead of nested <code>&lt;ul&gt;</code> — the list
+            semantics are the contract.
+          </li>
+          <li>
+            No ARIA <code>tree</code>/<code>treeitem</code> roles — the disclosure tree covers
+            display.
+          </li>
+          <li>
+            No collapse animation via <code>::details-content</code> — its
+            <code>overflow: hidden</code> clips the rail drop segment.
+          </li>
+          <li>No variant classes — hosts re-theme through the local tokens.</li>
+        </ul>
+      </section>
+    </main>
+    <site-toc></site-toc>
+
+    <footer></footer>
+  </body>
+</html>

@@ -853,6 +853,32 @@
       </section>
 
       <!-- Base typography -->
+      <!-- Tree -->
+      <section id="trees">
+        <ul class="ui-tree" role="list" id="tree-default">
+          <li id="tree-root-leaf">package.json</li>
+          <li>
+            <details open id="tree-branch-open">
+              <summary id="tree-summary-open">src</summary>
+              <ul role="list">
+                <li id="tree-nested-leaf">button.css</li>
+                <li>
+                  <details id="tree-branch-closed">
+                    <summary id="tree-summary-closed">fields</summary>
+                    <ul role="list">
+                      <li>input.css</li>
+                    </ul>
+                  </details>
+                </li>
+              </ul>
+            </details>
+          </li>
+        </ul>
+        <ul class="ui-tree" role="list" id="tree-single">
+          <li>Single node</li>
+        </ul>
+      </section>
+
       <section id="typography">
         <p id="typography-inline">
           Inline <code>code</code>, <kbd>Ctrl</kbd>+<kbd>C</kbd>, <samp>output</samp>,

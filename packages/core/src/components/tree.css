@@ -1,0 +1,168 @@
+/* Tree component.
+ *
+ * Native basis: nested <ul>/<li> — the platform's nested lists. A tree is
+ * a hierarchy of content: reply chains, outlines, file lists. The nesting
+ * and the list semantics (list/listitem roles) come with the elements;
+ * the component adds the rail-and-elbow vocabulary (the guide lines).
+ *
+ * Canonical structure:
+ *   <ul class="ui-tree" role="list">
+ *     <li>Leaf node</li>
+ *     <li>
+ *       <details open>
+ *         <summary>Branch node</summary>
+ *         <ul role="list">
+ *           <li>Child</li>
+ *         </ul>
+ *       </details>
+ *     </li>
+ *   </ul>
+ *
+ * role="list" on every list — insurance for the list-style: none quirk
+ * (VoiceOver used to drop list semantics when the marker is removed).
+ *
+ * A branch node is <details>/<summary> — native disclosure, native
+ * keyboard (Enter/Space on summary), no JS. A static (always-open)
+ * branch is <li>text<ul>…</ul></li> — same geometry, no disclosure.
+ * No ARIA tree roles: the interactive treeview control is out of scope
+ * (docs/TODO.md); the disclosure tree covers display.
+ *
+ * Geometry (all logical — RTL mirrors itself):
+ *   drop    ul::before — the children rail's top segment: hangs from the
+ *           parent's first line center (inset-block-start: -0.5 * 1lh),
+ *           at one line width left of the node text edge (the rail
+ *           centerline x). Children boxes start at the parent's content
+ *           edge, so the rail x is identical in the ul's and every
+ *           child's coordinate system.
+ *   elbow   li::before (nested li only) — the incoming rail: vertical
+ *           from the li's top down to the node's first-line center, plus
+ *           the horizontal branch into the node, rounded at the corner
+ *           (border-end-start-radius) — "├─"/"└─".
+ *   rail    li::after — the incoming rail continuing below the branch
+ *           point (it starts inside the elbow's curve radius so the
+ *           straight rail passes through and the branch curves off it);
+ *           a last child has no outgoing rail — its elbow terminates
+ *           the line ("└─").
+ *
+ * The li boxes are adjacent (inter-node spacing is padding-block, not
+ * margin — Timeline precedent), so the rails never break. The node's
+ * outermost content margins are zeroed so the entry box equals the
+ * rail column.
+ *
+ * The stub exits at the node's first-line center: the offset is
+ * (1lh + line-width) / 2 — the lh unit resolves against the li's
+ * inherited line-height (base --ui-line-height-normal), same contract
+ * as Timeline/Stepper; a host heading as the node text drifts and
+ * re-aligns through --ui-tree-node-offset.
+ *
+ * Collapsing is native and instant: the ::details-content overflow trap
+ * (the animation's overflow: hidden clips the rail's drop segment, which
+ * deliberately overhangs the ul's box) — an animated collapse would need
+ * a second line-drawing mechanism; one canonical implementation.
+ *
+ * Colors via local tokens (host-overridable):
+ *   rail --ui-color-border — decorative by construction (the list
+ *   semantics carry the structure), same policy as the divider line.
+ *
+ * APCA pairs used (validated in tests/apca):
+ *   rail: decorative — no pair (divider policy);
+ *   node text: host content on the base typography (existing pairs).
+ *
+ * Forced colors: the rails are borders — the system repaints them
+ * natively; the disclosure marker is native and follows the system.
+ */
+
+.ui-tree {
+  --ui-tree-indent: var(--ui-space-md);
+  --ui-tree-gap-block: var(--ui-space-2xs);
+  --ui-tree-line-width: 2px;
+  --ui-tree-node-offset: calc(0.5 * 1lh + 0.5 * var(--ui-tree-line-width));
+  --ui-tree-rail-color: var(--ui-color-border);
+  --ui-tree-rail-radius: var(--ui-radius-sm);
+
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Nested lists: no chrome, positioning context for the drop pseudo. */
+.ui-tree ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: relative;
+}
+
+/* The children rail's top segment: from the parent's first-line center
+ * down to the list's first child elbow (which starts at the ul's top).
+ * One line width left of the node text edge — clear of the glyphs. */
+.ui-tree ul::before {
+  content: '';
+  position: absolute;
+  inset-inline-start: calc(-1.5 * var(--ui-tree-line-width));
+  inline-size: 0;
+  inset-block-start: calc(-0.5 * 1lh);
+  block-size: calc(0.5 * 1lh);
+  border-inline-start: var(--ui-tree-line-width) solid var(--ui-tree-rail-color);
+}
+
+.ui-tree li {
+  position: relative;
+  padding-inline-start: var(--ui-tree-indent);
+}
+
+/* Nodes own the block gap (padding, not margin — Timeline precedent):
+ * adjacent boxes keep the rail continuous. */
+.ui-tree li + li {
+  padding-block-start: var(--ui-tree-gap-block);
+}
+
+/* The node's outermost margins are zeroed so the content starts at the
+ * elbow's optical position; inner spacing stays host content. */
+.ui-tree li > :first-child {
+  margin-block-start: 0;
+}
+
+.ui-tree li > :last-child {
+  margin-block-end: 0;
+}
+
+/* The elbow: the incoming rail (vertical, from the node's top down to
+ * its first-line center) plus the horizontal branch into the node,
+ * rounded at the corner. The rail centerline sits one line width left
+ * of the node box; the stub reaches the node's content edge exactly
+ * (the +1.5 * width compensates the pseudo's inline-start inset). */
+.ui-tree li li::before {
+  content: '';
+  position: absolute;
+  inset-inline-start: calc(-1.5 * var(--ui-tree-line-width));
+  inline-size: calc(var(--ui-tree-indent) + 1.5 * var(--ui-tree-line-width));
+  inset-block-start: 0;
+  block-size: var(--ui-tree-node-offset);
+  border-inline-start: var(--ui-tree-line-width) solid var(--ui-tree-rail-color);
+  border-block-end: var(--ui-tree-line-width) solid var(--ui-tree-rail-color);
+  border-end-start-radius: var(--ui-tree-rail-radius);
+}
+
+/* The incoming rail continuing below the branch point: it starts inside
+ * the elbow's curve radius, so the straight rail passes through the
+ * junction and the branch curves off it ("├─"). A last child has no
+ * outgoing rail — its elbow terminates the line ("└─"). */
+.ui-tree li li::after {
+  content: '';
+  position: absolute;
+  inset-inline-start: calc(-1.5 * var(--ui-tree-line-width));
+  inline-size: 0;
+  inset-block: calc(var(--ui-tree-node-offset) - var(--ui-tree-rail-radius)) 0;
+  border-inline-start: var(--ui-tree-line-width) solid var(--ui-tree-rail-color);
+}
+
+.ui-tree li:last-child::after {
+  display: none;
+}
+
+/* Disclosure branch: native marker (native forced-colors and RTL for
+ * free), pointer affordance, native focus ring from the base layer. */
+.ui-tree summary {
+  cursor: pointer;
+}
