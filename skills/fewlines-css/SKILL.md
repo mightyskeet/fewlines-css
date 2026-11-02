@@ -38,35 +38,36 @@ element. Recolor the system by overriding seed tokens (e.g.
 Pick the component by task, then read its reference **before writing
 markup** — never infer the API from an example or a neighboring component:
 
-| Task                                             | Component   | Reference                   |
-| ------------------------------------------------ | ----------- | --------------------------- |
-| Action: submit, command, open a dialog           | Button      | `references/button.md`      |
-| Text input with label and validation             | Field       | `references/field.md`       |
-| Group of controls with a shared name             | Fieldset    | `references/fieldset.md`    |
-| Modal window (confirmation, form)                | Dialog      | `references/dialog.md`      |
-| Non-modal overlay: menu, hint, panel             | Popover     | `references/popover.md`     |
-| List of actions in an overlay                    | Menu        | `references/menu.md`        |
-| Edge panel: filters, mobile nav, cart            | Drawer      | `references/drawer.md`      |
-| Disclosure block: FAQ, settings                  | Accordion   | `references/accordion.md`   |
-| Feedback message: status, result, error          | Alert       | `references/alert.md`       |
-| Status label / counter                           | Badge       | `references/badge.md`       |
-| Section separator                                | Divider     | `references/divider.md`     |
-| Operation progress: loading, processing          | Progress    | `references/progress.md`    |
-| Event chronology                                 | Timeline    | `references/timeline.md`    |
-| Stepwise process progress: done/current/upcoming | Stepper     | `references/stepper.md`     |
-| Navigation trail to the current page             | Breadcrumbs | `references/breadcrumbs.md` |
-| Placeholder for loading content                  | Skeleton    | `references/skeleton.md`    |
-| Panel switching with the address in the URL      | Tabs        | `references/tabs.md`        |
-| Binary on/off toggle: settings, consent          | Switch      | `references/switch.md`      |
-| Choice controls: checkboxes, radios, groups      | Choice      | `references/choice.md`      |
-| Short hover/focus hint                           | Tooltip     | `references/tooltip.md`     |
-| Tabular data: registries, reports, dashboards    | Table       | `references/table.md`       |
+| Task                                              | Component   | Reference                   |
+| ------------------------------------------------- | ----------- | --------------------------- |
+| Action: submit, command, open a dialog            | Button      | `references/button.md`      |
+| Text input with label and validation              | Field       | `references/field.md`       |
+| Group of controls with a shared name              | Fieldset    | `references/fieldset.md`    |
+| Modal window (confirmation, form)                 | Dialog      | `references/dialog.md`      |
+| Non-modal overlay: menu, hint, panel              | Popover     | `references/popover.md`     |
+| List of actions in an overlay                     | Menu        | `references/menu.md`        |
+| Edge panel: filters, mobile nav, cart             | Drawer      | `references/drawer.md`      |
+| Disclosure block: FAQ, settings                   | Accordion   | `references/accordion.md`   |
+| Feedback message: status, result, error           | Alert       | `references/alert.md`       |
+| Status label / counter                            | Badge       | `references/badge.md`       |
+| Compact interactive control: filters, tag actions | Chip        | `references/chip.md`        |
+| Section separator                                 | Divider     | `references/divider.md`     |
+| Operation progress: loading, processing           | Progress    | `references/progress.md`    |
+| Event chronology                                  | Timeline    | `references/timeline.md`    |
+| Stepwise process progress: done/current/upcoming  | Stepper     | `references/stepper.md`     |
+| Navigation trail to the current page              | Breadcrumbs | `references/breadcrumbs.md` |
+| Placeholder for loading content                   | Skeleton    | `references/skeleton.md`    |
+| Panel switching with the address in the URL       | Tabs        | `references/tabs.md`        |
+| Binary on/off toggle: settings, consent           | Switch      | `references/switch.md`      |
+| Choice controls: checkboxes, radios, groups       | Choice      | `references/choice.md`      |
+| Short hover/focus hint                            | Tooltip     | `references/tooltip.md`     |
+| Tabular data: registries, reports, dashboards     | Table       | `references/table.md`       |
 
 Disambiguation: modal + focus trap → Dialog; light dismiss, non-modal →
 Popover; action list in an overlay → Menu; panel from the viewport edge →
 Drawer; binary toggle → Switch; choice controls → Choice; disclosure →
 Accordion; unobtrusive status message → Alert; compact status/counter →
-Badge; tabular data → Table.
+Badge; compact interactive control → Chip; tabular data → Table.
 
 ## Base typography — native elements, no classes
 

@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script>
+      try {
+        var t = localStorage.getItem('theme');
+        if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+      } catch (e) {}
+    </script>
+    <script>
+      try {
+        var b = JSON.parse(localStorage.getItem('colors-bases') || 'null');
+        if (b) {
+          var r = document.documentElement,
+            s = r.style;
+          for (var k in b) s.setProperty(k, b[k]);
+          r.setAttribute('data-palette', 'custom');
+        }
+      } catch (e) {}
+    </script>
+    <title>Chip — fewlines-css</title>
+    <link rel="stylesheet" href="../css/core.css" />
+    <link rel="stylesheet" href="../css/docs.css" />
+    <link rel="stylesheet" href="../css/colors-derive.css" />
+    <script src="../js/site-version.js" defer></script>
+    <script src="../js/site-sidebar.js" defer blocking="render"></script>
+    <script src="../js/site-toc.js" defer blocking="render"></script>
+    <script src="../vendor/hljs.min.js" defer></script>
+    <script src="../js/site-code.js" defer></script>
+  </head>
+  <body>
+    <site-sidebar></site-sidebar>
+
+    <main>
+      <header class="page-header">
+        <h1>Chip</h1>
+        <p>
+          Compact interactive control with the Badge look: filters, tag actions, small add/remove
+          actions in dense toolbars. Native button/link semantics — no JS.
+        </p>
+      </header>
+
+      <section>
+        <h2>Semantic basis</h2>
+        <p>
+          A chip is an action, so the element is a real <code>&lt;button&gt;</code> (or
+          <code>&lt;a&gt;</code> for navigation): hover, press, focus and disabled come from the
+          platform, the same state model as Button. A static label is Badge, not Chip — do not style
+          a <code>&lt;span&gt;</code> as <code>ui-chip</code>.
+        </p>
+      </section>
+
+      <section>
+        <h2>Canonical markup</h2>
+        <pre><code>&lt;button class="ui-chip" type="button"&gt;Label&lt;/button&gt;</code></pre>
+        <p>
+          Adjacent chips get a gap automatically (<code>.ui-chip + .ui-chip</code>). The label never
+          wraps (<code>white-space: nowrap</code>) — chips are short labels by contract. Icons
+          auto-size to 1rem and never intercept the pointer; icon-only chips require
+          <code>aria-label</code>.
+        </p>
+      </section>
+
+      <section>
+        <h2>Variants</h2>
+        <div class="example">
+          <button class="ui-chip" type="button">Default</button>
+          <button class="ui-chip" type="button" data-variant="neutral">Neutral</button>
+          <button class="ui-chip" type="button" data-variant="attention">Attention</button>
+        </div>
+        <p>
+          <code>data-variant="neutral|attention"</code> — the Badge pastel set (soft tint surfaces,
+          like Alert). Default (no attribute) is the brand pastel: <code>brand-tint</code> +
+          <code>brand</code>. Hover fills the same family one step toward its contrast pole
+          (<code>brand-tint-hover</code>, the generic hover fill,
+          <code>attention-tint-hover</code>).
+        </p>
+      </section>
+
+      <section>
+        <h2>Solid fill</h2>
+        <div class="example">
+          <button class="ui-chip" type="button" data-solid>Default</button>
+          <button class="ui-chip" type="button" data-variant="neutral" data-solid>Neutral</button>
+          <button class="ui-chip" type="button" data-variant="attention" data-solid>
+            Attention
+          </button>
+        </div>
+        <p>
+          The boolean <code>data-solid</code> flips the fill to the button-default model — the bare
+          family tone with <code>on-*</code> text. <code>neutral</code> + solid is the
+          brand-independent inverted gray (<code>text</code> fill + <code>surface</code> label); its
+          hover walks toward the surface (<code>inverse-hover</code>).
+        </p>
+      </section>
+
+      <section>
+        <h2>Sizes</h2>
+        <div class="example">
+          <button class="ui-chip" type="button" data-size="sm">Small</button>
+          <button class="ui-chip" type="button">Medium</button>
+          <button class="ui-chip" type="button" data-size="lg">Large</button>
+        </div>
+        <p>
+          <code>data-size="sm|lg"</code>; default is md (no attribute) — the pill shown in the
+          Variants block above. Geometry scales, the label size stays: sm 24px, md 28px, lg 32px —
+          the smallest chip already meets the WCAG 2.5.8 target size.
+        </p>
+      </section>
+
+      <section>
+        <h2>Filters</h2>
+        <div class="example">
+          <button class="ui-chip" type="button">Design</button>
+          <button class="ui-chip" type="button" data-variant="neutral">
+            Research
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              aria-hidden="true"
+            >
+              <path d="M18 6 6 18M6 6l12 12" />
+            </svg>
+          </button>
+          <button class="ui-chip" type="button" data-variant="attention" data-solid>Overdue</button>
+        </div>
+        <p>
+          The typical chip patterns: filter toggles and removable tags. The remove icon is
+          <code>aria-hidden="true"</code>; the accessible name comes from the label text plus the
+          host-supplied <code>aria-label</code> when the icon alone carries meaning.
+        </p>
+      </section>
+
+      <section>
+        <h2>Disabled</h2>
+        <div class="example">
+          <button class="ui-chip" type="button" disabled>Disabled</button>
+          <a class="ui-chip" href="#" aria-disabled="true">Link chip</a>
+        </div>
+        <p>
+          Native <code>:disabled</code> covers buttons; links use <code>aria-disabled="true"</code>
+          (a link cannot be disabled natively — the host also gates the navigation).
+        </p>
+      </section>
+
+      <section>
+        <h2>Accessibility</h2>
+        <ul>
+          <li>
+            Chip text is the accessible name; icon-only chips require <code>aria-label</code>, the
+            icon gets <code>aria-hidden="true"</code>.
+          </li>
+          <li><code>:focus-visible</code> ring from the base layer — do not override.</li>
+          <li>
+            Color is never the only carrier of meaning (WCAG 1.4.1) — the label states the action;
+            variant styling reinforces it.
+          </li>
+          <li>
+            All label pairs are validated by the APCA matrix in both themes; pastel pairs sit at the
+            documented body minimum (Lc 60).
+          </li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Do not</h2>
+        <ul>
+          <li>
+            No <code>&lt;div class="ui-chip"&gt;</code> — only <code>&lt;button&gt;</code> or
+            <code>&lt;a&gt;</code>; a non-interactive label belongs to Badge.
+          </li>
+          <li>No JS for hover/active/disabled states — they are native.</li>
+          <li>No variant classes — variants are expressed only via <code>data-variant</code>.</li>
+          <li>No multi-line pills — <code>white-space: nowrap</code> is part of the contract.</li>
+        </ul>
+      </section>
+    </main>
+    <site-toc></site-toc>
+
+    <footer></footer>
+  </body>
+</html>

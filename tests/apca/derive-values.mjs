@@ -171,6 +171,7 @@ function half(theme) {
   };
 
   return {
+    k,
     surface,
     text,
     raised,
@@ -200,6 +201,12 @@ const tokens = {
   },
   text: { light: oklchToSrgb(light.text), dark: oklchToSrgb(dark.text) },
   'text-muted': { light: oklchToSrgb(light.muted), dark: oklchToSrgb(dark.muted) },
+  // Inverted fill hover (the neutral-solid chip): the text fill walks toward
+  // the page surface pole by the brand-hover's calibrated steps.
+  'inverse-hover': {
+    light: mixOklabSrgb(light.text, light.surface, light.k * 0.3),
+    dark: mixOklabSrgb(dark.text, dark.surface, dark.k * 0.14),
+  },
   border: { light: oklchToSrgb(light.border), dark: oklchToSrgb(dark.border) },
   'border-strong': {
     light: oklchToSrgb(light.borderStrong),
@@ -241,6 +248,10 @@ const tokens = {
   'attention-tint': {
     light: oklchToSrgb(light.attention.tint),
     dark: oklchToSrgb(dark.attention.tint),
+  },
+  'attention-tint-hover': {
+    light: mixOklabSrgb(light.attention.fill, light.attention.tint, 0.92),
+    dark: mixOklabSrgb(dark.attention.fill, dark.attention.tint, 0.92),
   },
   link: { light: oklchToSrgb(light.link.fill), dark: oklchToSrgb(dark.link.fill) },
   selection: { light: oklchToSrgb(light.link.tint), dark: oklchToSrgb(dark.link.tint) },

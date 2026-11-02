@@ -63,6 +63,7 @@ CI runs a 30° hue-step grid, a full 360-point sweep runs separately).
 | Accordion   | `<details>/<summary>`                       | `ui-accordion`, `ui-accordion-summary`, `ui-accordion-content`                                      |
 | Alert       | static message container                    | `ui-alert`, `ui-alert-title/body`, `data-variant`                                                   |
 | Badge       | static inline status label                  | `ui-badge`, `data-variant`                                                                          |
+| Chip        | compact interactive pill (Badge colors)     | `ui-chip`, `data-variant`, `data-solid`                                                             |
 | Divider     | `<hr>`                                      | `ui-divider`                                                                                        |
 | Progress    | `<progress>`                                | `ui-progress`                                                                                       |
 | Skeleton    | empty `<span>` placeholder                  | `ui-skeleton`                                                                                       |

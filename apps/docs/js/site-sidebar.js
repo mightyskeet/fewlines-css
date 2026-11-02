@@ -35,6 +35,7 @@ const PAGES = [
   { href: 'pages/typography.html', label: 'Typography', group: 'Foundation' },
   { href: 'pages/divider.html', label: 'Divider', group: 'Foundation' },
   { href: 'pages/button.html', label: 'Button', group: 'Forms' },
+  { href: 'pages/chip.html', label: 'Chip', group: 'Forms' },
   { href: 'pages/choice.html', label: 'Choice', group: 'Forms' },
   { href: 'pages/field.html', label: 'Field', group: 'Forms' },
   { href: 'pages/fieldset.html', label: 'Fieldset', group: 'Forms' },

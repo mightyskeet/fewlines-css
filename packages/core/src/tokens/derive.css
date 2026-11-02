@@ -133,6 +133,22 @@
     )
   );
 
+  /* Inverted fill hover (the neutral-solid chip: the page text as the fill).
+   * The fill walks toward the page surface pole by the brand-hover's
+   * calibrated steps, scaled by the neutral contrast multiplier. */
+  --ui-color-inverse-hover: light-dark(
+    color-mix(
+      in oklab,
+      var(--ui-pl-text-light) calc(100% - var(--ui-base-n-light-contrast) * 30%),
+      var(--ui-pl-surface-light)
+    ),
+    color-mix(
+      in oklab,
+      var(--ui-pl-text-dark) calc(100% - var(--ui-base-n-dark-contrast) * 14%),
+      var(--ui-pl-surface-dark)
+    )
+  );
+
   /* Border — mixes of surface toward text; the boundary step also drives
    * the focus ring (the same step) */
   --ui-pl-border-light: color-mix(
@@ -301,6 +317,14 @@
         calc(0.09 + var(--ui-base-attention-dark-contrast) * (0.033 + 0.12 * l))
         calc(var(--ui-base-attention-dark-contrast) * 0.12 * c) h
     )
+  );
+
+  /* Mirror of the static model: an 8% step of the tint toward the tone
+   * (the pastel chip hover, like brand-tint-hover). */
+  --ui-color-attention-tint-hover: color-mix(
+    in oklab,
+    var(--ui-color-attention) 8%,
+    var(--ui-color-attention-tint)
   );
 
   /* Utilities — link/selection derive from the link seed with the same

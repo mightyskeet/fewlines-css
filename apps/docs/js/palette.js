@@ -34,6 +34,13 @@
       threshold: 60,
       note: "secondary button pastel hover (pastel minimum)"
     },
+    {
+      fg: "attention",
+      bg: "attention-tint-hover",
+      role: "body",
+      threshold: 60,
+      note: "attention chip pastel hover (pastel minimum)"
+    },
     // Attention family (the urgency tone: errors, destructive actions,
     // validation failures — formerly danger). Shape mirrors brand.
     { fg: "attention", bg: "surface", role: "body" },
@@ -80,6 +87,12 @@
     // Neutral solid badge (the brand-independent inverted gray): the page
     // text as the fill, the page surface as the label.
     { fg: "surface", bg: "text", role: "body", note: "neutral-solid badge" },
+    {
+      fg: "surface",
+      bg: "inverse-hover",
+      role: "body",
+      note: "neutral-solid chip hover (the inverted fill toward the surface pole)"
+    },
     // Focus indicator (non-text contrast): the neutral ring.
     { fg: "focus-ring", bg: "surface", role: "nonText" },
     { fg: "focus-ring", bg: "surface-raised", role: "nonText" },

@@ -118,6 +118,18 @@
   initial-value: white;
 }
 
+@property --ui-color-attention-tint-hover {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: white;
+}
+
+@property --ui-color-inverse-hover {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: gray;
+}
+
 @property --ui-color-link {
   syntax: '<color>';
   inherits: true;

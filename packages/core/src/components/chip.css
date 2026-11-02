@@ -1,0 +1,180 @@
+/* Chip component.
+ *
+ * Native basis: <button>, <a> with button semantics, native states —
+ * the Button state model (hover pointer-gated, active excludes disabled,
+ * :focus-visible from the base layer). The color model is Badge's: the
+ * mirrored variant/solid attribute set (pastel tint surfaces, solid fills
+ * of the bare family tones) at pill geometry.
+ *
+ * Canonical structure:
+ *   <button class="ui-chip" type="button">Label</button>
+ *   <a class="ui-chip" href="#">Label</a>
+ *   <button class="ui-chip" type="button" data-variant="attention">Label</button>
+ *
+ * Variants mirror Badge exactly (data-variant + data-solid):
+ *   default (attribute omitted) — brand pastel: brand-tint + brand;
+ *   neutral                     — the gray member of the page gamut;
+ *   attention                   — the urgency family tint;
+ *   data-solid (bare)           — on-brand on brand (the button-default model);
+ *   neutral + solid             — the inverted gray (text fill, surface label);
+ *   attention + solid           — on-attention on attention.
+ *
+ * APCA pairs used (validated in tests/apca):
+ *   default:        brand on brand-tint (pastel minimum, Lc 60)
+ *   neutral pastel: text on surface-tint (body threshold, Lc 75)
+ *   attention pastel: attention on attention-tint (pastel minimum, Lc 60)
+ *   solid:          on-{brand,attention} on the bare tone (body threshold);
+ *     surface on text for the neutral solid (inverted page gamut, body
+ *     threshold)
+ *   hovers: brand-tint-hover / hover / attention-tint-hover (pastel
+ *     minimum), brand-hover / attention-hover / inverse-hover (body)
+ *
+ * Sizes via data-size: sm | lg (default — md, attribute omitted). Heights
+ * match Button xs/sm: sm 1.5rem / md 1.75rem / lg 2rem — an interactive
+ * target meets WCAG 2.5.8 (24px) already at sm. Typography stays at
+ * --ui-font-size-sm on every size (the chip is the small control of the
+ * system, like Badge typography stays put while geometry scales).
+ */
+
+.ui-chip {
+  --ui-chip-fg: var(--ui-color-brand);
+  --ui-chip-bg: var(--ui-color-brand-tint);
+  --ui-chip-hover: var(--ui-color-brand-tint-hover);
+
+  /* UA <button> is border-box, <a> is content-box (the Button note). */
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ui-space-2xs);
+  font: inherit;
+  font-size: var(--ui-font-size-sm);
+  font-weight: var(--ui-font-weight-medium);
+  line-height: var(--ui-line-height-tight);
+
+  /* The 1px transparent border resets the UA button border and keeps the
+   * geometry shared with Button (the filled chip carries no visible
+   * border). */
+  border: 1px solid transparent;
+  border-radius: var(--ui-radius-full);
+
+  /* corner-shape: round overrides the tokens-layer squircle (the Badge
+   * note): at a clamped full radius squircle flattens the stadium sides. */
+  corner-shape: round;
+  color: var(--ui-chip-fg);
+  background: var(--ui-chip-bg);
+  padding-block: var(--ui-space-3xs);
+  padding-inline: var(--ui-space-sm);
+  min-block-size: 1.75rem;
+
+  /* The label never squeezes into a wrapped mess (the Button note). */
+  min-inline-size: fit-content;
+  cursor: pointer;
+  user-select: none;
+  text-decoration: none;
+
+  /* A chip is a short label by contract; multi-line pills are host styling. */
+  white-space: nowrap;
+  transition: background-color var(--ui-duration-fast) ease;
+}
+
+/* Icons auto-size and never intercept the pointer (the Button rule). */
+.ui-chip svg {
+  inline-size: 1rem;
+  block-size: 1rem;
+  flex: none;
+  pointer-events: none;
+}
+
+/* Tint variants (the Badge feedback model). `neutral` is the gray member
+ * of the page gamut (the generic hover fill); `attention` is the urgency
+ * family (its own tint hover). */
+.ui-chip[data-variant='neutral'] {
+  --ui-chip-fg: var(--ui-color-text);
+  --ui-chip-bg: var(--ui-color-surface-tint);
+  --ui-chip-hover: var(--ui-color-hover);
+}
+
+.ui-chip[data-variant='attention'] {
+  --ui-chip-fg: var(--ui-color-attention);
+  --ui-chip-bg: var(--ui-color-attention-tint);
+  --ui-chip-hover: var(--ui-color-attention-tint-hover);
+}
+
+/* Solid model (the Badge solid set): bare `data-solid` = the brand family,
+ * `data-variant="..." data-solid` = the bare family tone as the fill with
+ * on-* text; `neutral` + solid is the inverted gray. Compound selectors
+ * out-specificity the pastel blocks. */
+.ui-chip[data-solid] {
+  --ui-chip-fg: var(--ui-color-on-brand);
+  --ui-chip-bg: var(--ui-color-brand);
+  --ui-chip-hover: var(--ui-color-brand-hover);
+}
+
+.ui-chip[data-variant='neutral'][data-solid] {
+  --ui-chip-fg: var(--ui-color-surface);
+  --ui-chip-bg: var(--ui-color-text);
+  --ui-chip-hover: var(--ui-color-inverse-hover);
+}
+
+.ui-chip[data-variant='attention'][data-solid] {
+  --ui-chip-fg: var(--ui-color-on-attention);
+  --ui-chip-bg: var(--ui-color-attention);
+  --ui-chip-hover: var(--ui-color-attention-hover);
+}
+
+/* Sizes — geometry scales, typography stays at --ui-font-size-sm. Heights
+ * follow Button's small steps (xs 1.5 / sm 1.75rem) plus a 2rem top. */
+.ui-chip[data-size='sm'] {
+  min-block-size: 1.5rem;
+  padding-inline: var(--ui-space-xs);
+}
+
+.ui-chip[data-size='lg'] {
+  min-block-size: 2rem;
+  padding-inline: var(--ui-space-sm);
+}
+
+/* Adjacent chips get a gap automatically (like stacked badges/alerts). */
+.ui-chip + .ui-chip {
+  margin-inline-start: var(--ui-space-2xs);
+}
+
+/* Disabled — native :disabled covers <button>; aria-disabled covers links
+ * (the Button rule, before the press/hover rules). */
+.ui-chip:disabled,
+.ui-chip[aria-disabled='true'] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  translate: none;
+}
+
+/* Press = hover fill + mechanical response (the Button state model). The
+ * per-variant hover fill lives in --ui-chip-hover, so one rule covers all
+ * six variants. Disabled controls are excluded like hover: WebKit matches
+ * :active on disabled buttons (Chromium/Gecko do not). */
+.ui-chip:active:not(:disabled, [aria-disabled='true']) {
+  background: var(--ui-chip-hover);
+  translate: 0 1px;
+}
+
+/* Hover never restyles a disabled control and is pointer-gated (sticky
+ * :hover on touch would latch the highlight). */
+@media (hover: hover) and (pointer: fine) {
+  .ui-chip:hover:not(:disabled, [aria-disabled='true']) {
+    background: var(--ui-chip-hover);
+  }
+}
+
+/* Forced colors: let the system paint the control colors (the Button rule). */
+@media (forced-colors: active) {
+  .ui-chip {
+    forced-color-adjust: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-chip {
+    transition: none;
+  }
+}
