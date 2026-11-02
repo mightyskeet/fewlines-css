@@ -43,7 +43,8 @@
   scroll-padding-block-start: calc(var(--site-header-size) + 0.5rem);
 }
 
-/* Fixed site header across the viewport: brand left, theme toggle right
+/* Fixed site header across the viewport: brand left; GitHub link, theme
+ * toggle and (narrow screens only) the drawer hamburger right
  * (site-sidebar.js). On wide screens the header renders inside the sticky
  * <site-sidebar>, whose stacking context would trap the header at z:auto
  * tree order — later stacking contexts (the timeline marker's z-index
@@ -140,13 +141,29 @@ site-sidebar {
   color: var(--ui-color-text-muted);
 }
 
+/* Mobile navigation drawer: the nav element itself is the drawer host —
+ * site-sidebar.js renders the links a second time with ui-drawer +
+ * popover (top layer, light dismiss, Escape — zero JS). The close button
+ * docks right; the list is vertical, like the grid sidebar on wide
+ * screens. */
+.site-drawer-head {
+  display: flex;
+  justify-content: flex-end;
+  margin-block-end: var(--ui-space-md);
+}
+
+.ui-drawer.site-nav ul {
+  flex-direction: column;
+  flex-wrap: nowrap;
+}
+
 body {
   max-inline-size: 60rem;
   margin-block: 0;
   margin-inline: auto;
   /* Clear the fixed site header. */
   padding-block-start: var(--site-header-size);
-  padding-inline: var(--ui-space-xl);
+  padding-inline: var(--ui-space-lg);
 }
 
 /* Bottom air belongs to the central column, not the body (it would pad
@@ -257,6 +274,28 @@ main > section {
   font-weight: 600;
 }
 
+/* Narrow screens: the header actions collapse to icon squares (the label
+ * spans return on wide screens), the hamburger appears, and the nav moves
+ * into the drawer — the in-flow copy would duplicate it. */
+@media (width < 72rem) {
+  .site-nav-toggle {
+    display: inline-flex;
+  }
+
+  .site-header-end .ui-button:has(.site-button-label) {
+    /* Square geometry around the 1rem mark, like the core icon size. */
+    padding-inline: calc((2.25rem - 1rem) / 2);
+  }
+
+  .site-button-label {
+    display: none;
+  }
+
+  site-sidebar > .site-nav:not(.ui-drawer) {
+    display: none;
+  }
+}
+
 @media (min-width: 72rem) {
   body {
     display: grid;
@@ -264,7 +303,11 @@ main > section {
     gap: 0 var(--ui-space-2xl);
     justify-content: center;
     max-inline-size: none;
-    padding-inline: var(--ui-space-lg);
+  }
+
+  /* The drawer trigger only exists for the narrow layout. */
+  .site-nav-toggle {
+    display: none;
   }
 
   main,
