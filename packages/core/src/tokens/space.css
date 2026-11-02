@@ -1,11 +1,22 @@
-/* Spacing tokens — 4px base scale. */
+/* Spacing tokens — 4px base scale.
+ *
+ * Fluid, proportional: one multiplier --ui-space-scale (0.75 at the narrow
+ * anchor -> 1 at --ui-fluid-vmax) rides the shared --ui-fluid factor from
+ * tokens/typography.css, and every step is a whole multiple of one step —
+ * the scale's ratios hold exactly at any viewport width (the typography
+ * scale anchors its small steps instead because ratios there would dive
+ * below readable sizes; spacing has no such floor). Hosts opt out by
+ * pinning --ui-fluid-vmin = --ui-fluid-vmax or overriding the tokens.
+ */
 :root {
-  --ui-space-3xs: 0.125rem;
-  --ui-space-2xs: 0.25rem;
-  --ui-space-xs: 0.5rem;
-  --ui-space-sm: 0.75rem;
-  --ui-space-md: 1rem;
-  --ui-space-lg: 1.5rem;
-  --ui-space-xl: 2rem;
-  --ui-space-2xl: 3rem;
+  --ui-space-scale: calc(0.75 + var(--ui-fluid) * 0.25);
+  --ui-space-step: calc(0.25rem * var(--ui-space-scale));
+  --ui-space-3xs: calc(0.5 * var(--ui-space-step));
+  --ui-space-2xs: var(--ui-space-step);
+  --ui-space-xs: calc(2 * var(--ui-space-step));
+  --ui-space-sm: calc(3 * var(--ui-space-step));
+  --ui-space-md: calc(4 * var(--ui-space-step));
+  --ui-space-lg: calc(6 * var(--ui-space-step));
+  --ui-space-xl: calc(8 * var(--ui-space-step));
+  --ui-space-2xl: calc(12 * var(--ui-space-step));
 }
