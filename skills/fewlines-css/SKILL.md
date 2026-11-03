@@ -85,6 +85,42 @@ styling from the base layer. No classes needed:
 | Figure caption                         | `<figure>` + `<figcaption>`              |
 | Thematic break                         | `<hr>`                                   |
 | Indexes (formulas, footnotes)          | `<sub>`, `<sup>`                         |
+| Unordered list                         | `<ul>` + `<li>`                          |
+| Ordered list, outline numbering        | `<ol>` + nested `<ol>` (see below)       |
+| Term → description (vertical)          | `<dl>` + `<dt>`/`<dd>`                   |
+| Receipt key/value rows                 | `<dl data-variant="horizontal">` (below) |
+
+List rules (base layer, no classes):
+
+- Indent: `ul` — `--ui-space-lg`, `ol` — `--ui-space-xl` (numbers are
+  narrower than bullets). The UA fixed indents are replaced.
+- Nested `ol` read as hierarchical paths (`2.1.1`) via `counters()`. The
+  top level keeps native markers — `start`/`reversed`/`value` work there
+  but are ignored by counters on nested levels.
+- The numbering system is the host token `--ui-list-counter-style`
+  (a counter-style name: `decimal`, `georgian`, an `@counter-style`). It
+  must stay valid — a garbage value drops the marker.
+- Nested `ol` drop `list-style: none` semantics in WebKit — put the
+  `role="list"` insurance on nested lists that carry meaning (the same
+  contract Timeline/Stepper/Tree follow).
+- `dt` carries the bold weight; `dd` indent is `--ui-space-md`.
+- Receipt variant canonical markup — every pair wrapped in a `<div>`
+  (valid `dl` grouping), one `dt` per group; the key lands on the last
+  value's line, values sit at the value edge:
+
+```html
+<dl data-variant="horizontal">
+  <div>
+    <dt>License</dt>
+    <dd>MIT</dd>
+  </div>
+  <div>
+    <dt>Contacts</dt>
+    <dd>hello@example.com</dd>
+    <dd>+1 555 0100</dd>
+  </div>
+</dl>
+```
 
 ## System rules
 

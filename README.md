@@ -75,7 +75,11 @@ CI runs a 30° hue-step grid, a full 360-point sweep runs separately).
 
 Beyond the components, the base layer styles semantic text elements without
 classes: `code`/`kbd`/`samp`, `pre`, `mark`, `abbr`, links, `blockquote`,
-`hr`, `sub`/`sup`, `::selection`.
+`hr`, `sub`/`sup`, `::selection` — and the semantic lists: `ul`/`ol` ride
+the spacing scale, nested `ol` read as hierarchical paths (`2.1.1`, the
+numbering system is the `--ui-list-counter-style` token), and `dl` has a
+vertical canon plus a receipt variant (`<dl data-variant="horizontal">`,
+div-wrapped pairs) with a dotted leader and values at the value edge.
 
 Canonical markup and live examples: [fewlines-css documentation](https://mightyskeet.github.io/fewlines-css/)
 (sources: `apps/docs/`).
