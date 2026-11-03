@@ -63,7 +63,7 @@ test('receipt dl pins dd to the value column and stacks extra values', async ({ 
   expect(boxes.every((b, i) => i === 0 || b.top > boxes[i - 1].top)).toBe(true);
 });
 
-test('receipt leader is a dotted border-token line', async ({ page }) => {
+test('receipt leader is a dotted border-strong line', async ({ page }) => {
   await page.goto('/pages/lists.html');
   const after = await page
     .locator('dl[data-variant="horizontal"] dt')
@@ -71,4 +71,13 @@ test('receipt leader is a dotted border-token line', async ({ page }) => {
     .evaluate((el) => getComputedStyle(el, '::after'));
   expect(after.content).toBe('""');
   expect(after.borderBlockEndStyle).toBe('dotted');
+  const strong = await page.evaluate(() => {
+    const probe = document.createElement('span');
+    probe.style.color = 'var(--ui-color-border-strong)';
+    document.body.append(probe);
+    const color = getComputedStyle(probe).color;
+    probe.remove();
+    return color;
+  });
+  expect(after.borderBlockEndColor).toBe(strong);
 });
