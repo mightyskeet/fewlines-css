@@ -117,21 +117,35 @@ dd {
 
 /* The receipt form (key ..... value rows) is a data-variant switch on the
  * bare dl — the same data-attribute contract as the component variants,
- * no class. A two-column grid: the key column stretches, dd is pinned to
- * the value column (grid-column: 2) so multiple dd stack under the first;
- * the ::after dotted leader fills the key column and baseline-aligns with
- * the row (an empty flex item's baseline is its bottom margin edge).
- * Canonical pairing is one dd per dt; extra dd pile up in the value
- * column by design. The leader is decorative — a border-strong token
- * line set off from the text by a gap step on both ends, repainted by
- * forced colors natively. */
+ * no class. Canonical markup groups every pair into a <div> (valid HTML:
+ * dl allows div-wrapped dt/dd groups) — the wrapper is the flex line
+ * group: rhythm between groups (dl row gap) and inside a group (none —
+ * the values stack on the plain line rhythm) are set independently.
+ *
+ * The group is a wrapping row-reverse flex on shared baselines: values
+ * are placed before the key (order), so lone values sit on their own
+ * lines at the main-start edge — the inline end — while the key lands on
+ * the LAST value's line (a row-reverse line runs end-to-start), grows
+ * over its free space and leads from the key text to that value: the
+ * receipt-total line of the canonical sketch. Middle values (a dd that is
+ * neither first nor last) take their own full line. The key cannot reach
+ * a value above its line — there is none. Canonical pairing is one dt
+ * per div. The leader is decorative — a border-strong token line,
+ * repainted by forced colors natively. */
 dl[data-variant='horizontal'] {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: var(--ui-space-sm) var(--ui-space-2xs);
+  row-gap: var(--ui-space-sm);
+}
+
+dl[data-variant='horizontal'] > div {
+  display: flex;
+  flex-flow: row-reverse wrap;
+  align-items: baseline;
 }
 
 dl[data-variant='horizontal'] dt {
+  order: 1;
+  flex: 1 1 auto;
   display: flex;
   align-items: baseline;
 }
@@ -140,13 +154,18 @@ dl[data-variant='horizontal'] dt::after {
   content: '';
   flex: 1;
   margin-inline: var(--ui-space-2xs);
-  border-block-end: 1px dotted var(--ui-color-border-strong);
+  border-block-end: 1px dashed var(--ui-color-border-strong);
 }
 
 dl[data-variant='horizontal'] dd {
-  grid-column: 2;
+  display: flex;
+  align-items: baseline;
   margin: 0;
-  text-align: end;
+}
+
+dl[data-variant='horizontal'] dd:not(:first-of-type, :last-of-type) {
+  flex: 1 1 100%;
+  justify-content: flex-end;
 }
 
 /* Canonical heading typography: h1–h6 map onto the fluid scale steps

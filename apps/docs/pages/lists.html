@@ -137,24 +137,32 @@
         <h2>Description list — receipt</h2>
         <div class="example">
           <dl data-variant="horizontal">
-            <dt>License</dt>
-            <dd>MIT</dd>
-            <dt>Runtime</dt>
-            <dd>None</dd>
-            <dt>Contacts</dt>
-            <dd>hello@example.com</dd>
-            <dd>+1 555 0100</dd>
-            <dd>@fewlines</dd>
+            <div>
+              <dt>License</dt>
+              <dd>MIT</dd>
+            </div>
+            <div>
+              <dt>Runtime</dt>
+              <dd>None</dd>
+            </div>
+            <div>
+              <dt>Contacts</dt>
+              <dd>hello@example.com</dd>
+              <dd>+1 555 0100</dd>
+              <dd>@fewlines</dd>
+            </div>
           </dl>
         </div>
         <p>
-          A two-column grid on the bare <code>dl</code>: the key column stretches (<code
-            >minmax(0, 1fr)</code
-          >), the values sit in the second column — <code>dd</code> is pinned there with
-          <code>grid-column: 2</code>, so extra <code>dd</code> stack under the first one. The
-          dotted leader is a <code>::after</code> flex filler on the key — a decorative
-          border-strong line set off from the text by a gap step on both ends, baseline aligned by
-          the flex row. Canonical pairing is one <code>dd</code> per <code>dt</code>.
+          A data-variant switch on the bare <code>dl</code>; every pair is grouped into a
+          <code>&lt;div&gt;</code> (valid HTML — <code>dl</code> allows div-wrapped
+          <code>dt</code>/<code>dd</code> groups), and the group is a wrapping row-reverse flex on
+          shared baselines: rhythm between groups and inside a group is set independently. Values
+          are placed before the key (<code>order</code>), so lone values sit on their own lines at
+          the value edge, and the key lands on the last value's line — the receipt-total row — where
+          it grows and leads to the value with a dashed <code>dt::after</code>. Canonical pairing is
+          one <code>dt</code> per <code>div</code>; the DOM order (and the reading order) stays
+          key-first.
         </p>
       </section>
 

@@ -73,8 +73,9 @@ test('open attribute is the native state (no JS classes)', async ({ page }) => {
   const isOpen = await page.locator('#accordion-first').evaluate((el) => el.open);
   expect(isOpen).toBe(true);
 
-  const contentVisible = await page.locator('#accordion-first .ui-accordion-content').isVisible();
-  expect(contentVisible).toBe(true);
+  // toBeVisible retries through the entry animation (the content box
+  // starts at zero block-size while the grid-rows transition runs).
+  await expect(page.locator('#accordion-first .ui-accordion-content')).toBeVisible();
 });
 
 test('summary is reachable via Tab and exposes disclosure semantics', async ({ page }) => {

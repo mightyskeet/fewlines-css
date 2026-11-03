@@ -42,35 +42,63 @@ test('nested ol renders the counters path, the top level stays native', async ({
   expect(before.position).toBe('absolute');
 });
 
-test('receipt dl pins dd to the value column and stacks extra values', async ({ page }) => {
+test('receipt dl lays groups out and stacks extra values', async ({ page }) => {
   await page.goto('/pages/lists.html');
   const dl = page.locator('dl[data-variant="horizontal"]').first();
 
+  // The dl stacks div-wrapped groups; each group is a wrapping row-reverse
+  // flex row.
   expect(await dl.evaluate((el) => getComputedStyle(el).display)).toBe('grid');
-  expect(await dl.evaluate((el) => getComputedStyle(el).gridTemplateColumns)).toMatch(/^\S+ \S+$/);
+  const group = dl.locator('> div').first();
+  expect(await group.evaluate((el) => getComputedStyle(el).display)).toBe('flex');
+  expect(await group.evaluate((el) => getComputedStyle(el).flexDirection)).toBe('row-reverse');
+  expect(await group.evaluate((el) => getComputedStyle(el).flexWrap)).toBe('wrap');
 
-  const dd = dl.locator('dd').first();
-  expect(await dd.evaluate((el) => getComputedStyle(el).gridColumnStart)).toBe('2');
-  expect(await dd.evaluate((el) => getComputedStyle(el).marginInlineStart)).toBe('0px');
+  // The key is placed after the values (order) and grows over its line's
+  // free space; middle dd take their own full lines, the last value stays
+  // a normal item so the key can share its line.
+  const contactsDt = dl.locator('dt', { hasText: 'Contacts' });
+  expect(await contactsDt.evaluate((el) => getComputedStyle(el).order)).toBe('1');
+  expect(await contactsDt.evaluate((el) => getComputedStyle(el).flexGrow)).toBe('1');
+  const middle = dl.locator('dd', { hasText: '+1 555 0100' });
+  expect(await middle.evaluate((el) => getComputedStyle(el).flexBasis)).toBe('100%');
+  expect(await middle.evaluate((el) => getComputedStyle(el).justifyContent)).toBe('flex-end');
+  const last = dl.locator('dd', { hasText: '@fewlines' });
+  expect(await last.evaluate((el) => getComputedStyle(el).flexBasis)).toBe('auto');
 
-  // Extra values stack in the value column: every dd shares the same
-  // column edge and the tops grow strictly down the list.
-  const boxes = [];
+  // The key sits on the last value's line, below the first one.
+  const hello = dl.locator('dd', { hasText: 'hello@example.com' });
+  expect(await contactsDt.evaluate((el) => el.offsetTop)).toBeGreaterThan(
+    await hello.evaluate((el) => el.offsetTop),
+  );
+
+  // Values stack down the list, tops strictly increasing; every value's
+  // TEXT ends at the same right edge (the receipt edge) — the element
+  // rect of a full-width continuation box is the container edge, so the
+  // text range is what proves the alignment.
+  const edges = [];
+  const tops = [];
   for (const el of await dl.locator('dd').all()) {
-    boxes.push(await el.evaluate((node) => ({ left: node.offsetLeft, top: node.offsetTop })));
+    const box = await el.evaluate((node) => {
+      const range = document.createRange();
+      range.selectNodeContents(node);
+      const text = range.getBoundingClientRect();
+      return { right: Math.round(text.right), top: Math.round(node.offsetTop) };
+    });
+    edges.push(box.right);
+    tops.push(box.top);
   }
-  expect(boxes.every((b) => b.left === boxes[0].left)).toBe(true);
-  expect(boxes.every((b, i) => i === 0 || b.top > boxes[i - 1].top)).toBe(true);
+  expect(edges.every((e) => Math.abs(e - edges[0]) <= 1)).toBe(true);
+  expect(tops.every((t, i) => i === 0 || t > tops[i - 1])).toBe(true);
 });
 
-test('receipt leader is a dotted border-strong line', async ({ page }) => {
+test('receipt leader is a dashed border-strong line reaching the value', async ({ page }) => {
   await page.goto('/pages/lists.html');
-  const after = await page
-    .locator('dl[data-variant="horizontal"] dt')
-    .first()
-    .evaluate((el) => getComputedStyle(el, '::after'));
+  const dt = page.locator('dl[data-variant="horizontal"] dt').first();
+  const after = await dt.evaluate((el) => getComputedStyle(el, '::after'));
   expect(after.content).toBe('""');
-  expect(after.borderBlockEndStyle).toBe('dotted');
+  expect(after.borderBlockEndStyle).toBe('dashed');
+
   const strong = await page.evaluate(() => {
     const probe = document.createElement('span');
     probe.style.color = 'var(--ui-color-border-strong)';
