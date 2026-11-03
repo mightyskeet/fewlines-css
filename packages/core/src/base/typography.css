@@ -50,6 +50,103 @@ li {
   text-wrap: pretty;
 }
 
+/* Lists: one canonical presentation for the semantic list elements — no
+ * classes, hosts style nothing for plain list content.
+ *
+ * Indent: the UA fixed 40px start padding is normalized onto the spacing
+ * scale (--ui-space-lg) so list rhythm rides the fluid space scale with
+ * everything else.
+ *
+ * Markers stay native where no formatting burden is added: ul at every
+ * level and the top level of ol (semantics, start/reversed/value intact).
+ *
+ * Nested ol reads as hierarchical numbering (2.2.1) — the platform's
+ * counters() primitive (direct use: universal; var() substitutes inside
+ * counters() before parsing — probe 2026-11-03, Chromium). Every ol
+ * resets its own counter and every li increments it: a top-level li
+ * increments silently and keeps its native marker, nested lists swap it
+ * for the ::before path. list-style: none on nested lists trips the
+ * WebKit quirk that strips list semantics for assistive tech — hosts put
+ * the role="list" insurance on nested lists that carry meaning (the same
+ * contract the Timeline/Stepper/Tree components follow).
+ *
+ * The number system is host-overridable via --ui-list-counter-style
+ * (tokens/typography.css): a counter-style name (decimal, georgian,
+ * lower-alpha, an @counter-style). The var() fallback covers an unset
+ * token only — a garbage value invalidates content at computed-value
+ * time and the marker disappears.
+ */
+ul,
+ol {
+  padding-inline-start: var(--ui-space-lg);
+}
+
+ol {
+  counter-reset: list;
+}
+
+ol > li {
+  counter-increment: list;
+}
+
+ol ol {
+  list-style: none;
+}
+
+/* The hanging number: an absolutely positioned box anchored so its end
+ * edge sits one gap step before the li content — wider paths (10.10.10.)
+ * grow leftward into the parent gutter instead of pushing or overlapping
+ * the text, and wrapped lines stay level with the first line. Right-edge
+ * anchoring right-aligns the numbers, like the UA marker box. */
+ol ol > li {
+  position: relative;
+}
+
+ol ol > li::before {
+  content: counters(list, '.', var(--ui-list-counter-style, decimal));
+  position: absolute;
+  inset-inline-end: calc(100% + var(--ui-space-2xs));
+}
+
+/* Description list: the vertical form is the canonical presentation —
+ * dt keeps the UA bold weight, the dd indent is normalized from the UA
+ * fixed 40px onto the spacing scale. */
+dd {
+  margin-inline-start: var(--ui-space-md);
+}
+
+/* The receipt form (key ..... value rows) is a data-variant switch on the
+ * bare dl — the same data-attribute contract as the component variants,
+ * no class. A two-column grid: the key column stretches, dd is pinned to
+ * the value column (grid-column: 2) so multiple dd stack under the first;
+ * the ::after dotted leader fills the key column and baseline-aligns with
+ * the row (an empty flex item's baseline is its bottom margin edge).
+ * Canonical pairing is one dd per dt; extra dd pile up in the value
+ * column by design. The leader is decorative — a border-token line,
+ * repainted by forced colors natively. */
+dl[data-variant='horizontal'] {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--ui-space-sm) var(--ui-space-2xs);
+}
+
+dl[data-variant='horizontal'] dt {
+  display: flex;
+  align-items: baseline;
+}
+
+dl[data-variant='horizontal'] dt::after {
+  content: '';
+  flex: 1;
+  border-block-end: 1px dotted var(--ui-color-border);
+}
+
+dl[data-variant='horizontal'] dd {
+  grid-column: 2;
+  margin: 0;
+  text-align: end;
+}
+
 /* Canonical heading typography: h1–h6 map onto the fluid scale steps
  * (tokens/typography.css) with explicit weights and line heights — the
  * canonical mapping lives in. All levels share weight 700;

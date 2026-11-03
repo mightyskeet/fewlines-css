@@ -33,6 +33,7 @@ const PAGES = [
   { href: 'index.html', label: 'Overview' },
   { href: 'pages/colors.html', label: 'Colors', group: 'Foundation' },
   { href: 'pages/typography.html', label: 'Typography', group: 'Foundation' },
+  { href: 'pages/lists.html', label: 'Lists', group: 'Foundation' },
   { href: 'pages/divider.html', label: 'Divider', group: 'Foundation' },
   { href: 'pages/button.html', label: 'Button', group: 'Forms' },
   { href: 'pages/chip.html', label: 'Chip', group: 'Forms' },

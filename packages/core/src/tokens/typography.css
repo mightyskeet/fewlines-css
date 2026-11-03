@@ -62,4 +62,11 @@
   --ui-line-height-normal: 1.5;
   --ui-font-weight-medium: 500;
   --ui-font-weight-bold: 700;
+
+  /* Numbering system of the hierarchical ol markers (base lists):
+   * a <counter-style-name> — a predefined system (decimal, georgian,
+   * lower-alpha, ...) or a host @counter-style. Must be a valid counter
+   * style: a garbage value invalidates the marker content (base
+   * typography.css) — the var() fallback covers an unset token only. */
+  --ui-list-counter-style: decimal;
 }
