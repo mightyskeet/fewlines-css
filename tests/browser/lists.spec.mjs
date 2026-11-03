@@ -17,11 +17,17 @@ const space = (page, token) =>
     return size;
   }, token);
 
-test('list indent follows the spacing scale token', async ({ page }) => {
+test('list indents follow the spacing scale tokens', async ({ page }) => {
   await page.goto('/pages/lists.html');
   const ul = page.locator('.example ul').first();
   expect(await ul.evaluate((el) => getComputedStyle(el).paddingInlineStart)).toBe(
     await space(page, '--ui-space-lg'),
+  );
+  // Numbers are narrower than bullets: the ordered list takes the next
+  // step up.
+  const ol = page.locator('.example ol').first();
+  expect(await ol.evaluate((el) => getComputedStyle(el).paddingInlineStart)).toBe(
+    await space(page, '--ui-space-xl'),
   );
 });
 
@@ -45,6 +51,14 @@ test('nested ol renders the counters path, the top level stays native', async ({
 test('receipt dl lays groups out and stacks extra values', async ({ page }) => {
   await page.goto('/pages/lists.html');
   const dl = page.locator('dl[data-variant="horizontal"]').first();
+
+  // The vertical dt carries the bold weight (the UA renders it normal).
+  const vdt = page.locator('.example dl:not([data-variant]) dt').first();
+  expect(await vdt.evaluate((el) => getComputedStyle(el).fontWeight)).toBe('700');
+  const vdd = page.locator('.example dl:not([data-variant]) dd').first();
+  expect(await vdd.evaluate((el) => getComputedStyle(el).marginInlineStart)).toBe(
+    await space(page, '--ui-space-md'),
+  );
 
   // The dl stacks div-wrapped groups; each group is a wrapping row-reverse
   // flex row.

@@ -54,8 +54,10 @@ li {
  * classes, hosts style nothing for plain list content.
  *
  * Indent: the UA fixed 40px start padding is normalized onto the spacing
- * scale (--ui-space-lg) so list rhythm rides the fluid space scale with
- * everything else.
+ * scale so list rhythm rides the fluid space scale with everything else.
+ * The unordered list takes --ui-space-lg; the ordered list takes the next
+ * step up (--ui-space-xl) — numbers occupy less width than bullets, and
+ * at the same step the marker feels cramped against the text.
  *
  * Markers stay native where no formatting burden is added: ul at every
  * level and the top level of ol (semantics, start/reversed/value intact).
@@ -76,12 +78,12 @@ li {
  * token only — a garbage value invalidates content at computed-value
  * time and the marker disappears.
  */
-ul,
-ol {
+ul {
   padding-inline-start: var(--ui-space-lg);
 }
 
 ol {
+  padding-inline-start: var(--ui-space-xl);
   counter-reset: list;
 }
 
@@ -109,8 +111,13 @@ ol ol > li::before {
 }
 
 /* Description list: the vertical form is the canonical presentation —
- * dt keeps the UA bold weight, the dd indent is normalized from the UA
- * fixed 40px onto the spacing scale. */
+ * the term is the row's heading and carries the bold weight (the UA
+ * stylesheet renders dt at normal weight); the dd indent is normalized
+ * from the UA fixed 40px onto the spacing scale. */
+dt {
+  font-weight: var(--ui-font-weight-bold);
+}
+
 dd {
   margin-inline-start: var(--ui-space-md);
 }
