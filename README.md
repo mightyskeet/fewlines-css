@@ -71,6 +71,7 @@ CI runs a 30° hue-step grid, a full 360-point sweep runs separately).
 | Tabs        | panel switching with the address in the URL | `ui-tabs`, `ui-tab`, `ui-tabs-panel`                                                                |
 | Timeline    | `<ol>` event chronology                     | `ui-timeline`, `ui-timeline-meta`                                                                   |
 | Breadcrumbs | `<nav>` navigation trail                    | `ui-breadcrumbs` (+ Menu popover for the collapsed state)                                           |
+| Pagination  | `<nav>` page sequence                       | `ui-pagination`, `aria-current="page"`                                                              |
 | Table       | `<table>` + `<caption>`                     | `ui-table`, `ui-table-wrap`, `data-zebra`, `data-sticky`, `data-align`                              |
 
 Beyond the components, the base layer styles semantic text elements without

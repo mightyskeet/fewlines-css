@@ -53,6 +53,7 @@ const PAGES = [
   { href: 'pages/timeline.html', label: 'Timeline', group: 'Indicators' },
   { href: 'pages/stepper.html', label: 'Stepper', group: 'Indicators' },
   { href: 'pages/breadcrumbs.html', label: 'Breadcrumbs', group: 'Navigation' },
+  { href: 'pages/pagination.html', label: 'Pagination', group: 'Navigation' },
   { href: 'pages/tabs.html', label: 'Tabs', group: 'Navigation' },
   { href: 'pages/accordion.html', label: 'Accordion', group: 'Navigation' },
   { href: 'pages/tree.html', label: 'Tree', group: 'Navigation' },

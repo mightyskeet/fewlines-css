@@ -1,0 +1,144 @@
+/* Pagination component.
+ *
+ * Native basis: <nav aria-label="Pagination"> with <ul>/<li> and <a href>
+ * links — the WAI-ARIA pagination pattern: the landmark, the list semantics
+ * and the navigation itself come with the elements; the page state lives in
+ * the URL. Zero JS.
+ *
+ * Canonical structure:
+ *   <nav class="ui-pagination" aria-label="Pagination">
+ *     <ul role="list">
+ *       <li><a href="?page=1" rel="prev" aria-label="Previous page">‹</a></li>
+ *       <li><a href="?page=1">1</a></li>
+ *       <li aria-current="page">2</li>
+ *       <li><a href="?page=3">3</a></li>
+ *       <li aria-hidden="true">…</li>
+ *       <li><a href="?page=12">12</a></li>
+ *       <li><a href="?page=3" rel="next" aria-label="Next page">›</a></li>
+ *     </ul>
+ *   </nav>
+ *
+ * role="list" — insurance for the list-style: none quirk (the Timeline
+ * precedent).
+ *
+ * The current page is a non-link `<li aria-current="page">` — a page does
+ * not link to itself (the WAI-ARIA pattern); the native state is announced
+ * by screen readers and painted as the filled pill. Unlike Breadcrumbs/
+ * Stepper there is no `:has()` leg: the state never sits on a child.
+ *
+ * Truncated ranges: the host collapses skipped pages into one
+ * `<li aria-hidden="true">…</li>` — pure punctuation, hidden from assistive
+ * tech (the accessible story is the page sequence itself). A plain-text
+ * `<li>` is also how the host renders an unavailable prev/next (no link, no
+ * current — e.g. the first page has no previous): the ellipsis and the
+ * disabled edges share one muted rule. The host may omit the edge `<li>`
+ * entirely instead; then the row shrinks.
+ *
+ * Geometry: the chip's pill — 1.75rem min box (WCAG 2.5.8 met at the rest
+ * size), stadium radius, sm typography. Page numbers center in the box;
+ * the min sizes keep one-digit entries square while two- and three-digit
+ * ones grow with the padding.
+ *
+ * Row alignment: `align-items: center` — the bare text entries (ellipsis,
+ * disabled edges) center against the pill row.
+ *
+ * Colors via local tokens (host-overridable):
+ *   link      --ui-color-text (the registered body pair on surface);
+ *   hover     --ui-color-hover (the neutral hover fill, chip neutral);
+ *   current   on-brand on brand (the chip solid pair);
+ *   muted     --ui-color-text-muted (the registered fluent pair — the
+ *             Breadcrumbs separator). No new pairs.
+ *
+ * APCA pairs used (validated in tests/apca):
+ *   text/surface (links), hover/surface (hover + pressed),
+ *   on-brand/brand (current), text-muted/surface (muted edges).
+ *
+ * Forced colors: the links and the current pill repaint from the system
+ * palette natively (background/color are forced); the semantics stay with
+ * aria-current. The focus ring follows the base layer contract.
+ *
+ * RTL: all positioning is logical (padding-inline, gap) — the row mirrors
+ * itself.
+ */
+
+.ui-pagination {
+  --ui-pagination-size: 1.75rem;
+  --ui-pagination-gap: var(--ui-space-2xs);
+  --ui-pagination-color: var(--ui-color-text);
+  --ui-pagination-hover: var(--ui-color-hover);
+  --ui-pagination-muted: var(--ui-color-text-muted);
+  --ui-pagination-accent: var(--ui-color-brand);
+  --ui-pagination-on-accent: var(--ui-color-on-brand);
+}
+
+/* The row: a wrapping flex of entries; bare text entries center against
+ * the pills. */
+.ui-pagination ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ui-pagination-gap);
+}
+
+/* The pill box: links and the current page share the geometry (the chip
+ * model at a square-ish minimum). */
+.ui-pagination a,
+.ui-pagination li[aria-current='page'] {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-block-size: var(--ui-pagination-size);
+  min-inline-size: var(--ui-pagination-size);
+  padding-inline: var(--ui-space-xs);
+  border-radius: var(--ui-radius-full);
+
+  /* corner-shape: round overrides the tokens-layer squircle (the Chip
+   * note): at a clamped full radius squircle flattens the stadium. */
+  corner-shape: round;
+  font-size: var(--ui-font-size-sm);
+  font-weight: var(--ui-font-weight-medium);
+  line-height: var(--ui-line-height-tight);
+  color: var(--ui-pagination-color);
+  background: transparent;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background-color var(--ui-duration-fast) ease;
+}
+
+/* Current page: the filled pill (the chip solid model). aria-current
+ * carries the semantics; the fill is the visual state. */
+.ui-pagination li[aria-current='page'] {
+  color: var(--ui-pagination-on-accent);
+  background: var(--ui-pagination-accent);
+}
+
+/* Bare text entries: the ellipsis and the disabled edges (no link, no
+ * current). The link color is set on the links themselves, so this never
+ * restyles a real entry. */
+.ui-pagination li:not([aria-current='page']) {
+  color: var(--ui-pagination-muted);
+}
+
+/* Press = hover fill + mechanical response (the Button state model). */
+.ui-pagination a:active {
+  background: var(--ui-pagination-hover);
+  translate: 0 1px;
+}
+
+/* Hover is pointer-gated (sticky :hover on touch would latch the fill —
+ * the Button/Chip guard). */
+@media (hover: hover) and (pointer: fine) {
+  .ui-pagination a:hover {
+    background: var(--ui-pagination-hover);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-pagination a {
+    transition: none;
+  }
+}

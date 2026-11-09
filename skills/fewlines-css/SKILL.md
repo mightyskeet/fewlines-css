@@ -56,6 +56,7 @@ markup** — never infer the API from an example or a neighboring component:
 | Event chronology                                  | Timeline    | `references/timeline.md`    |
 | Stepwise process progress: done/current/upcoming  | Stepper     | `references/stepper.md`     |
 | Navigation trail to the current page              | Breadcrumbs | `references/breadcrumbs.md` |
+| Page sequence for paged content                   | Pagination  | `references/pagination.md`  |
 | Placeholder for loading content                   | Skeleton    | `references/skeleton.md`    |
 | Panel switching with the address in the URL       | Tabs        | `references/tabs.md`        |
 | Binary on/off toggle: settings, consent           | Switch      | `references/switch.md`      |
@@ -67,7 +68,8 @@ Disambiguation: modal + focus trap → Dialog; light dismiss, non-modal →
 Popover; action list in an overlay → Menu; panel from the viewport edge →
 Drawer; binary toggle → Switch; choice controls → Choice; disclosure →
 Accordion; unobtrusive status message → Alert; compact status/counter →
-Badge; compact interactive control → Chip; tabular data → Table.
+Badge; compact interactive control → Chip; tabular data → Table;
+navigation trail → Breadcrumbs; page sequence → Pagination.
 
 ## Base typography — native elements, no classes
 

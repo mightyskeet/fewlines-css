@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script>
+      try {
+        var t = localStorage.getItem('theme');
+        if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+      } catch (e) {}
+    </script>
+    <script>
+      try {
+        var b = JSON.parse(localStorage.getItem('colors-bases') || 'null');
+        if (b) {
+          var r = document.documentElement,
+            s = r.style;
+          for (var k in b) s.setProperty(k, b[k]);
+          r.setAttribute('data-palette', 'custom');
+        }
+      } catch (e) {}
+    </script>
+    <title>Pagination — fewlines-css</title>
+    <link rel="stylesheet" href="../css/core.css" />
+    <link rel="stylesheet" href="../css/docs.css" />
+    <link rel="stylesheet" href="../css/colors-derive.css" />
+    <script src="../js/site-version.js" defer></script>
+    <script src="../js/site-sidebar.js" defer blocking="render"></script>
+    <script src="../js/site-toc.js" defer blocking="render"></script>
+    <script src="../vendor/hljs.min.js" defer></script>
+    <script src="../js/site-code.js" defer></script>
+  </head>
+  <body>
+    <site-sidebar></site-sidebar>
+
+    <main>
+      <header class="page-header">
+        <h1>Pagination</h1>
+        <p>
+          Page sequence navigation on the native <code>&lt;nav&gt;</code> with links: navigation is
+          native, the page state lives in the URL, the current page is the native
+          <code>aria-current="page"</code> state. No JS.
+        </p>
+      </header>
+
+      <section>
+        <h2>Semantic basis</h2>
+        <p>
+          The component is the WAI-ARIA pagination pattern: a
+          <code>&lt;nav aria-label="Pagination"&gt;</code> landmark with a
+          <code>&lt;ul&gt;</code> of links. Every entry is a real <code>&lt;a href&gt;</code> — the
+          navigation works without JS, and the current page is a non-link
+          <code>&lt;li aria-current="page"&gt;</code> (a page does not link to itself). Not a
+          <a href="breadcrumbs.html">breadcrumb</a> trail and not a
+          <a href="stepper.html">stepper</a>: those carry hierarchy and process progress.
+        </p>
+      </section>
+
+      <section>
+        <h2>Canonical markup</h2>
+        <pre><code>&lt;nav class="ui-pagination" aria-label="Pagination"&gt;
+  &lt;ul role="list"&gt;
+    &lt;li&gt;&lt;a href="?page=1" rel="prev" aria-label="Previous page"&gt;‹&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href="?page=1"&gt;1&lt;/a&gt;&lt;/li&gt;
+    &lt;li aria-current="page"&gt;2&lt;/li&gt;
+    &lt;li&gt;&lt;a href="?page=3"&gt;3&lt;/a&gt;&lt;/li&gt;
+    &lt;li aria-hidden="true"&gt;…&lt;/li&gt;
+    &lt;li&gt;&lt;a href="?page=12"&gt;12&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href="?page=3" rel="next" aria-label="Next page"&gt;›&lt;/a&gt;&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/nav&gt;</code></pre>
+        <p>
+          Edge glyph links must carry <code>aria-label</code> — <code>‹</code>/<code>›</code> are
+          not accessible names. <code>rel="prev"/"next"</code> is part of the canon.
+        </p>
+      </section>
+
+      <section>
+        <h2>States</h2>
+        <div class="example">
+          <nav class="ui-pagination" aria-label="Pagination">
+            <ul role="list">
+              <li><a href="#states" rel="prev" aria-label="Previous page">‹</a></li>
+              <li><a href="#states">1</a></li>
+              <li aria-current="page">2</li>
+              <li><a href="#states">3</a></li>
+              <li><a href="#states">4</a></li>
+              <li aria-hidden="true">…</li>
+              <li><a href="#states">12</a></li>
+              <li><a href="#states" rel="next" aria-label="Next page">›</a></li>
+            </ul>
+          </nav>
+        </div>
+        <p>
+          The current page is the only filled pill and the only non-link — the state is not color
+          alone. Hover fills the pill (pointer-gated), press shifts it 1px, focus takes the base
+          ring.
+        </p>
+      </section>
+
+      <section>
+        <h2>Disabled edges</h2>
+        <div class="example">
+          <nav class="ui-pagination" aria-label="Pagination">
+            <ul role="list">
+              <li>‹</li>
+              <li aria-current="page">1</li>
+              <li><a href="#edges">2</a></li>
+              <li><a href="#edges" rel="next" aria-label="Next page">›</a></li>
+            </ul>
+          </nav>
+        </div>
+        <p>
+          An unavailable edge (no previous page on page 1) renders as bare text in
+          <code>&lt;li&gt;</code> — muted, not focusable, not announced as a control. The host may
+          omit the <code>&lt;li&gt;</code> entirely instead. Skipped ranges collapse into
+          <code>&lt;li aria-hidden="true"&gt;…&lt;/li&gt;</code> — screen readers skip the
+          punctuation, the page sequence stays the story.
+        </p>
+      </section>
+
+      <section>
+        <h2>Customization</h2>
+        <p>
+          No variants — hosts re-theme through the local tokens. Centering the row on the page is
+          host styling (<code>justify-content</code> on the <code>&lt;ul&gt;</code>):
+        </p>
+        <pre><code>.compact-pager {
+  --ui-pagination-size: 1.5rem;
+  --ui-pagination-accent: var(--ui-color-attention);
+  --ui-pagination-on-accent: var(--ui-color-on-attention);
+}</code></pre>
+      </section>
+
+      <section>
+        <h2>Accessibility</h2>
+        <ul>
+          <li>
+            The landmark has a name (<code>aria-label="Pagination"</code> is mandatory); the list
+            roles are native.
+          </li>
+          <li>
+            The current page is the native <code>aria-current="page"</code> state and is not in the
+            tab order.
+          </li>
+          <li>
+            Edge glyph links carry <code>aria-label</code>; the ellipsis is
+            <code>aria-hidden</code>.
+          </li>
+          <li>
+            The pill pairs (<code>text</code>, <code>hover</code>, <code>on-brand</code>,
+            <code>text-muted</code>) are registered in the APCA matrix — no new pairs.
+          </li>
+          <li>Forced colors repaint the pills from the system palette natively.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Do not</h2>
+        <ul>
+          <li>
+            No links on the current page — <code>aria-current="page"</code> sits on the
+            <code>&lt;li&gt;</code>, the entry stays out of the tab order.
+          </li>
+          <li>
+            No <code>&lt;button&gt;</code> or <code>href="#"</code> stubs — entries are real links.
+          </li>
+          <li>
+            No state classes (<code>.is-current</code> and friends) — the native attribute only.
+          </li>
+          <li>No edge glyph links without <code>aria-label</code>.</li>
+        </ul>
+      </section>
+    </main>
+    <site-toc></site-toc>
+
+    <footer></footer>
+  </body>
+</html>
