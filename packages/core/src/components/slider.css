@@ -5,56 +5,73 @@
  * PageUp/PageDown), form participation and :disabled are all native;
  * there is nothing to build and no JS.
  *
- * Canonical structure (the name is the host's duty, like every control):
+ * Canonical structure:
  *   <label for="volume">Volume</label>
- *   <input class="ui-slider" type="range" id="volume" min="0" max="100" value="50" />
+ *   <span class="ui-slider"><input type="range" id="volume" min="0" max="100" value="50" /></span>
  *
- * Engine paint model (the Progress precedent, 2026-10-29): with
- * appearance:none Chromium/WebKit paint the track on
- * ::-webkit-slider-runnable-track and the thumb on ::-webkit-slider-thumb;
- * Firefox — ::-moz-range-track and ::-moz-range-thumb. One canonical look,
- * two engine pseudo targets.
+ * The wrapper is the documented last resort (host decision 2026-11-09):
+ * the value fill must be a real box, and <input> is a void element — it
+ * has no ::before/::after to carry one. The probed no-wrapper
+ * alternatives both fail: the runnable track pseudo cannot be taken over
+ * by position:absolute (the engine's thumb placement breaks — probe
+ * 2026-11-09), and the thumb can only paint beyond its own box through
+ * the border-image slice trick this model replaces. The class stays the
+ * single styling contract; the input is a bare native control inside it.
  *
- * The filled segment RIDES ON THE THUMB (the border-image slice trick of
- * Temani Afif's CSS-only range slider): the thumb's side border slices
- * (1px strips of the source gradient — fill on the inline-start half,
- * track on the inline-end half) are stretched 100vw sideways, and the
- * cross-axis border-image widths (calc(50% − rail/2)) crop both strips to
- * exactly the rail thickness, centered on the thumb. The input's
- * overflow: hidden clips the strips to the element, and its full radius
- * rounds the rail ends. The fill therefore follows the thumb NATIVELY —
- * zero JS, zero host-set value property, no dual source of truth
- * (2026-11-09). The track pseudo stays transparent: it remains the thumb's
- * layout reference only. The gradient directions are physical, so RTL and
- * the vertical orientation redefine the one border-image token — single
- * mirror points (the :dir() precedent of the Field select chevron).
- * In an engine where the trick fails the strips simply do not paint —
- * a uniform track with the thumb carrying the state (graceful).
+ * Value fill — CSS Anchor Positioning (the compatibility-doc policy:
+ * progressive enhancement, `css-anchor-positioning` Chrome 125+, FF 147+,
+ * Safari 26+). The thumb pseudo is the ANCHOR: anchor-name on
+ * ::-webkit-slider-thumb / ::-moz-range-thumb — the engine tracks its own
+ * pseudo natively, the fill follows the thumb with zero JS and no
+ * host-set value property (browser probe 2026-11-09, Chromium). The
+ * wrapper's ::after paints the fill, the ::before the gray rail — the
+ * rail is static and anchor-independent, it paints in every engine.
  *
- * The thumb is the state carrier: a brand ring over a transparent
- * interior (host decision 2026-11-09 — no depth shadow; the strips meet
- * under it). The input box is the hit target: thumb + 2×space-xs covers
- * the minimum target size at every density; the thumb and the rail scale
- * over the space scale (data-size).
+ * The fill's inline-end edge sits at the thumb's CENTER: its rounded cap
+ * (radius-full) is a circle of rail/2 centered half a thumb short of the
+ * thumb's center — strictly inside the opaque thumb circle — the junction
+ * is invisible at every density (sm 2+2≤8, md 4+4≤10, lg 6+6≤12).
+ * Without a resolvable anchor the anchor() inset is invalid at
+ * computed-value time and the ::after collapses to zero size: a uniform
+ * track, the state carried by the thumb (graceful — no @supports gate on
+ * the anchor feature itself). The gate IS needed for anchor-scope
+ * (Chrome 131): with a bare anchor-name the duplicate name resolves to
+ * the first slider in tree order and every fill would track the first
+ * thumb — the compatibility-doc anchor contract.
  *
- * Vertical (data-orientation="vertical"): writing-mode: sideways-lr —
- * min at the bottom, max at the top (browser probe 2026-11-09: the
- * vertical-* modes give min at the TOP in Chromium; see the rule below).
- * Vertically/sideways-oriented form controls: Chrome 132/124, FF 43/120,
- * Safari 18.4/17.4; docs/compatibility.md, 2026-11-09. slider-direction
- * is outside the Can I Use tracking — not used. The rail length is the
- * --ui-slider-length knob: 100% of the container height is not a workable
- * default for a vertical control in flow (percentage heights need a
- * definite container).
+ * RTL needs no mirror: anchor(end) and the logical insets resolve against
+ * the querying element's writing mode — the same declarations serve both
+ * directions (browser probe 2026-11-09, Chromium). The border-image
+ * model's physical gradient mirror is gone.
  *
- * APCA (validated in tests/apca): the thumb ring — brand/surface, the
- * registered Stepper/Avatar pair; the filled segment is border-strong —
- * decorative reinforcement by the border policy (host decision
- * 2026-11-09: no new APCA pairs), the value is carried by the thumb
- * position, not by color alone (WCAG 1.4.1).
+ * The thumb is the state carrier: a SOLID brand circle (host decision
+ * 2026-11-09 — the hollow ring read as a missing fill). The input box is
+ * the hit target: thumb + 2×space-xs covers the minimum target size at
+ * every density; the thumb and the rail scale over the space scale
+ * (data-size).
  *
- * Forced colors: appearance is restored to auto — the system slider takes
- * over (the Progress precedent).
+ * Vertical (data-orientation="vertical" on the wrapper):
+ * writing-mode: sideways-lr on the input — min at the bottom, max at the
+ * top (the mixer convention; browser probe 2026-11-09: the vertical-*
+ * modes give min at the TOP in Chromium). The wrapper keeps the unrotated
+ * axes and carries the geometry: the rail length is the definite
+ * --ui-slider-length block-size (percentage heights need a definite
+ * container), the inline-size is the thickness. The fill swaps to the
+ * block axis: bottom edge pinned, top edge at the thumb's center via
+ * anchor(top) — direction-independent, the vertical/RTL exclusion of the
+ * old model is gone. Vertically/sideways-oriented form controls:
+ * Chrome 132/124, FF 43/120, Safari 18.4/17.4 — docs/compatibility.md,
+ * 2026-11-09. slider-direction is outside the Can I Use tracking — not
+ * used.
+ *
+ * APCA (validated in tests/apca): the thumb is solid brand over the
+ * surface — the registered Stepper/Avatar pair; the filled segment is
+ * border-strong — decorative reinforcement by the border policy (host
+ * decision 2026-11-09: no new APCA pairs), the value is carried by the
+ * thumb position, not by color alone (WCAG 1.4.1).
+ *
+ * Forced colors: appearance is restored to auto and the paint pseudos
+ * step aside — the system slider takes over (the Progress precedent).
  */
 
 .ui-slider {
@@ -67,92 +84,111 @@
   --ui-slider-thumb: 1.25rem;
   --ui-slider-rail: var(--ui-space-xs);
 
-  /* The fill+track paint that rides on the thumb: one border-image
-   * shorthand — source (fill half / track half), slice 0 1 (side slices
-   * only), widths (cross-axis crop to the rail; inline stretch 100vw PLUS
-   * half the thumb — the strips reach the thumb's CENTER and meet under
-   * it, the junction hidden inside the thumb), outset exactly 100vw (the
-   * area the widths need). Redefined for RTL and the vertical orientation
-   * below — the gradient directions are physical. */
-  --ui-slider-fill-image: linear-gradient(
-      90deg,
-      var(--ui-slider-fill) 50%,
-      var(--ui-slider-track) 0
-    )
-    0 1 / calc(50% - var(--ui-slider-rail) / 2) calc(100vw + var(--ui-slider-thumb) / 2) / 0 100vw;
+  display: block;
+  position: relative;
 
+  /* The box is the hit target — and the air around the thumb. Thumb +
+   * 2×space-xs at every density (≥ 24px target size). */
+  block-size: calc(var(--ui-slider-thumb) + 2 * var(--ui-space-xs));
+
+  /* The paint pseudos paint below the input but must stay inside THIS
+   * component's paint: z-index: 0 makes the wrapper its own stacking
+   * context — without it the z-index: -1 pseudos drop into the ancestor
+   * stacking context and slide under host backgrounds. */
+  z-index: 0;
+
+  /* One anchor name per instance: scoped to the wrapper's subtree, several
+   * sliders on a page each track their own thumb (browser probe
+   * 2026-11-09). */
+  anchor-scope: --ui-slider-thumb;
+}
+
+/* The control: the native element, the hit target, fills the wrapper. */
+.ui-slider > input {
   appearance: none;
   box-sizing: border-box;
   display: block;
+  inline-size: 100%;
+  block-size: 100%;
   margin: 0;
   border: none;
   background: transparent;
-
-  /* The box is the hit target — and the air around the thumb: the shared
-   * elevation shadow must fit inside, the overflow clip below would cut
-   * it. Thumb + 2×space-xs at every density (≥ 24px target size). */
-  block-size: calc(var(--ui-slider-thumb) + 2 * var(--ui-space-xs));
-
-  /* The rail fills the container (the Progress width contract). */
-  inline-size: 100%;
-
-  /* Clips the thumb's 100vw fill strips to the element… */
-  overflow: hidden;
-
-  /* …and the full radius rounds the clipped rail ends (corner-shape: round
-   * overrides the tokens-layer squircle — the Switch precedent). */
-  border-radius: var(--ui-radius-full);
-  corner-shape: round;
 }
 
-/* The track: the thumb's layout reference, transparent — the rail paint
- * rides on the thumb's border-image. Rounded ends follow the pill. */
-.ui-slider::-webkit-slider-runnable-track,
-.ui-slider::-moz-range-track {
+/* The track: the thumb's layout reference only — transparent. The rail
+ * paint lives on the wrapper's ::before, the fill on ::after. */
+.ui-slider > input::-webkit-slider-runnable-track,
+.ui-slider > input::-moz-range-track {
   inline-size: 100%;
   block-size: var(--ui-slider-rail);
-  border-radius: var(--ui-radius-full);
   background: transparent;
 }
 
-/* The thumb: a brand ring over a TRANSPARENT interior — the fill and
- * track strips run through it and meet at its center, so the junction is
- * inside the ring (a solid circle would force the strips to stop at its
- * bounding box — the square-end artifact next to the round edge). No
- * depth shadow: the ring carries the thumb against the page.
- * The ring is an OUTLINE with a negative offset — outlines paint after
- * the border-image (element paint order), so the ring stays whole where
- * the strips pass under it; it follows the rounded shape. An inset
- * box-shadow would paint UNDER the border-image and tear the ring open.
+/* Chromium/WebKit only: the runnable track is pinned to the top edge of a
+ * taller box (flex-start) — auto block margins center the track, the rail
+ * hugs the box middle and the thumb with it (Firefox centers the track
+ * itself, auto margins are a no-op there). */
+.ui-slider > input::-webkit-slider-runnable-track {
+  margin-block: auto;
+}
+
+/* The thumb: the SOLID state carrier — a brand circle (host decision
+ * 2026-11-09). No outline ring, no border-image, no depth shadow: the
+ * opaque circle hides the fill's junction (see the header comment).
  * appearance:none on the thumb itself is mandatory: with only the input
  * stripped, the engine keeps its native blue thumb paint (probe
- * 2026-11-09). */
-.ui-slider::-webkit-slider-thumb,
-.ui-slider::-moz-range-thumb {
+ * 2026-11-09). anchor-name turns the pseudo into the fill's anchor. */
+.ui-slider > input::-webkit-slider-thumb,
+.ui-slider > input::-moz-range-thumb {
   appearance: none;
   inline-size: var(--ui-slider-thumb);
   block-size: var(--ui-slider-thumb);
   border: none; /* Firefox paints a UA border on the thumb */
   border-radius: var(--ui-radius-full);
-  background: none;
-  outline: calc(var(--ui-slider-rail) / 2) solid var(--ui-color-brand);
-  outline-offset: calc(var(--ui-slider-rail) / -2);
-  border-image: var(--ui-slider-fill-image);
+  background: var(--ui-color-brand);
+  anchor-name: --ui-slider-thumb;
 }
 
 /* Chromium/WebKit only: the thumb hangs off the top edge of the runnable
  * track — negative half the (rail − thumb) difference centers it on the
  * track (the classic engine recipe; Firefox centers the thumb itself). */
-.ui-slider::-webkit-slider-thumb {
+.ui-slider > input::-webkit-slider-thumb {
   margin-block-start: calc((var(--ui-slider-rail) - var(--ui-slider-thumb)) / 2);
 }
 
-/* Chromium/WebKit only: the runnable track is pinned to the top edge of a
- * taller box (flex-start) — the rail ends up hugging the box top and the
- * thumb with it. Auto block margins center the track in the box; Firefox
- * centers the track itself, auto margins are a no-op there. */
-.ui-slider::-webkit-slider-runnable-track {
-  margin-block: auto;
+/* The gray rail: static paint, anchor-independent — every engine. */
+.ui-slider::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset-inline: 0;
+  inset-block: calc(50% - var(--ui-slider-rail) / 2);
+  border-radius: var(--ui-radius-full);
+  background: var(--ui-slider-track);
+}
+
+/* The value fill: anchored to the thumb. Gated on anchor-scope (Chrome
+ * 131+): older anchor engines would resolve the duplicate name to the
+ * FIRST slider in tree order — every fill tracking the first thumb. */
+@supports (anchor-scope: --ui-slider-thumb) {
+  .ui-slider::after {
+    content: '';
+    position: absolute;
+    z-index: -1;
+
+    /* From the inline-start edge to the thumb's center: the end inset is
+     * the distance from the container's inline-end edge — the thumb's
+     * inline-end edge sits anchor(end) deep, its center half a thumb
+     * further in. Logical keywords resolve against THIS element's writing
+     * mode: RTL needs no mirror (browser probe 2026-11-09). */
+    inset-inline: 0 calc(anchor(--ui-slider-thumb end) + var(--ui-slider-thumb) / 2);
+
+    /* Rail-thick, statically centered — the thumb is statically centered
+     * with it; no anchor needed on this axis. */
+    inset-block: calc(50% - var(--ui-slider-rail) / 2);
+    border-radius: var(--ui-radius-full);
+    background: var(--ui-slider-fill);
+  }
 }
 
 /* Sizes — density: thumb over fixed steps, rail thickness over the space
@@ -167,53 +203,72 @@
   --ui-slider-rail: var(--ui-space-sm);
 }
 
-/* Disabled: the state-model opacity, the platform refuses interaction. */
-.ui-slider:disabled {
+/* Disabled: the state-model opacity on the WRAPPER (the paint pseudos dim
+ * with the control — they are siblings, the input's own opacity would not
+ * reach them), the platform refuses interaction on the input. */
+.ui-slider:has(> input:disabled) {
   opacity: 0.5;
+}
+
+.ui-slider > input:disabled {
   cursor: not-allowed;
 }
 
-/* Vertical: writing-mode rotates the control and the engine pseudo chain
- * with it (logical properties keep working). sideways-lr rotates the value
- * axis bottom-to-top: min at the BOTTOM, max at the top — the mixer
- * convention (browser probe 2026-11-09: both vertical-lr and vertical-rl
- * give min at the TOP in Chromium; sideways-lr — Chrome 132, FF 43,
- * Safari 18.4, floor матрицы выше). The inline axis is now the rail —
- * a definite length instead of the container-filling 100%; the block axis
- * is the thickness. The fill strips swap axes: bottom slice = fill (the
- * gradient runs to top), top slice = track, 100vh inline stretch. */
+/* Vertical: the wrapper keeps the unrotated axes and carries the geometry
+ * — a definite rail length along its block axis (percentage heights need
+ * a definite container) and the thickness along its inline axis; the
+ * rotated input fills it (the orthogonal percentage resolution: the
+ * input's inline size resolves against the wrapper's block size, its
+ * block size against the wrapper's inline size). */
 .ui-slider[data-orientation='vertical'] {
-  writing-mode: sideways-lr;
-  inline-size: var(--ui-slider-length);
-  block-size: calc(var(--ui-slider-thumb) + 2 * var(--ui-space-xs));
-
   --ui-slider-length: 8rem;
 
-  /* The strips reach the thumb center: inline width 100vh + thumb/2,
-   * outset 100vh — see the base token comment. */
-  --ui-slider-fill-image: linear-gradient(0deg, var(--ui-slider-fill) 50%, var(--ui-slider-track) 0)
-    1 0 / calc(100vh + var(--ui-slider-thumb) / 2) calc(50% - var(--ui-slider-rail) / 2) / 100vh 0;
+  block-size: var(--ui-slider-length);
+  inline-size: calc(var(--ui-slider-thumb) + 2 * var(--ui-space-xs));
 }
 
-/* RTL: the value grows toward the inline-end (physically left) — the fill
- * is the right slice. The vertical orientation does not flip with the
- * document direction, so it is excluded here (the :dir() precedent of the
- * Field select chevron). */
-@supports selector(:dir(rtl)) {
-  .ui-slider:dir(rtl):not([data-orientation='vertical']) {
-    --ui-slider-fill-image: linear-gradient(
-        270deg,
-        var(--ui-slider-fill) 50%,
-        var(--ui-slider-track) 0
+.ui-slider[data-orientation='vertical'] > input {
+  /* sideways-lr rotates the value axis bottom-to-top: min at the BOTTOM,
+   * max at the top — the mixer convention (browser probe 2026-11-09:
+   * both vertical-lr and vertical-rl give min at the TOP in Chromium;
+   * sideways-lr — Chrome 132, FF 43, Safari 18.4, floor матрицы выше). */
+  writing-mode: sideways-lr;
+}
+
+/* The rail runs along the block axis now: full length, centered stripe
+ * across the inline (thickness) axis. */
+.ui-slider[data-orientation='vertical']::before {
+  inset-block: 0;
+  inset-inline: calc(50% - var(--ui-slider-rail) / 2);
+  inline-size: var(--ui-slider-rail);
+  block-size: auto;
+}
+
+/* The fill grows from the bottom edge (min end) to the thumb's center:
+ * its top edge is half a rail short of the thumb's top — the rounded cap
+ * nests inside the opaque thumb (see the header comment). anchor(top) is
+ * physical and direction-independent: no vertical/RTL exclusion. */
+@supports (anchor-scope: --ui-slider-thumb) {
+  .ui-slider[data-orientation='vertical']::after {
+    inset-block: calc(
+        anchor(--ui-slider-thumb top) + (var(--ui-slider-thumb) - var(--ui-slider-rail)) / 2
       )
-      0 1 / calc(50% - var(--ui-slider-rail) / 2) calc(100vw + var(--ui-slider-thumb) / 2) / 0 100vw;
+      0;
+    inset-inline: calc(50% - var(--ui-slider-rail) / 2);
+    inline-size: var(--ui-slider-rail);
   }
 }
 
 /* Forced colors: system colors take over — the native slider repaints
- * itself with system colors (guaranteed non-text contrast). */
+ * itself with system colors (guaranteed non-text contrast), the component
+ * paint steps aside. */
 @media (forced-colors: active) {
-  .ui-slider {
+  .ui-slider > input {
     appearance: auto;
+  }
+
+  .ui-slider::before,
+  .ui-slider::after {
+    display: none;
   }
 }

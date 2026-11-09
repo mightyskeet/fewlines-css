@@ -57,95 +57,79 @@
       <section>
         <h2>Canonical markup</h2>
         <pre><code>&lt;label for="volume"&gt;Volume&lt;/label&gt;
-&lt;input class="ui-slider" type="range" id="volume" min="0" max="100" value="50" /&gt;</code></pre>
+&lt;span class="ui-slider"&gt;
+  &lt;input type="range" id="volume" min="0" max="100" value="50" /&gt;
+&lt;/span&gt;</code></pre>
         <p>
           The accessible name is mandatory — a <code>&lt;label&gt;</code> or
-          <code>aria-label</code> (the same host contract as every Field control). The rail fills
-          the container; the box is the hit target and the thumb's air (thumb + 2×
-          <code>space-xs</code> — the elevation shadow fits inside the overflow clip).
+          <code>aria-label</code> (the same host contract as every Field control). The class sits on
+          the wrapper: the value fill must be a real box, and <code>&lt;input&gt;</code> is a void
+          element without <code>::before</code>/<code>::after</code> to carry one — the probed
+          no-wrapper alternatives both fail (the track pseudo breaks the engine's thumb placement;
+          the thumb can only paint beyond its box through the border-image trick). The input stays a
+          bare native control. The rail fills the container; the box is the hit target and the
+          thumb's air (thumb + 2× <code>space-xs</code>).
         </p>
         <div class="example">
           <label for="slider-demo-volume">Volume</label>
-          <input
-            class="ui-slider"
-            type="range"
-            id="slider-demo-volume"
-            min="0"
-            max="100"
-            value="50"
-          />
+          <span class="ui-slider">
+            <input type="range" id="slider-demo-volume" min="0" max="100" value="50" />
+          </span>
         </div>
       </section>
 
       <section>
         <h2>Value fill</h2>
         <p>
-          The filled segment rides on the thumb: its side border slices stretch across the whole
-          rail (<code>100vw</code> + half the thumb) and meet UNDER the thumb — the junction is
-          inside it — while the cross-axis border-image widths crop both strips to exactly the rail
-          thickness. The thumb is a brand ring over a transparent interior, no depth shadow. The
-          input's <code>overflow: hidden</code> clips the strips into the rounded rail. The fill
-          follows the thumb natively — zero JS, no host-set value property, no <code>attr()</code>.
-          In an engine where the border-image trick fails the strips do not paint: a uniform track,
-          the state carried by the thumb.
+          CSS Anchor Positioning (progressive enhancement): the thumb pseudo is the anchor (<code
+            >anchor-name</code
+          >
+          on the engine thumb pseudo — the engine tracks it natively), the wrapper's
+          <code>::after</code> paints the fill from the inline-start edge to the thumb's center, the
+          <code>::before</code> the static gray rail. The fill's rounded cap nests strictly inside
+          the opaque thumb — the junction is invisible. RTL needs no mirror:
+          <code>anchor(end)</code> and the logical insets resolve against the writing mode. Without
+          a resolvable anchor the <code>::after</code> collapses to zero size: a uniform track, the
+          state carried by the thumb. Zero JS, no host-set value property, no <code>attr()</code>.
         </p>
         <div class="example">
-          <input
-            class="ui-slider"
-            type="range"
-            min="0"
-            max="100"
-            value="50"
-            aria-label="Slider with value fill"
-          />
+          <span class="ui-slider">
+            <input type="range" min="0" max="100" value="50" aria-label="Slider with value fill" />
+          </span>
         </div>
       </section>
 
       <section>
         <h2>Vertical</h2>
         <div class="example" style="block-size: 12rem">
-          <input
-            class="ui-slider"
-            type="range"
-            data-orientation="vertical"
-            min="0"
-            max="100"
-            value="70"
-            aria-label="Vertical slider"
-          />
+          <span class="ui-slider" data-orientation="vertical">
+            <input type="range" min="0" max="100" value="70" aria-label="Vertical slider" />
+          </span>
         </div>
         <p>
-          <code>data-orientation="vertical"</code> — <code>writing-mode: sideways-lr</code>: the
-          engine rotates the control and the pseudo chain with it. The minimum is at the bottom, the
-          maximum at the top (the mixer convention; the <code>vertical-lr</code>/
-          <code>vertical-rl</code> modes give min at the top). The rail length is the
-          <code>--ui-slider-length</code> knob (default <code>8rem</code>); the gradient mirrors
-          along the new axis automatically.
+          <code>data-orientation="vertical"</code> on the wrapper —
+          <code>writing-mode: sideways-lr</code> on the input: the engine rotates the control. The
+          minimum is at the bottom, the maximum at the top (the mixer convention; the
+          <code>vertical-lr</code>/ <code>vertical-rl</code> modes give min at the top). The wrapper
+          carries the geometry: a definite rail length along its block axis (the
+          <code>--ui-slider-length</code> knob, default <code>8rem</code>) and the thickness along
+          its inline axis. The fill swaps to the block axis via <code>anchor(top)</code> —
+          direction-independent, no mirror.
         </p>
       </section>
 
       <section>
         <h2>Sizes</h2>
         <div class="example">
-          <input
-            class="ui-slider"
-            type="range"
-            data-size="sm"
-            min="0"
-            max="100"
-            value="40"
-            aria-label="Small"
-          />
-          <input class="ui-slider" type="range" min="0" max="100" value="40" aria-label="Default" />
-          <input
-            class="ui-slider"
-            type="range"
-            data-size="lg"
-            min="0"
-            max="100"
-            value="40"
-            aria-label="Large"
-          />
+          <span class="ui-slider" data-size="sm">
+            <input type="range" min="0" max="100" value="40" aria-label="Small" />
+          </span>
+          <span class="ui-slider">
+            <input type="range" min="0" max="100" value="40" aria-label="Default" />
+          </span>
+          <span class="ui-slider" data-size="lg">
+            <input type="range" min="0" max="100" value="40" aria-label="Large" />
+          </span>
         </div>
         <p>
           <code>data-size="sm|lg"</code>; default is md (no attribute). Density only: the thumb
@@ -174,7 +158,7 @@
             The accessible name is mandatory (<code>&lt;label&gt;</code> / <code>aria-label</code>).
           </li>
           <li>
-            The thumb ring — <code>brand/surface</code>, the registered Stepper/Avatar pair; the
+            The thumb is solid brand over the surface — the registered Stepper/Avatar pair; the
             filled segment is <code>border-strong</code> — decorative reinforcement by the border
             policy (no new APCA pairs).
           </li>
@@ -197,7 +181,7 @@
           <li>No unnamed sliders — the accessible name is part of the contract.</li>
           <li>
             No host-set value property and no runtime JS for the fill — it follows the thumb
-            natively via the border-image trick.
+            natively via CSS Anchor Positioning (the thumb pseudo is the anchor).
           </li>
           <li>
             No <code>datalist</code> tick marks in the contract — the paint is engine-owned and

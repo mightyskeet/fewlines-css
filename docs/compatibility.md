@@ -151,6 +151,30 @@ Safari 26.6–27, iOS Safari 26.6–27, Android Chrome 154 и экосистем
 4. Anchor contract (имена якорей, fallback positions, ограничения collision
    handling) документируется в contract-доке компонента Popover.
 
+**Slider (2026-11-09):** значение-заливка якорится к thumb-псевдоэлементу.
+`anchor-name` на `::-webkit-slider-thumb` / `::-moz-range-thumb` — за
+пределами caniuse-трекинга; проставлено браузерным пробом в Chromium
+(2026-11-09): движок отслеживает собственный псевдоэлемент, заливка едет
+за thumb без JS и без host-set свойства. Отказ без обёртки невозможен
+(`<input>` — void-элемент, `::before/::after` нет; abspos на трек-псевдо
+ломает раскладку thumb — проб 2026-11-09), каноническая разметка —
+обёртка `<span class="ui-slider">` (host decision 2026-11-09, последний
+ресорт). Правила:
+
+5. Имя якоря одно на компонент и скоупится обёрткой
+   (`anchor-scope: --ui-slider-thumb`, Chrome 131/FF 147/Safari 26):
+   дубликаты без скоупа резолвятся к первому элементу в tree order.
+   `::after`-заливка обёрнута в `@supports (anchor-scope: …)` — в
+   anchor-движках 125–130 заливка просто не рисуется.
+6. Fallback без якоря — вырожденный и безопасный без `@supports`:
+   нерезолвленный `anchor()` даёт invalid at computed-value time →
+   `::after` схлопывается в нулевую ширину; рельса (`::before`) и thumb
+   от якоря не зависят и рисуются во всех движках.
+7. Логические стороны `anchor(end)`/`anchor(top)` резолвятся против
+   writing mode запрашивающего элемента — RTL-зеркало не требуется
+   (проб 2026-11-09, Chromium; в FF/Safari не проверено — заявлять
+   зеркало нельзя, fallback вырожденный).
+
 ### `accent-color` — partial в Safari
 
 Safari 15.4–26.1 не поддерживает минимальный контраст акцентного контрола
