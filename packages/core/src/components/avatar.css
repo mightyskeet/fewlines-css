@@ -1,0 +1,132 @@
+/* Avatar component.
+ *
+ * Native basis: the platform has no native avatar element. The semantic
+ * layer is host-owned: the <img> carries its own alt (the accessible name);
+ * a decorative image uses alt="" and the host labels the container (or the
+ * surrounding text names the person). Core adds no JS, no states.
+ *
+ * Canonical structure:
+ *   <span class="ui-avatar"><img src="…" alt="A. Candidate" /></span>
+ *
+ * The container is a <span> (inline, no role, no focus): the circle is
+ * presentation. object-fit: cover crops any source ratio into the circle
+ * (Can I Use: baseline — Chrome 32, FF 36, Safari 10;
+ * docs/compatibility.md, 2026-11-09). The image rounds itself
+ * (border-radius: inherit) instead of clipping on the container — the
+ * status dot must be able to sit on the circle edge. The surface-tint
+ * background shows through while the image loads and behind broken
+ * images; a fallback CONTENT (initials) is host styling — the container
+ * centers whatever it holds.
+ *
+ * Status dot: data-status="online|away|busy" — a ::after indicator whose
+ * center lands on the circle edge (diagonal geometry, the inset token
+ * below). Colors map to the existing families (the system deliberately
+ * has no success family, docs/theme.md): online — brand, away —
+ * text-muted, busy — attention. Presence must not rely on color alone
+ * (WCAG 1.4.1): the host conveys it with text or the img alt / aria-label;
+ * the dot is decorative.
+ *
+ * Group: .ui-avatar-group — a flex row where adjacent avatars stack with
+ * a negative margin-inline-start; inside the group every avatar wears a
+ * page-surface ring (border) so the overlap reads as separate circles.
+ *
+ * Sizes via data-size: sm | lg (default — md, attribute omitted), straight
+ * from the fluid space scale: sm = lg step, md = xl step, lg = 2xl step.
+ * The host resizes declaratively by overriding --ui-avatar-size.
+ *
+ * APCA pairs used (validated in tests/apca):
+ *   online dot: brand/surface (nonText) — the Stepper marker pair;
+ *   busy dot:   attention/surface (nonText) — the spellcheck pair;
+ *   away dot:   text-muted/surface (nonText).
+ * The ring is the page surface — decorative separation, no pair.
+ *
+ * Forced colors: the dot fill is a background — stripped to the system
+ * canvas; the ring border is repainted CanvasText so the indicator keeps
+ * a visible boundary (the Stepper precedent). The group ring is a border —
+ * repainted by the system natively.
+ */
+
+.ui-avatar {
+  --ui-avatar-size: var(--ui-space-xl);
+  --ui-avatar-ring: var(--ui-color-surface);
+  --ui-avatar-dot: var(--ui-color-brand);
+
+  position: relative;
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  inline-size: var(--ui-avatar-size);
+  block-size: var(--ui-avatar-size);
+  border-radius: var(--ui-radius-full);
+
+  /* corner-shape: round overrides the tokens-layer squircle (Badge
+   * precedent): at a clamped full radius squircle flattens the circle. */
+  corner-shape: round;
+  background: var(--ui-color-surface-tint);
+}
+
+.ui-avatar img {
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+  border-radius: inherit;
+}
+
+/* Sizes from the fluid space scale; md (no attribute) is the xl step. */
+.ui-avatar[data-size='sm'] {
+  --ui-avatar-size: var(--ui-space-lg);
+}
+
+.ui-avatar[data-size='lg'] {
+  --ui-avatar-size: var(--ui-space-2xl);
+}
+
+/* Status dot: centered on the circle edge — the corner sits at
+ * (1/√2)·R from the center, the edge at R, so the per-axis inset is
+ * R·(1 − 1/√2) ≈ 0.1464 of the size. The dot is fully inside the square
+ * box (no clipping), the surface ring separates it from the image. */
+.ui-avatar[data-status]::after {
+  content: '';
+  position: absolute;
+  inset-block-end: calc(var(--ui-avatar-size) * 0.1464);
+  inset-inline-end: calc(var(--ui-avatar-size) * 0.1464);
+  box-sizing: border-box;
+  inline-size: calc(var(--ui-avatar-size) / 4);
+  block-size: calc(var(--ui-avatar-size) / 4);
+  border: var(--ui-space-3xs) solid var(--ui-avatar-ring);
+  border-radius: var(--ui-radius-full);
+  corner-shape: round;
+  background: var(--ui-avatar-dot);
+}
+
+.ui-avatar[data-status='away'] {
+  --ui-avatar-dot: var(--ui-color-text-muted);
+}
+
+.ui-avatar[data-status='busy'] {
+  --ui-avatar-dot: var(--ui-color-attention);
+}
+
+/* Group: adjacent avatars stack (the negative margin mirrors in RTL with
+ * the logical property); the page-surface ring keeps the overlap legible. */
+.ui-avatar-group {
+  display: flex;
+  align-items: center;
+}
+
+.ui-avatar-group .ui-avatar {
+  border: var(--ui-space-3xs) solid var(--ui-avatar-ring);
+}
+
+.ui-avatar-group .ui-avatar + .ui-avatar {
+  margin-inline-start: calc(var(--ui-space-2xs) * -1);
+}
+
+/* Forced colors: the dot keeps a visible boundary (Stepper precedent). */
+@media (forced-colors: active) {
+  .ui-avatar[data-status]::after {
+    border-color: CanvasText;
+  }
+}

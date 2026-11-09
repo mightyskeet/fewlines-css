@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script>
+      try {
+        var t = localStorage.getItem('theme');
+        if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+      } catch (e) {}
+    </script>
+    <script>
+      try {
+        var b = JSON.parse(localStorage.getItem('colors-bases') || 'null');
+        if (b) {
+          var r = document.documentElement,
+            s = r.style;
+          for (var k in b) s.setProperty(k, b[k]);
+          r.setAttribute('data-palette', 'custom');
+        }
+      } catch (e) {}
+    </script>
+    <title>Avatar — fewlines-css</title>
+    <link rel="stylesheet" href="../css/core.css" />
+    <link rel="stylesheet" href="../css/docs.css" />
+    <link rel="stylesheet" href="../css/colors-derive.css" />
+    <script src="../js/site-version.js" defer></script>
+    <script src="../js/site-sidebar.js" defer blocking="render"></script>
+    <script src="../js/site-toc.js" defer blocking="render"></script>
+    <script src="../vendor/hljs.min.js" defer></script>
+    <script src="../js/site-code.js" defer></script>
+  </head>
+  <body>
+    <site-sidebar></site-sidebar>
+
+    <main>
+      <header class="page-header">
+        <h1>Avatar</h1>
+        <p>
+          Person/entity identity: photos with an optional presence dot, stacked groups. Static
+          inline element — no states, no JS.
+        </p>
+      </header>
+
+      <section>
+        <h2>Semantic basis</h2>
+        <p>
+          The platform has no native avatar element, so the component is a static
+          <code>&lt;span&gt;</code> and adds no JS: no role, no focus, no hover. The identity lives
+          in the image's <code>alt</code> — that is the accessible name; a decorative image uses
+          <code>alt=""</code> and the host names the person in surrounding text.
+        </p>
+      </section>
+
+      <section>
+        <h2>Canonical markup</h2>
+        <pre><code>&lt;span class="ui-avatar"&gt;&lt;img src="ada.jpg" alt="Ada Lovelace" /&gt;&lt;/span&gt;</code></pre>
+        <p>
+          <code>object-fit: cover</code> crops any source ratio into the circle — the avatar keeps
+          its token square. The image rounds itself (<code>border-radius: inherit</code>), not the
+          container: <code>overflow: hidden</code> would clip the status dot that sits on the circle
+          edge. The <code>surface-tint</code> background shows through while the image loads; a
+          fallback with initials is host styling — the container centers whatever it holds.
+        </p>
+      </section>
+
+      <section>
+        <h2>Status dot</h2>
+        <div class="example">
+          <span class="ui-avatar"><img src="../img/avatar.svg" alt="Ada Lovelace" /></span>
+          <span class="ui-avatar" data-status="online"
+            ><img src="../img/avatar.svg" alt="Ada Lovelace (online)"
+          /></span>
+          <span class="ui-avatar" data-status="away"
+            ><img src="../img/avatar.svg" alt="Ada Lovelace (away)"
+          /></span>
+          <span class="ui-avatar" data-status="busy"
+            ><img src="../img/avatar.svg" alt="Ada Lovelace (busy)"
+          /></span>
+        </div>
+        <p>
+          <code>data-status="online|away|busy"</code> — a dot whose center sits on the circle edge,
+          separated from the image by a page-surface ring. Colors map to the existing families:
+          <code>online</code> — <code>brand</code>, <code>away</code> — <code>text-muted</code>,
+          <code>busy</code> — <code>attention</code> (the system deliberately has no success
+          family). Presence must not rely on color alone (WCAG 1.4.1): the host states it in the
+          accessible name or surrounding text; the dot is decorative.
+        </p>
+      </section>
+
+      <section>
+        <h2>Sizes</h2>
+        <div class="example">
+          <span class="ui-avatar" data-size="sm"
+            ><img src="../img/avatar.svg" alt="Small avatar"
+          /></span>
+          <span class="ui-avatar"><img src="../img/avatar.svg" alt="Medium avatar" /></span>
+          <span class="ui-avatar" data-size="lg"
+            ><img src="../img/avatar.svg" alt="Large avatar"
+          /></span>
+        </div>
+        <p>
+          <code>data-size="sm|lg"</code>; default is md (no attribute). Sizes come straight from the
+          fluid space scale: sm = <code>--ui-space-lg</code>, md = <code>--ui-space-xl</code>, lg =
+          <code>--ui-space-2xl</code>. The host resizes declaratively by overriding
+          <code>--ui-avatar-size</code> on any scope — the dot scales with it.
+        </p>
+      </section>
+
+      <section>
+        <h2>Group</h2>
+        <div class="example">
+          <span class="ui-avatar-group">
+            <span class="ui-avatar" data-size="sm"
+              ><img src="../img/avatar.svg" alt="Grace Hopper"
+            /></span>
+            <span class="ui-avatar" data-size="sm"
+              ><img src="../img/avatar.svg" alt="Alan Turing"
+            /></span>
+            <span class="ui-avatar" data-size="sm"
+              ><img src="../img/avatar.svg" alt="Katherine Johnson"
+            /></span>
+            <span class="ui-avatar" data-size="sm"
+              ><img src="../img/avatar.svg" alt="Edsger Dijkstra"
+            /></span>
+          </span>
+        </div>
+        <p>
+          Adjacent avatars stack via a negative <code>margin-inline-start</code> (mirrors in RTL);
+          inside the group every avatar wears a page-surface ring so the overlap reads as separate
+          circles. The group's accessible semantics are the host's — e.g. an
+          <code>aria-label</code> naming the people.
+        </p>
+      </section>
+
+      <section>
+        <h2>Accessibility</h2>
+        <ul>
+          <li>
+            Avatar is a generic inline element: no interactive role, not focusable, no states.
+          </li>
+          <li>
+            The accessible name comes from the <code>&lt;img&gt;</code> <code>alt</code> — name the
+            person, not the file.
+          </li>
+          <li>
+            Color is never the only presence signal (WCAG 1.4.1); the dot pairs are validated at the
+            non-text threshold (WCAG 1.4.11) in both themes.
+          </li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Do not</h2>
+        <ul>
+          <li>
+            No interactive avatars — a <code>&lt;button&gt;</code> or <code>&lt;a&gt;</code> styled
+            as <code>ui-avatar</code> is out of contract; wrap the avatar in a host link instead.
+          </li>
+          <li>
+            No <code>overflow: hidden</code> on the container — the status dot must reach the circle
+            edge; the image rounds itself.
+          </li>
+          <li>
+            No variant classes — shape and color vocabulary is only <code>data-status</code> and
+            <code>data-size</code>.
+          </li>
+          <li>
+            No widgets inside — badges, chips and counters are siblings of the avatar, not children.
+          </li>
+        </ul>
+      </section>
+    </main>
+    <site-toc></site-toc>
+
+    <footer></footer>
+  </body>
+</html>

@@ -48,6 +48,7 @@ const PAGES = [
   { href: 'pages/tooltip.html', label: 'Tooltip', group: 'Overlays' },
   { href: 'pages/alert.html', label: 'Alert', group: 'Indicators' },
   { href: 'pages/badge.html', label: 'Badge', group: 'Indicators' },
+  { href: 'pages/avatar.html', label: 'Avatar', group: 'Indicators' },
   { href: 'pages/skeleton.html', label: 'Skeleton', group: 'Indicators' },
   { href: 'pages/progress.html', label: 'Progress', group: 'Indicators' },
   { href: 'pages/timeline.html', label: 'Timeline', group: 'Indicators' },

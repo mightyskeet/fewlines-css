@@ -122,6 +122,11 @@ export const tokenPairs = [
   // the done disc and the current ring/dot on the page surface.
   { fg: 'brand', bg: 'surface', role: 'nonText', note: 'stepper state markers' },
 
+  // Avatar: the status dot is a non-text presence indicator (WCAG 1.4.11)
+  // on the page surface; brand and attention pairs exist above (Stepper,
+  // spellcheck) — the away dot adds the muted pair.
+  { fg: 'text-muted', bg: 'surface', role: 'nonText', note: 'avatar away dot' },
+
   // Utility roles. Link: hyperlink text on the page and raised surfaces.
   // Selection: the tint under the author text color (the same soft-surface
   // pair the neutral Alert uses).

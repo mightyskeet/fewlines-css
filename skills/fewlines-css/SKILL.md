@@ -50,6 +50,7 @@ markup** — never infer the API from an example or a neighboring component:
 | Disclosure block: FAQ, settings                   | Accordion   | `references/accordion.md`   |
 | Feedback message: status, result, error           | Alert       | `references/alert.md`       |
 | Status label / counter                            | Badge       | `references/badge.md`       |
+| Person/entity identity: photo, presence, group    | Avatar      | `references/avatar.md`      |
 | Compact interactive control: filters, tag actions | Chip        | `references/chip.md`        |
 | Section separator                                 | Divider     | `references/divider.md`     |
 | Operation progress: loading, processing           | Progress    | `references/progress.md`    |
@@ -68,8 +69,9 @@ Disambiguation: modal + focus trap → Dialog; light dismiss, non-modal →
 Popover; action list in an overlay → Menu; panel from the viewport edge →
 Drawer; binary toggle → Switch; choice controls → Choice; disclosure →
 Accordion; unobtrusive status message → Alert; compact status/counter →
-Badge; compact interactive control → Chip; tabular data → Table;
-navigation trail → Breadcrumbs; page sequence → Pagination.
+Badge; person identity/presence → Avatar; compact interactive control →
+Chip; tabular data → Table; navigation trail → Breadcrumbs; page sequence →
+Pagination.
 
 ## Base typography — native elements, no classes
 
