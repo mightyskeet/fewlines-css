@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script>
+      try {
+        var t = localStorage.getItem('theme');
+        if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+      } catch (e) {}
+    </script>
+    <script>
+      try {
+        var b = JSON.parse(localStorage.getItem('colors-bases') || 'null');
+        if (b) {
+          var r = document.documentElement,
+            s = r.style;
+          for (var k in b) s.setProperty(k, b[k]);
+          r.setAttribute('data-palette', 'custom');
+        }
+      } catch (e) {}
+    </script>
+    <title>Slider — fewlines-css</title>
+    <link rel="stylesheet" href="../css/core.css" />
+    <link rel="stylesheet" href="../css/docs.css" />
+    <link rel="stylesheet" href="../css/colors-derive.css" />
+    <script src="../js/site-version.js" defer></script>
+    <script src="../js/site-sidebar.js" defer blocking="render"></script>
+    <script src="../js/site-toc.js" defer blocking="render"></script>
+    <script src="../vendor/hljs.min.js" defer></script>
+    <script src="../js/site-code.js" defer></script>
+  </head>
+  <body>
+    <site-sidebar></site-sidebar>
+
+    <main>
+      <header class="page-header">
+        <h1>Slider</h1>
+        <p>
+          Value selection on a bounded scale on the native <code>&lt;input type="range"&gt;</code>:
+          the slider role, keyboard and form participation come with the element. No JS.
+        </p>
+      </header>
+
+      <section>
+        <h2>Semantic basis</h2>
+        <p>
+          The component is the native range control: the <code>min</code>/<code>max</code>/
+          <code>step</code>/<code>value</code> model, the <code>slider</code> role, native keyboard
+          (arrows, <kbd>Home</kbd>/<kbd>End</kbd>, <kbd>PageUp</kbd>/<kbd>PageDown</kbd>) and
+          <code>:disabled</code> belong to the element. The component only themes the paint: track
+          and thumb through the engine pseudo-elements (the documented Progress paint model) — no
+          state machine.
+        </p>
+      </section>
+
+      <section>
+        <h2>Canonical markup</h2>
+        <pre><code>&lt;label for="volume"&gt;Volume&lt;/label&gt;
+&lt;input class="ui-slider" type="range" id="volume" min="0" max="100" value="50" /&gt;</code></pre>
+        <p>
+          The accessible name is mandatory — a <code>&lt;label&gt;</code> or
+          <code>aria-label</code> (the same host contract as every Field control). The rail fills
+          the container; the box is the hit target — 24px at every density (minimum target size).
+        </p>
+        <div class="example">
+          <label for="slider-demo-volume">Volume</label>
+          <input
+            class="ui-slider"
+            type="range"
+            id="slider-demo-volume"
+            min="0"
+            max="100"
+            value="50"
+          />
+        </div>
+      </section>
+
+      <section>
+        <h2>Value fill (opt-in)</h2>
+        <pre><code>&lt;input class="ui-slider" type="range" min="0" max="100" value="50"
+       style="--ui-slider-value: 50" aria-label="Volume"&gt;</code></pre>
+        <p>
+          The filled segment is painted by one gradient token on the track pseudo of both engines
+          (Firefox's <code>::-moz-range-progress</code> is deliberately not used). CSS cannot read
+          the <code>value</code> attribute and runtime JS is out of contract, so the host sets
+          <code>--ui-slider-value</code> (0–100) next to the attributes — the dual source of truth
+          of the Progress circle: the attributes drive the accessibility tree, the property drives
+          the paint. Without the property the track stays uniform — the state is carried by the
+          thumb, the contract does not break. Hosts with a JS layer sync the property on
+          <code>input</code> — one line.
+        </p>
+        <div class="example">
+          <input
+            class="ui-slider"
+            type="range"
+            min="0"
+            max="100"
+            value="50"
+            style="--ui-slider-value: 50"
+            aria-label="Slider with value fill"
+          />
+        </div>
+      </section>
+
+      <section>
+        <h2>Vertical</h2>
+        <div class="example" style="align-items: stretch; block-size: 12rem">
+          <input
+            class="ui-slider"
+            type="range"
+            data-orientation="vertical"
+            min="0"
+            max="100"
+            value="70"
+            style="--ui-slider-value: 70"
+            aria-label="Vertical slider"
+          />
+        </div>
+        <p>
+          <code>data-orientation="vertical"</code> — <code>writing-mode: sideways-lr</code>: the
+          engine rotates the control and the pseudo chain with it. The minimum is at the bottom, the
+          maximum at the top (the mixer convention; the <code>vertical-lr</code>/
+          <code>vertical-rl</code> modes give min at the top). The rail length is the
+          <code>--ui-slider-length</code> knob (default <code>8rem</code>); the gradient mirrors
+          along the new axis automatically.
+        </p>
+      </section>
+
+      <section>
+        <h2>Sizes</h2>
+        <div class="example">
+          <input
+            class="ui-slider"
+            type="range"
+            data-size="sm"
+            min="0"
+            max="100"
+            value="40"
+            style="--ui-slider-value: 40"
+            aria-label="Small"
+          />
+          <input
+            class="ui-slider"
+            type="range"
+            min="0"
+            max="100"
+            value="40"
+            style="--ui-slider-value: 40"
+            aria-label="Default"
+          />
+          <input
+            class="ui-slider"
+            type="range"
+            data-size="lg"
+            min="0"
+            max="100"
+            value="40"
+            style="--ui-slider-value: 40"
+            aria-label="Large"
+          />
+        </div>
+        <p>
+          <code>data-size="sm|lg"</code>; default is md (no attribute). Density only: the thumb
+          scales in fixed steps (16 / 20 / 24px), the rail thickness over the space scale (4 / 8 /
+          12px) — the Progress density model. The hit target stays 24px at every density.
+        </p>
+      </section>
+
+      <section>
+        <h2>Customization</h2>
+        <p>
+          The fill follows the brand family by default; the track is the de-emphasised soft surface
+          (the Progress model). Hosts re-theme through the local tokens — no variants, no classes:
+        </p>
+        <pre><code>.volume-warning {
+  --ui-slider-fill: var(--ui-color-attention);
+}</code></pre>
+      </section>
+
+      <section>
+        <h2>Accessibility</h2>
+        <ul>
+          <li>The <code>slider</code> role, keyboard and form semantics are native.</li>
+          <li>
+            The accessible name is mandatory (<code>&lt;label&gt;</code> / <code>aria-label</code>).
+          </li>
+          <li>
+            The fill/track pair is registered in the APCA matrix as a non-text pair (<code
+              >brand/surface-tint</code
+            >
+            — the Progress pair); the thumb is the Switch thumb model (surface + shared elevation).
+          </li>
+          <li>The value is conveyed by the thumb position, not by color alone (WCAG 1.4.1).</li>
+          <li>
+            Forced colors restore the native <code>appearance</code> — the system slider takes over
+            with guaranteed system contrast.
+          </li>
+          <li>Reduced motion — not required, there are no animations.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Do not</h2>
+        <ul>
+          <li>
+            No <code>div</code>-based widget instead of <code>&lt;input type="range"&gt;</code> —
+            the role, the keyboard and the form semantics come with the element.
+          </li>
+          <li>No unnamed sliders — the accessible name is part of the contract.</li>
+          <li>
+            Do not set <code>--ui-slider-value</code> beyond 0–100 — the paint does not clamp; the
+            host clamps it.
+          </li>
+          <li>
+            No <code>datalist</code> tick marks in the contract — the paint is engine-owned and
+            ticks are not themed cross-engine.
+          </li>
+        </ul>
+      </section>
+    </main>
+    <site-toc></site-toc>
+
+    <footer></footer>
+  </body>
+</html>

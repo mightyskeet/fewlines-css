@@ -144,6 +144,7 @@
 
 .ui-avatar-group .ui-avatar {
   --ui-avatar-ring-width: var(--ui-space-3xs);
+
   border: var(--ui-avatar-ring-width) solid var(--ui-avatar-ring);
 }
 

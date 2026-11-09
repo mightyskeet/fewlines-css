@@ -41,6 +41,7 @@ const PAGES = [
   { href: 'pages/field.html', label: 'Field', group: 'Forms' },
   { href: 'pages/fieldset.html', label: 'Fieldset', group: 'Forms' },
   { href: 'pages/switch.html', label: 'Switch', group: 'Forms' },
+  { href: 'pages/slider.html', label: 'Slider', group: 'Forms' },
   { href: 'pages/dialog.html', label: 'Dialog', group: 'Overlays' },
   { href: 'pages/popover.html', label: 'Popover', group: 'Overlays' },
   { href: 'pages/menu.html', label: 'Menu', group: 'Overlays' },
