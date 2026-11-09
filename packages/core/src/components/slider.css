@@ -44,11 +44,13 @@
  * directions (browser probe 2026-11-09, Chromium). The border-image
  * model's physical gradient mirror is gone.
  *
- * The thumb is the state carrier: a SOLID brand circle (host decision
- * 2026-11-09 — the hollow ring read as a missing fill). The input box is
- * the hit target: thumb + 2×space-xs covers the minimum target size at
- * every density; the thumb and the rail scale over the space scale
- * (data-size).
+ * The thumb is the state carrier: a brand ring over an OPAQUE surface
+ * interior (host decision 2026-11-09, revision 2 — the solid brand dot
+ * read as heavy, the first hollow ring read as a missing fill because
+ * the strips showed through; the opaque surface closes that). The input
+ * box is the hit target: thumb + 2×space-xs covers the minimum target
+ * size at every density; the thumb and the rail scale over the space
+ * scale (data-size).
  *
  * Vertical (data-orientation="vertical" on the wrapper):
  * writing-mode: sideways-lr on the input — min at the bottom, max at the
@@ -64,11 +66,12 @@
  * 2026-11-09. slider-direction is outside the Can I Use tracking — not
  * used.
  *
- * APCA (validated in tests/apca): the thumb is solid brand over the
- * surface — the registered Stepper/Avatar pair; the filled segment is
- * border-strong — decorative reinforcement by the border policy (host
- * decision 2026-11-09: no new APCA pairs), the value is carried by the
- * thumb position, not by color alone (WCAG 1.4.1).
+ * APCA (validated in tests/apca): the fill is brand/surface-tint — the
+ * REGISTERED Progress pair (nonText); the thumb ring is brand/surface —
+ * the registered Stepper/Avatar pair (nonText, added to the registry
+ * 2026-11-09 — the component comments claimed it, the matrix entry was
+ * missing). The value is carried by the thumb position, not by color
+ * alone (WCAG 1.4.1); the fill stays decorative reinforcement.
  *
  * Forced colors: appearance is restored to auto and the paint pseudos
  * step aside — the system slider takes over (the Progress precedent).
@@ -76,10 +79,11 @@
 
 .ui-slider {
   /* Local knobs — the host customization points (same model as Progress).
-   * The fill default is border-strong (host decision 2026-11-09): the
-   * filled segment is decorative reinforcement — the state is carried by
-   * the thumb (WCAG 1.4.1), the border-family tone needs no APCA pair. */
-  --ui-slider-fill: var(--ui-color-border-strong);
+   * The fill default is brand (host decision 2026-11-09, revision 2): the
+   * filled segment joins the REGISTERED Progress pair brand/surface-tint
+   * (nonText, tests/apca) — the state is carried by the thumb position
+   * (WCAG 1.4.1), the fill stays decorative reinforcement. */
+  --ui-slider-fill: var(--ui-color-brand);
   --ui-slider-track: var(--ui-color-surface-tint);
   --ui-slider-thumb: 1.25rem;
   --ui-slider-rail: var(--ui-space-xs);
@@ -132,20 +136,29 @@
   margin-block: auto;
 }
 
-/* The thumb: the SOLID state carrier — a brand circle (host decision
- * 2026-11-09). No outline ring, no border-image, no depth shadow: the
- * opaque circle hides the fill's junction (see the header comment).
+/* The thumb: the state carrier — a brand ring over an OPAQUE surface
+ * interior (host decision 2026-11-09, revision 2 — the solid brand dot
+ * read as heavy; the earlier hollow ring read as a missing fill because
+ * the strips showed through: the opaque surface closes that). The border
+ * IS the ring — the fill no longer paints on the thumb, no outline
+ * offset gymnastics; box-sizing keeps the diameter at --ui-slider-thumb
+ * over the density-scaled ring thickness (rail/2). The opaque interior
+ * hides the fill's junction (see the header comment). No depth shadow.
  * appearance:none on the thumb itself is mandatory: with only the input
  * stripped, the engine keeps its native blue thumb paint (probe
- * 2026-11-09). anchor-name turns the pseudo into the fill's anchor. */
+ * 2026-11-09). anchor-name turns the pseudo into the fill's anchor.
+ * corner-shape: round overrides the tokens-layer squircle — at a clamped
+ * full radius the squircle flattens the circle (the Switch precedent). */
 .ui-slider > input::-webkit-slider-thumb,
 .ui-slider > input::-moz-range-thumb {
   appearance: none;
+  box-sizing: border-box;
   inline-size: var(--ui-slider-thumb);
   block-size: var(--ui-slider-thumb);
-  border: none; /* Firefox paints a UA border on the thumb */
+  border: calc(var(--ui-slider-rail) / 2) solid var(--ui-color-brand);
   border-radius: var(--ui-radius-full);
-  background: var(--ui-color-brand);
+  corner-shape: round;
+  background: var(--ui-color-surface);
   anchor-name: --ui-slider-thumb;
 }
 
@@ -156,7 +169,9 @@
   margin-block-start: calc((var(--ui-slider-rail) - var(--ui-slider-thumb)) / 2);
 }
 
-/* The gray rail: static paint, anchor-independent — every engine. */
+/* The gray rail: static paint, anchor-independent — every engine.
+ * corner-shape: round overrides the tokens-layer squircle: at a clamped
+ * full radius the squircle flattens the pill ends (the Switch precedent). */
 .ui-slider::before {
   content: '';
   position: absolute;
@@ -164,6 +179,7 @@
   inset-inline: 0;
   inset-block: calc(50% - var(--ui-slider-rail) / 2);
   border-radius: var(--ui-radius-full);
+  corner-shape: round;
   background: var(--ui-slider-track);
 }
 
@@ -187,6 +203,7 @@
      * with it; no anchor needed on this axis. */
     inset-block: calc(50% - var(--ui-slider-rail) / 2);
     border-radius: var(--ui-radius-full);
+    corner-shape: round;
     background: var(--ui-slider-fill);
   }
 }

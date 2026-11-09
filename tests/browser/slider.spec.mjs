@@ -105,7 +105,7 @@ test('track wiring: transparent reference track (CSSOM)', async ({ page, browser
   expect(['none', 'initial', '']).toContain(rule.backgroundImage);
 });
 
-test('thumb wiring: solid brand, anchor carrier (CSSOM)', async ({ page }) => {
+test('thumb wiring: brand ring over surface, anchor carrier (CSSOM)', async ({ page }) => {
   const css = await page.evaluate(() => {
     const walk = (rules, acc) => {
       for (const rule of rules) {
@@ -123,12 +123,16 @@ test('thumb wiring: solid brand, anchor carrier (CSSOM)', async ({ page }) => {
     return acc.join('\n');
   });
 
-  // The solid state carrier: brand background, no border-image, no ring,
-  // no depth shadow. anchor-name turns the pseudo into the fill's anchor.
-  // (CSSOM expands `border: none` into longhands — `border-image: none`
-  // is the reset, the absence of a paint source is what is asserted.)
-  expect(css).toContain('background: var(--ui-color-brand)');
+  // The state carrier: a brand ring over an opaque surface interior (the
+  // border IS the ring — no border-image, no outline, no depth shadow).
+  // anchor-name turns the pseudo into the fill's anchor.
+  // (CSSOM expands `border: none`-style resets into longhands — the paint
+  // shorthand is what is asserted.)
+  expect(css).toContain('background: var(--ui-color-surface)');
+  expect(css).toContain('solid var(--ui-color-brand)');
   expect(css).toContain('anchor-name: --ui-slider-thumb');
+  expect(css).toContain('corner-shape: round');
+  expect(css).toContain('box-sizing: border-box');
   expect(css).not.toContain('border-image: var');
   expect(css).not.toContain('border-image: linear-gradient');
   expect(css).not.toContain('outline:');
@@ -144,18 +148,20 @@ test('painted track and thumb (Firefox ::-moz-range-*)', async ({ page, browserN
   const styles = await page.locator('#slider-filled').evaluate((el) => ({
     track: getComputedStyle(el, '::-moz-range-track').backgroundImage,
     thumbFillImage: getComputedStyle(el, '::-moz-range-thumb').borderImageSource,
-    thumbFill: getComputedStyle(el, '::-moz-range-thumb').backgroundColor,
+    thumbInterior: getComputedStyle(el, '::-moz-range-thumb').backgroundColor,
+    thumbRing: getComputedStyle(el, '::-moz-range-thumb').borderTopColor,
     thumbRadius: getComputedStyle(el, '::-moz-range-thumb').borderRadius,
     thumbSize: getComputedStyle(el, '::-moz-range-thumb').inlineSize,
   }));
 
   // The rail paint lives on the wrapper's ::before — the track stays
-  // transparent; the thumb is the solid brand circle.
+  // transparent; the thumb is the brand ring over the opaque surface.
   expect(styles.track).toBe('none');
   expect(styles.thumbFillImage).toBe('none');
-  expect(styles.thumbFill).toBe(await token(page, '--ui-color-brand'));
+  expect(styles.thumbInterior).toBe(await token(page, '--ui-color-surface'));
+  expect(styles.thumbRing).toBe(await token(page, '--ui-color-brand'));
   expect(styles.thumbRadius).not.toBe('0px');
-  expect(styles.thumbSize).toBe('20px'); // md thumb: 1.25rem
+  expect(styles.thumbSize).toBe('20px'); // md thumb: 1.25rem (border-box)
 });
 
 test('the fill anchors to the thumb (CSSOM)', async ({ page }) => {
@@ -184,13 +190,17 @@ test('the fill anchors to the thumb (CSSOM)', async ({ page }) => {
   // Lightning CSS may keep the merged shorthand — the inline-start leg of
   // it is the 0.
   expect(css).toMatch(/inset-inline:(\s*0 calc)|inset-inline-start:\s*0/);
-  // The gray rail is the static ::before — anchor-independent.
-  const rail = await page.locator('#slider-default').evaluate((el) => {
-    const s = getComputedStyle(el.parentElement, '::before');
-    return { paint: s.backgroundColor, radius: s.borderRadius };
+  // The gray rail is the static ::before — anchor-independent; the fill
+  // is the brand pair (the registered Progress nonText pair).
+  const paint = await page.locator('#slider-default').evaluate((el) => {
+    const w = el.parentElement;
+    return {
+      rail: getComputedStyle(w, '::before').backgroundColor,
+      fill: getComputedStyle(w, '::after').backgroundColor,
+    };
   });
-  expect(rail.paint).toBe(await token(page, '--ui-color-surface-tint'));
-  expect(rail.radius).not.toBe('0px');
+  expect(paint.rail).toBe(await token(page, '--ui-color-surface-tint'));
+  expect(paint.fill).toBe(await token(page, '--ui-color-brand'));
 });
 
 test('the fill follows the thumb (Chromium probe)', async ({ page, browserName }) => {

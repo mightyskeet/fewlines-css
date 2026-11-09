@@ -30,9 +30,11 @@ JS.
   Safari 18.4/17.4 — `docs/compatibility.md`, 2026-11-09.
   `slider-direction` is outside the Can I Use tracking — not used.
 - Theming: `light-dark()` in the semantic tokens the paint consumes.
-- The thumb is a SOLID brand circle (host decision 2026-11-09 — the
-  earlier hollow ring read as a missing fill): the opaque circle hides the
-  fill's junction under it. No depth shadow.
+- The thumb is a brand RING over an OPAQUE surface interior (host
+  decision 2026-11-09, revision 2 — the solid brand dot read as heavy,
+  the first hollow ring read as a missing fill because the strips showed
+  through; the opaque surface closes that). The border is the ring; the
+  opaque interior hides the fill's junction under it. No depth shadow.
 
 ## Canonical markup
 
@@ -98,13 +100,13 @@ the space scale (sm `--ui-space-2xs`, md `--ui-space-xs`, lg
 
 ### Customization (local tokens)
 
-| Token                | Default                    | Meaning               |
-| -------------------- | -------------------------- | --------------------- |
-| `--ui-slider-fill`   | `--ui-color-border-strong` | Fill color.           |
-| `--ui-slider-track`  | `--ui-color-surface-tint`  | Track color.          |
-| `--ui-slider-thumb`  | per `data-size`            | Thumb diameter.       |
-| `--ui-slider-rail`   | per `data-size`            | Rail thickness.       |
-| `--ui-slider-length` | `8rem`                     | Vertical rail length. |
+| Token                | Default                   | Meaning               |
+| -------------------- | ------------------------- | --------------------- |
+| `--ui-slider-fill`   | `--ui-color-brand`        | Fill color.           |
+| `--ui-slider-track`  | `--ui-color-surface-tint` | Track color.          |
+| `--ui-slider-thumb`  | per `data-size`           | Thumb diameter.       |
+| `--ui-slider-rail`   | per `data-size`           | Rail thickness.       |
+| `--ui-slider-length` | `8rem`                    | Vertical rail length. |
 
 Hosts override with semantic tokens, not classes; color semantics are
 solved by overriding `--ui-slider-fill` in place (on the wrapper — the
@@ -122,11 +124,11 @@ position carries the state.
 
 - Native `slider` role, native keyboard, native form semantics.
 - A name is mandatory (`label`/`aria-label`).
-- The thumb is solid brand over the surface — the registered
-  Stepper/Avatar pair. The filled segment is `border-strong` — decorative
-  reinforcement by the border policy (host decision 2026-11-09: no new
-  APCA pairs); the state is carried by the thumb position, not by color
-  alone (WCAG 1.4.1).
+- The fill is brand/surface-tint — the registered Progress pair
+  (nonText, tests/apca); the thumb ring is brand/surface — the
+  registered Stepper/Avatar pair. The state is carried by the thumb
+  position, not by color alone (WCAG 1.4.1); the fill stays decorative
+  reinforcement.
 - The value is conveyed by the thumb position, not by color alone
   (WCAG 1.4.1).
 - Forced colors: `appearance` returns to `auto`, the paint pseudos step
