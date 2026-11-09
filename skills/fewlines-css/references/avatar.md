@@ -44,19 +44,27 @@ interactive. No JS.
 ## Status dot
 
 `data-status` renders a `::after` indicator at the inline-end/block-end
-corner; its center sits exactly on the circle edge (diagonal geometry).
+corner; its center sits exactly on the image-circle edge. The inset is
+derived from the diagonal geometry — `(size/2 − ring)·(1 − cos(45°)) −
+dot/2` (the sin/cos precedent: Progress circle), not a magic number;
+plain absolute positioning — the dot is a child pseudo-element, anchor
+positioning binds cross-element pairs and stays partial in the matrix.
+The dot is a third of the avatar size (scales with `--ui-avatar-size`);
+its own page-surface ring separates it from the image and the page.
 Colors map to the existing families — the system deliberately has no
 success family (`docs/theme.md`):
 
-| Attribute              | Meaning                 | Token                   |
-| ---------------------- | ----------------------- | ----------------------- |
-| `data-status="online"` | available               | `--ui-color-brand`      |
-| `data-status="away"`   | inactive / idle         | `--ui-color-text-muted` |
-| `data-status="busy"`   | do not disturb / urgent | `--ui-color-attention`  |
-| _(no attribute)_       | no dot                  | —                       |
+| Attribute              | Meaning                 | Token                      |
+| ---------------------- | ----------------------- | -------------------------- |
+| `data-status="online"` | available               | `--ui-color-brand`         |
+| `data-status="away"`   | inactive / idle — gray  | `--ui-color-border-strong` |
+| `data-status="busy"`   | do not disturb / urgent | `--ui-color-attention`     |
+| _(no attribute)_       | no dot                  | —                          |
 
 Presence must not rely on color alone (WCAG 1.4.1): the host conveys the
-state with text or the accessible name; the dot is decorative. An unknown
+state with text or the accessible name; the dot is decorative. `away` is
+the gray member (`border-strong` — the Timeline marker tone;
+`text-muted` is too dark at dot sizes). An unknown
 value renders the online (brand) dot.
 
 ## Group
@@ -86,7 +94,7 @@ the fluid space scale (scale 1: sm 24px, md 32px, lg 48px):
 | lg           | `data-size="lg"` | `--ui-space-2xl` |
 
 The host resizes declaratively by overriding `--ui-avatar-size` on any
-scope; the dot scales with it (a quarter of the size).
+scope; the dot scales with it (a third of the size).
 
 ## States
 
@@ -101,8 +109,8 @@ No states (static container). Differences only via `data-status` and
 - WCAG 1.4.1 (Use of Color): presence is never color-only — the host states
   it in text or the name.
 - The dot pairs are validated at the non-text threshold (WCAG 1.4.11):
-  brand/surface (the Stepper pair), attention/surface (the spellcheck pair),
-  text-muted/surface.
+  brand/surface (the Stepper pair), attention/surface (the spellcheck
+  pair), border-strong/surface (the Timeline marker pair).
 - reduced motion — not required, there are no animations.
 
 ## Do not

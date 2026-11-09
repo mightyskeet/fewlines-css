@@ -64,16 +64,35 @@ test('sizes scale monotonically (sm < md < lg)', async ({ page }) => {
 test('status dots map to their family tokens', async ({ page }) => {
   const cases = [
     { id: 'avatar-online', tokenName: '--ui-color-brand' },
-    { id: 'avatar-away', tokenName: '--ui-color-text-muted' },
+    { id: 'avatar-away', tokenName: '--ui-color-border-strong' },
     { id: 'avatar-busy', tokenName: '--ui-color-attention' },
   ];
   for (const { id, tokenName } of cases) {
-    const dot = await page.locator(`#${id}`).evaluate((el) => {
+    const box = await page.locator(`#${id}`).evaluate((el) => {
       const s = getComputedStyle(el, '::after');
-      return { content: s.content, background: s.backgroundColor };
+      const rect = el.getBoundingClientRect();
+      // Dot center on the circle edge: the diagonal offset (the cos(45deg)
+      // formula) puts the center exactly at R = size/2 from the box center.
+      const dotLeft = parseFloat(s.insetInlineEnd);
+      const dotBottom = parseFloat(s.insetBlockEnd);
+      const dotSize = parseFloat(s.inlineSize);
+      const centerOffset = Math.hypot(
+        rect.width / 2 - dotLeft - dotSize / 2,
+        rect.height / 2 - dotBottom - dotSize / 2,
+      );
+      return {
+        content: s.content,
+        background: s.backgroundColor,
+        dotSize,
+        centerOffset,
+      };
     });
-    expect(dot.content, id).toBe('""');
-    expect(dot.background, id).toBe(await token(page, tokenName));
+    expect(box.content, id).toBe('""');
+    expect(box.background, id).toBe(await token(page, tokenName));
+    // A third of the avatar size.
+    expect(box.dotSize, id).toBeCloseTo(32 / 3, 0);
+    // Center lands on the circle edge.
+    expect(box.centerOffset, id).toBeCloseTo(16, 0);
   }
 });
 
