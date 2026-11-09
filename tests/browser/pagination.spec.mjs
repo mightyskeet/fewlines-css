@@ -185,6 +185,31 @@ test('edge links carry rel and an accessible name; the landmark is named', async
   await expect(page.locator('#pagination-default')).toHaveAttribute('aria-label', 'Pagination');
 });
 
+test('edge glyphs are lifted optically, the pill does not grow', async ({ page }) => {
+  // The sm size is a fluid token — the expectation is measured, not
+  // hardcoded (the Breadcrumbs cap precedent).
+  const smPx = () =>
+    page.evaluate(() => {
+      const probe = document.createElement('div');
+      probe.style.cssText = 'position:absolute;visibility:hidden;font-size:var(--ui-font-size-sm);';
+      document.body.append(probe);
+      const px = parseFloat(getComputedStyle(probe).fontSize);
+      probe.remove();
+      return px;
+    });
+
+  const fontSizeOf = (id) =>
+    page.locator(id).evaluate((el) => parseFloat(getComputedStyle(el).fontSize));
+
+  const sm = await smPx();
+  // The edge glyph rides 1.25 × the sm size (the lift token).
+  expect(await fontSizeOf('#pagination-prev')).toBeCloseTo(sm * 1.25, 1);
+  // A middle page link stays at the sm size.
+  expect(await fontSizeOf('#pagination-page1')).toBeCloseTo(sm, 1);
+  // The disabled edge lifts the same way.
+  expect(await fontSizeOf('#pagination-disabled-prev')).toBeCloseTo(sm * 1.25, 1);
+});
+
 test('keyboard: links take the base focus ring', async ({ page }) => {
   await page.locator('#pagination-prev').focus();
   await page.keyboard.press('Tab'); // page 1

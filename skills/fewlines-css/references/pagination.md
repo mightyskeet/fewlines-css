@@ -46,7 +46,7 @@ Skipped pages collapse into one `<li aria-hidden="true">…</li>` — pure punct
 
 ## Variants and sizes
 
-- No attribute variants (`data-variant`/`data-size` do not exist). Geometry lives in local tokens: `--ui-pagination-size` (default `1.75rem` — WCAG 2.5.8 met at rest), `--ui-pagination-gap` (default `--ui-space-2xs`), `--ui-pagination-color` (default `text`), `--ui-pagination-hover` (default `hover`), `--ui-pagination-muted` (default `text-muted`), `--ui-pagination-accent` (default `brand`), `--ui-pagination-on-accent` (default `on-brand`).
+- No attribute variants (`data-variant`/`data-size` do not exist). Geometry lives in local tokens: `--ui-pagination-size` (default `1.75rem` — WCAG 2.5.8 met at rest), `--ui-pagination-gap` (default `--ui-space-2xs`), `--ui-pagination-glyph-scale` (default `1.25` — the optical lift of the edge chevrons; edges are the first/last `<li>` of the canon), `--ui-pagination-color` (default `text`), `--ui-pagination-hover` (default `hover`), `--ui-pagination-muted` (default `text-muted`), `--ui-pagination-accent` (default `brand`), `--ui-pagination-on-accent` (default `on-brand`).
 - Row alignment/centering on the page is host styling (`justify-content` on the `<ul>`).
 
 ## States

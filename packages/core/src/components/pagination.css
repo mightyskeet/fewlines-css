@@ -46,6 +46,12 @@
  * Row alignment: `align-items: center` — the bare text entries (ellipsis,
  * disabled edges) center against the pill row.
  *
+ * Edge glyphs (‹/›) are optically smaller than digits at the same size —
+ * the edge controls lift them by `--ui-pagination-glyph-scale` (the pill
+ * box does not grow). The edges are the first/last `<li>` in the canon, so
+ * the lift is structural and covers both the links and the disabled
+ * button; the SVG-icon edge (host-authored) rides the same rule.
+ *
  * Colors via local tokens (host-overridable):
  *   link      --ui-color-text (the registered body pair on surface);
  *   hover     --ui-color-hover (the neutral hover fill, chip neutral);
@@ -69,6 +75,7 @@
 .ui-pagination {
   --ui-pagination-size: 1.75rem;
   --ui-pagination-gap: var(--ui-space-2xs);
+  --ui-pagination-glyph-scale: 1.25;
   --ui-pagination-color: var(--ui-color-text);
   --ui-pagination-hover: var(--ui-color-hover);
   --ui-pagination-muted: var(--ui-color-text-muted);
@@ -130,6 +137,13 @@
  * a real entry. */
 .ui-pagination li:not([aria-current='page']) {
   color: var(--ui-pagination-muted);
+}
+
+/* Edge glyph lift: ‹/› sit low in their em box and read smaller than the
+ * digits — the edge controls get a scaled glyph in the same pill. */
+.ui-pagination li:first-child :is(a, button),
+.ui-pagination li:last-child :is(a, button) {
+  font-size: calc(var(--ui-font-size-sm) * var(--ui-pagination-glyph-scale));
 }
 
 /* The disabled edge: muted, mechanical cursor (the Chip disabled model).
