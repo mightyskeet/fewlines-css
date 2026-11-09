@@ -31,10 +31,11 @@
  * In an engine where the trick fails the strips simply do not paint —
  * a uniform track with the thumb carrying the state (graceful).
  *
- * The thumb is the state carrier: a surface circle with the shared
- * elevation (the Switch thumb model). The input box is the hit target:
- * 1.5rem (24px) covers the minimum target size at every density; the
- * thumb and the rail scale over the space scale (data-size).
+ * The thumb is the state carrier: a brand ring over a transparent
+ * interior (host decision 2026-11-09 — no depth shadow; the strips meet
+ * under it). The input box is the hit target: thumb + 2×space-xs covers
+ * the minimum target size at every density; the thumb and the rail scale
+ * over the space scale (data-size).
  *
  * Vertical (data-orientation="vertical"): writing-mode: sideways-lr —
  * min at the bottom, max at the top (browser probe 2026-11-09: the
@@ -46,36 +47,39 @@
  * default for a vertical control in flow (percentage heights need a
  * definite container).
  *
- * APCA pair used (validated in tests/apca): fill/track — brand/surface-tint
- * (nonText), the Progress pair; the thumb is the Switch thumb model —
- * surface on the fill, separated by the elevation (manual audit, Switch
- * precedent); the value is carried by the thumb position, not by color
- * alone (WCAG 1.4.1).
+ * APCA (validated in tests/apca): the thumb ring — brand/surface, the
+ * registered Stepper/Avatar pair; the filled segment is border-strong —
+ * decorative reinforcement by the border policy (host decision
+ * 2026-11-09: no new APCA pairs), the value is carried by the thumb
+ * position, not by color alone (WCAG 1.4.1).
  *
  * Forced colors: appearance is restored to auto — the system slider takes
  * over (the Progress precedent).
  */
 
 .ui-slider {
-  /* Local knobs — the host customization points (same model as Progress). */
-  --ui-slider-fill: var(--ui-color-brand);
+  /* Local knobs — the host customization points (same model as Progress).
+   * The fill default is border-strong (host decision 2026-11-09): the
+   * filled segment is decorative reinforcement — the state is carried by
+   * the thumb (WCAG 1.4.1), the border-family tone needs no APCA pair. */
+  --ui-slider-fill: var(--ui-color-border-strong);
   --ui-slider-track: var(--ui-color-surface-tint);
   --ui-slider-thumb: 1.25rem;
   --ui-slider-rail: var(--ui-space-xs);
 
   /* The fill+track paint that rides on the thumb: one border-image
    * shorthand — source (fill half / track half), slice 0 1 (side slices
-   * only), widths (cross-axis crop to the rail, 100vw inline stretch),
-   * outset exactly 100vw: the strips run CONTINUOUSLY from the thumb's
-   * edges — one solid strip under the thumb, no cutout. Redefined for RTL
-   * and the vertical orientation below — the gradient directions are
-   * physical. */
+   * only), widths (cross-axis crop to the rail; inline stretch 100vw PLUS
+   * half the thumb — the strips reach the thumb's CENTER and meet under
+   * it, the junction hidden inside the thumb), outset exactly 100vw (the
+   * area the widths need). Redefined for RTL and the vertical orientation
+   * below — the gradient directions are physical. */
   --ui-slider-fill-image: linear-gradient(
       90deg,
       var(--ui-slider-fill) 50%,
       var(--ui-slider-track) 0
     )
-    0 1 / calc(50% - var(--ui-slider-rail) / 2) 100vw / 0 100vw;
+    0 1 / calc(50% - var(--ui-slider-rail) / 2) calc(100vw + var(--ui-slider-thumb) / 2) / 0 100vw;
 
   appearance: none;
   box-sizing: border-box;
@@ -111,8 +115,15 @@
   background: transparent;
 }
 
-/* The thumb: surface circle with the shared elevation (the Switch thumb
- * model), carrying the fill strips on its border-image.
+/* The thumb: a brand ring over a TRANSPARENT interior — the fill and
+ * track strips run through it and meet at its center, so the junction is
+ * inside the ring (a solid circle would force the strips to stop at its
+ * bounding box — the square-end artifact next to the round edge). No
+ * depth shadow: the ring carries the thumb against the page.
+ * The ring is an OUTLINE with a negative offset — outlines paint after
+ * the border-image (element paint order), so the ring stays whole where
+ * the strips pass under it; it follows the rounded shape. An inset
+ * box-shadow would paint UNDER the border-image and tear the ring open.
  * appearance:none on the thumb itself is mandatory: with only the input
  * stripped, the engine keeps its native blue thumb paint (probe
  * 2026-11-09). */
@@ -123,8 +134,9 @@
   block-size: var(--ui-slider-thumb);
   border: none; /* Firefox paints a UA border on the thumb */
   border-radius: var(--ui-radius-full);
-  background: var(--ui-color-surface);
-  box-shadow: var(--ui-elevation-1);
+  background: none;
+  outline: calc(var(--ui-slider-rail) / 2) solid var(--ui-color-brand);
+  outline-offset: calc(var(--ui-slider-rail) / -2);
   border-image: var(--ui-slider-fill-image);
 }
 
@@ -176,8 +188,11 @@
   block-size: calc(var(--ui-slider-thumb) + 2 * var(--ui-space-xs));
 
   --ui-slider-length: 8rem;
+
+  /* The strips reach the thumb center: inline width 100vh + thumb/2,
+   * outset 100vh — see the base token comment. */
   --ui-slider-fill-image: linear-gradient(0deg, var(--ui-slider-fill) 50%, var(--ui-slider-track) 0)
-    1 0 / 100vh calc(50% - var(--ui-slider-rail) / 2) / 100vh 0;
+    1 0 / calc(100vh + var(--ui-slider-thumb) / 2) calc(50% - var(--ui-slider-rail) / 2) / 100vh 0;
 }
 
 /* RTL: the value grows toward the inline-end (physically left) — the fill
@@ -191,7 +206,7 @@
         var(--ui-slider-fill) 50%,
         var(--ui-slider-track) 0
       )
-      0 1 / calc(50% - var(--ui-slider-rail) / 2) 100vw / 0 100vw;
+      0 1 / calc(50% - var(--ui-slider-rail) / 2) calc(100vw + var(--ui-slider-thumb) / 2) / 0 100vw;
   }
 }
 

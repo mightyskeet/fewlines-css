@@ -81,12 +81,13 @@
         <h2>Value fill</h2>
         <p>
           The filled segment rides on the thumb: its side border slices stretch across the whole
-          rail (<code>100vw</code>), painted fill up to the thumb and track after it, and the
-          cross-axis border-image widths crop both strips to exactly the rail thickness. The input's
-          <code>overflow: hidden</code> clips the strips into the rounded rail. The fill follows the
-          thumb natively — zero JS, no host-set value property, no <code>attr()</code>. In an engine
-          where the border-image trick fails the strips do not paint: a uniform track, the state
-          carried by the thumb.
+          rail (<code>100vw</code> + half the thumb) and meet UNDER the thumb — the junction is
+          inside it — while the cross-axis border-image widths crop both strips to exactly the rail
+          thickness. The thumb is a brand ring over a transparent interior, no depth shadow. The
+          input's <code>overflow: hidden</code> clips the strips into the rounded rail. The fill
+          follows the thumb natively — zero JS, no host-set value property, no <code>attr()</code>.
+          In an engine where the border-image trick fails the strips do not paint: a uniform track,
+          the state carried by the thumb.
         </p>
         <div class="example">
           <input
@@ -173,10 +174,9 @@
             The accessible name is mandatory (<code>&lt;label&gt;</code> / <code>aria-label</code>).
           </li>
           <li>
-            The fill/track pair is registered in the APCA matrix as a non-text pair (<code
-              >brand/surface-tint</code
-            >
-            — the Progress pair); the thumb is the Switch thumb model (surface + shared elevation).
+            The thumb ring — <code>brand/surface</code>, the registered Stepper/Avatar pair; the
+            filled segment is <code>border-strong</code> — decorative reinforcement by the border
+            policy (no new APCA pairs).
           </li>
           <li>The value is conveyed by the thumb position, not by color alone (WCAG 1.4.1).</li>
           <li>

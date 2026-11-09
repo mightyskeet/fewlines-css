@@ -30,6 +30,11 @@ JS.
   Safari 18.4/17.4 — `docs/compatibility.md`, 2026-11-09.
   `slider-direction` is outside the Can I Use tracking — not used.
 - Theming: `light-dark()` in the semantic tokens the paint consumes.
+- The thumb is a brand RING over a transparent interior (host decision
+  2026-11-09): the strips run through it and meet inside; a solid circle
+  would force the strips to stop at its bounding box (the square-end
+  artifact). The ring is an inset box-shadow — paint, not elevation; no
+  depth shadow.
 
 ## Canonical markup
 
@@ -41,37 +46,28 @@ JS.
 - The class is the only styling contract; the control fills the container
   (`inline-size: 100%` — container geometry is the host's, the same width
   contract as Progress).
-- The box is the hit target: `1.5rem` (24px) tall at every density —
-  minimum target size (WCAG 2.5.8); the rail floats centered inside it.
+- The box is the hit target and the thumb's air: thumb + 2×`--ui-space-xs`
+  (32 / 36 / 40px — minimum target size met at every density, WCAG 2.5.8);
+  the rail floats centered inside it.
 
-### Value fill (opt-in paint)
+### Value fill
 
-The filled track segment is painted by ONE gradient token
-(`--ui-slider-paint`) on the track pseudo of both engines; Firefox's
-`::-moz-range-progress` is deliberately not used — the gradient is a single
-paint model and a single RTL/vertical mirror point.
+The filled segment RIDES ON THE THUMB (the border-image slice trick):
+the thumb's side border slices are stretched `100vw` sideways — the
+inline-start one paints the fill, the inline-end one the track — and both
+reach the thumb's CENTER (inline width `100vw + thumb/2`), so the strips
+meet UNDER the thumb, the junction inside it. The cross-axis
+border-image widths (`calc(50% − rail/2)`) crop both strips to exactly
+the rail thickness, centered on the thumb. The input's
+`overflow: hidden` clips the strips to the element; its full radius
+rounds the rail ends. The fill follows the thumb NATIVELY — zero JS, no
+host-set value property (2026-11-09). Firefox's `::-moz-range-progress`
+is deliberately not used — one paint model, one RTL/vertical mirror
+point.
 
-CSS cannot read the `value` attribute (`attr()` is rejected — Safari only
-TP; runtime JS is out of contract), so the host sets `--ui-slider-value`
-(0–100, bare number) next to the `value` attribute — the documented dual
-source of truth of the Progress circle:
-
-```html
-<input
-  class="ui-slider"
-  type="range"
-  min="0"
-  max="100"
-  value="50"
-  style="--ui-slider-value: 50"
-  aria-label="Volume"
-/>
-```
-
-- Without the property the track stays uniform (fill stop at 0%): the
-  state is carried by the thumb position — the contract does not break.
-- The host clamps the number to 0–100 (no clamping in the paint).
-- Hosts with a JS layer sync the property on `input` — one line.
+- In an engine where the border-image trick fails the strips simply do
+  not paint: a uniform track, the state carried by the thumb position
+  (graceful).
 
 ## Variants and sizes
 
@@ -82,18 +78,17 @@ is not the default).
 Density: `data-size="sm|lg"`; default md, attribute omitted — thumb over
 fixed steps (1 / 1.25 / 1.5rem), rail thickness over the space scale
 (sm `--ui-space-2xs`, md `--ui-space-xs`, lg `--ui-space-sm`), the Progress
-density model. The input box stays 24px at every density.
+density model. The input box stays `thumb + 2×space-xs` at every density.
 
 ### Customization (local tokens)
 
-| Token                | Default                   | Meaning                          |
-| -------------------- | ------------------------- | -------------------------------- |
-| `--ui-slider-fill`   | `--ui-color-brand`        | Fill color.                      |
-| `--ui-slider-track`  | `--ui-color-surface-tint` | Track color.                     |
-| `--ui-slider-thumb`  | per `data-size`           | Thumb diameter.                  |
-| `--ui-slider-rail`   | per `data-size`           | Rail thickness.                  |
-| `--ui-slider-length` | `8rem`                    | Vertical rail length.            |
-| `--ui-slider-value`  | host-set                  | Paint value 0–100 (dual source). |
+| Token                | Default                    | Meaning               |
+| -------------------- | -------------------------- | --------------------- |
+| `--ui-slider-fill`   | `--ui-color-border-strong` | Fill color.           |
+| `--ui-slider-track`  | `--ui-color-surface-tint`  | Track color.          |
+| `--ui-slider-thumb`  | per `data-size`            | Thumb diameter.       |
+| `--ui-slider-rail`   | per `data-size`            | Rail thickness.       |
+| `--ui-slider-length` | `8rem`                     | Vertical rail length. |
 
 Hosts override with semantic tokens, not classes; color semantics are
 solved by overriding `--ui-slider-fill` in place.
@@ -108,10 +103,10 @@ There is no hover styling: the thumb position carries the state.
 
 - Native `slider` role, native keyboard, native form semantics.
 - A name is mandatory (`label`/`aria-label`).
-- The fill/track pair is registered in the APCA matrix as a non-text pair
-  (`brand/surface-tint` — the Progress pair); the thumb is the Switch
-  thumb model (surface + `--ui-elevation-1`, separated by the elevation —
-  manual audit, Switch precedent).
+- The thumb ring — brand/surface, the registered Stepper/Avatar pair.
+  The filled segment is `border-strong` — decorative reinforcement by the
+  border policy (host decision 2026-11-09: no new APCA pairs); the state
+  is carried by the thumb position, not by color alone (WCAG 1.4.1).
 - The value is conveyed by the thumb position, not by color alone
   (WCAG 1.4.1).
 - Forced colors: `appearance` returns to `auto` — the system slider is
@@ -123,7 +118,6 @@ There is no hover styling: the thumb position carries the state.
 - Do not replace `<input type="range">` with a `div`-based widget — you
   lose the role, the keyboard and the form semantics without JS.
 - Do not leave a slider without an accessible name.
-- Do not set `--ui-slider-value` beyond 0–100 (the paint does not clamp).
 - Do not create variants via classes — density only via `data-size`,
   orientation only via `data-orientation`, colors only by overriding the
   local tokens.

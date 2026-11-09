@@ -103,32 +103,33 @@ test('track wiring: transparent reference track with the pill radius (CSSOM)', a
   expect(rule.borderRadius).toBe('var(--ui-radius-full)');
 });
 
-test('thumb wiring: surface circle with the shared elevation (CSSOM)', async ({ page }) => {
+test('thumb wiring: brand ring, no depth shadow (CSSOM)', async ({ page }) => {
   // The thumb paint is split across rules (the Chromium-only margin rule
-  // has no paint) — merge every slider-thumb rule before asserting.
-  const merged = await page.evaluate(() => {
+  // has no paint). Chromium's CSSOM does not expand the outline longhands
+  // of this rule — the shorthand cssText is the stable assert.
+  const css = await page.evaluate(() => {
     const walk = (rules, acc) => {
       for (const rule of rules) {
         if (rule.cssRules) walk(rule.cssRules, acc);
-        if (rule.selectorText?.includes('slider-thumb')) acc.push(rule.style);
+        if (rule.selectorText?.includes('slider-thumb')) acc.push(rule.cssText);
       }
       return acc;
     };
-    const styles = [];
-    for (const sheet of document.styleSheets) walk(sheet.cssRules, styles);
-    const read = (prop) =>
-      styles.map((s) => s.getPropertyValue(prop)).find((v) => v && v !== '') ?? '';
-    return {
-      background: read('background'),
-      // The CSSOM expands the `border: none` shorthand into longhands.
-      borderStyle: read('border-style'),
-      shadow: read('box-shadow'),
-    };
+    const acc = [];
+    for (const sheet of document.styleSheets) {
+      try {
+        walk(sheet.cssRules, acc);
+      } catch {}
+    }
+    return acc.join('\n');
   });
 
-  expect(merged.background).toBe('var(--ui-color-surface)');
-  expect(merged.borderStyle).toBe('none');
-  expect(merged.shadow).toBe('var(--ui-elevation-1)');
+  expect(css).toContain('border-image: var(--ui-slider-fill-image)');
+  // The brand ring: an outline with a negative offset (paints over the
+  // border-image strips), no depth shadow.
+  expect(css).toContain('outline: calc(var(--ui-slider-rail) / 2) solid var(--ui-color-brand)');
+  expect(css).toContain('outline-offset');
+  expect(css).not.toContain('elevation');
 });
 
 test('painted track and thumb (Firefox ::-moz-range-*)', async ({ page, browserName }) => {
@@ -139,8 +140,8 @@ test('painted track and thumb (Firefox ::-moz-range-*)', async ({ page, browserN
 
   const styles = await page.locator('#slider-filled').evaluate((el) => ({
     track: getComputedStyle(el, '::-moz-range-track').backgroundImage,
-    thumb: getComputedStyle(el, '::-moz-range-thumb').backgroundColor,
     thumbFillImage: getComputedStyle(el, '::-moz-range-thumb').borderImageSource,
+    thumbRing: getComputedStyle(el, '::-moz-range-thumb').outlineColor,
     thumbRadius: getComputedStyle(el, '::-moz-range-thumb').borderRadius,
     thumbSize: getComputedStyle(el, '::-moz-range-thumb').inlineSize,
   }));
@@ -149,9 +150,9 @@ test('painted track and thumb (Firefox ::-moz-range-*)', async ({ page, browserN
   // transparent; the border-image source resolves the fill and track tokens.
   expect(styles.track).toBe('none');
   expect(styles.thumbFillImage).toContain('linear-gradient');
-  expect(styles.thumbFillImage).toContain(await token(page, '--ui-color-brand'));
+  expect(styles.thumbFillImage).toContain(await token(page, '--ui-color-border-strong'));
   expect(styles.thumbFillImage).toContain(await token(page, '--ui-color-surface-tint'));
-  expect(styles.thumb).toBe(await token(page, '--ui-color-surface'));
+  expect(styles.thumbRing).toBe(await token(page, '--ui-color-brand'));
   expect(styles.thumbRadius).not.toBe('0px');
   expect(styles.thumbSize).toBe('20px'); // md thumb: 1.25rem
 });
