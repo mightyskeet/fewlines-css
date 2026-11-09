@@ -110,6 +110,111 @@
       </section>
 
       <section>
+        <h2>Icons</h2>
+        <div class="example">
+          <label class="ui-field">
+            <span class="ui-field-label">Search</span>
+            <input class="ui-input" type="search" placeholder="Search…" />
+            <svg
+              class="ui-field-icon"
+              data-side="start"
+              aria-hidden="true"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <circle cx="11" cy="11" r="8" />
+              <path d="m21 21-4.35-4.35" />
+            </svg>
+          </label>
+          <label class="ui-field">
+            <span class="ui-field-label">Search (lg — the glyph grows with the control)</span>
+            <input class="ui-input" type="search" data-size="lg" placeholder="Search…" />
+            <svg
+              class="ui-field-icon"
+              data-side="start"
+              aria-hidden="true"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <circle cx="11" cy="11" r="8" />
+              <path d="m21 21-4.35-4.35" />
+            </svg>
+          </label>
+          <label class="ui-field" style="--ui-icon-scale: 1.4">
+            <span class="ui-field-label">Host knob: --ui-icon-scale: 1.4</span>
+            <input class="ui-input" type="search" placeholder="Search…" />
+            <svg
+              class="ui-field-icon"
+              data-side="start"
+              aria-hidden="true"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <circle cx="11" cy="11" r="8" />
+              <path d="m21 21-4.35-4.35" />
+            </svg>
+          </label>
+          <label class="ui-field">
+            <span class="ui-field-label">Role (trailing chevron replaces the painted wedge)</span>
+            <select class="ui-select">
+              <option>Designer</option>
+              <option>Developer</option>
+            </select>
+            <svg
+              class="ui-field-icon"
+              data-side="end"
+              aria-hidden="true"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="m6 9 6 6 6-6" />
+            </svg>
+          </label>
+        </div>
+        <pre><code>&lt;label class="ui-field"&gt;
+  &lt;span class="ui-field-label"&gt;Search&lt;/span&gt;
+  &lt;input class="ui-input" type="search" placeholder="Search…" /&gt;
+  &lt;svg class="ui-field-icon" data-side="start" aria-hidden="true" viewBox="0 0 24 24"&gt;…&lt;/svg&gt;
+&lt;/label&gt;</code></pre>
+        <p>
+          The icon is a direct member of <code>ui-field</code> — no wrapper markup. Contract: the
+          icon <strong>follows the control in DOM</strong> (the control keys its space reserve off
+          that order); the visual side is <code>data-side="start|end"</code>. The slot is
+          content-agnostic — inline <code>svg</code>, <code>img</code>, a font-icon
+          <code>&lt;i&gt;</code>, or a real <code>&lt;button&gt;</code> (interactive members, e.g. a
+          password eye; the button keeps the pointer, decorative members are
+          <code>pointer-events: none</code> and must carry <code>aria-hidden="true"</code>).
+        </p>
+        <p>
+          One sizing idiom: the member's <code>font-size</code> is the knob — the svg box is
+          <code>1em</code>, so the glyph rides the control size (grows at <code>lg</code>) and the
+          host knob <code>--ui-icon-scale</code> scales every glyph at every size declaratively (set
+          it on any scope). The control reserves <code>icon-pad + icon-size + icon-gap</code> as
+          padding — pure token math. For the select the painted wedge yields to any trailing member:
+          a custom svg chevron scales with the control and mirrors in RTL for free. Icons are for
+          single-line controls only — textarea, <code>type="file"</code> and growing
+          <code>field-sizing: content</code> inputs are out, and WebKit's own
+          <code>type="search"</code> clear button collides with a trailing icon.
+        </p>
+      </section>
+
+      <section>
         <h2>Textarea autosize</h2>
         <div class="example">
           <label class="ui-field">
