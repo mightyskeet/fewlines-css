@@ -77,7 +77,8 @@
     { fg: "border-strong", bg: "surface", role: "nonText", note: "timeline marker ring" },
     // Stepper: the state markers are non-text indicators (WCAG 1.4.11) —
     // the done disc and the current ring/dot on the page surface.
-    // (The Avatar status dot reuses the stepper/timeline/spellcheck pairs.)
+    // (The Avatar busy dot reuses the spellcheck pair; the away dot is the
+    // border tone — decorative by the border/divider policy.)
     // Utility roles. Link: hyperlink text on the page and raised surfaces.
     // Selection: the tint under the author text color (the same soft-surface
     // pair the neutral Alert uses).

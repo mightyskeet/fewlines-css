@@ -64,7 +64,7 @@ test('sizes scale monotonically (sm < md < lg)', async ({ page }) => {
 test('status dots map to their family tokens', async ({ page }) => {
   const cases = [
     { id: 'avatar-online', tokenName: '--ui-color-brand' },
-    { id: 'avatar-away', tokenName: '--ui-color-border-strong' },
+    { id: 'avatar-away', tokenName: '--ui-color-border' },
     { id: 'avatar-busy', tokenName: '--ui-color-attention' },
   ];
   for (const { id, tokenName } of cases) {

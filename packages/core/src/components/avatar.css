@@ -27,7 +27,7 @@
  * positioning — anchor positioning binds cross-element pairs and is
  * partial in the matrix; a child pseudo needs none of it. Colors map to
  * the existing families (the system deliberately has no success family,
- * docs/theme.md): online — brand, away — border-strong (the gray member,
+ * docs/theme.md): online — brand, away — border (light gray),
  * the Timeline marker tone — text-muted is too dark at dot sizes),
  * busy — attention.
  * Presence must not rely on color alone (WCAG 1.4.1): the host conveys it
@@ -44,7 +44,8 @@
  * APCA pairs used (validated in tests/apca):
  *   online dot: brand/surface (nonText) — the Stepper marker pair;
  *   busy dot:   attention/surface (nonText) — the spellcheck pair;
- *   away dot:   border-strong/surface (nonText) — the Timeline marker pair.
+ *   away dot:   the border tone — decorative by the border/divider
+ *              policy (presence is conveyed by the host, WCAG 1.4.1).
  * The ring is the page surface — decorative separation, no pair.
  *
  * Forced colors: the dot fill is a background — stripped to the system
@@ -125,7 +126,9 @@
 }
 
 .ui-avatar[data-status='away'] {
-  --ui-avatar-dot: var(--ui-color-border-strong);
+  /* border is the light gray; on the dark surface it disappears (Lc 0) —
+   * the dark half steps up to the visible border-strong. */
+  --ui-avatar-dot: light-dark(var(--ui-color-border), var(--ui-color-border-strong));
 }
 
 .ui-avatar[data-status='busy'] {

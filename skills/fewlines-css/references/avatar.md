@@ -54,17 +54,18 @@ its own page-surface ring separates it from the image and the page.
 Colors map to the existing families — the system deliberately has no
 success family (`docs/theme.md`):
 
-| Attribute              | Meaning                 | Token                      |
-| ---------------------- | ----------------------- | -------------------------- |
-| `data-status="online"` | available               | `--ui-color-brand`         |
-| `data-status="away"`   | inactive / idle — gray  | `--ui-color-border-strong` |
-| `data-status="busy"`   | do not disturb / urgent | `--ui-color-attention`     |
-| _(no attribute)_       | no dot                  | —                          |
+| Attribute              | Meaning                      | Token                  |
+| ---------------------- | ---------------------------- | ---------------------- |
+| `data-status="online"` | available                    | `--ui-color-brand`     |
+| `data-status="away"`   | inactive / idle — light gray | `--ui-color-border`    |
+| `data-status="busy"`   | do not disturb / urgent      | `--ui-color-attention` |
+| _(no attribute)_       | no dot                       | —                      |
 
 Presence must not rely on color alone (WCAG 1.4.1): the host conveys the
 state with text or the accessible name; the dot is decorative. `away` is
-the gray member (`border-strong` — the Timeline marker tone;
-`text-muted` is too dark at dot sizes). An unknown
+the light gray `border` (on the dark surface `border` vanishes, so the
+dark half steps up to `border-strong`) — decorative by the border/divider
+policy. An unknown
 value renders the online (brand) dot.
 
 ## Group
@@ -110,7 +111,8 @@ No states (static container). Differences only via `data-status` and
   it in text or the name.
 - The dot pairs are validated at the non-text threshold (WCAG 1.4.11):
   brand/surface (the Stepper pair), attention/surface (the spellcheck
-  pair), border-strong/surface (the Timeline marker pair).
+  pair); the away dot is the border tone — decorative by the border/divider
+  policy.
 - reduced motion — not required, there are no animations.
 
 ## Do not
