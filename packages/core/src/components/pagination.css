@@ -8,13 +8,13 @@
  * Canonical structure:
  *   <nav class="ui-pagination" aria-label="Pagination">
  *     <ul role="list">
- *       <li><button type="button" disabled aria-label="Previous page">‹</button></li>
+ *       <li><button type="button" disabled aria-label="Previous page"></button></li>
  *       <li><a href="?page=1">1</a></li>
  *       <li aria-current="page">2</li>
  *       <li><a href="?page=3">3</a></li>
  *       <li aria-hidden="true">…</li>
  *       <li><a href="?page=12">12</a></li>
- *       <li><a href="?page=3" rel="next" aria-label="Next page">›</a></li>
+ *       <li><a href="?page=3" rel="next" aria-label="Next page"></a></li>
  *     </ul>
  *   </nav>
  *
@@ -46,11 +46,15 @@
  * Row alignment: `align-items: center` — the bare text entries (ellipsis,
  * disabled edges) center against the pill row.
  *
- * Edge glyphs (‹/›) are optically smaller than digits at the same size —
- * the edge controls lift them by `--ui-pagination-glyph-scale` (the pill
- * box does not grow). The edges are the first/last `<li>` in the canon, so
- * the lift is structural and covers both the links and the disabled
- * button; the SVG-icon edge (host-authored) rides the same rule.
+ * Edge chevrons are drawn by the component (the Choice mask precedent): a
+ * text glyph rides the font baseline — its ink never optically centers in
+ * the pill, and baseline-compensating paddings would be font-dependent
+ * magic numbers. A drawn chevron centers by construction (the control is
+ * an inline-flex box, the pseudo is a flex item, the mask fills the box).
+ * The edge controls render empty in the canon and are named by aria-label;
+ * currentColor carries the paint (muted on the disabled edge, the system
+ * palette in forced colors — the mask survives, the Choice note). The
+ * incoming edge mirrors via scale (the Tree RTL mirror precedent).
  *
  * Colors via local tokens (host-overridable):
  *   link      --ui-color-text (the registered body pair on surface);
@@ -65,17 +69,25 @@
  *   on-brand/brand (current), text-muted/surface (muted edges).
  *
  * Forced colors: the links and the current pill repaint from the system
- * palette natively (background/color are forced); the semantics stay with
- * aria-current. The focus ring follows the base layer contract.
+ * palette natively (background/color are forced); the chevron's mask
+ * survives and its background-color rides currentColor into the system
+ * palette (the Choice note); the semantics stay with aria-current. The
+ * focus ring follows the base layer contract.
  *
  * RTL: all positioning is logical (padding-inline, gap) — the row mirrors
- * itself.
+ * itself; the chevron direction mirrors with it (the Tree precedent,
+ * `:dir(rtl)` under @supports — outside caniuse tracking).
  */
 
 .ui-pagination {
   --ui-pagination-size: 1.75rem;
   --ui-pagination-gap: var(--ui-space-2xs);
-  --ui-pagination-glyph-scale: 1.25;
+
+  font-family: var(--ui-font-mono);
+
+  /* Mono digits: equal advances make every pill's width predictable (the
+   * Table data-mono precedent). The drawn chevrons do not care — the
+   * choice rides the whole component for consistency. */
   --ui-pagination-color: var(--ui-color-text);
   --ui-pagination-hover: var(--ui-color-hover);
   --ui-pagination-muted: var(--ui-color-text-muted);
@@ -139,11 +151,43 @@
   color: var(--ui-pagination-muted);
 }
 
-/* Edge glyph lift: ‹/› sit low in their em box and read smaller than the
- * digits — the edge controls get a scaled glyph in the same pill. */
-.ui-pagination li:first-child :is(a, button),
-.ui-pagination li:last-child :is(a, button) {
-  font-size: calc(var(--ui-font-size-sm) * var(--ui-pagination-glyph-scale));
+/* Edge chevrons: drawn by the component — a text glyph rides the font
+ * baseline and never optically centers in the pill; a drawn one centers
+ * by construction (the control is an inline-flex box, the pseudo is a
+ * flex item, the mask fills the box). The edge control renders empty in
+ * the canon and is named by aria-label; the chevron paints with
+ * currentColor (muted on the disabled edge). */
+.ui-pagination li:first-child :is(a, button)::before,
+.ui-pagination li:last-child :is(a, button)::before {
+  content: '';
+  flex: none;
+  inline-size: 0.5em;
+  block-size: 0.75em;
+  background-color: currentcolor;
+
+  /* The Choice precedent: the shape is an SVG path data-URI, the color
+   * rides the masked layer's background. */
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 12'%3E%3Cpath d='M1.5 1.5 6.5 6 1.5 10.5' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  mask-position: center;
+  mask-size: 100% 100%;
+  mask-repeat: no-repeat;
+}
+
+/* The incoming edge mirrors (points back). */
+.ui-pagination li:first-child :is(a, button)::before {
+  scale: -1 1;
+}
+
+/* RTL: the row mirrors logically, the chevron direction mirrors with it
+ * (the Tree precedent; :dir() is outside caniuse tracking — gated). */
+@supports selector(:dir(rtl)) {
+  .ui-pagination li:first-child :is(a, button):dir(rtl)::before {
+    scale: 1;
+  }
+
+  .ui-pagination li:last-child :is(a, button):dir(rtl)::before {
+    scale: -1 1;
+  }
 }
 
 /* The disabled edge: muted, mechanical cursor (the Chip disabled model).

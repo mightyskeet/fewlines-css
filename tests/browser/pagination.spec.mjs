@@ -185,29 +185,48 @@ test('edge links carry rel and an accessible name; the landmark is named', async
   await expect(page.locator('#pagination-default')).toHaveAttribute('aria-label', 'Pagination');
 });
 
-test('edge glyphs are lifted optically, the pill does not grow', async ({ page }) => {
-  // The sm size is a fluid token — the expectation is measured, not
-  // hardcoded (the Breadcrumbs cap precedent).
-  const smPx = () =>
-    page.evaluate(() => {
-      const probe = document.createElement('div');
-      probe.style.cssText = 'position:absolute;visibility:hidden;font-size:var(--ui-font-size-sm);';
-      document.body.append(probe);
-      const px = parseFloat(getComputedStyle(probe).fontSize);
-      probe.remove();
-      return px;
-    });
+test('edge chevrons are drawn by the component and optically centered', async ({ page }) => {
+  const chevron = await page.locator('#pagination-next').evaluate((el) => {
+    const s = getComputedStyle(el, '::before');
+    const font = parseFloat(getComputedStyle(el).fontSize);
+    return {
+      content: s.content,
+      width: parseFloat(s.width),
+      height: parseFloat(s.height),
+      font,
+      mask: s.maskImage,
+      paint: s.backgroundColor,
+    };
+  });
+  expect(chevron.content).toBe('""');
+  // The box is em-sized (0.5 × 0.75 em) — the mask fills it, so the ink
+  // centers with the flex alignment.
+  expect(chevron.width).toBeCloseTo(chevron.font * 0.5, 1);
+  expect(chevron.height).toBeCloseTo(chevron.font * 0.75, 1);
+  expect(chevron.mask).toContain('data:image/svg+xml');
+  expect(chevron.paint).toBe(await token(page, '--ui-color-text'));
 
-  const fontSizeOf = (id) =>
-    page.locator(id).evaluate((el) => parseFloat(getComputedStyle(el).fontSize));
+  // The edge control renders empty — the name comes from aria-label.
+  await expect(page.locator('#pagination-next')).toHaveText('');
 
-  const sm = await smPx();
-  // The edge glyph rides 1.25 × the sm size (the lift token).
-  expect(await fontSizeOf('#pagination-prev')).toBeCloseTo(sm * 1.25, 1);
-  // A middle page link stays at the sm size.
-  expect(await fontSizeOf('#pagination-page1')).toBeCloseTo(sm, 1);
-  // The disabled edge lifts the same way.
-  expect(await fontSizeOf('#pagination-disabled-prev')).toBeCloseTo(sm * 1.25, 1);
+  // The incoming edge mirrors (points back).
+  const mirror = await page
+    .locator('#pagination-prev')
+    .evaluate((el) => getComputedStyle(el, '::before').scale);
+  expect(mirror).toBe('-1 1');
+
+  // The disabled edge paints muted via currentColor.
+  const disabledPaint = await page
+    .locator('#pagination-disabled-prev')
+    .evaluate((el) => getComputedStyle(el, '::before').backgroundColor);
+  expect(disabledPaint).toBe(await token(page, '--ui-color-text-muted'));
+});
+
+test('the component rides the mono font (predictable pill widths)', async ({ page }) => {
+  const link = await page
+    .locator('#pagination-page1')
+    .evaluate((el) => getComputedStyle(el).fontFamily);
+  expect(link).toBe(await token(page, '--ui-font-mono'));
 });
 
 test('keyboard: links take the base focus ring', async ({ page }) => {

@@ -60,18 +60,20 @@
         <h2>Canonical markup</h2>
         <pre><code>&lt;nav class="ui-pagination" aria-label="Pagination"&gt;
   &lt;ul role="list"&gt;
-    &lt;li&gt;&lt;a href="?page=1" rel="prev" aria-label="Previous page"&gt;‹&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href="?page=1" rel="prev" aria-label="Previous page"&gt;&lt;/a&gt;&lt;/li&gt;
     &lt;li&gt;&lt;a href="?page=1"&gt;1&lt;/a&gt;&lt;/li&gt;
     &lt;li aria-current="page"&gt;2&lt;/li&gt;
     &lt;li&gt;&lt;a href="?page=3"&gt;3&lt;/a&gt;&lt;/li&gt;
     &lt;li aria-hidden="true"&gt;…&lt;/li&gt;
     &lt;li&gt;&lt;a href="?page=12"&gt;12&lt;/a&gt;&lt;/li&gt;
-    &lt;li&gt;&lt;a href="?page=3" rel="next" aria-label="Next page"&gt;›&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href="?page=3" rel="next" aria-label="Next page"&gt;&lt;/a&gt;&lt;/li&gt;
   &lt;/ul&gt;
 &lt;/nav&gt;</code></pre>
         <p>
-          Edge glyph links must carry <code>aria-label</code> — <code>‹</code>/<code>›</code> are
-          not accessible names. <code>rel="prev"/"next"</code> is part of the canon.
+          The edge chevrons are drawn by the component — the controls render empty and are named by
+          <code>aria-label</code> (mandatory: an empty edge link has no other name). A text glyph in
+          the control would double the chevron and never centers optically — a text glyph rides the
+          font baseline. <code>rel="prev"/"next"</code> is part of the canon.
         </p>
       </section>
 
@@ -80,14 +82,14 @@
         <div class="example">
           <nav class="ui-pagination" aria-label="Pagination">
             <ul role="list">
-              <li><a href="#states" rel="prev" aria-label="Previous page">‹</a></li>
+              <li><a href="#states" rel="prev" aria-label="Previous page"></a></li>
               <li><a href="#states">1</a></li>
               <li aria-current="page">2</li>
               <li><a href="#states">3</a></li>
               <li><a href="#states">4</a></li>
               <li aria-hidden="true">…</li>
               <li><a href="#states">12</a></li>
-              <li><a href="#states" rel="next" aria-label="Next page">›</a></li>
+              <li><a href="#states" rel="next" aria-label="Next page"></a></li>
             </ul>
           </nav>
         </div>
@@ -103,10 +105,10 @@
         <div class="example">
           <nav class="ui-pagination" aria-label="Pagination">
             <ul role="list">
-              <li><button type="button" disabled aria-label="Previous page">‹</button></li>
+              <li><button type="button" disabled aria-label="Previous page"></button></li>
               <li aria-current="page">1</li>
               <li><a href="#edges">2</a></li>
-              <li><a href="#edges" rel="next" aria-label="Next page">›</a></li>
+              <li><a href="#edges" rel="next" aria-label="Next page"></a></li>
             </ul>
           </nav>
         </div>
@@ -146,8 +148,12 @@
             tab order.
           </li>
           <li>
-            Edge glyph links carry <code>aria-label</code>; the ellipsis is
-            <code>aria-hidden</code>.
+            Edge controls render empty — the chevron is drawn — and are named by
+            <code>aria-label</code>; the ellipsis is <code>aria-hidden</code>.
+          </li>
+          <li>
+            The component rides the mono font: equal digit advances keep every pill's width
+            predictable (the Table <code>data-mono</code> precedent).
           </li>
           <li>
             The pill pairs (<code>text</code>, <code>hover</code>, <code>on-brand</code>,
@@ -170,7 +176,9 @@
           <li>
             No state classes (<code>.is-current</code> and friends) — the native attribute only.
           </li>
-          <li>No edge glyph links without <code>aria-label</code>.</li>
+          <li>
+            No edge controls without <code>aria-label</code> — the drawn chevron is decorative.
+          </li>
         </ul>
       </section>
     </main>
