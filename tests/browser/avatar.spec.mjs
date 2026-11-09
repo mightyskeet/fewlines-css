@@ -21,11 +21,21 @@ const token = (page, name) =>
 test('the image is cropped into the circle (object-fit: cover)', async ({ page }) => {
   const styles = await page.locator('#avatar-default img').evaluate((el) => {
     const s = getComputedStyle(el);
-    return { objectFit: s.objectFit, radius: s.borderRadius, width: s.width, height: s.height };
+    return {
+      objectFit: s.objectFit,
+      radius: s.borderRadius,
+      cornerShape: s.cornerShape,
+      width: s.width,
+      height: s.height,
+    };
   });
   expect(styles.objectFit).toBe('cover');
   // The image rounds itself (the container must not clip the status dot).
   expect(styles.radius).not.toBe('0px');
+  // corner-shape does not inherit: the tokens-layer squircle would flatten
+  // the photo into a rounded square — the image is rounded back (computed
+  // `round` serializes as superellipse(1)).
+  expect(styles.cornerShape).toBe('superellipse(1)');
 });
 
 test('the container is square and circular', async ({ page }) => {

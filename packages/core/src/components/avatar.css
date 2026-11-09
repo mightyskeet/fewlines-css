@@ -72,6 +72,11 @@
   block-size: 100%;
   object-fit: cover;
   border-radius: inherit;
+
+  /* corner-shape does NOT inherit (radius.css): the tokens-layer universal
+   * squircle would flatten the image into a rounded square — round it back
+   * (the same override the container carries). */
+  corner-shape: round;
 }
 
 /* Sizes from the fluid space scale; md (no attribute) is the xl step. */
