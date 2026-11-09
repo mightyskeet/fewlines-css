@@ -8,7 +8,7 @@
  * Canonical structure:
  *   <nav class="ui-pagination" aria-label="Pagination">
  *     <ul role="list">
- *       <li><a href="?page=1" rel="prev" aria-label="Previous page">‹</a></li>
+ *       <li><button type="button" disabled aria-label="Previous page">‹</button></li>
  *       <li><a href="?page=1">1</a></li>
  *       <li aria-current="page">2</li>
  *       <li><a href="?page=3">3</a></li>
@@ -28,11 +28,15 @@
  *
  * Truncated ranges: the host collapses skipped pages into one
  * `<li aria-hidden="true">…</li>` — pure punctuation, hidden from assistive
- * tech (the accessible story is the page sequence itself). A plain-text
- * `<li>` is also how the host renders an unavailable prev/next (no link, no
- * current — e.g. the first page has no previous): the ellipsis and the
- * disabled edges share one muted rule. The host may omit the edge `<li>`
- * entirely instead; then the row shrinks.
+ * tech (the accessible story is the page sequence itself). An unavailable
+ * prev/next (no link, no current — e.g. the first page has no previous) is
+ * a native `<button type="button" disabled>` — the honest "a control lives
+ * here but is off" semantics: the keyboard skips it natively (no dead
+ * entry in the tab order, unlike aria-disabled links — the Menu note), the
+ * disabled state is the platform's, and the pill geometry is shared with
+ * the links. The Button twin pattern: `<a>` navigates, `<button disabled>`
+ * marks the unavailable edge. The host may omit the edge `<li>` entirely
+ * instead; then the row shrinks.
  *
  * Geometry: the chip's pill — 1.75rem min box (WCAG 2.5.8 met at the rest
  * size), stadium radius, sm typography. Page numbers center in the box;
@@ -47,7 +51,8 @@
  *   hover     --ui-color-hover (the neutral hover fill, chip neutral);
  *   current   on-brand on brand (the chip solid pair);
  *   muted     --ui-color-text-muted (the registered fluent pair — the
- *             Breadcrumbs separator). No new pairs.
+ *             Breadcrumbs separator; the disabled button and the ellipsis).
+ *             No new pairs.
  *
  * APCA pairs used (validated in tests/apca):
  *   text/surface (links), hover/surface (hover + pressed),
@@ -83,9 +88,11 @@
   gap: var(--ui-pagination-gap);
 }
 
-/* The pill box: links and the current page share the geometry (the chip
- * model at a square-ish minimum). */
+/* The pill box: links, the disabled edge button and the current page share
+ * the geometry (the chip model at a square-ish minimum). `font: inherit`
+ * and `border: none` reset the UA <button> look (the Button twin). */
 .ui-pagination a,
+.ui-pagination button,
 .ui-pagination li[aria-current='page'] {
   box-sizing: border-box;
   display: inline-flex;
@@ -94,11 +101,13 @@
   min-block-size: var(--ui-pagination-size);
   min-inline-size: var(--ui-pagination-size);
   padding-inline: var(--ui-space-xs);
+  border: none;
   border-radius: var(--ui-radius-full);
 
   /* corner-shape: round overrides the tokens-layer squircle (the Chip
    * note): at a clamped full radius squircle flattens the stadium. */
   corner-shape: round;
+  font: inherit;
   font-size: var(--ui-font-size-sm);
   font-weight: var(--ui-font-weight-medium);
   line-height: var(--ui-line-height-tight);
@@ -116,11 +125,19 @@
   background: var(--ui-pagination-accent);
 }
 
-/* Bare text entries: the ellipsis and the disabled edges (no link, no
- * current). The link color is set on the links themselves, so this never
- * restyles a real entry. */
+/* Bare text entries: the ellipsis (no link, no current). The link and
+ * button colors are set on the controls themselves, so this never restyles
+ * a real entry. */
 .ui-pagination li:not([aria-current='page']) {
   color: var(--ui-pagination-muted);
+}
+
+/* The disabled edge: muted, mechanical cursor (the Chip disabled model).
+ * Buttons appear in the canon only disabled — the hover/press fills stay
+ * scoped to the links. */
+.ui-pagination button:disabled {
+  color: var(--ui-pagination-muted);
+  cursor: not-allowed;
 }
 
 /* Press = hover fill + mechanical response (the Button state model). */

@@ -4,9 +4,9 @@ import { expect, test } from '../fixtures/test.mjs';
  * Pagination component tests.
  * The contract under test: native links only (current page is a non-link
  * li), the aria-current="page" state painted as the filled pill, the
- * shared muted rule for the ellipsis and the disabled edges, the chip
- * pill geometry and the native focus/hover/active model
- * (tests/README.md).
+ * disabled edge as a native disabled button sharing the pill geometry,
+ * the muted ellipsis, the chip pill geometry and the native
+ * focus/hover/active model (tests/README.md).
  */
 
 test.beforeEach(async ({ page }) => {
@@ -96,7 +96,7 @@ test('the current page is the filled pill and is not a link', async ({ page }) =
   await expect(page.locator('#pagination-page3')).toBeFocused();
 });
 
-test('the ellipsis and the disabled edge share the muted rule', async ({ page }) => {
+test('the ellipsis is muted bare text; the disabled edge is a muted pill', async ({ page }) => {
   const muted = await token(page, '--ui-color-text-muted');
 
   const ellipsis = await page.locator('#pagination-ellipsis').evaluate((el) => {
@@ -107,11 +107,28 @@ test('the ellipsis and the disabled edge share the muted rule', async ({ page })
   // Bare text entries get no pill box.
   expect(ellipsis.minBlockSize).not.toBe('28px');
 
+  // The disabled edge keeps the pill geometry (the row stays steady) and
+  // is muted with the mechanical cursor (the Chip disabled model).
   const disabledEdge = await page.locator('#pagination-disabled-prev').evaluate((el) => {
     const s = getComputedStyle(el);
-    return { color: s.color, fontSize: s.fontSize };
+    return {
+      color: s.color,
+      minBlockSize: s.minBlockSize,
+      cursor: s.cursor,
+      borderWidth: s.borderWidth,
+      borderStyle: s.borderStyle,
+    };
   });
   expect(disabledEdge.color).toBe(muted);
+  expect(disabledEdge.minBlockSize).toBe('28px');
+  expect(disabledEdge.cursor).toBe('not-allowed');
+  // The UA button border is reset (color rides currentColor, width 0).
+  expect(disabledEdge.borderWidth).toBe('0px');
+  expect(disabledEdge.borderStyle).toBe('none');
+
+  // Native disabled: not focusable, not in the tab order.
+  await page.locator('#pagination-disabled-prev').focus();
+  await expect(page.locator('#pagination-disabled-prev')).not.toBeFocused();
 
   // The ellipsis is hidden from assistive tech (visibility stays).
   await expect(page.locator('#pagination-ellipsis')).toHaveAttribute('aria-hidden', 'true');

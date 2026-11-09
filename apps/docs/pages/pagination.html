@@ -103,7 +103,7 @@
         <div class="example">
           <nav class="ui-pagination" aria-label="Pagination">
             <ul role="list">
-              <li>‹</li>
+              <li><button type="button" disabled aria-label="Previous page">‹</button></li>
               <li aria-current="page">1</li>
               <li><a href="#edges">2</a></li>
               <li><a href="#edges" rel="next" aria-label="Next page">›</a></li>
@@ -111,11 +111,13 @@
           </nav>
         </div>
         <p>
-          An unavailable edge (no previous page on page 1) renders as bare text in
-          <code>&lt;li&gt;</code> — muted, not focusable, not announced as a control. The host may
-          omit the <code>&lt;li&gt;</code> entirely instead. Skipped ranges collapse into
-          <code>&lt;li aria-hidden="true"&gt;…&lt;/li&gt;</code> — screen readers skip the
-          punctuation, the page sequence stays the story.
+          An unavailable edge (no previous page on page 1) is a native
+          <code>&lt;button type="button" disabled&gt;</code> — the same pill geometry as the links
+          (the row stays steady), muted, skipped by the keyboard natively. The Button twin pattern:
+          <code>&lt;a&gt;</code> navigates, <code>&lt;button disabled&gt;</code> marks the off
+          state. The host may omit the <code>&lt;li&gt;</code> entirely instead. Skipped ranges
+          collapse into <code>&lt;li aria-hidden="true"&gt;…&lt;/li&gt;</code> — screen readers skip
+          the punctuation, the page sequence stays the story.
         </p>
       </section>
 

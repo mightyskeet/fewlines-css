@@ -15,13 +15,13 @@ Page sequence navigation for paged content: search results, tables, listings. On
 ```html
 <nav class="ui-pagination" aria-label="Pagination">
   <ul role="list">
-    <li><a href="?page=1" rel="prev" aria-label="Previous page">‹</a></li>
+    <li><a href="?page=4" rel="prev" aria-label="Previous page">‹</a></li>
     <li><a href="?page=1">1</a></li>
     <li aria-current="page">2</li>
     <li><a href="?page=3">3</a></li>
     <li aria-hidden="true">…</li>
     <li><a href="?page=12">12</a></li>
-    <li><a href="?page=3" rel="next" aria-label="Next page">›</a></li>
+    <li><a href="?page=5" rel="next" aria-label="Next page">›</a></li>
   </ul>
 </nav>
 ```
@@ -33,14 +33,16 @@ Page sequence navigation for paged content: search results, tables, listings. On
 
 ### Truncated ranges and disabled edges
 
-Skipped pages collapse into one `<li aria-hidden="true">…</li>` — pure punctuation, hidden from assistive tech. An unavailable edge (no previous on page 1) renders the same way as plain text in `<li>` — or is omitted entirely:
+Skipped pages collapse into one `<li aria-hidden="true">…</li>` — pure punctuation, hidden from assistive tech. An unavailable edge (no previous on page 1) is a native disabled button — the Button twin pattern (`<a>` navigates, `<button disabled>` marks the off state):
 
 ```html
-<li>‹</li>
+<li><button type="button" disabled aria-label="Previous page">‹</button></li>
 ```
 
-- Both the ellipsis and the bare-text edge render muted (one rule: an `<li>` without a link and without `aria-current`).
-- A bare-text edge is not focusable and not announced as a control — correct: it is not one.
+- The disabled button keeps the pill geometry (the row stays steady), renders muted and is skipped by the keyboard natively — no dead entry in the tab order.
+- `aria-disabled` on a link is not the tool here: the link stays in the tab order (the Menu note).
+- `<button>` appears in the canon only disabled; the host may omit the edge `<li>` entirely instead.
+- Edge controls (links and the disabled button) carry `aria-label` — `‹`/`›` are not names.
 
 ## Variants and sizes
 
@@ -49,7 +51,7 @@ Skipped pages collapse into one `<li aria-hidden="true">…</li>` — pure punct
 
 ## States
 
-Native only: hover — `:hover` (pointer-gated, the sticky-hover guard) fills the pill; pressed — `:active` fills + shifts 1px; focus — the base `:focus-visible` ring; current — `aria-current="page"` (filled brand pill).
+Native only: hover — `:hover` (pointer-gated, the sticky-hover guard) fills the pill; pressed — `:active` fills + shifts 1px; focus — the base `:focus-visible` ring; current — `aria-current="page"` (filled brand pill); disabled edge — native `:disabled` (muted, not focusable, `cursor: not-allowed`).
 
 ## Keyboard and accessibility
 
@@ -63,7 +65,8 @@ Native only: hover — `:hover` (pointer-gated, the sticky-hover guard) fills th
 ## Do not
 
 - Do not make the current page a link (`aria-current` on `<a>`) — a page does not link to itself; the current entry must not be in the tab order.
-- Do not use buttons or `<a href="#">` stubs — entries are real links to real URLs.
+- Do not use buttons for enabled pages or `<a href="#">` stubs — entries are real links to real URLs; `<button>` appears only as the disabled edge.
+- Do not render the disabled edge as bare text in `<li>` — it loses the pill geometry (the row shifts) and reads as punctuation, not as an off control.
 - Do not add `data-*` state classes or `.is-current` — only `aria-current="page"`.
 - Do not omit `aria-label` on the edge glyph links — `‹`/`›` are not accessible names.
 - Do not draw the ellipsis with component classes or images — it is a host-authored `<li aria-hidden="true">…</li>`.
