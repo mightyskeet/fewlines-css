@@ -64,12 +64,20 @@
   background: var(--ui-color-brand);
 }
 
-/* Icons auto-size to 1rem and never intercept the pointer. */
+/* Icons auto-size to the button font (the 1em box rides the size steps:
+ * sm/icon-sm step down with the font) times the host's --ui-icon-scale
+ * knob; never intercept the pointer. lg keeps the default font — explicit
+ * bump is the only raw length. */
 .ui-button svg {
-  inline-size: 1rem;
-  block-size: 1rem;
+  inline-size: calc(1em * var(--ui-icon-scale));
+  block-size: calc(1em * var(--ui-icon-scale));
   flex: none;
   pointer-events: none;
+}
+
+.ui-button[data-size='lg'] svg {
+  inline-size: calc(1.125rem * var(--ui-icon-scale));
+  block-size: calc(1.125rem * var(--ui-icon-scale));
 }
 
 /* Sizes — density: heights match Field (sm 1.75 / md 2.25 / lg 2.75rem); xs

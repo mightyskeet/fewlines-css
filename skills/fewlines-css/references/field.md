@@ -53,6 +53,34 @@ Read-only and file variants follow the same shape:
 
 - Any element after a field gets an automatic gap (`.ui-field + *`) — next field, button, alert; hosts arrange nothing themselves.
 
+### Icon slot
+
+An optional icon member overlays the control's grid row — no wrapper markup, the field is the only arranger. Content-agnostic: inline `svg` (recommended), `img`, a font-icon `<i>`, or a real `<button>` (interactive slots, e.g. a password eye).
+
+```html
+<label class="ui-field">
+  <span class="ui-field-label">Search</span>
+  <input class="ui-input" type="search" placeholder="Search…" />
+  <svg class="ui-field-icon" data-side="start" aria-hidden="true" viewBox="0 0 24 24">…</svg>
+</label>
+```
+
+Contract:
+
+- The icon **follows the control in DOM** (the control's `:has(~ …)` keys off that order); the visual side is `data-side="start|end"`. One icon per side — a second member of the same side overlaps the first.
+- One sizing idiom: the member's `font-size` is the single knob. Font glyphs are the em itself; `svg`/`img` declare a `1em` box and follow it (on the member or wrapped inside). Custom glyph optics = host overrides `font-size`, the box follows.
+- The size map (`--ui-field-icon-size` / `--ui-field-icon-gap` / `--ui-field-icon-pad`) lives on the field — it reads the control's `data-size` via `:has(> …)`; both the control (padding reserve) and the icon (size, inset) inherit it. The reserved padding is `pad + size + gap` (token math, no raw lengths outside the map).
+- Host knob `--ui-icon-scale` (tokens layer, default 1) multiplies every glyph at every size — set it on any scope, no styles needed.
+- Select: the painted wedge yields structurally to any trailing slot member (`background-image: none`) — a custom svg chevron rides the icon size map, mirrors in RTL via logical props, and needs no glyph-name classes in core. The painted wedge stays the default.
+- Icon color is host content: core never paints glyphs — svg strokes and font glyphs color via `currentColor`.
+
+Accessibility:
+
+- Decorative members are `aria-hidden="true"` and `pointer-events: none`; interactive members (`<button>`, `<a>`) stay clickable. Font icons are real text for screen readers — `aria-hidden="true"` is mandatory; an interactive slot member carries its own `aria-label`.
+- The hit-area of an interactive member is host styling (e.g. a `::before` overlay) — core adds no button special cases.
+
+Boundaries — icons are for single-line controls only; out of scope: `ui-textarea` (height from `rows`), `type="file"` (native button fills the field), growing `field-sizing: content` inputs (a trailing icon would drift), `type="search"` in WebKit (its own clear button collides with a trailing icon).
+
 ## Variants and sizes
 
 Controls: `ui-input`, `ui-textarea`, `ui-select`. Wrapper `ui-field` is shared.

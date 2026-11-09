@@ -9,6 +9,10 @@
  * pinning --ui-fluid-vmin = --ui-fluid-vmax or overriding the tokens.
  */
 :root {
+  /* Icon glyph scale (the --ui-space-scale house pattern): a multiplier on
+   * every icon box — field slots, button/chip svg — so hosts rescale all
+   * glyphs on any scope declaratively, keeping the per-size scale intact. */
+  --ui-icon-scale: 1;
   --ui-space-scale: calc(0.75 + var(--ui-fluid) * 0.25);
   --ui-space-step: calc(0.25rem * var(--ui-space-scale));
   --ui-space-3xs: calc(0.5 * var(--ui-space-step));

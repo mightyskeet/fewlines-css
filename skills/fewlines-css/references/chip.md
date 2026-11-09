@@ -21,7 +21,7 @@ Compact interactive control with the Badge look: filters, tags-with-actions, sma
 
 - The label never wraps (`white-space: nowrap`) — a chip is a short label by contract.
 - Adjacent `.ui-chip` get a gap automatically (`.ui-chip + .ui-chip`).
-- Icons auto-size to 1rem and never intercept the pointer; icon-only chips require `aria-label`.
+- Icons (inline `svg`) auto-size to the chip font — a `1em` box times the host knob `--ui-icon-scale` (the Button/Field idiom) — and never intercept the pointer; icon-only chips require `aria-label`.
 
 ## Variants and sizes
 

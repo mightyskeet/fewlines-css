@@ -1,5 +1,5 @@
 (() => {
-  // tests/apca/token-pairs.mjs
+  // apca/token-pairs.mjs
   var tokenPairs = [
     // Core text on surfaces
     { fg: "text", bg: "surface", role: "body" },
@@ -124,7 +124,7 @@
     disabled: 30
   };
 
-  // apps/docs/vendor/apca-w3.mjs
+  // ../apps/docs/vendor/apca-w3.mjs
   var SA98G = {
     mainTRC: 2.4,
     // 2.4 exponent for emulating actual monitor perception
@@ -203,7 +203,7 @@
     return SA98G.sRco * simpleExp(rgb[0]) + SA98G.sGco * simpleExp(rgb[1]) + SA98G.sBco * simpleExp(rgb[2]);
   }
 
-  // apps/docs/js/site-palette.js
+  // ../apps/docs/js/site-palette.js
   var KEY = "colors-bases";
   var FAMILIES = [
     {

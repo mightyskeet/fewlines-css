@@ -29,11 +29,33 @@
  * min-block-size render at different total heights. Single-line controls
  * pin border-box so md/sm/lg heights are exact and identical; textarea
  * stays content-box because its sizing is line-based (rows, 3lh floor).
+ *
+ * Icon slot: an optional member `.ui-field-icon` (any content: svg, img,
+ * font-icon <i>, a real button) overlays the control's grid row. Contract:
+ * the icon FOLLOWS the control in DOM (the control's :has(~ …) keys off
+ * that order); the visual side is `data-side="start|end"`. The control
+ * reserves the space itself; core ships zero icon assets and paints no
+ * glyphs — color is currentColor, decorative members are pointer-none.
+ * Single-line controls only: textarea, type="file" and field-sizing
+ * growing inputs are out (experiment 2026-11-04, .experiments/field-icons).
  */
 
 .ui-field {
   display: grid;
   gap: var(--ui-space-3xs);
+
+  /* Icon size map — the ONLY place with raw icon lengths. It lives on the
+   * field (the size overrides below read the control's data-size via :has
+   * over its children), so the control (padding reserve) and the icon
+   * (size, inset) inherit the same three variables:
+   *   --ui-field-icon-size  glyph box (font icons via font-size, svg via 1em)
+   *   --ui-field-icon-gap   air between glyph and text
+   *   --ui-field-icon-pad   icon inset from the control edge = base inline pad
+   * Hosts scale every glyph at every size via --ui-icon-scale (tokens layer)
+   * — a multiplier, so the size scale stays intact. */
+  --ui-field-icon-size: calc(1rem * var(--ui-icon-scale));
+  --ui-field-icon-gap: var(--ui-space-xs);
+  --ui-field-icon-pad: var(--ui-space-sm);
 }
 
 /* Stack: any element after a field gets the same air — the next field, the
@@ -128,7 +150,11 @@
   );
   background-position: right var(--ui-space-xs) center;
   background-repeat: no-repeat;
-  background-size: 0.5rem 0.25rem;
+
+  /* 1rem × 0.3rem fills the md reserve exactly (space-xs 8px offset +
+   * 16px = 24px = space-lg): the glyph meets the text edge optically
+   * instead of floating short of it; constant at sm and in RTL. */
+  background-size: 1rem 0.3rem;
 }
 
 .ui-select[data-size='lg'] {
@@ -248,4 +274,90 @@
     appearance: auto;
     background-image: none;
   }
+}
+
+/* Icon slot (kept after the component rules above: the slot rules are more
+ * specific and must not precede them — the size map itself lives on the
+ * .ui-field rule at the top).
+ *
+ * Grid: every member is pinned to column 1 (sparse auto-placement would
+ * push a row-2 icon into a NEW column instead of overlaying the control's
+ * cell); members declare their row by kind. */
+.ui-field > * {
+  grid-column: 1;
+}
+
+.ui-field > .ui-field-label {
+  grid-row: 1;
+}
+
+.ui-field > :is(.ui-input, .ui-select, .ui-textarea) {
+  grid-row: 2;
+}
+
+.ui-field > :is(.ui-field-description, .ui-field-error) {
+  grid-row: 3;
+}
+
+.ui-field:has(> :is(.ui-input, .ui-select)[data-size='sm']) {
+  --ui-field-icon-size: calc(var(--ui-font-size-sm) * var(--ui-icon-scale));
+}
+
+.ui-field:has(> :is(.ui-input, .ui-select)[data-size='lg']) {
+  --ui-field-icon-size: calc(1.125rem * var(--ui-icon-scale));
+  --ui-field-icon-pad: var(--ui-space-md); /* lg grows the base inline pad above */
+}
+
+/* Icon member: the box IS the glyph — the member's font-size is the single
+ * knob (font glyphs are the em; replaced content declares a 1em box and
+ * follows, on the member or wrapped inside). Decorative icons never
+ * intercept the pointer; interactive members (a real button) opt back in. */
+.ui-field-icon:is(svg, img),
+.ui-field-icon :is(svg, img) {
+  inline-size: 1em;
+  block-size: 1em;
+}
+
+.ui-field > .ui-field-icon {
+  grid-row: 2;
+  align-self: center;
+  font-size: var(--ui-field-icon-size);
+  line-height: 1;
+  pointer-events: none;
+}
+
+.ui-field > .ui-field-icon[data-side='start'] {
+  justify-self: start;
+  margin-inline-start: var(--ui-field-icon-pad);
+}
+
+.ui-field > .ui-field-icon[data-side='end'] {
+  justify-self: end;
+  margin-inline-end: var(--ui-field-icon-pad);
+}
+
+.ui-field > .ui-field-icon:is(button, a) {
+  pointer-events: auto; /* same specificity as the none-rule above */
+}
+
+/* Space reserve: pure token math over the map. Without :has() support no
+ * reserve is granted — the glyph overlaps the text (decorative loss). */
+:is(.ui-input, .ui-select):has(~ .ui-field-icon[data-side='start']) {
+  padding-inline-start: calc(
+    var(--ui-field-icon-pad) + var(--ui-field-icon-size) + var(--ui-field-icon-gap)
+  );
+}
+
+:is(.ui-input, .ui-select):has(~ .ui-field-icon[data-side='end']) {
+  padding-inline-end: calc(
+    var(--ui-field-icon-pad) + var(--ui-field-icon-size) + var(--ui-field-icon-gap)
+  );
+}
+
+/* The painted select wedge yields structurally to any trailing slot member
+ * (no glyph-name classes in core): the member replaces the background and
+ * rides the same size map (1em → grows at lg). The grid slot mirrors in RTL
+ * via logical props; the wedge's :dir(rtl) case above keeps the default. */
+.ui-select:has(~ .ui-field-icon[data-side='end']) {
+  background-image: none;
 }

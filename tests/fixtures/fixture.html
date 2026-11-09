@@ -143,6 +143,44 @@
           </label>
           <button class="ui-button" type="submit" id="form-submit">Submit</button>
         </form>
+
+        <!-- Field icon slot -->
+        <label class="ui-field">
+          <span class="ui-field-label">Search with icon</span>
+          <input class="ui-input" type="search" id="input-icon-start" placeholder="Search…" />
+          <svg
+            class="ui-field-icon"
+            id="icon-start"
+            data-side="start"
+            aria-hidden="true"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <circle cx="11" cy="11" r="8" />
+            <path d="m21 21-4.35-4.35" />
+          </svg>
+        </label>
+        <label class="ui-field">
+          <span class="ui-field-label">Select with chevron</span>
+          <select class="ui-select" id="select-icon-end">
+            <option>Option A</option>
+            <option>Option B</option>
+          </select>
+          <svg
+            class="ui-field-icon"
+            id="icon-end"
+            data-side="end"
+            aria-hidden="true"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path d="m6 9 6 6 6-6" />
+          </svg>
+        </label>
       </section>
 
       <!-- Dialog -->

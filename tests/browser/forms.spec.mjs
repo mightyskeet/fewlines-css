@@ -97,6 +97,32 @@ test('select paints its own chevron inset from the edge', async ({ page }) => {
   expect(styles.image).toContain('conic-gradient');
 });
 
+test('field icon slot reserves space and stays decorative', async ({ page }) => {
+  const input = page.locator('#input-icon-start');
+  const padding = await input.evaluate((el) => {
+    const cs = getComputedStyle(el);
+    return { start: cs.paddingInlineStart, end: cs.paddingInlineEnd };
+  });
+  // The leading icon grants a padding reserve above the base inline pad.
+  expect(parseFloat(padding.start)).toBeGreaterThan(parseFloat(padding.end));
+
+  const icon = await page.locator('#icon-start').evaluate((el) => {
+    const cs = getComputedStyle(el);
+    return { pointerEvents: cs.pointerEvents, inlineSize: cs.inlineSize, fontSize: cs.fontSize };
+  });
+  // Decorative members never intercept the pointer; the svg box is 1em of
+  // the glyph knob (font-size), so the box rides the same size map.
+  expect(icon.pointerEvents).toBe('none');
+  expect(parseFloat(icon.inlineSize)).toBeCloseTo(parseFloat(icon.fontSize), 1);
+});
+
+test('select yields the painted wedge to a trailing slot icon', async ({ page }) => {
+  const image = await page
+    .locator('#select-icon-end')
+    .evaluate((el) => getComputedStyle(el).backgroundImage);
+  expect(image).toBe('none');
+});
+
 test('forced colors restore the native select arrow', async ({ page }) => {
   await page.emulateMedia({ forcedColors: 'active' });
   const appearance = await page

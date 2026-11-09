@@ -78,10 +78,11 @@
   transition: background-color var(--ui-duration-fast) ease;
 }
 
-/* Icons auto-size and never intercept the pointer (the Button rule). */
+/* Icons auto-size to the chip font (1em × --ui-icon-scale, the Button/Field
+ * idiom) and never intercept the pointer. */
 .ui-chip svg {
-  inline-size: 1rem;
-  block-size: 1rem;
+  inline-size: calc(1em * var(--ui-icon-scale));
+  block-size: calc(1em * var(--ui-icon-scale));
   flex: none;
   pointer-events: none;
 }

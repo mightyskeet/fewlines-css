@@ -49,7 +49,7 @@ Sizes:
 
 - Heights match Field (sm 1.75 / md 2.25 / lg 2.75rem).
 - `sm`/`xs` (and `icon-sm`/`icon-xs`) also drop the font to `--ui-font-size-sm`; `md` and up stay on the default step.
-- Icons auto-size to 1rem (`pointer-events: none`); the square button is for icon-only actions.
+- Icons (inline `svg`) auto-size to the button font — a `1em` box (it steps down with `sm`/`icon-sm`, grows at `lg`) times the host knob `--ui-icon-scale` — and never intercept the pointer (`pointer-events: none`); the square button is for icon-only actions.
 - The button never shrinks narrower than its content as a flex/grid item — `min-inline-size: fit-content`.
 
 ## States
