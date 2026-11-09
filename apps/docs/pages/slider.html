@@ -61,7 +61,8 @@
         <p>
           The accessible name is mandatory — a <code>&lt;label&gt;</code> or
           <code>aria-label</code> (the same host contract as every Field control). The rail fills
-          the container; the box is the hit target — 24px at every density (minimum target size).
+          the container; the box is the hit target and the thumb's air (thumb + 2×
+          <code>space-xs</code> — the elevation shadow fits inside the overflow clip).
         </p>
         <div class="example">
           <label for="slider-demo-volume">Volume</label>
@@ -77,18 +78,15 @@
       </section>
 
       <section>
-        <h2>Value fill (opt-in)</h2>
-        <pre><code>&lt;input class="ui-slider" type="range" min="0" max="100" value="50"
-       style="--ui-slider-value: 50" aria-label="Volume"&gt;</code></pre>
+        <h2>Value fill</h2>
         <p>
-          The filled segment is painted by one gradient token on the track pseudo of both engines
-          (Firefox's <code>::-moz-range-progress</code> is deliberately not used). CSS cannot read
-          the <code>value</code> attribute and runtime JS is out of contract, so the host sets
-          <code>--ui-slider-value</code> (0–100) next to the attributes — the dual source of truth
-          of the Progress circle: the attributes drive the accessibility tree, the property drives
-          the paint. Without the property the track stays uniform — the state is carried by the
-          thumb, the contract does not break. Hosts with a JS layer sync the property on
-          <code>input</code> — one line.
+          The filled segment rides on the thumb: its side border slices stretch across the whole
+          rail (<code>100vw</code>), painted fill up to the thumb and track after it, and the
+          cross-axis border-image widths crop both strips to exactly the rail thickness. The input's
+          <code>overflow: hidden</code> clips the strips into the rounded rail. The fill follows the
+          thumb natively — zero JS, no host-set value property, no <code>attr()</code>. In an engine
+          where the border-image trick fails the strips do not paint: a uniform track, the state
+          carried by the thumb.
         </p>
         <div class="example">
           <input
@@ -97,7 +95,6 @@
             min="0"
             max="100"
             value="50"
-            style="--ui-slider-value: 50"
             aria-label="Slider with value fill"
           />
         </div>
@@ -105,7 +102,7 @@
 
       <section>
         <h2>Vertical</h2>
-        <div class="example" style="align-items: stretch; block-size: 12rem">
+        <div class="example" style="block-size: 12rem">
           <input
             class="ui-slider"
             type="range"
@@ -113,7 +110,6 @@
             min="0"
             max="100"
             value="70"
-            style="--ui-slider-value: 70"
             aria-label="Vertical slider"
           />
         </div>
@@ -137,18 +133,9 @@
             min="0"
             max="100"
             value="40"
-            style="--ui-slider-value: 40"
             aria-label="Small"
           />
-          <input
-            class="ui-slider"
-            type="range"
-            min="0"
-            max="100"
-            value="40"
-            style="--ui-slider-value: 40"
-            aria-label="Default"
-          />
+          <input class="ui-slider" type="range" min="0" max="100" value="40" aria-label="Default" />
           <input
             class="ui-slider"
             type="range"
@@ -156,14 +143,14 @@
             min="0"
             max="100"
             value="40"
-            style="--ui-slider-value: 40"
             aria-label="Large"
           />
         </div>
         <p>
           <code>data-size="sm|lg"</code>; default is md (no attribute). Density only: the thumb
           scales in fixed steps (16 / 20 / 24px), the rail thickness over the space scale (4 / 8 /
-          12px) — the Progress density model. The hit target stays 24px at every density.
+          12px) — the Progress density model. The box (thumb + 2× <code>space-xs</code>) stays the
+          hit target at every density.
         </p>
       </section>
 
@@ -209,8 +196,8 @@
           </li>
           <li>No unnamed sliders — the accessible name is part of the contract.</li>
           <li>
-            Do not set <code>--ui-slider-value</code> beyond 0–100 — the paint does not clamp; the
-            host clamps it.
+            No host-set value property and no runtime JS for the fill — it follows the thumb
+            natively via the border-image trick.
           </li>
           <li>
             No <code>datalist</code> tick marks in the contract — the paint is engine-owned and

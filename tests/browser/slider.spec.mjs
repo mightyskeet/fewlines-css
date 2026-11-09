@@ -4,9 +4,9 @@ import { expect, test } from '../fixtures/test.mjs';
  * Slider component tests.
  * The contract under test: native range semantics (role, keyboard,
  * disabled), the engine paint wiring (track/thumb pseudo-elements), the
- * opt-in value-fill contract (--ui-slider-value, the Progress circle dual
- * source of truth), density sizes, the vertical orientation (min at the
- * bottom) and the RTL mirror (tests/README.md).
+ * thumb-riding fill (the border-image slice trick — zero JS, no host-set
+ * value), density sizes, the vertical orientation (min at the bottom) and
+ * the RTL mirror (tests/README.md).
  *
  * Known engine limit (the Progress precedent): Chromium's getComputedStyle
  * resolves the internal ::-webkit-slider-* pseudos to the ELEMENT's styles
@@ -60,14 +60,17 @@ test('box: appearance none, container-filling width, 24px hit target', async ({ 
   // Fills the container (no UA width divergence); Firefox layout reports
   // the form control a subpixel short of the section box.
   expect(el.width).toBeCloseTo(sectionWidth, 0);
-  expect(el.blockSize).toBe(24); // the box is the hit target (WCAG 2.5.8)
+  // The box is the hit target and the thumb's air: thumb + 2×space-xs
+  // (md 36px) — the elevation shadow must fit inside the overflow clip.
+  expect(el.blockSize).toBe(36);
 });
 
-test('paint wiring: both track pseudo rules carry the one gradient token (CSSOM)', async ({
+test('track wiring: transparent reference track with the pill radius (CSSOM)', async ({
   page,
   browserName,
 }) => {
-  // Engines drop foreign-vendor pseudo rules from the CSSOM.
+  // Engines drop foreign-vendor pseudo rules from the CSSOM. The rail
+  // paint rides on the thumb — the track stays transparent.
   const needle = browserName === 'firefox' ? '-moz-range-track' : '-webkit-slider-runnable-track';
   const rule = await page.evaluate((needle) => {
     const walk = (rules) => {
@@ -78,7 +81,9 @@ test('paint wiring: both track pseudo rules carry the one gradient token (CSSOM)
         }
         if (rule.selectorText?.includes(needle))
           return {
-            background: rule.style.getPropertyValue('background'),
+            // Lightning CSS minifies the `background` shorthand — the
+            // stable longhand is the image layer.
+            backgroundImage: rule.style.getPropertyValue('background-image'),
             borderRadius: rule.style.getPropertyValue('border-radius'),
           };
       }
@@ -91,7 +96,10 @@ test('paint wiring: both track pseudo rules carry the one gradient token (CSSOM)
     return null;
   }, needle);
 
-  expect(rule.background).toBe('var(--ui-slider-paint)');
+  // Lightning CSS minifies `background: transparent` to `background: 0 0`
+  // — the CSSOM longhand then serializes as `initial`. The contract: the
+  // track rule carries NO paint layer.
+  expect(['none', 'initial', '']).toContain(rule.backgroundImage);
   expect(rule.borderRadius).toBe('var(--ui-radius-full)');
 });
 
@@ -132,29 +140,38 @@ test('painted track and thumb (Firefox ::-moz-range-*)', async ({ page, browserN
   const styles = await page.locator('#slider-filled').evaluate((el) => ({
     track: getComputedStyle(el, '::-moz-range-track').backgroundImage,
     thumb: getComputedStyle(el, '::-moz-range-thumb').backgroundColor,
+    thumbFillImage: getComputedStyle(el, '::-moz-range-thumb').borderImageSource,
     thumbRadius: getComputedStyle(el, '::-moz-range-thumb').borderRadius,
     thumbSize: getComputedStyle(el, '::-moz-range-thumb').inlineSize,
   }));
 
-  // The one gradient paint token resolves the brand fill and the tint track.
-  expect(styles.track).toContain('linear-gradient');
-  expect(styles.track).toContain(await token(page, '--ui-color-brand'));
-  expect(styles.track).toContain(await token(page, '--ui-color-surface-tint'));
+  // The rail paint rides on the thumb (border-image) — the track stays
+  // transparent; the border-image source resolves the fill and track tokens.
+  expect(styles.track).toBe('none');
+  expect(styles.thumbFillImage).toContain('linear-gradient');
+  expect(styles.thumbFillImage).toContain(await token(page, '--ui-color-brand'));
+  expect(styles.thumbFillImage).toContain(await token(page, '--ui-color-surface-tint'));
   expect(styles.thumb).toBe(await token(page, '--ui-color-surface'));
   expect(styles.thumbRadius).not.toBe('0px');
   expect(styles.thumbSize).toBe('20px'); // md thumb: 1.25rem
 });
 
-test('value fill is opt-in paint: host-set number, dual source of truth', async ({ page }) => {
-  const filled = await page
-    .locator('#slider-filled')
-    .evaluate((el) => getComputedStyle(el).getPropertyValue('--ui-slider-value').trim());
-  const bare = await page
+test('the fill rides on the thumb: border-image wiring (CSSOM)', async ({ page }) => {
+  // The thumb's border-image paints the fill/track strips (the Progress
+  // engine-paint trap applies: CSSOM wiring is the Chromium-level assert).
+  const paint = await page
     .locator('#slider-default')
-    .evaluate((el) => getComputedStyle(el).getPropertyValue('--ui-slider-value').trim());
+    .evaluate((el) => getComputedStyle(el).getPropertyValue('--ui-slider-fill-image').trim());
 
-  expect(filled).toBe('50');
-  expect(bare).toBe(''); // no host property — uniform track, thumb carries the state
+  expect(paint).toContain('linear-gradient');
+  expect(paint).toContain('100vw'); // the inline stretch of the side slices
+  // The element clips the strips into the rounded rail.
+  const clip = await page.locator('#slider-default').evaluate((el) => {
+    const s = getComputedStyle(el);
+    return { overflow: s.overflow, radius: s.borderRadius };
+  });
+  expect(clip.overflow).toBe('hidden');
+  expect(clip.radius).not.toBe('0px');
 });
 
 test('density: thumb over fixed steps, rail over the space scale', async ({ page }) => {
@@ -212,14 +229,14 @@ test('vertical: writing-mode rotates the control, min at the bottom', async ({ p
     const rect = el.getBoundingClientRect();
     return {
       writingMode: s.writingMode,
-      paint: s.getPropertyValue('--ui-slider-paint'),
+      paint: s.getPropertyValue('--ui-slider-fill-image').trim(),
       width: rect.width,
       height: rect.height,
     };
   });
 
   expect(box.writingMode).toBe('sideways-lr');
-  expect(box.paint).toContain('to top');
+  expect(box.paint).toContain('100vh'); // the strips stretch along the vertical rail
   expect(box.height).toBeGreaterThan(box.width);
 
   // The min end is at the bottom (the mixer convention; browser probe
@@ -238,21 +255,22 @@ test('vertical: the rail length is a definite token, not a percentage', async ({
 });
 
 test('RTL mirrors the horizontal paint, vertical stays put', async ({ page }) => {
+  const readPaint = (id) =>
+    page
+      .locator(`#${id}`)
+      .evaluate((el) => getComputedStyle(el).getPropertyValue('--ui-slider-fill-image').trim());
+  const ltr = await readPaint('slider-default');
+  const vertical = await readPaint('slider-vertical');
+
   await page.evaluate(() => {
     document.documentElement.setAttribute('dir', 'rtl');
   });
 
-  const paints = await page.evaluate(() => ({
-    horizontal: getComputedStyle(document.getElementById('slider-default')).getPropertyValue(
-      '--ui-slider-paint',
-    ),
-    vertical: getComputedStyle(document.getElementById('slider-vertical')).getPropertyValue(
-      '--ui-slider-paint',
-    ),
-  }));
-
-  expect(paints.horizontal).toContain('to left');
-  expect(paints.vertical).toContain('to top');
+  // The gradient directions are physical: RTL mirrors the horizontal
+  // token; the vertical one does not flip with the document direction.
+  const rtl = await readPaint('slider-default');
+  expect(rtl).not.toBe(ltr);
+  expect(rtl).not.toBe(await readPaint('slider-vertical'));
 });
 
 test('disabled: state-model opacity, native interaction refusal', async ({ page }) => {

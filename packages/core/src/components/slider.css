@@ -12,23 +12,29 @@
  * Engine paint model (the Progress precedent, 2026-10-29): with
  * appearance:none Chromium/WebKit paint the track on
  * ::-webkit-slider-runnable-track and the thumb on ::-webkit-slider-thumb;
- * Firefox paints on ::-moz-range-track and ::-moz-range-thumb. One
- * canonical look, two engine pseudo targets, both fed from the same local
- * custom properties — one source of truth (2026-11-09).
+ * Firefox — ::-moz-range-track and ::-moz-range-thumb. One canonical look,
+ * two engine pseudo targets.
  *
- * The filled segment is painted by ONE gradient token (--ui-slider-paint)
- * on the track pseudo of both engines; Firefox's dedicated
- * ::-moz-range-progress is deliberately not used — the gradient keeps a
- * single paint model and one RTL/vertical mirror point.
+ * The filled segment RIDES ON THE THUMB (the border-image slice trick of
+ * Temani Afif's CSS-only range slider): the thumb's side border slices
+ * (1px strips of the source gradient — fill on the inline-start half,
+ * track on the inline-end half) are stretched 100vw sideways, and the
+ * cross-axis border-image widths (calc(50% − rail/2)) crop both strips to
+ * exactly the rail thickness, centered on the thumb. The input's
+ * overflow: hidden clips the strips to the element, and its full radius
+ * rounds the rail ends. The fill therefore follows the thumb NATIVELY —
+ * zero JS, zero host-set value property, no dual source of truth
+ * (2026-11-09). The track pseudo stays transparent: it remains the thumb's
+ * layout reference only. The gradient directions are physical, so RTL and
+ * the vertical orientation redefine the one border-image token — single
+ * mirror points (the :dir() precedent of the Field select chevron).
+ * In an engine where the trick fails the strips simply do not paint —
+ * a uniform track with the thumb carrying the state (graceful).
  *
- * The fill value: CSS cannot read the value attribute (attr() is rejected,
- * MutationObserver impossible — zero runtime JS), so the host sets
- * --ui-slider-value (0–100, bare number) next to the value attribute — the
- * documented dual source of truth of the Progress circle (the attribute
- * drives the accessibility tree, the property drives the paint). Without
- * the property the track stays uniform: the state is carried by the thumb
- * position, the contract does not break. Hosts with a JS layer sync the
- * property on input — one line.
+ * The thumb is the state carrier: a surface circle with the shared
+ * elevation (the Switch thumb model). The input box is the hit target:
+ * 1.5rem (24px) covers the minimum target size at every density; the
+ * thumb and the rail scale over the space scale (data-size).
  *
  * Vertical (data-orientation="vertical"): writing-mode: sideways-lr —
  * min at the bottom, max at the top (browser probe 2026-11-09: the
@@ -40,20 +46,10 @@
  * default for a vertical control in flow (percentage heights need a
  * definite container).
  *
- * The gradient direction is physical ("to right"), so RTL and the vertical
- * orientation redefine the one paint token — a single mirror point, the
- * :dir() precedent of the Field select chevron.
- *
- * The thumb is the state carrier: a surface circle with the shared
- * elevation (the Switch thumb model) — the same look with and without the
- * fill. The input box is the hit target: 1.5rem (24px) covers the
- * minimum target size at every density; the thumb and the rail scale over
- * the space scale (data-size).
- *
  * APCA pair used (validated in tests/apca): fill/track — brand/surface-tint
  * (nonText), the Progress pair; the thumb is the Switch thumb model —
  * surface on the fill, separated by the elevation (manual audit, Switch
- * precedent); on/off state is carried by the thumb position, not by color
+ * precedent); the value is carried by the thumb position, not by color
  * alone (WCAG 1.4.1).
  *
  * Forced colors: appearance is restored to auto — the system slider takes
@@ -67,13 +63,19 @@
   --ui-slider-thumb: 1.25rem;
   --ui-slider-rail: var(--ui-space-xs);
 
-  /* The one paint token: fill up to the host-set value, track after it.
-   * Without --ui-slider-value the fill stop is 0% — uniform track. */
-  --ui-slider-paint: linear-gradient(
-    to right,
-    var(--ui-slider-fill) calc(var(--ui-slider-value, 0) * 1%),
-    var(--ui-slider-track) 0
-  );
+  /* The fill+track paint that rides on the thumb: one border-image
+   * shorthand — source (fill half / track half), slice 0 1 (side slices
+   * only), widths (cross-axis crop to the rail, 100vw inline stretch),
+   * outset exactly 100vw: the strips run CONTINUOUSLY from the thumb's
+   * edges — one solid strip under the thumb, no cutout. Redefined for RTL
+   * and the vertical orientation below — the gradient directions are
+   * physical. */
+  --ui-slider-fill-image: linear-gradient(
+      90deg,
+      var(--ui-slider-fill) 50%,
+      var(--ui-slider-track) 0
+    )
+    0 1 / calc(50% - var(--ui-slider-rail) / 2) 100vw / 0 100vw;
 
   appearance: none;
   box-sizing: border-box;
@@ -82,33 +84,48 @@
   border: none;
   background: transparent;
 
-  /* The box is the hit target, not the thumb: 24px at every density. */
-  block-size: 1.5rem;
+  /* The box is the hit target — and the air around the thumb: the shared
+   * elevation shadow must fit inside, the overflow clip below would cut
+   * it. Thumb + 2×space-xs at every density (≥ 24px target size). */
+  block-size: calc(var(--ui-slider-thumb) + 2 * var(--ui-space-xs));
 
   /* The rail fills the container (the Progress width contract). */
   inline-size: 100%;
+
+  /* Clips the thumb's 100vw fill strips to the element… */
+  overflow: hidden;
+
+  /* …and the full radius rounds the clipped rail ends (corner-shape: round
+   * overrides the tokens-layer squircle — the Switch precedent). */
+  border-radius: var(--ui-radius-full);
+  corner-shape: round;
 }
 
-/* The track: both engines, one gradient token. Rounded ends follow the
- * pill (the Progress track model); the rail thickness — space scale. */
+/* The track: the thumb's layout reference, transparent — the rail paint
+ * rides on the thumb's border-image. Rounded ends follow the pill. */
 .ui-slider::-webkit-slider-runnable-track,
 .ui-slider::-moz-range-track {
   inline-size: 100%;
   block-size: var(--ui-slider-rail);
   border-radius: var(--ui-radius-full);
-  background: var(--ui-slider-paint);
+  background: transparent;
 }
 
 /* The thumb: surface circle with the shared elevation (the Switch thumb
- * model) — readable on the fill and on the bare track alike. */
+ * model), carrying the fill strips on its border-image.
+ * appearance:none on the thumb itself is mandatory: with only the input
+ * stripped, the engine keeps its native blue thumb paint (probe
+ * 2026-11-09). */
 .ui-slider::-webkit-slider-thumb,
 .ui-slider::-moz-range-thumb {
+  appearance: none;
   inline-size: var(--ui-slider-thumb);
   block-size: var(--ui-slider-thumb);
   border: none; /* Firefox paints a UA border on the thumb */
   border-radius: var(--ui-radius-full);
   background: var(--ui-color-surface);
   box-shadow: var(--ui-elevation-1);
+  border-image: var(--ui-slider-fill-image);
 }
 
 /* Chromium/WebKit only: the thumb hangs off the top edge of the runnable
@@ -116,6 +133,14 @@
  * track (the classic engine recipe; Firefox centers the thumb itself). */
 .ui-slider::-webkit-slider-thumb {
   margin-block-start: calc((var(--ui-slider-rail) - var(--ui-slider-thumb)) / 2);
+}
+
+/* Chromium/WebKit only: the runnable track is pinned to the top edge of a
+ * taller box (flex-start) — the rail ends up hugging the box top and the
+ * thumb with it. Auto block margins center the track in the box; Firefox
+ * centers the track itself, auto margins are a no-op there. */
+.ui-slider::-webkit-slider-runnable-track {
+  margin-block: auto;
 }
 
 /* Sizes — density: thumb over fixed steps, rail thickness over the space
@@ -143,32 +168,30 @@
  * give min at the TOP in Chromium; sideways-lr — Chrome 132, FF 43,
  * Safari 18.4, floor матрицы выше). The inline axis is now the rail —
  * a definite length instead of the container-filling 100%; the block axis
- * is the thickness. The paint token is redefined along the new physical
- * axis (a single mirror point). */
+ * is the thickness. The fill strips swap axes: bottom slice = fill (the
+ * gradient runs to top), top slice = track, 100vh inline stretch. */
 .ui-slider[data-orientation='vertical'] {
   writing-mode: sideways-lr;
   inline-size: var(--ui-slider-length);
-  block-size: 1.5rem;
+  block-size: calc(var(--ui-slider-thumb) + 2 * var(--ui-space-xs));
 
   --ui-slider-length: 8rem;
-  --ui-slider-paint: linear-gradient(
-    to top,
-    var(--ui-slider-fill) calc(var(--ui-slider-value, 0) * 1%),
-    var(--ui-slider-track) 0
-  );
+  --ui-slider-fill-image: linear-gradient(0deg, var(--ui-slider-fill) 50%, var(--ui-slider-track) 0)
+    1 0 / 100vh calc(50% - var(--ui-slider-rail) / 2) / 100vh 0;
 }
 
-/* RTL: the value grows toward the inline-end (physically left) — the
- * gradient mirrors. The vertical orientation does not flip with the
+/* RTL: the value grows toward the inline-end (physically left) — the fill
+ * is the right slice. The vertical orientation does not flip with the
  * document direction, so it is excluded here (the :dir() precedent of the
  * Field select chevron). */
 @supports selector(:dir(rtl)) {
   .ui-slider:dir(rtl):not([data-orientation='vertical']) {
-    --ui-slider-paint: linear-gradient(
-      to left,
-      var(--ui-slider-fill) calc(var(--ui-slider-value, 0) * 1%),
-      var(--ui-slider-track) 0
-    );
+    --ui-slider-fill-image: linear-gradient(
+        270deg,
+        var(--ui-slider-fill) 50%,
+        var(--ui-slider-track) 0
+      )
+      0 1 / calc(50% - var(--ui-slider-rail) / 2) 100vw / 0 100vw;
   }
 }
 
