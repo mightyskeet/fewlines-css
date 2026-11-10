@@ -75,6 +75,10 @@
     // Timeline: the marker ring is a non-text boundary (an event marker);
     // the rail is decorative (the divider policy), no pair.
     { fg: "border-strong", bg: "surface", role: "nonText", note: "timeline marker ring" },
+    // The state-marker ring/disc pair the Stepper/Avatar comments claim:
+    // the entry was missing from the matrix (added 2026-11-09 with the
+    // Slider thumb ring — the same registered pair).
+    { fg: "brand", bg: "surface", role: "nonText", note: "stepper/avatar/slider marker ring" },
     // Stepper: the state markers are non-text indicators (WCAG 1.4.11) —
     // the done disc and the current ring/dot on the page surface.
     // (The Avatar busy dot reuses the spellcheck pair; the away dot is the
