@@ -29,6 +29,12 @@
   initial-value: gray;
 }
 
+@property --ui-color-surface-tint-hover {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: gray;
+}
+
 /* Derived hover fills (color-mix of animated inputs) recompute per frame
  * during the theme transition and are NOT in the transition list — adding
  * them would retarget a transition on every animated frame (laggy follow).

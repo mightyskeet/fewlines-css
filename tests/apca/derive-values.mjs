@@ -195,6 +195,12 @@ const tokens = {
   surface: { light: oklchToSrgb(light.surface), dark: oklchToSrgb(dark.surface) },
   'surface-raised': { light: oklchToSrgb(light.raised), dark: oklchToSrgb(dark.raised) },
   'surface-tint': { light: oklchToSrgb(light.soft), dark: oklchToSrgb(dark.raised) },
+  // Tint-surface hover (the neutral chip pastel): an 8% step of the tint
+  // toward the page text (the family tint-hover formula).
+  'surface-tint-hover': {
+    light: mixOklabSrgb(light.text, light.soft, 0.92),
+    dark: mixOklabSrgb(dark.text, dark.raised, 0.92),
+  },
   hover: {
     light: oklchToSrgb(light.soft),
     dark: mixOklabSrgb(dark.raised, dark.border, 0.5),

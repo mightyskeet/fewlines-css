@@ -152,6 +152,7 @@ const FAMILY_TOKENS = {
     'surface',
     'surface-raised',
     'surface-tint',
+    'surface-tint-hover',
     'hover',
     'border',
     'border-strong',

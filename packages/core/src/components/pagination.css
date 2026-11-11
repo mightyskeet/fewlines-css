@@ -58,7 +58,7 @@
  *
  * Colors via local tokens (host-overridable):
  *   link      --ui-color-text (the registered body pair on surface);
- *   hover     --ui-color-hover (the neutral hover fill, chip neutral);
+ *   hover     --ui-color-hover (the neutral hover fill over the page surface);
  *   current   on-brand on brand (the chip solid pair);
  *   muted     --ui-color-text-muted (the registered fluent pair — the
  *             Breadcrumbs separator; the disabled button and the ellipsis).

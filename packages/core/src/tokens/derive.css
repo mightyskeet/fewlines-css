@@ -234,6 +234,17 @@
   );
   --ui-color-surface-tint: light-dark(var(--ui-pl-soft-light), var(--ui-pl-raised-dark));
 
+  /* Tint-surface hover (the neutral chip pastel): an 8% step of the tint
+   * toward the page text (the family tint-hover formula). --ui-color-hover
+   * is the step over the page surface and coincides with surface-tint in
+   * the light theme, so a control already sitting on the tint needs its
+   * own derived step to stay visible. */
+  --ui-color-surface-tint-hover: color-mix(
+    in oklab,
+    var(--ui-color-text) 8%,
+    var(--ui-color-surface-tint)
+  );
+
   /* ---- Chromatic families ----
    * Per family and theme: source (that theme's seed), a binary branch
    * selector (vivid fill at seed L <= 0.70, pastel above), the theme's fill

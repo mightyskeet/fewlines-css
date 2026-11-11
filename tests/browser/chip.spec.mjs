@@ -62,7 +62,7 @@ test('hover lands on the variant hover fill and skips disabled', async ({ page }
 
   const cases = [
     { id: '#chip-default', fill: '--ui-color-brand-tint-hover' },
-    { id: '#chip-neutral', fill: '--ui-color-hover' },
+    { id: '#chip-neutral', fill: '--ui-color-surface-tint-hover' },
     { id: '#chip-attention', fill: '--ui-color-attention-tint-hover' },
     { id: '#chip-default-solid', fill: '--ui-color-brand-hover' },
     { id: '#chip-neutral-solid', fill: '--ui-color-inverse-hover' },

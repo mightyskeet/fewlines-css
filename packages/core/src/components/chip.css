@@ -26,8 +26,8 @@
  *   solid:          on-{brand,attention} on the bare tone (body threshold);
  *     surface on text for the neutral solid (inverted page gamut, body
  *     threshold)
- *   hovers: brand-tint-hover / hover / attention-tint-hover (pastel
- *     minimum), brand-hover / attention-hover / inverse-hover (body)
+ *   hovers: brand-tint-hover / surface-tint-hover / attention-tint-hover
+ *     (pastel minimum), brand-hover / attention-hover / inverse-hover (body)
  *
  * Sizes via data-size: sm | lg (default — md, attribute omitted). Heights
  * match Button xs/sm: sm 1.5rem / md 1.75rem / lg 2rem — an interactive
@@ -93,7 +93,7 @@
 .ui-chip[data-variant='neutral'] {
   --ui-chip-fg: var(--ui-color-text);
   --ui-chip-bg: var(--ui-color-surface-tint);
-  --ui-chip-hover: var(--ui-color-hover);
+  --ui-chip-hover: var(--ui-color-surface-tint-hover);
 }
 
 .ui-chip[data-variant='attention'] {

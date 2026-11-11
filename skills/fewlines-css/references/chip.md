@@ -35,7 +35,7 @@ The attribute set mirrors Badge exactly — the same six looks:
 | `data-solid` (alone)          | solid brand family: `on-brand` text on `brand` fill                                                                  |
 | `data-variant="…" data-solid` | solid fill of the family's bare tone + `on-*` text; `neutral` + solid = inverted gray (fill `text`, label `surface`) |
 
-Hover/press fill is the same family one step toward its contrast pole: `brand-tint-hover` / `hover` / `attention-tint-hover` (pastel), `brand-hover` / `inverse-hover` / `attention-hover` (solid). Press = the hover fill + a 1px translate (the Button model).
+Hover/press fill is the same family one step toward its contrast pole: `brand-tint-hover` / `surface-tint-hover` / `attention-tint-hover` (pastel), `brand-hover` / `inverse-hover` / `attention-hover` (solid). Press = the hover fill + a 1px translate (the Button model).
 
 Sizes: `data-size="sm|lg"`; default is md, no attribute needed.
 

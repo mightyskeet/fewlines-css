@@ -38,6 +38,12 @@ export const tokenPairs = [
   { fg: 'text', bg: 'surface', role: 'body' },
   { fg: 'text', bg: 'surface-raised', role: 'body' },
   { fg: 'text', bg: 'surface-tint', role: 'body', note: 'badge neutral: gray tint' },
+  {
+    fg: 'text',
+    bg: 'surface-tint-hover',
+    role: 'body',
+    note: 'neutral chip pastel hover (the 8% tint step)',
+  },
   { fg: 'text-muted', bg: 'surface', role: 'fluent' },
   { fg: 'text-muted', bg: 'surface-raised', role: 'fluent' },
 
