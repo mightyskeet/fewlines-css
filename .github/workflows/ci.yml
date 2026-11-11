@@ -38,8 +38,20 @@ jobs:
       - name: Package purity
         run: node tests/purity/check.mjs
 
+      - name: Playwright version
+        id: pw
+        working-directory: tests
+        run: echo "version=$(node -p "require('@playwright/test/package.json').version")" >> "$GITHUB_OUTPUT"
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v6
+        with:
+          path: ~/.cache/ms-playwright
+          key: ms-playwright-${{ steps.pw.outputs.version }}
+
       - name: Install Playwright browser
-        run: npx playwright install chromium --with-deps
+        # no --with-deps: apt font pulls die on flaky DNS to azure mirrors; runner libs suffice
+        run: npx playwright install chromium
         working-directory: tests
 
       - name: Browser + accessibility tests
