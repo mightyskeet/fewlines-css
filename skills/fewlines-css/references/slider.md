@@ -95,7 +95,9 @@ its inline axis.
 Density: `data-size="sm|lg"` on the wrapper; default md, attribute
 omitted — thumb over fixed steps (1 / 1.25 / 1.5rem), rail thickness over
 the space scale (sm `--ui-space-2xs`, md `--ui-space-xs`, lg
-`--ui-space-sm`), the Progress density model. The box (thumb +
+`--ui-space-sm`), the Progress density model. The thumb ring does NOT
+scale with the density: `--ui-slider-thumb-ring` is fixed at half a
+space step at every size. The box (thumb +
 2×space-xs) stays the hit target at every density.
 
 ### Customization (local tokens)
@@ -106,6 +108,7 @@ the space scale (sm `--ui-space-2xs`, md `--ui-space-xs`, lg
 | `--ui-slider-track`  | `--ui-color-surface-tint` | Track color.          |
 | `--ui-slider-thumb`  | per `data-size`           | Thumb diameter.       |
 | `--ui-slider-rail`   | per `data-size`           | Rail thickness.       |
+| `--ui-slider-thumb-ring` | `--ui-space-3xs`          | Thumb ring (border) thickness. |
 | `--ui-slider-length` | `8rem`                    | Vertical rail length. |
 
 Hosts override with semantic tokens, not classes; color semantics are

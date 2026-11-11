@@ -49,8 +49,8 @@
  * read as heavy, the first hollow ring read as a missing fill because
  * the strips showed through; the opaque surface closes that). The input
  * box is the hit target: thumb + 2×space-xs covers the minimum target
- * size at every density; the thumb and the rail scale over the space
- * scale (data-size).
+ * size at every density; the rail scales over the space scale (data-size),
+ * the thumb ring does not (see the knobs).
  *
  * Vertical (data-orientation="vertical" on the wrapper):
  * writing-mode: sideways-lr on the input — min at the bottom, max at the
@@ -87,6 +87,9 @@
   --ui-slider-track: var(--ui-color-surface-tint);
   --ui-slider-thumb: 1.25rem;
   --ui-slider-rail: var(--ui-space-xs);
+  /* The thumb ring is size-independent: half a step (the old sm ring) at
+   * every data-size. */
+  --ui-slider-thumb-ring: var(--ui-space-3xs);
 
   display: block;
   position: relative;
@@ -142,7 +145,7 @@
  * the strips showed through: the opaque surface closes that). The border
  * IS the ring — the fill no longer paints on the thumb, no outline
  * offset gymnastics; box-sizing keeps the diameter at --ui-slider-thumb
- * over the density-scaled ring thickness (rail/2). The opaque interior
+ * over the size-independent ring (--ui-slider-thumb-ring). The opaque interior
  * hides the fill's junction (see the header comment). No depth shadow.
  * appearance:none on the thumb itself is mandatory: with only the input
  * stripped, the engine keeps its native blue thumb paint (probe
@@ -155,7 +158,7 @@
   box-sizing: border-box;
   inline-size: var(--ui-slider-thumb);
   block-size: var(--ui-slider-thumb);
-  border: calc(var(--ui-slider-rail) / 2) solid var(--ui-color-brand);
+  border: var(--ui-slider-thumb-ring) solid var(--ui-color-brand);
   border-radius: var(--ui-radius-full);
   corner-shape: round;
   background: var(--ui-color-surface);
