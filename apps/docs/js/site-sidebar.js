@@ -38,6 +38,7 @@ const PAGES = [
   { href: 'pages/button.html', label: 'Button', group: 'Forms' },
   { href: 'pages/chip.html', label: 'Chip', group: 'Forms' },
   { href: 'pages/choice.html', label: 'Choice', group: 'Forms' },
+  { href: 'pages/rating.html', label: 'Rating', group: 'Forms' },
   { href: 'pages/field.html', label: 'Field', group: 'Forms' },
   { href: 'pages/fieldset.html', label: 'Fieldset', group: 'Forms' },
   { href: 'pages/switch.html', label: 'Switch', group: 'Forms' },

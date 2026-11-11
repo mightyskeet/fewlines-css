@@ -87,6 +87,7 @@
   --ui-slider-track: var(--ui-color-surface-tint);
   --ui-slider-thumb: 1.25rem;
   --ui-slider-rail: var(--ui-space-xs);
+
   /* The thumb ring is size-independent: half a step (the old sm ring) at
    * every data-size. */
   --ui-slider-thumb-ring: var(--ui-space-3xs);

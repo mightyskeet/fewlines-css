@@ -62,12 +62,13 @@ markup** — never infer the API from an example or a neighboring component:
 | Panel switching with the address in the URL       | Tabs        | `references/tabs.md`        |
 | Binary on/off toggle: settings, consent           | Switch      | `references/switch.md`      |
 | Choice controls: checkboxes, radios, groups       | Choice      | `references/choice.md`      |
+| Whole-star rating input                           | Rating      | `references/rating.md`      |
 | Short hover/focus hint                            | Tooltip     | `references/tooltip.md`     |
 | Tabular data: registries, reports, dashboards     | Table       | `references/table.md`       |
 
 Disambiguation: modal + focus trap → Dialog; light dismiss, non-modal →
 Popover; action list in an overlay → Menu; panel from the viewport edge →
-Drawer; binary toggle → Switch; choice controls → Choice; disclosure →
+Drawer; binary toggle → Switch; choice controls → Choice; whole-star rating → Rating; disclosure →
 Accordion; unobtrusive status message → Alert; compact status/counter →
 Badge; person identity/presence → Avatar; compact interactive control →
 Chip; tabular data → Table; navigation trail → Breadcrumbs; page sequence →

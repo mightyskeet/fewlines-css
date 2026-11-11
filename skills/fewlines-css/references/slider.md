@@ -102,14 +102,14 @@ space step at every size. The box (thumb +
 
 ### Customization (local tokens)
 
-| Token                | Default                   | Meaning               |
-| -------------------- | ------------------------- | --------------------- |
-| `--ui-slider-fill`   | `--ui-color-brand`        | Fill color.           |
-| `--ui-slider-track`  | `--ui-color-surface-tint` | Track color.          |
-| `--ui-slider-thumb`  | per `data-size`           | Thumb diameter.       |
-| `--ui-slider-rail`   | per `data-size`           | Rail thickness.       |
+| Token                    | Default                   | Meaning                        |
+| ------------------------ | ------------------------- | ------------------------------ |
+| `--ui-slider-fill`       | `--ui-color-brand`        | Fill color.                    |
+| `--ui-slider-track`      | `--ui-color-surface-tint` | Track color.                   |
+| `--ui-slider-thumb`      | per `data-size`           | Thumb diameter.                |
+| `--ui-slider-rail`       | per `data-size`           | Rail thickness.                |
 | `--ui-slider-thumb-ring` | `--ui-space-3xs`          | Thumb ring (border) thickness. |
-| `--ui-slider-length` | `8rem`                    | Vertical rail length. |
+| `--ui-slider-length`     | `8rem`                    | Vertical rail length.          |
 
 Hosts override with semantic tokens, not classes; color semantics are
 solved by overriding `--ui-slider-fill` in place (on the wrapper — the

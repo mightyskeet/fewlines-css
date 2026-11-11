@@ -1,0 +1,181 @@
+/* Rating component.
+ *
+ * Native basis: <input type="radio"> inside a <fieldset> — the native radio
+ * group (one selection, arrow-key stepping, Space), the group name from the
+ * legend, native form participation and fieldset[disabled] propagation. No
+ * JS, no state classes.
+ *
+ * Canonical structure:
+ *   <fieldset class="ui-rating">
+ *     <legend class="ui-rating-legend">Your rating</legend>
+ *     <label class="ui-rating-star">
+ *       <input type="radio" name="rating" value="1" aria-label="1 star" />
+ *     </label>
+ *     … ×5 …
+ *   </fieldset>
+ *
+ * The label wraps its input (the implicit-label model of Choice): a click
+ * anywhere on the star toggles. The stars are empty elements — the shape is
+ * paint — so the accessible name of each control comes from the input's
+ * aria-label ("1 star" … "5 stars").
+ *
+ * The input is invisible but NOT removed from layout/hit-testing: it sits
+ * absolutely over the star box at opacity 0, so the shared base
+ * :focus-visible ring outlines the star natively — no :has() focus
+ * plumbing, no outline: none (the base focus contract holds).
+ *
+ * Whole steps only: 5 radios for 5 stars. Half steps would mean 10 radios —
+ * double keyboard stops and half-value accessible names; not in the
+ * contract.
+ *
+ * The paint: two SVG-mask data-URI layers on the label (the Choice
+ * precedent — the shape belongs to the SVG, the color to the semantic
+ * token; the data-URI color is dead alpha):
+ *   ::before — the OUTLINE star, the empty state (surface-tint);
+ *   ::after — the SOLID star, the filled state (brand), fades in on
+ *   :checked/hover (opacity).
+ * The state is not carried by color alone (WCAG 1.4.1): the shape itself
+ * changes from outline to solid.
+ *
+ * No direction: rtl trick and no flex on the fieldset (the fieldset layout
+ * trap, fieldset.css). The DOM order IS the visual order; the "fill the
+ * stars before the selection" look is forward-looking :has() (direct use,
+ * docs/compatibility.md 2026-11-09):
+ *   :has(:checked)                    — the checked star itself;
+ *   :has(~ .ui-rating-star :checked)  — every star before it.
+ * Hover preview follows the same shape (pointer-gated, Choice/Switch
+ * model). It only ever ADDS fill: hovering below the selection changes
+ * nothing — un-filling the checked stars on hover would need state CSS
+ * cannot see (the checked input may sit anywhere around the hovered star).
+ *
+ * APCA pairs used (validated in tests/apca, no new tokens):
+ *   filled star: brand/surface-tint (the registered Progress fill pair,
+ *   nonText) — the solid star paints over the outline star;
+ *   empty star: surface-tint on the page surface (the Slider rail model).
+ *
+ * Forced colors: CanvasText keeps the empty outline visible (backgrounds
+ * are forced to Canvas), Highlight paints the filled stars (the Choice
+ * model).
+ */
+
+.ui-rating {
+  --ui-rating-size: 1.5rem;
+
+  /* The UA fieldset chrome is off: a rating row has no box (the resets of
+   * fieldset.css, minus the border). */
+  min-inline-size: 0;
+  margin: 0;
+  border: none;
+  padding: 0;
+}
+
+/* The legend is the group's accessible name — the Fieldset legend model
+ * (the group label, not a section heading), minus the border-cut padding. */
+.ui-rating-legend {
+  font: 500 var(--ui-font-size-sm) / 1.45 var(--ui-font-sans);
+  color: var(--ui-color-text);
+  padding: 0;
+}
+
+.ui-rating:disabled .ui-rating-legend {
+  color: var(--ui-color-text-muted);
+}
+
+/* The star: the hit target (--ui-rating-size ≥ 24px, WCAG 2.5.8) and the
+ * paint box. Inline boxes in plain flow — no flex on the fieldset (the
+ * fieldset layout trap, fieldset.css). */
+.ui-rating-star {
+  position: relative;
+  display: inline-block;
+  inline-size: var(--ui-rating-size);
+  block-size: var(--ui-rating-size);
+  cursor: pointer;
+}
+
+.ui-rating-star + .ui-rating-star {
+  margin-inline-start: var(--ui-space-2xs);
+}
+
+/* The control: invisible but live — it covers the star box exactly, so the
+ * pointer always lands on the input and the native focus ring outlines the
+ * star. The cursor rides the label (inherit) so the disabled state only
+ * restyles one element. */
+.ui-rating-star input {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  cursor: inherit;
+}
+
+/* The paint layers: the shape is the data-URI, the color the token (the
+ * Choice model). */
+.ui-rating-star::before,
+.ui-rating-star::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  mask-size: 100% 100%;
+  mask-repeat: no-repeat;
+  mask-position: center;
+}
+
+/* Empty state: the outline star, the de-emphasised paint (the Slider rail
+ * token). */
+.ui-rating-star::before {
+  background: var(--ui-color-surface-tint);
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z' fill='none' stroke='%23fff' stroke-width='2' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+
+/* Filled state: the solid star, brand, fading in (the Choice fade). */
+.ui-rating-star::after {
+  background: var(--ui-color-brand);
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z' fill='%23fff'/%3E%3C/svg%3E");
+  opacity: 0;
+  transition: opacity var(--ui-duration-fast) ease;
+}
+
+/* Filled: the checked star and every star before it — one forward-looking
+ * :has() pair covers both (the checked input is a descendant of its own
+ * label and a following sibling of every earlier label's stars). */
+.ui-rating-star:has(:checked)::after,
+.ui-rating-star:has(~ .ui-rating-star :checked)::after {
+  opacity: 1;
+}
+
+/* Hover preview: the hovered star and every star before it. Pointer-gated
+ * (the sticky :hover of touch would latch the preview). */
+@media (hover: hover) and (pointer: fine) {
+  .ui-rating-star:hover::after,
+  .ui-rating-star:has(~ .ui-rating-star:hover)::after {
+    opacity: 1;
+  }
+}
+
+/* Disabled — the group level is native (fieldset[disabled]); a single
+ * disabled radio dims the same way. */
+.ui-rating:disabled .ui-rating-star,
+.ui-rating:has(input:disabled) .ui-rating-star {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* Forced colors: the masked layers take system colors — the outline stays
+ * visible on the Canvas (backgrounds are forced to Canvas), the fill reads
+ * as Highlight (the Choice model). The opacity rules above keep driving
+ * the fill. */
+@media (forced-colors: active) {
+  .ui-rating-star::before {
+    background: CanvasText;
+  }
+
+  .ui-rating-star::after {
+    background: Highlight;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-rating-star::after {
+    transition: none;
+  }
+}

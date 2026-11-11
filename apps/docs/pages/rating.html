@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script>
+      try {
+        var t = localStorage.getItem('theme');
+        if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+      } catch (e) {}
+    </script>
+    <script>
+      try {
+        var b = JSON.parse(localStorage.getItem('colors-bases') || 'null');
+        if (b) {
+          var r = document.documentElement,
+            s = r.style;
+          for (var k in b) s.setProperty(k, b[k]);
+          r.setAttribute('data-palette', 'custom');
+        }
+      } catch (e) {}
+    </script>
+    <title>Rating — fewlines-css</title>
+    <link rel="stylesheet" href="../css/core.css" />
+    <link rel="stylesheet" href="../css/docs.css" />
+    <link rel="stylesheet" href="../css/colors-derive.css" />
+    <script src="../js/site-version.js" defer></script>
+    <script src="../js/site-sidebar.js" defer blocking="render"></script>
+    <script src="../js/site-toc.js" defer blocking="render"></script>
+    <script src="../vendor/hljs.min.js" defer></script>
+    <script src="../js/site-code.js" defer></script>
+  </head>
+  <body>
+    <site-sidebar></site-sidebar>
+
+    <main>
+      <header class="page-header">
+        <h1>Rating</h1>
+        <p>
+          Whole-star rating input on a native radio group in a <code>&lt;fieldset&gt;</code>: the
+          selection, the keyboard and the form participation come with the elements. No JS, no
+          <code>direction: rtl</code> trick.
+        </p>
+      </header>
+
+      <section>
+        <h2>Semantic basis</h2>
+        <p>
+          Five <code>&lt;input type="radio"&gt;</code> in a <code>&lt;fieldset&gt;</code>: one
+          selection, arrow-key stepping, Space, the group name from the legend and native
+          <code>fieldset[disabled]</code> disabling — nothing to build. Whole steps only: half steps
+          would mean 10 radios (double keyboard stops, half-value names) and stay outside the
+          contract.
+        </p>
+      </section>
+
+      <section>
+        <h2>Canonical markup</h2>
+        <pre><code>&lt;fieldset class="ui-rating"&gt;
+  &lt;legend class="ui-rating-legend"&gt;Your rating&lt;/legend&gt;
+  &lt;label class="ui-rating-star"&gt;
+    &lt;input type="radio" name="rating" value="1" aria-label="1 star" /&gt;
+  &lt;/label&gt;
+  &lt;!-- … up to value="5" / "5 stars" … --&gt;
+&lt;/fieldset&gt;</code></pre>
+        <p>
+          The label wraps its input (the implicit-label model of Choice): a click anywhere on the
+          star toggles. The stars are empty elements — the shape is paint — so each control's name
+          comes from the input's <code>aria-label</code>. The inputs are invisible but NOT removed
+          from layout: they sit over the star box at <code>opacity: 0</code>, so the shared base
+          <code>:focus-visible</code> ring outlines the star natively (no <code>display: none</code>
+          — it would kill the keyboard).
+        </p>
+        <div class="example">
+          <fieldset class="ui-rating">
+            <legend class="ui-rating-legend">Your rating</legend>
+            <label class="ui-rating-star">
+              <input type="radio" name="rating-demo" value="1" aria-label="1 star" />
+            </label>
+            <label class="ui-rating-star">
+              <input type="radio" name="rating-demo" value="2" aria-label="2 stars" />
+            </label>
+            <label class="ui-rating-star">
+              <input type="radio" name="rating-demo" value="3" aria-label="3 stars" />
+            </label>
+            <label class="ui-rating-star">
+              <input type="radio" name="rating-demo" value="4" aria-label="4 stars" />
+            </label>
+            <label class="ui-rating-star">
+              <input type="radio" name="rating-demo" value="5" aria-label="5 stars" />
+            </label>
+          </fieldset>
+        </div>
+      </section>
+
+      <section>
+        <h2>The fill</h2>
+        <p>
+          The paint is two SVG-mask data-URI layers on the label (the Choice precedent — the shape
+          belongs to the SVG, the color to the token): <code>::before</code> the outline star (the
+          empty state), <code>::after</code> the solid star (brand) fading in. The filled look — the
+          checked star plus every star before it — is forward-looking <code>:has()</code>, the DOM
+          order is the visual order (no <code>direction: rtl</code>; LTR/RTL both come free from the
+          logical properties). The hover preview (pointer-gated) only ever adds fill: hovering below
+          the current selection changes nothing.
+        </p>
+        <div class="example">
+          <fieldset class="ui-rating">
+            <legend class="ui-rating-legend">Pre-selected</legend>
+            <label class="ui-rating-star">
+              <input type="radio" name="rating-preset" value="1" aria-label="1 star" />
+            </label>
+            <label class="ui-rating-star">
+              <input type="radio" name="rating-preset" value="2" aria-label="2 stars" />
+            </label>
+            <label class="ui-rating-star">
+              <input type="radio" name="rating-preset" value="3" checked aria-label="3 stars" />
+            </label>
+            <label class="ui-rating-star">
+              <input type="radio" name="rating-preset" value="4" aria-label="4 stars" />
+            </label>
+            <label class="ui-rating-star">
+              <input type="radio" name="rating-preset" value="5" aria-label="5 stars" />
+            </label>
+          </fieldset>
+        </div>
+      </section>
+
+      <section>
+        <h2>Disabled</h2>
+        <div class="example">
+          <fieldset class="ui-rating" disabled>
+            <legend class="ui-rating-legend">Disabled group</legend>
+            <label class="ui-rating-star">
+              <input type="radio" name="rating-off" value="1" aria-label="1 star" />
+            </label>
+            <label class="ui-rating-star">
+              <input type="radio" name="rating-off" value="2" aria-label="2 stars" />
+            </label>
+            <label class="ui-rating-star">
+              <input type="radio" name="rating-off" value="3" aria-label="3 stars" />
+            </label>
+            <label class="ui-rating-star">
+              <input type="radio" name="rating-off" value="4" aria-label="4 stars" />
+            </label>
+            <label class="ui-rating-star">
+              <input type="radio" name="rating-off" value="5" aria-label="5 stars" />
+            </label>
+          </fieldset>
+        </div>
+        <p>
+          <code>fieldset[disabled]</code> — native group disabling; a single disabled radio dims the
+          same way (<code>:has(input:disabled)</code>).
+        </p>
+      </section>
+
+      <section>
+        <h2>Customization</h2>
+        <p>
+          One density; the star box scales via the local token (default <code>1.5rem</code> = 24px —
+          the WCAG 2.5.8 minimum target size):
+        </p>
+        <pre><code>.rating-compact {
+  --ui-rating-size: 1.25rem;
+}</code></pre>
+        <p>
+          The fill follows the brand family by default; hosts re-theme through semantic tokens in
+          place — no variants, no classes.
+        </p>
+      </section>
+
+      <section>
+        <h2>Accessibility</h2>
+        <ul>
+          <li>
+            Native radio semantics: arrows step through the stars, Space selects; each value is
+            announced with its <code>aria-label</code>, the group with the legend.
+          </li>
+          <li>
+            The state is not carried by color alone (WCAG 1.4.1): the shape changes from outline to
+            solid.
+          </li>
+          <li>
+            Filled star: brand/surface-tint — the registered Progress fill pair (nonText); the empty
+            outline is surface-tint on the surface (the Slider rail model).
+          </li>
+          <li>
+            Forced colors: the outline takes <code>CanvasText</code>, the fill
+            <code>Highlight</code> (the Choice model).
+          </li>
+          <li>Reduced motion disables the fill fade.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Do not</h2>
+        <ul>
+          <li>
+            No <code>div</code>-based stars — the selection, keyboard and form semantics come with
+            the radio group.
+          </li>
+          <li>
+            No <code>display: none</code> on the inputs — they must stay focusable;
+            <code>opacity: 0</code> over the star box is the contract.
+          </li>
+          <li>No half steps (10 radios) — outside the contract.</li>
+          <li>
+            No flex/grid on the <code>&lt;fieldset&gt;</code> — the fieldset layout trap; plain flow
+            renders identically across engines.
+          </li>
+          <li>
+            No <code>direction: rtl</code> — the fill looks forward through <code>:has()</code>.
+          </li>
+        </ul>
+      </section>
+    </main>
+    <site-toc></site-toc>
+
+    <footer></footer>
+  </body>
+</html>
