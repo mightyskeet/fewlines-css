@@ -44,7 +44,14 @@ One canonical element — a native radio group in a `<fieldset>`. Zero JS.
   anywhere on the star toggles; no `for`/`id` wiring.
 - Plain flow inside the fieldset — no flex/grid on `<fieldset>` (the
   fieldset layout trap, `docs/compatibility.md` 2026-10-29); the star row
-  is inline boxes.
+  is inline boxes. The stars TOUCH — no gap: the hover path must stay
+  continuous across the row (a gap between the boxes drops the preview
+  mid-move). The component neutralizes the pretty-printed markup
+  whitespace itself (`font-size: 0` on the fieldset — the legend carries
+  its own font); do not rely on hand-stripped whitespace in the HTML.
+- The rhythm is the neighbors' model: the legend keeps the Field
+  label→control air (`--ui-space-3xs`), adjacent groups stack
+  (`--ui-space-sm`, the Fieldset/Field model).
 - Hover preview is pointer-gated (`@media (hover: hover) and
 (pointer: fine)`, the Choice/Switch model) — sticky `:hover` of touch
   would latch the preview.

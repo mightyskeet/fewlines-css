@@ -67,33 +67,46 @@
   margin: 0;
   border: none;
   padding: 0;
+
+  /* The inline-row whitespace killer: the pretty-printed whitespace
+   * between the labels renders as a word space and gaps the row — the
+   * hover preview would drop mid-move. The legend re-declares its font
+   * explicitly and the stars are fixed boxes, nothing else inherits this. */
+  font-size: 0;
 }
 
 /* The legend is the group's accessible name — the Fieldset legend model
- * (the group label, not a section heading), minus the border-cut padding. */
+ * (the group label, not a section heading), minus the border-cut padding.
+ * The air to the stars is the Field label→control step (3xs). */
 .ui-rating-legend {
   font: 500 var(--ui-font-size-sm) / 1.45 var(--ui-font-sans);
   color: var(--ui-color-text);
   padding: 0;
+  margin-block-end: var(--ui-space-3xs);
 }
 
 .ui-rating:disabled .ui-rating-legend {
   color: var(--ui-color-text-muted);
 }
 
+/* Stacked groups: adjacent members get the same air — the Fieldset/Field
+ * model ("the host just puts them next to each other"). */
+.ui-rating + .ui-rating {
+  margin-block-start: var(--ui-space-sm);
+}
+
 /* The star: the hit target (--ui-rating-size ≥ 24px, WCAG 2.5.8) and the
  * paint box. Inline boxes in plain flow — no flex on the fieldset (the
- * fieldset layout trap, fieldset.css). */
+ * fieldset layout trap, fieldset.css). The stars touch — no gap: the
+ * hover path must stay continuous across the row (a gap between the boxes
+ * drops the hover preview mid-move); the glyph's own padding inside the
+ * SVG viewBox is the visual separation. */
 .ui-rating-star {
   position: relative;
   display: inline-block;
   inline-size: var(--ui-rating-size);
   block-size: var(--ui-rating-size);
   cursor: pointer;
-}
-
-.ui-rating-star + .ui-rating-star {
-  margin-inline-start: var(--ui-space-2xs);
 }
 
 /* The control: invisible but live — it covers the star box exactly, so the

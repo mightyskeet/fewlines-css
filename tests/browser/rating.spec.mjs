@@ -102,6 +102,44 @@ test('paint: two SVG-mask layers, empty = surface-tint, filled = brand', async (
   expect(paint.afterMask).not.toContain('stroke');
 });
 
+test('stars touch: the hover path is continuous, rhythm is the neighbors model', async ({
+  page,
+}) => {
+  // Adjacent star boxes share the edge — no gap between them (the
+  // pretty-printed markup whitespace would render as a word space and
+  // drop the hover preview mid-move). Geometry: computed, engine-honest.
+  const touching = await page.locator('#rating-default .ui-rating-star').evaluateAll((stars) => {
+    const rects = stars.map((s) => s.getBoundingClientRect());
+    return rects[1].left - rects[0].right;
+  });
+  expect(touching).toBeCloseTo(0, 4);
+
+  // The rhythm wiring (legend air = Field 3xs, stack = Fieldset/Field sm):
+  // the space tokens are fluid — the rule stream is the stable assert (the
+  // Slider precedent).
+  const css = await page.evaluate(() => {
+    const walk = (rules, acc) => {
+      for (const rule of rules) {
+        if (rule.cssRules) walk(rule.cssRules, acc);
+        if (rule.selectorText?.includes('ui-rating')) acc.push(rule.cssText);
+      }
+      return acc;
+    };
+    const acc = [];
+    for (const sheet of document.styleSheets) {
+      try {
+        walk(sheet.cssRules, acc);
+      } catch {}
+    }
+    return acc.join('\n');
+  });
+  expect(css).toContain('margin-block-end: var(--ui-space-3xs)');
+  // The CSSOM serializes selectors engine-normalized — match the combinator
+  // loosely.
+  expect(css).toMatch(/ui-rating\s*\+\s*\.ui-rating/);
+  expect(css).toContain('margin-block-start: var(--ui-space-sm)');
+});
+
 test('focus ring outlines the star natively (the base contract)', async ({ page }) => {
   // Land on the first radio by keyboard: the focus must be :focus-visible
   // and the shared ring paints on the input sitting over the star box.
