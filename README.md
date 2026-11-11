@@ -73,6 +73,10 @@ CI runs a 30° hue-step grid, a full 360-point sweep runs separately).
 | Breadcrumbs | `<nav>` navigation trail                    | `ui-breadcrumbs` (+ Menu popover for the collapsed state)                                           |
 | Pagination  | `<nav>` page sequence                       | `ui-pagination`, `aria-current="page"`                                                              |
 | Table       | `<table>` + `<caption>`                     | `ui-table`, `ui-table-wrap`, `data-zebra`, `data-sticky`, `data-align`                              |
+| Tree        | nested `<ul>/<li>` + `<details>/<summary>`  | `ui-tree` (indents/rails via tokens: `ui-tree-indent`…)                                             |
+| Avatar      | static `<span>` + `<img>`                   | `ui-avatar`, `data-status`, `ui-avatar-group`, `ui-avatar-size`                                     |
+| Slider      | `<input type="range">`                      | `ui-slider`, `data-orientation`, `data-size`, `ui-slider-length`                                    |
+| Rating      | `<fieldset>` + 5 `<input type="radio">`     | `ui-rating`, `ui-rating-star`, `ui-rating-legend`, `ui-rating-size`                                 |
 
 Beyond the components, the base layer styles semantic text elements without
 classes: `code`/`kbd`/`samp`, `pre`, `mark`, `abbr`, links, `blockquote`,

@@ -1,6 +1,6 @@
 {
   "name": "fewlines-css",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Platform-native CSS UI system. Zero runtime JavaScript.",
   "license": "MIT",
   "repository": {
