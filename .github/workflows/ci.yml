@@ -7,7 +7,8 @@ on:
 
 jobs:
   ci:
-    runs-on: ubuntu-latest
+    # ubuntu-latest is 26.04 now; playwright 1.57 --with-deps has no 26.04 package list yet
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
 
